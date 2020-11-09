@@ -1,4 +1,4 @@
-;;
+﻿;;
 ;; ABI - REGISTERS
 ;;
 ;;             [    WIN64    ]      ----VM----
@@ -50,23 +50,6 @@ proc DllEntryPoint hinstDLL,fdwReason,lpvReserved
     ret
 endp
 
-Operations:
-OpNop = 0
-    dq      ExecNop
-OpI8  = 1
-    dq      ExecI8
-OpI16 = 2
-    dq      ExecI16
-OpI32 = 3
-    dq      ExecI32
-OpI64 = 4
-    dq      ExecI64
-OpAdd = 5
-    dq      ExecAdd
-OpRet = 6
-    dq      ExecRet
-
-; (addr) -> (stack-usage)
 proc Execute uses rbx rsi rdi, chunk
     mov     [chunk], rcx
     mov     rsi, rcx
@@ -104,94 +87,10 @@ proc DestroyBuilder
     ret
 endp
 
-ExecNop:
-    ret
+Operations:
+$EXEC$
 
-ExecI8:
-    movsx   rax, byte [rsi]
-    add     rsi, 1
-    sub     rdi, 8
-    mov     [rdi], rax
-    ret
-
-ExecI16:
-    movsx   rax, word [rsi]
-    add     rsi, 2
-    sub     rdi, 8
-    mov     [rdi], rax
-    ret
-
-ExecI32:
-    movsxd  rax, dword [rsi]
-    add     rsi, 4
-    sub     rdi, 8
-    mov     [rdi], rax
-    ret
-
-ExecI64:
-    mov     rax, qword [rsi]
-    add     rsi, 8
-    sub     rdi, 8
-    mov     [rdi], rax
-    ret
-
-ExecAdd:
-    mov     rax, [rdi]
-    add     rax, [rdi + 8]
-    add     rdi, 8
-    mov     [rdi], rax
-    ret;
-
-ExecRet:
-    pop     rax
-    mov     rax, 42
-    jmp     Return
-
-; (addr) -> (addr)
-EmitNop:
-    mov     [rcx], byte OpNop
-    lea     rax, [rcx+1]
-    ret
-
-; (addr, i8) -> (addr)
-EmitI8:
-    mov     [rcx], byte OpI8
-    mov     [rcx+1], dl
-    lea     rax, [rcx+2]
-    ret
-
-; (addr, i16) -> (addr)
-EmitI16:
-    mov     [rcx], byte OpI16
-    mov     [rcx+1], dx
-    lea     rax, [rcx+3]
-    ret
-
-; (addr, i32) -> (addr)
-EmitI32:
-    mov     [rcx], byte OpI32
-    mov     [rcx+1], edx
-    lea     rax, [rcx+5]
-    ret
-
-; (addr, i64) -> (addr)
-EmitI64:
-    mov     [rcx], byte OpI64
-    mov     [rcx+1], rdx
-    lea     rax, [rcx+9]
-    ret
-
-; (addr) -> (addr)
-EmitAdd:
-    mov     [rcx], byte OpAdd
-    lea     rax, [rcx+1]
-    ret
-
-; (addr) -> (addr)
-EmitRet:
-    mov     [rcx], byte OpRet
-    lea     rax, [rcx+1]
-    ret
+$EMIT$
 
 proc vmAdd
     mov     rax, rcx
@@ -222,7 +121,7 @@ section '.data' data readable writeable
 StackTop:
     dq StackEnd
 StackStart:
-    dq 10*1024 dup 0
+    dq 1024 dup 0
 StackEnd:
 
 BuildStart:
@@ -236,13 +135,7 @@ section '.edata' data readable
     data export
         export 'vm.dll',\
             vmAdd, 'Add',\
-            EmitNop, 'EmitNop',\
-            EmitI8, 'EmitI8',\
-            EmitI16, 'EmitI16',\
-            EmitI32, 'EmitI32',\
-            EmitI64, 'EmitI64',\
-            EmitAdd, 'EmitAdd',\
-            EmitRet, 'EmitRet',\
+$EXPORT$,\
             Execute, 'Execute',\
             CreateBuilder, 'CreateBuilder',\
             DestroyBuilder, 'DestroyBuilder',\

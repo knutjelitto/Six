@@ -13,30 +13,37 @@ namespace Six
 
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long Execute(ref byte addr);
+        public static extern long Execute(long builder);
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
         public static extern long GetStackAt(long index);
 
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitI8(ref byte addr, sbyte value);
+        public static extern long CreateBuilder();
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitI16(ref byte addr, short value);
+        public static extern void DestroyBuilder(long builder);
+
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitI32(ref byte addr, int value);
+        public static extern long EmitI8(long addr, sbyte value);
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitI64(ref byte addr, long value);
+        public static extern long EmitI16(long addr, short value);
+
+        [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
+        public static extern long EmitI32(long addr, int value);
+
+        [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
+        public static extern long EmitI64(long addr, long value);
         
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitAdd(ref byte addr);
+        public static extern long EmitAdd(long addr);
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]
-        public static extern long EmitRet(ref byte addr);
+        public static extern long EmitRet(long addr);
 
 
         [DllImport(DLL, CallingConvention = CC, CharSet = CS)]

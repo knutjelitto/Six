@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace Six
@@ -19,51 +18,18 @@ namespace Six
 
         public void Init()
         {
-            Console.WriteLine("Six --");
+            Console.WriteLine("Six -- 0.0.1");
 
-            var projects = new DirectoryInfo("../../../../..");
+            var tools = new Externals();
 
-            Console.WriteLine($"{projects.FullName}");
+            var gen = new GenVM();
 
-            var fasmDir = Path.Combine(projects.FullName, "Tools", "fasm");
-            var fasm = Path.Combine(fasmDir, "fasm.exe");
-            var include = Path.Combine(fasmDir, "include");
+            gen.Ops();
 
-#if false
-            var tools = Path.Combine(fasmDir, "TOOLS", "WIN32");
-            Exec(fasm, Path.Combine(tools, "SYMBOLS.ASM"), include);
-            Exec(fasm, Path.Combine(tools, "LISTING.ASM"), include);
-#endif
 
-            var example = Path.Combine(".", "VM.asm -s VM.fas");
-            Exec(fasm, example, include);
-        }
+            var vm_dll = Path.Combine(".", "VM.asm -s VM.fas");
 
-        public void Tools()
-        {
-
-        }
-
-        public void Exec(string program, string arguments, string include)
-        {
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    UseShellExecute = false,
-                    FileName = program,
-                    Arguments = arguments,
-                }
-            };
-
-            process.StartInfo.Environment["INCLUDE"] = include;
-
-            var watch = new Stopwatch();
-            watch.Start();
-            process.Start();
-            process.WaitForExit();
-            watch.Stop();
-            Console.WriteLine($"{watch.Elapsed}");
+            tools.Fasm(vm_dll);
         }
 
         public void Run()
@@ -74,25 +40,22 @@ namespace Six
             VM.WriteMessage("==>");
             Console.WriteLine($"{x} + {y} == {VM.Add(x, y)}");
 
-            var bytes = new byte[128];
+            var builder = VM.CreateBuilder();
+            var ptr = builder;
 
-            long cnt = 0;
-            ref byte ptr = ref bytes[0];
 
-            cnt += VM.EmitI8(ref ptr, 10);
-            ptr = ref bytes[cnt];
+            ptr = VM.EmitI8(ptr, 10);
 
-            cnt += VM.EmitI8(ref ptr, 12);
-            ptr = ref bytes[cnt];
+            ptr = VM.EmitI8(ptr, 12);
 
-            cnt += VM.EmitAdd(ref ptr);
-            ptr = ref bytes[cnt];
+            ptr = VM.EmitAdd(ptr);
 
-            cnt += (int)VM.EmitRet(ref ptr);
-            ptr = ref bytes[cnt];
+            ptr = VM.EmitRet(ptr);
 
-            var result = VM.Execute(ref bytes[0]);
+            var result = VM.Execute(builder);
             Console.WriteLine($"result: {result}");
+
+            VM.DestroyBuilder(builder);
 
             var sum = VM.GetStackAt(0);
             Console.WriteLine($"sum: {sum}");
