@@ -50,23 +50,6 @@ proc DllEntryPoint hinstDLL,fdwReason,lpvReserved
     ret
 endp
 
-Operations:
-OpNop = 0
-    dq      ExecNop
-OpI8  = 1
-    dq      ExecI8
-OpI16 = 2
-    dq      ExecI16
-OpI32 = 3
-    dq      ExecI32
-OpI64 = 4
-    dq      ExecI64
-OpAdd = 5
-    dq      ExecAdd
-OpRet = 6
-    dq      ExecRet
-
-; (addr) -> (stack-usage)
 proc Execute uses rbx rsi rdi, chunk
     mov     [chunk], rcx
     mov     rsi, rcx
@@ -104,6 +87,23 @@ proc DestroyBuilder
     ret
 endp
 
+Operations:
+    dq      ExecNop
+    dq      ExecI8
+    dq      ExecI16
+    dq      ExecI32
+    dq      ExecI64
+    dq      ExecAdd
+    dq      ExecRet
+
+    OpNop = 0
+    OpI8 = 1
+    OpI16 = 2
+    OpI32 = 3
+    OpI64 = 4
+    OpAdd = 5
+    OpRet = 6
+
 ExecNop:
     ret
 
@@ -140,58 +140,53 @@ ExecAdd:
     add     rax, [rdi + 8]
     add     rdi, 8
     mov     [rdi], rax
-    ret;
+    ret
 
 ExecRet:
     pop     rax
     mov     rax, 42
     jmp     Return
 
-; (addr) -> (addr)
+
 EmitNop:
     mov     [rcx], byte OpNop
-    lea     rax, [rcx+1]
+    lea     rax, [rcx + 1]
     ret
 
-; (addr, i8) -> (addr)
 EmitI8:
     mov     [rcx], byte OpI8
-    mov     [rcx+1], dl
-    lea     rax, [rcx+2]
+    mov     [rcx + 1], dl
+    lea     rax, [rcx + 2]
     ret
 
-; (addr, i16) -> (addr)
 EmitI16:
     mov     [rcx], byte OpI16
-    mov     [rcx+1], dx
-    lea     rax, [rcx+3]
+    mov     [rcx + 1], dx
+    lea     rax, [rcx + 3]
     ret
 
-; (addr, i32) -> (addr)
 EmitI32:
     mov     [rcx], byte OpI32
-    mov     [rcx+1], edx
-    lea     rax, [rcx+5]
+    mov     [rcx + 1], edx
+    lea     rax, [rcx + 5]
     ret
 
-; (addr, i64) -> (addr)
 EmitI64:
     mov     [rcx], byte OpI64
-    mov     [rcx+1], rdx
-    lea     rax, [rcx+9]
+    mov     [rcx + 1], rdx
+    lea     rax, [rcx + 9]
     ret
 
-; (addr) -> (addr)
 EmitAdd:
     mov     [rcx], byte OpAdd
-    lea     rax, [rcx+1]
+    lea     rax, [rcx + 1]
     ret
 
-; (addr) -> (addr)
 EmitRet:
     mov     [rcx], byte OpRet
-    lea     rax, [rcx+1]
+    lea     rax, [rcx + 1]
     ret
+
 
 proc vmAdd
     mov     rax, rcx
@@ -222,7 +217,7 @@ section '.data' data readable writeable
 StackTop:
     dq StackEnd
 StackStart:
-    dq 10*1024 dup 0
+    dq 1024 dup 0
 StackEnd:
 
 BuildStart:
