@@ -14,5 +14,20 @@ namespace SixComp
 
         public Span Span { get; }
         public ToKind Kind { get; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Token other && other.Kind == Kind;
+        }
+
+        public override int GetHashCode()
+        {
+            return Kind.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{Kind}('{Span}')";
+        }
     }
 }

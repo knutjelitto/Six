@@ -15,12 +15,18 @@
         private int start;
         private int current;
 
-        public bool Done => current == source.Lenght;
+        public bool Done { get; private set; } = false;
 
         public string Rest => source.Chars(new Span(source, current, source.Lenght));
 
-        public Token? Next()
+
+        public Token Next()
         {
+            if (Done)
+            {
+                return Token(ToKind.ERROR);
+            }
+
             while (current < source.Lenght && char.IsWhiteSpace(source[current]))
             {
                 current += 1;
@@ -28,54 +34,61 @@
 
             start = current;
 
-            if (current >= source.Lenght)
+            if (current == source.Lenght)
             {
-                return null;
+                Done = true;
+                return Token(ToKind.EOF);
             }
 
             switch (source[current])
             {
                 case '.':
-                    current += 1;
-                    return new Token(Span(), ToKind.Dot);
+                    return Token(ToKind.Dot);
                 case ';':
-                    current += 1;
-                    return new Token(Span(), ToKind.Semi);
+                    return Token(ToKind.Semi);
                 case ':':
-                    current += 1;
-                    return new Token(Span(), ToKind.Colon);
+                    return Token(ToKind.Colon);
+                case ',':
+                    return Token(ToKind.Comma);
 
                 case '(':
-                    current += 1;
-                    return new Token(Span(), ToKind.LParen);
+                    return Token(ToKind.LParen);
                 case ')':
-                    current += 1;
-                    return new Token(Span(), ToKind.RParent);
+                    return Token(ToKind.RParent);
                 case '{':
-                    current += 1;
-                    return new Token(Span(), ToKind.LBrace);
+                    return Token(ToKind.LBrace);
                 case '}':
-                    current += 1;
-                    return new Token(Span(), ToKind.RBrace);
+                    return Token(ToKind.RBrace);
                 case '[':
-                    current += 1;
-                    return new Token(Span(), ToKind.LBrack);
+                    return Token(ToKind.LBrack);
                 case ']':
-                    current += 1;
-                    return new Token(Span(), ToKind.RBrack);
+                    return Token(ToKind.RBrack);
 
+                case '=':
+                    return Token(ToKind.Assign);
+                case '!':
+                    return Token(ToKind.Bang);
+                case '?':
+                    return Token(ToKind.Quest);
+                case '^':
+                    return Token(ToKind.Caret);
+                case '~':
+                    return Token(ToKind.Tilde);
+
+                case '<':
+                    return Token(ToKind.Less);
+                case '>':
+                    return Token(ToKind.Greater);
                 case '+':
-                    current += 1;
-                    return new Token(Span(), ToKind.OpPlus);
+                    return Token(ToKind.Plus);
                 case '-':
-                    current += 1;
-                    return new Token(Span(), ToKind.OpMinus);
+                    return Token(ToKind.Minus);
                 case '*':
-                    current += 1;
-                    return new Token(Span(), ToKind.OpMul);
+                    return Token(ToKind.Asterisk);
                 case '/':
-                    current += 1;
-                    return new Token(Span(), ToKind.OpDiv);
+                    return Token(ToKind.Slash);
+                case '%':
+                    return Token(ToKind.Percent);
                 default:
                     if (char.IsLetter(source[current]))
                     {
@@ -93,8 +106,12 @@
                             "let" => new Token(span, ToKind.KwLet),
                             "var" => new Token(span, ToKind.KwVar),
                             "func" => new Token(span, ToKind.KwFunc),
+                            "case" => new Token(span, ToKind.KwCase),
+                            "class" => new Token(span, ToKind.KwClass),
+                            "struct" => new Token(span, ToKind.KwStruct),
+                            "enum" => new Token(span, ToKind.KwEnum),
                             "return" => new Token(span, ToKind.KwReturn),
-                            _ => new Token(span, ToKind.Identifier),
+                            _ => new Token(span, ToKind.Name),
                         };
                     }
                     if (char.IsDigit(source[current]))
@@ -105,14 +122,21 @@
                         }
                         while (current < source.Lenght && char.IsDigit(source[current]));
 
-                        var span = Span();
-
-                        return new Token(span, ToKind.Number);
+                        return Token(ToKind.Number, 0);
                     }
                     break;
             }
 
-            return null;
+            return Token(ToKind.ERROR);
+        }
+
+        private Token Token(ToKind kind, int consume = 1)
+        {
+            if (current < source.Lenght)
+            {
+                current += consume;
+            }
+            return new Token(Span(), kind);
         }
 
         private Span Span()

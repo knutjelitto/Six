@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp
+﻿namespace SixComp
 {
     public enum ToKind
     {
-        Identifier,
+        EOF,
+        ERROR,
+
+        Name,
         Number,
         String,
 
         Dot,
         Semi,
         Colon,
+        Comma,
 
         LParen,
         RParent,
@@ -21,14 +21,28 @@ namespace SixComp
         LBrack,
         RBrack,
 
-        OpPlus,
-        OpMinus,
-        OpMul,
-        OpDiv,
+        Assign,
+        Bang,
+        Quest,
+        Caret,
+        Tilde,
+
+        Less,
+        Greater,
+
+        Plus,
+        Minus,
+        Asterisk,
+        Slash,
+        Percent,
 
         KwLet,
         KwVar,
         KwFunc,
+        KwClass,
+        KwStruct,
+        KwEnum,
+        KwCase,
         KwReturn,
     }
 }
