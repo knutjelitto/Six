@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class EnumDeclaration : Declaration
     {
-        public EnumDeclaration(Name name, GenericParameterList? parameters, DeclarationList declarations)
+        public EnumDeclaration(Name name, GenericParameterList parameters, DeclarationList declarations)
         {
             Name = name;
             Parameters = parameters;
@@ -12,13 +12,16 @@ namespace SixComp.ParseTree
         }
 
         public Name Name { get; }
-        public GenericParameterList? Parameters { get; }
-        public DeclarationList? Declarations { get; }
+        public GenericParameterList Parameters { get; }
+        public DeclarationList Declarations { get; }
 
         public override void Write(IWriter writer)
         {
             writer.WriteLine($"enum {Name}");
-            Declarations.Write(writer);
+            using (writer.Indent())
+            {
+                Declarations.Write(writer);
+            }
         }
     }
 }

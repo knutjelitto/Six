@@ -2,21 +2,8 @@
 
 namespace SixComp.Support
 {
-    public class ConsoleWriter : IWriter
+    public class ConsoleWriter : IndentWriter
     {
-        public void Write(string text)
-        {
-            Console.Write(text);
-        }
-
-        public void WriteLine(string text)
-        {
-            Console.WriteLine(text);
-        }
-
-        public void WriteLine()
-        {
-            Console.WriteLine();
-        }
+        public ConsoleWriter() : base(Console.Out) { }
     }
 }

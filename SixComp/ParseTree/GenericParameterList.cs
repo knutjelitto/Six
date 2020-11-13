@@ -7,5 +7,6 @@ namespace SixComp.ParseTree
     public class GenericParameterList : ItemList<GenericParameter>
     {
         public GenericParameterList(List<GenericParameter> items) : base(items) { }
+        public GenericParameterList() { }
     }
 }

@@ -13,6 +13,11 @@ namespace SixComp.ParseTree
             this.items = items;
         }
 
+        protected ItemList()
+            : this(new List<T>())
+        {
+        }
+
         public T this[int index] => items[index];
         public int Count => items.Count;
         public IEnumerator<T> GetEnumerator() => items.GetEnumerator();

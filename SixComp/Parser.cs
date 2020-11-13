@@ -125,7 +125,7 @@ namespace SixComp
         {
             Consume(ToKind.KwEnum);
             var name = ParseName();
-            var generics = Try(ToKind.Less, ParseGenericParameterClause);
+            var generics = TryList(ToKind.Less, ParseGenericParameterClause);
             Consume(ToKind.LBrace);
             var cases = ParseEnumCases();
             Consume(ToKind.RBrace);
@@ -257,6 +257,16 @@ namespace SixComp
                 return parse();
             }
             return null;
+        }
+
+        private T TryList<T>(ToKind start, Func<T> parse)
+            where T : class, new()
+        {
+            if (Current.Kind == start)
+            {
+                return parse();
+            }
+            return new T();
         }
 
         private TupleType ParseTupleType()
