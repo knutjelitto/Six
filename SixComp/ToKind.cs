@@ -1,5 +1,8 @@
-﻿namespace SixComp
+﻿using System;
+
+namespace SixComp
 {
+    [Flags]
     public enum ToKind
     {
         EOF,
@@ -10,6 +13,8 @@
         String,
 
         Dot,
+        DotDotDot,
+        DotDotLess,
         Semi,
         Colon,
         Comma,
@@ -21,7 +26,7 @@
         LBrack,
         RBrack,
 
-        Assign,
+        Equal,
         Bang,
         Quest,
         Caret,

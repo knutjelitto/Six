@@ -4,13 +4,13 @@ namespace SixComp.ParseTree
 {
     public class EnumCase : Declaration
     {
-        public EnumCase(Token name, TupleType? types)
+        public EnumCase(Name name, TupleType? types)
         {
             Name = name;
             Types = types;
         }
 
-        public Token Name { get; }
+        public Name Name { get; }
         public TupleType? Types { get; }
 
         public override void Write(IWriter writer)

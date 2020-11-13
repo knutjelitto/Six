@@ -8,6 +8,6 @@ namespace SixComp.Support
         void WriteLine(string text);
         void WriteLine();
 
-        IDisposable Indent();
+        IDisposable Indent(Action? before = null, Action? after = null);
     }
 }

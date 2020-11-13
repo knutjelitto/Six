@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class GenericParameter
     {
@@ -12,5 +8,10 @@ namespace SixComp.ParseTree
         }
 
         public Name Name { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
     }
 }

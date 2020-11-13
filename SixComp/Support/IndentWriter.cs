@@ -17,10 +17,15 @@ namespace SixComp.Support
         public TextWriter Writer { get; }
         public int Level { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public IDisposable Indent()
+        public IDisposable Indent(Action? before = null, Action? after = null)
         {
+            before?.Invoke();
             currentPrefix += prefix;
-            return new Disposable(() => currentPrefix = currentPrefix.Substring(0, currentPrefix.Length - prefix.Length));
+            return new Disposable(() =>
+            {
+                currentPrefix = currentPrefix.Substring(0, currentPrefix.Length - prefix.Length);
+                after?.Invoke();
+            });
         }
 
         public void Write(string text)

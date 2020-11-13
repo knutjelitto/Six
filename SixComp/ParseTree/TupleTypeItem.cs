@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class TupleTypeItem
     {
@@ -14,5 +10,14 @@ namespace SixComp.ParseTree
 
         public Name? Name { get; }
         public IType Type { get; }
+
+        public override string ToString()
+        {
+            if (Name is Name name)
+            {
+                return $"{name}: {Type}";
+            }
+            return $"{Type}";
+        }
     }
 }

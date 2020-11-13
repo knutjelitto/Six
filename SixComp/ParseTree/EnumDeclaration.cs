@@ -17,8 +17,8 @@ namespace SixComp.ParseTree
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"enum {Name}");
-            using (writer.Indent())
+            writer.WriteLine($"enum {Name}{Parameters}");
+            using (writer.Block())
             {
                 Declarations.Write(writer);
             }

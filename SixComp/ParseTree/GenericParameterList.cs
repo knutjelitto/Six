@@ -8,5 +8,14 @@ namespace SixComp.ParseTree
     {
         public GenericParameterList(List<GenericParameter> items) : base(items) { }
         public GenericParameterList() { }
+
+        public override string ToString()
+        {
+            if (Count > 0)
+            {
+                return $"<{ string.Join(", ", this) }>";
+            }
+            return string.Empty;
+        }
     }
 }

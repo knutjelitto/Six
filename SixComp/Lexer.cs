@@ -19,8 +19,12 @@
 
         public string Rest => source.Chars(new Span(source, current, source.Lenght));
 
+        public char Current => current < source.Lenght ? source[current] : '\0';
+        public char Next => current + 1 < source.Lenght ? source[current + 1] : '\0';
+        public char NextNext => current + 2 < source.Lenght ? source[current + 2] : '\0';
 
-        public Token Next()
+
+        public Token GetNext()
         {
             if (Done)
             {
@@ -43,6 +47,17 @@
             switch (source[current])
             {
                 case '.':
+                    if (Next == '.')
+                    {
+                        if (NextNext == '.')
+                        {
+                            return Token(ToKind.DotDotDot, 3);
+                        }
+                        else if (NextNext == '<')
+                        {
+                            return Token(ToKind.DotDotLess, 3);
+                        }
+                    }
                     return Token(ToKind.Dot);
                 case ';':
                     return Token(ToKind.Semi);
@@ -65,7 +80,7 @@
                     return Token(ToKind.RBrack);
 
                 case '=':
-                    return Token(ToKind.Assign);
+                    return Token(ToKind.Equal);
                 case '!':
                     return Token(ToKind.Bang);
                 case '?':
@@ -90,27 +105,27 @@
                 case '%':
                     return Token(ToKind.Percent);
                 default:
-                    if (char.IsLetter(source[current]))
+                    if (char.IsLetter(Current) || Current == '_')
                     {
                         do
                         {
                             current += 1;
                         }
-                        while (current < source.Lenght && char.IsLetterOrDigit(source[current]));
+                        while (char.IsLetterOrDigit(Current) || Current == '_');
 
                         var span = Span();
                         var text = span.ToString();
 
                         return text switch
                         {
-                            "let" => new Token(span, ToKind.KwLet),
-                            "var" => new Token(span, ToKind.KwVar),
-                            "func" => new Token(span, ToKind.KwFunc),
                             "case" => new Token(span, ToKind.KwCase),
                             "class" => new Token(span, ToKind.KwClass),
-                            "struct" => new Token(span, ToKind.KwStruct),
                             "enum" => new Token(span, ToKind.KwEnum),
+                            "func" => new Token(span, ToKind.KwFunc),
+                            "let" => new Token(span, ToKind.KwLet),
                             "return" => new Token(span, ToKind.KwReturn),
+                            "struct" => new Token(span, ToKind.KwStruct),
+                            "var" => new Token(span, ToKind.KwVar),
                             _ => new Token(span, ToKind.Name),
                         };
                     }

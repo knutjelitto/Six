@@ -6,6 +6,10 @@ namespace SixComp
 {
     internal class Program
     {
+        //private bool TRUE = true;
+        private DirectoryInfo WorkSpace;
+        private DirectoryInfo TempDir;
+
         static void Main(string[] args)
         {
             new Program().Test();
@@ -13,9 +17,20 @@ namespace SixComp
             Console.ReadKey(true);
         }
 
+        public Program()
+        {
+            WorkSpace = new DirectoryInfo("../../../..");
+            TempDir = new DirectoryInfo(Path.Combine(WorkSpace.FullName, "../Temp/Six"));
+            TempDir.Create();
+
+            Console.WriteLine($"workspace: {WorkSpace.FullName}");
+            Console.WriteLine($"temp     : {TempDir.FullName}");
+
+        }
+
         public void Test()
         {
-            var source = File.ReadAllText(@"./Samples/Test.six");
+            var source = File.ReadAllText(@"./Samples/Six.six");
             Test(source);
 #if false
             Test("11+12?12*13:13-14");
@@ -31,7 +46,7 @@ namespace SixComp
             var lexer = new Lexer(source);
             while (!lexer.Done)
             {
-                var token = lexer.Next(); ;
+                var token = lexer.GetNext(); ;
                 //Console.WriteLine($"{token.Kind}");
                 if (token.Kind == ToKind.ERROR)
                 {
@@ -60,7 +75,10 @@ namespace SixComp
                     Console.WriteLine($"can't continue parsing at {parser.Ahead(0)}");
                 }
 
-                tree.Write(new ConsoleWriter());
+                using (var writer = new FileWriter(Path.Combine(TempDir.FullName, "Six.tree")))
+                {
+                    tree.Write(writer);
+                }
             }
             catch (InvalidOperationException error)
             {

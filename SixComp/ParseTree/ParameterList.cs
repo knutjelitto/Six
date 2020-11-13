@@ -2,10 +2,10 @@
 
 namespace SixComp.ParseTree
 {
-    public class TypeList : ItemList<IType>
+    public class ParameterList : ItemList<Parameter>
     {
-        public TypeList(List<IType> items) : base(items) { }
-        public TypeList() { }
+        public ParameterList(List<Parameter> items) : base(items) { }
+        public ParameterList() { }
 
         public override string ToString()
         {

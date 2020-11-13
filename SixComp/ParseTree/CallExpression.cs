@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class CallExpression : Expression
     {
-        public CallExpression(Expression left, List<Expression> arguments)
+        public CallExpression(Expression left, ArgumentList arguments)
         {
             Left = left;
             Arguments = arguments;
         }
 
         public Expression Left { get; }
-        public List<Expression> Arguments { get; }
+        public ArgumentList Arguments { get; }
 
         public override string ToString()
         {

@@ -29,8 +29,6 @@ namespace SixComp
             prefix.Add(ToKind.Plus, (ParsePrefixOp, Precedence.Prefix));
             prefix.Add(ToKind.Bang, (ParsePrefixOp, Precedence.Prefix));
 
-            //infix.Add(ToKind.Quest, (ParsePostfixOp, Precedence.Postfix));
-
             infix.Add(ToKind.LParen, (ParseCall, Precedence.Call));
             infix.Add(ToKind.Quest, (ParseConditional, Precedence.Conditional));
 
@@ -77,7 +75,7 @@ namespace SixComp
                 case ToKind.KwVar:
                     break;
                 case ToKind.KwFunc:
-                    break;
+                    return ParseFuncDeclaration();
                 case ToKind.KwClass:
                     return ParseClassDeclaration();
                 case ToKind.KwStruct:
@@ -87,6 +85,14 @@ namespace SixComp
             }
 
             return null;
+        }
+
+        private FuncDeclaration ParseFuncDeclaration()
+        {
+            Consume(ToKind.KwFunc);
+            var name = ParseName();
+
+            return new FuncDeclaration(name);
         }
 
         private LetDeclaration ParseLetDeclaration()
@@ -103,22 +109,24 @@ namespace SixComp
         {
             Consume(ToKind.KwClass);
             var name = ParseName();
+            var generics = TryList(ToKind.Less, ParseGenericParameterClause);
             Consume(ToKind.LBrace);
             var declarations = ParseDeclarations();
             Consume(ToKind.RBrace);
 
-            return new ClassDeclaration(name, declarations);
+            return new ClassDeclaration(name, generics, declarations);
         }
 
         private StructDeclaration ParseStructDeclaration()
         {
             Consume(ToKind.KwStruct);
             var name = ParseName();
+            var generics = TryList(ToKind.Less, ParseGenericParameterClause);
             Consume(ToKind.LBrace);
             var declarations = ParseDeclarations();
             Consume(ToKind.RBrace);
 
-            return new StructDeclaration(name, declarations);
+            return new StructDeclaration(name, generics, declarations);
         }
 
         private EnumDeclaration ParseEnumDeclaration()
@@ -154,7 +162,7 @@ namespace SixComp
 
         private EnumCase ParseEnumCase()
         {
-            var name = Consume(ToKind.Name);
+            var name = ParseName();
             var types = Try(ToKind.LParen, ParseTupleType);
 
             return new EnumCase(name, types);
@@ -231,17 +239,17 @@ namespace SixComp
             return new TypeIdentifier(names);
         }
 
-        private TypeName ParseTypeName()
+        public TypeName ParseTypeName()
         {
             var name = ParseName();
-            var arguments = Try(ToKind.Less, ParseGenericArgumentClause);
+            var arguments = TryList(ToKind.Less, ParseGenericArgumentClause);
 
             return new TypeName(name, arguments);
         }
 
         private Expression? TryParseInitializer()
         {
-            if (Current.Kind == ToKind.Assign)
+            if (Current.Kind == ToKind.Equal)
             {
                 Consume();
                 return ParseExpression();
@@ -259,7 +267,7 @@ namespace SixComp
             return null;
         }
 
-        private T TryList<T>(ToKind start, Func<T> parse)
+        public T TryList<T>(ToKind start, Func<T> parse)
             where T : class, new()
         {
             if (Current.Kind == start)
@@ -305,25 +313,26 @@ namespace SixComp
         }
 
         public Token Current => Ahead(0);
+        public Token Next => Ahead(1);
 
         public Token Ahead(int offset)
         {
             while (tokens.Count <= current + offset)
             {
-                tokens.Add(Lexer.Next());
+                tokens.Add(Lexer.GetNext());
             }
 
             return tokens[current + offset];
         }
 
-        private Token Consume()
+        public Token Consume()
         {
             var token = Ahead(0);
             current += 1;
             return token;
         }
 
-        private Token Consume(ToKind kind)
+        public Token Consume(ToKind kind)
         {
             var token = Ahead(0);
             if (token.Kind == kind)
@@ -366,7 +375,6 @@ namespace SixComp
                 else
                 {
                     left = infixFun.parser(left, Consume(), infixFun.precedence);
-                    //left = infix.Parse(this, left, Consume());
                 }
             }
 
@@ -422,96 +430,64 @@ namespace SixComp
         {
             Debug.Assert(token.Kind == ToKind.LParen);
 
-            var args = new List<Expression>();
+            var arguments = ParseArgumentList();
+
+            Consume(ToKind.RParent);
+
+            return new CallExpression(left, arguments);
+        }
+
+        private Argument ParseArgument()
+        {
+            Name? name = null;
+
+            if (Current.Kind == ToKind.Name && Next.Kind == ToKind.Colon)
+            {
+                name = ParseName();
+                Consume(ToKind.Colon);
+            }
+
+            var expr = ParseExpression();
+
+            return new Argument(name, expr);
+        }
+
+        private ArgumentList ParseArgumentList()
+        {
+            var arguments = new List<Argument>();
+
+            while (Current.Kind != ToKind.RParent)
+            {
+                var argument = ParseArgument();
+                arguments.Add(argument);
+
+                if (!Match(ToKind.Comma))
+                {
+                    break;
+                }
+            }
+
+            return new ArgumentList(arguments);
+        }
+
+        private ExpressionList ParseExpressionList()
+        {
+            Consume(ToKind.LParen);
+
+            var exprs = new List<Expression>();
 
             if (!Match(ToKind.RParent))
             {
                 do
                 {
-                    args.Add(ParseExpression());
+                    exprs.Add(ParseExpression());
                 }
                 while (Match(ToKind.Colon));
                 Consume(ToKind.RParent);
 
             }
 
-            return new CallExpression(left, args);
-        }
-
-
-        private abstract class Parselet
-        {
-        }
-
-        private abstract class InfixParselet : Parselet
-        {
-            public abstract Expression Parse(Parser parser, Expression left, Token token);
-            public abstract int Prec { get; }
-        }
-
-        private class InfixOpParselet : InfixParselet
-        {
-            public InfixOpParselet(int precedence, bool isRight)
-            {
-                Prec = precedence;
-                IsRight = isRight;
-            }
-
-            public override int Prec { get; }
-            public bool IsRight { get; }
-
-            public override Expression Parse(Parser parser, Expression left, Token token)
-            {
-                var right = parser.ParseExpression(Prec - (IsRight ? 1 : 0));
-                return new InfixExpression(left, token, right);
-            }
-        }
-
-        private class CallParselet : InfixParselet
-        {
-            public override int Prec => Precedence.Call;
-
-            public override Expression Parse(Parser parser, Expression left, Token token)
-            {
-                var args = new List<Expression>();
-
-                if (!parser.Match(ToKind.RParent))
-                {
-                    do
-                    {
-                        args.Add(parser.ParseExpression());
-                    }
-                    while (parser.Match(ToKind.Colon));
-                    parser.Consume(ToKind.RParent);
-
-                }
-
-                return new CallExpression(left, args);
-            }
-        }
-
-        private class PostfixParselet : InfixParselet
-        {
-            public override int Prec => Precedence.Postfix;
-
-            public override Expression Parse(Parser parser, Expression left, Token token)
-            {
-                return new PostfixExpression(left, token);
-            }
-        }
-
-        private class ConditionalParselet : InfixParselet
-        {
-            public override int Prec => Precedence.Conditional;
-
-            public override Expression Parse(Parser parser, Expression left, Token token)
-            {
-                var ifTrue = parser.ParseExpression();
-                parser.Consume(ToKind.Colon);
-                var iffalse = parser.ParseExpression(Prec - 1);
-
-                return new ConditionalExpression(left, ifTrue, iffalse);
-            }
+            return new ExpressionList(exprs);
         }
     }
 }
