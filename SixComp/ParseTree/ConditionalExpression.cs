@@ -4,18 +4,18 @@ using System.Text;
 
 namespace SixComp.ParseTree
 {
-    public class ConditionalExpression : Expression
+    public class ConditionalExpression : AnyExpression
     {
-        public ConditionalExpression(Expression condition, Expression ifTrue, Expression ifFalse)
+        public ConditionalExpression(AnyExpression condition, AnyExpression ifTrue, AnyExpression ifFalse)
         {
             Condition = condition;
             IfTrue = ifTrue;
             IfFalse = ifFalse;
         }
 
-        public Expression Condition { get; }
-        public Expression IfTrue { get; }
-        public Expression IfFalse { get; }
+        public AnyExpression Condition { get; }
+        public AnyExpression IfTrue { get; }
+        public AnyExpression IfFalse { get; }
 
         public override string ToString()
         {

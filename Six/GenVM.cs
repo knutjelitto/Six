@@ -8,7 +8,7 @@ namespace Six
     {
         private class OP : Named
         {
-            public OP(String name, int bytes, int number)
+            public OP(string name, int bytes, int number)
                 : base(name)
             {
                 Bytes = bytes;
@@ -19,7 +19,7 @@ namespace Six
                 Emit = $"Emit{Name}";
             }
 
-            public Int32 Bytes { get; }
+            public int Bytes { get; }
             public int Number { get; }
             public string Symbol { get; }
             public string Exec { get; }
@@ -28,14 +28,14 @@ namespace Six
 
         private class Named : Snippet
         {
-            public String Name { get; }
+            public string Name { get; }
 
             public Named(string name)
             {
                 Name = name;
             }
 
-            public override String ToString()
+            public override string ToString()
             {
                 return $"{Name} ({Lines.Count})";
             }

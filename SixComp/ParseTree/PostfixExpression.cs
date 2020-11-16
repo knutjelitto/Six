@@ -1,14 +1,14 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class PostfixExpression : Expression
+    public class PostfixExpression : AnyExpression
     {
-        public PostfixExpression(Expression operand, Token op)
+        public PostfixExpression(AnyExpression operand, Token op)
         {
             Op = op;
             Operand = operand;
         }
 
-        public Expression Operand { get; }
+        public AnyExpression Operand { get; }
         public Token Op { get; }
     }
 }

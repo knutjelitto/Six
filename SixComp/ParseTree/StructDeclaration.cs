@@ -2,26 +2,21 @@
 
 namespace SixComp.ParseTree
 {
-    public class StructDeclaration : Declaration
+    public class StructDeclaration : StructureType
     {
-        public StructDeclaration(Name name, GenericParameterList parameters, DeclarationList declarations)
+        public StructDeclaration((Name name, GenericParameterList parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
+            : base(args)
         {
-            Name = name;
-            Parameters = parameters;
-            Declarations = declarations;
         }
 
-        public Name Name { get; }
-        public GenericParameterList Parameters { get; }
-        public DeclarationList Declarations { get; }
+        public static StructDeclaration Parse(Parser parser)
+        {
+            return new StructDeclaration(Parse(parser, ToKind.KwStruct));
+        }
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"struct {Name}{Parameters}");
-            using (writer.Block())
-            {
-                Declarations.Write(writer);
-            }
+            Write(writer, "struct");
         }
     }
 }

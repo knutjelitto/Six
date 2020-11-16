@@ -23,8 +23,8 @@ namespace SixComp
         RParent,
         LBrace,
         RBrace,
-        LBrack,
-        RBrack,
+        LBracket,
+        RBracket,
 
         Equal,
         Bang,
@@ -33,7 +33,10 @@ namespace SixComp
         Tilde,
 
         Less,
+        LessEqual,
         Greater,
+        GreaterEqual,
+        MinusGreater,
 
         Plus,
         Minus,
@@ -41,13 +44,20 @@ namespace SixComp
         Slash,
         Percent,
 
-        KwLet,
-        KwVar,
-        KwFunc,
-        KwClass,
-        KwStruct,
-        KwEnum,
+        KwBreak,
         KwCase,
+        KwClass,
+        KwContinue,
+        KwElse,
+        KwEnum,
+        KwFunc,
+        KwIf,
+        KwInit,
+        KwLet,
+        KwProtocol,
+        KwSelf,
+        KwStruct,
         KwReturn,
+        KwVar,
     }
 }

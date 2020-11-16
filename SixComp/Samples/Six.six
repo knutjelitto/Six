@@ -1,4 +1,21 @@
-﻿func fac(_ n: int) -> int
+﻿protocol Collection
+{
+}
+
+struct Source
+{
+    let name: string
+    let content: string
+
+    init(_ name: string, _ content: string)
+    {
+        self.name = name
+        self.content = content
+    }
+}
+
+
+func fac(_ n: int) -> int
 {
     if n <= 0
     {
@@ -6,6 +23,11 @@
     }
     else
     {
-        return n * fac(n - 1)
+        return n * fac(n - 1 * 12)
     }
+}
+
+func test()
+{
+    print("Hello Six");
 }

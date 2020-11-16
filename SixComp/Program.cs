@@ -13,6 +13,7 @@ namespace SixComp
         static void Main(string[] args)
         {
             new Program().Test();
+            //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
         }
@@ -47,7 +48,7 @@ namespace SixComp
             while (!lexer.Done)
             {
                 var token = lexer.GetNext(); ;
-                //Console.WriteLine($"{token.Kind}");
+                //Console.WriteLine($"{token.Kind} `{token.Span}`");
                 if (token.Kind == ToKind.ERROR)
                 {
                     break;

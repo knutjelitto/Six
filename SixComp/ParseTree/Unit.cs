@@ -4,6 +4,7 @@ namespace SixComp.ParseTree
 {
     public class Unit : IWriteable
     {
+
         public Unit(DeclarationList declarations)
         {
             Declarations = declarations;
@@ -13,7 +14,24 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer)
         {
-            Declarations.Write(writer);
+            bool more = false;
+
+            foreach (var declaration in Declarations)
+            {
+                if (more)
+                {
+                    writer.WriteLine();
+                }
+                declaration.Write(writer);
+                more = true;
+            }
+        }
+
+        public static Unit Parse(Parser parser)
+        {
+            var declarations = DeclarationList.Parse(parser);
+
+            return new Unit(declarations);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, IType type)
+        public Parameter(Name? label, Name name, AnyType type)
         {
             Label = label;
             Name = name;
@@ -13,7 +11,7 @@ namespace SixComp.ParseTree
 
         public Name? Label { get; }
         public Name Name { get; }
-        public Type Type { get; }
+        public AnyType Type { get; }
 
         public static Parameter Parse(Parser parser)
         {
@@ -27,6 +25,15 @@ namespace SixComp.ParseTree
             var name = Name.Parse(parser);
 
             parser.Consume(ToKind.Colon);
+            var type = AnyType.Parse(parser);
+
+            return new Parameter(label, name, type);
+        }
+
+        public override string ToString()
+        {
+            var label = Label == null ? string.Empty : $"{Label} ";
+            return $"{label}{Name}: {Type}";
         }
     }
 }

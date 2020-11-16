@@ -16,10 +16,14 @@ namespace SixComp.ParseTree
         protected ItemList()
             : this(new List<T>())
         {
+            Missing = true;
         }
 
         public T this[int index] => items[index];
         public int Count => items.Count;
+
+        public bool Missing { get; }
+
         public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();

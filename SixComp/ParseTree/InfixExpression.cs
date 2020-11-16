@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class InfixExpression : Expression
+    public class InfixExpression : AnyExpression
     {
-        public InfixExpression(Expression left, Token op, Expression right)
+        public InfixExpression(AnyExpression left, Token op, AnyExpression right)
         {
             Left = left;
             Op = op;
             Right = right;
         }
 
-        public Expression Left { get; }
+        public AnyExpression Left { get; }
         public Token Op { get; }
-        public Expression Right { get; }
+        public AnyExpression Right { get; }
 
         public override string ToString()
         {
-            return $"(_{Op.Span}_ {Left} {Right})";
+            return $"({Left} {Op} {Right})";
         }
     }
 }

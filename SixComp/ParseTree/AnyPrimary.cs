@@ -1,0 +1,25 @@
+﻿using System;
+
+namespace SixComp.ParseTree
+{
+    public interface AnyPrimary : AnyExpression
+    {
+        public static new AnyPrimary Parse(Parser parser)
+        {
+            switch (parser.Current.Kind)
+            {
+                case ToKind.Number:
+                    return NumberLiteralExpression.Parse(parser);
+                case ToKind.String:
+                    return StringLiteralExpression.Parse(parser);
+                case ToKind.Name:
+                    return NameExpression.Parse(parser);
+                case ToKind.KwSelf:
+                    return SelfExpression.Parse(parser);
+            }
+
+
+            throw new InvalidOperationException($"couldn't continue on {parser.Current.Kind}");
+        }
+    }
+}

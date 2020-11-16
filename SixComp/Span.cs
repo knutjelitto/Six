@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp
+﻿namespace SixComp
 {
     public struct Span
     {
@@ -18,6 +14,11 @@ namespace SixComp
         }
 
         public int Length => End - Start;
+
+        public string GetLine()
+        {
+            return Source.LineFor(this);
+        }
 
         public override string ToString()
         {

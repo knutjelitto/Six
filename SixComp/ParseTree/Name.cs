@@ -16,7 +16,7 @@
 
         public override string ToString()
         {
-            return Token.Span.ToString();
+            return $"{Token}";
         }
     }
 }

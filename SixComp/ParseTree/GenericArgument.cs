@@ -2,16 +2,16 @@
 {
     public class GenericArgument
     {
-        public GenericArgument(IType type)
+        public GenericArgument(AnyType type)
         {
             Type = type;
         }
 
-        public IType Type { get; }
+        public AnyType Type { get; }
 
         public static GenericArgument Parse(Parser parser)
         {
-            var type = TypeParser.Parse(parser);
+            var type = AnyType.Parse(parser);
 
             return new GenericArgument(type);
         }

@@ -2,26 +2,21 @@
 
 namespace SixComp.ParseTree
 {
-    public class EnumDeclaration : Declaration
+    public class EnumDeclaration : StructureType
     {
-        public EnumDeclaration(Name name, GenericParameterList parameters, DeclarationList declarations)
+        public EnumDeclaration((Name name, GenericParameterList parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
+            : base(args)
         {
-            Name = name;
-            Parameters = parameters;
-            Declarations = declarations;
         }
 
-        public Name Name { get; }
-        public GenericParameterList Parameters { get; }
-        public DeclarationList Declarations { get; }
+        public static EnumDeclaration Parse(Parser parser)
+        {
+            return new EnumDeclaration(Parse(parser, ToKind.KwEnum));
+        }
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"enum {Name}{Parameters}");
-            using (writer.Block())
-            {
-                Declarations.Write(writer);
-            }
+            Write(writer, "enum");
         }
     }
 }

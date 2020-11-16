@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
@@ -9,13 +7,23 @@ namespace SixComp.ParseTree
         public GenericParameterList(List<GenericParameter> items) : base(items) { }
         public GenericParameterList() { }
 
+        public static GenericParameterList Parse(Parser parser)
+        {
+            List<GenericParameter> names = new List<GenericParameter>();
+
+            do
+            {
+                var parameter = GenericParameter.Parse(parser);
+                names.Add(parameter);
+            }
+            while (parser.Match(ToKind.Comma));
+
+            return new GenericParameterList(names);
+        }
+
         public override string ToString()
         {
-            if (Count > 0)
-            {
-                return $"<{ string.Join(", ", this) }>";
-            }
-            return string.Empty;
+            return string.Join(", ", this);
         }
     }
 }

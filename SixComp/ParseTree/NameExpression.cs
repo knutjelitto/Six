@@ -1,21 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class NameExpression : Expression
+    public class NameExpression : AnyPrimary
     {
-        public NameExpression(Token name)
+        public NameExpression(Name name, GenericArgumentClause arguments)
         {
             Name = name;
+            Arguments = arguments;
         }
 
-        public Token Name { get; }
+        public Name Name { get; }
+        public GenericArgumentClause Arguments { get; }
+
+        public static NameExpression Parse(Parser parser)
+        {
+            var name = Name.Parse(parser);
+            var arguments = parser.TryList(ToKind.Less, GenericArgumentClause.Parse);
+
+            return new NameExpression(name, arguments);
+        }
 
         public override string ToString()
         {
-            return $"(id {Name.Span})";
+            return $"{Name}{Arguments}";
         }
     }
 }

@@ -18,5 +18,15 @@
         {
             return content.Substring(span.Start, span.Length);
         }
+
+        public string LineFor(Span span)
+        {
+            var start = content.LastIndexOfAny(new char[] { '\n', '\r' }, span.Start);
+            start = start < 0 ? 0 : start;
+            var end = content.IndexOfAny(new char[] { '\n', '\r' }, span.End);
+            end = end < 0 ? content.Length : end;
+
+            return content.Substring(start, end - start);
+        }
     }
 }

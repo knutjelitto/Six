@@ -2,6 +2,6 @@
 {
     public interface IWriteable
     {
-        void Write(IWriter writer);
+        void Write(IWriter writer) { writer.WriteLine(this.ToString() ?? "<<<huh?>>>"); }
     }
 }

@@ -1,17 +1,16 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class NumberLiteralExpression : Expression
+    public sealed class NumberLiteralExpression : AnyLiteralExpression
     {
-        public NumberLiteralExpression(Token number)
+        public NumberLiteralExpression(Token token) : base(token)
         {
-            Number = number;
         }
 
-        public Token Number { get; }
-
-        public override string ToString()
+        public static NumberLiteralExpression Parse(Parser parser)
         {
-            return $"(# {Number.Span})";
+            var token = parser.Consume(ToKind.Number);
+
+            return new NumberLiteralExpression(token);
         }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace SixComp.ParseTree
 {
-    public class ExpressionList : ItemList<Expression>
+    public class ExpressionList : ItemList<AnyExpression>
     {
-        public ExpressionList(List<Expression> items) : base(items) { }
+        public ExpressionList(List<AnyExpression> items) : base(items) { }
         public ExpressionList() { }
     }
 }

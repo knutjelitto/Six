@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp
+﻿namespace SixComp
 {
     public struct Token
     {
-        public Token(Span span, ToKind kind)
+        public Token(Span span, ToKind kind, bool newLine)
         {
             Span = span;
             Kind = kind;
+            NewLine = newLine;
         }
 
         public Span Span { get; }
         public ToKind Kind { get; }
+        public bool NewLine { get; }
 
         public override bool Equals(object? obj)
         {
@@ -27,7 +25,7 @@ namespace SixComp
 
         public override string ToString()
         {
-            return $"{Kind}('{Span}')";
+            return $"{Span}";
         }
     }
 }

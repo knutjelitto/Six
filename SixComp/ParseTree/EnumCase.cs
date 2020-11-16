@@ -1,23 +1,29 @@
 ﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
-    public class EnumCase : Declaration
+    public class EnumCase : AnyDeclaration
     {
-        public EnumCase(Name name, TupleType? types)
+        public EnumCase(EnumCaseItemList caseItems)
         {
-            Name = name;
-            Types = types;
+            CaseItems = caseItems;
         }
 
-        public Name Name { get; }
-        public TupleType? Types { get; }
+        public EnumCaseItemList CaseItems { get; }
 
-        public override void Write(IWriter writer)
+        public static EnumCase Parse(Parser parser)
         {
-            var types = Types?.ToString() ?? string.Empty;
+            parser.Consume(ToKind.KwCase);
 
-            writer.WriteLine($"case {Name}{types}");
+            var caseItems = EnumCaseItemList.Parse(parser);
+
+            return new EnumCase(caseItems);
+        }
+
+        public void Write(IWriter writer)
+        {
+            throw new NotImplementedException();
         }
     }
 }
