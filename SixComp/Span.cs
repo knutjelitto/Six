@@ -1,4 +1,6 @@
-﻿namespace SixComp
+﻿using SixComp.Support;
+
+namespace SixComp
 {
     public struct Span
     {

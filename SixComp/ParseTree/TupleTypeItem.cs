@@ -28,11 +28,8 @@
 
         public override string ToString()
         {
-            if (Name is Name name)
-            {
-                return $"{name}: {Type}";
-            }
-            return $"{Type}";
+            var name = Name == null ? string.Empty : $": {Name}";
+            return $"{name}{Type}";
         }
     }
 }

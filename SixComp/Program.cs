@@ -31,24 +31,23 @@ namespace SixComp
 
         public void Test()
         {
-            var source = File.ReadAllText(@"./Samples/Six.six");
-            Test(source);
 #if false
-            Test("11+12?12*13:13-14");
-            Test("+++11");
-            Test("+11+-12*13");
-            Test("func fib(): int { return 12 }");
+            var file = @"./Source/Package.swift";
 #endif
+            var file = @"./Source/Six.swift";
+            var text = File.ReadAllText(file);
+            Test(new Source(file, text));
         }
 
-        public void Test(string text)
+        public void Test(Source source)
         {
-            var source = new Source("<intern>", text);
+            var index = new SourceIndex(source);
             var lexer = new Lexer(source);
             while (!lexer.Done)
             {
-                var token = lexer.GetNext(); ;
-                //Console.WriteLine($"{token.Kind} `{token.Span}`");
+                var token = lexer.GetNext();
+                var line = index.GetLine(token.Span.Start);
+                Console.WriteLine($"@({line.lineNumber},{line.columnNumber}) {token.Kind} [{token.Span.Start}..<{token.Span.End}]`{token.Span}` on line `{line.line}`");
                 if (token.Kind == ToKind.ERROR)
                 {
                     break;
@@ -66,17 +65,25 @@ namespace SixComp
             try
             {
                 Console.WriteLine($"parsing \"\"\"");
-                Console.Write(text);
+                Console.Write(source.Content);
                 Console.WriteLine("\"\"\"");
 
                 var tree = parser.Parse();
 
-                if (parser.Ahead(0).Kind != ToKind.EOF)
+                if (parser.Current.Kind != ToKind.EOF)
                 {
-                    Console.WriteLine($"can't continue parsing at {parser.Ahead(0)}");
+                    Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
+                    var lineinfo = source.Index.GetLine(parser.Current.Span.Start);
+                    Console.WriteLine($"    --> {source.Name}[{lineinfo.lineNumber},{lineinfo.columnNumber}]");
+                    Console.WriteLine($"     |");
+                    Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
+                    var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
+                    Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber-1)}{arrow}");
                 }
 
-                using (var writer = new FileWriter(Path.Combine(TempDir.FullName, "Six.tree")))
+                var treeFile = Path.Combine(TempDir.FullName, Path.ChangeExtension(source.Name, ".tree"));
+                Directory.CreateDirectory(Path.GetDirectoryName(treeFile));
+                using (var writer = new FileWriter(treeFile))
                 {
                     tree.Write(writer);
                 }
@@ -84,6 +91,13 @@ namespace SixComp
             catch (InvalidOperationException error)
             {
                 Console.WriteLine($"error: {error.Message}");
+                Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
+                var lineinfo = source.Index.GetLine(parser.Current.Span.Start);
+                Console.WriteLine($"    --> {source.Name}[{lineinfo.lineNumber},{lineinfo.columnNumber}]");
+                Console.WriteLine($"     |");
+                Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
+                var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
+                Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber - 1)}{arrow}");
             }
         }
     }

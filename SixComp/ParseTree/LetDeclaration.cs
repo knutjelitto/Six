@@ -4,34 +4,25 @@ namespace SixComp.ParseTree
 {
     public class LetDeclaration : AnyDeclaration
     {
-        public LetDeclaration(Name name, AnyType? type, AnyExpression? initializer)
+        public LetDeclaration(PatternInitializerList initializers)
         {
-            Name = name;
-            Type = type;
-            Initializer = initializer;
+            Initializers = initializers;
         }
 
-        public Name Name { get; }
-        public AnyType? Type { get; }
-        public AnyExpression? Initializer { get; }
+        public PatternInitializerList Initializers { get; }
 
         public static LetDeclaration Parse(Parser parser)
         {
             parser.Consume(ToKind.KwLet);
-            var name = Name.Parse(parser);
-            var type = parser.TryMatch(ToKind.Colon, AnyType.Parse);
-            var init = parser.TryMatch(ToKind.Equal, AnyExpression.Parse);
 
-            return new LetDeclaration(name, type, init);
+            var initializers = PatternInitializerList.Parse(parser);
+
+            return new LetDeclaration(initializers);
         }
 
         public void Write(IWriter writer)
         {
-            var type = Type == null ? string.Empty : $": {Type}";
-            var init = Initializer == null ? string.Empty : $" = {Initializer}";
-
-            writer.Write($"let {Name}{type}{init}");
-            writer.WriteLine();
+            writer.WriteLine($"let {Initializers}");
         }
     }
 }

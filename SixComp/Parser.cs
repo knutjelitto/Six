@@ -54,6 +54,16 @@ namespace SixComp
             return Unit.Parse(this);
         }
 
+        public bool IsOperator(ToKind kind)
+        {
+            return prefix.ContainsKey(kind) || infix.ContainsKey(kind);
+        }
+
+        public bool IsOperator()
+        {
+            return IsOperator(Current.Kind);
+        }
+
         public T? Try<T>(ToKind start, Func<Parser, T> parse)
             where T : class
         {

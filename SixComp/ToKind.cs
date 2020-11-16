@@ -52,12 +52,14 @@ namespace SixComp
         KwEnum,
         KwFunc,
         KwIf,
+        KwImport,
         KwInit,
         KwLet,
         KwProtocol,
+        KwReturn,
         KwSelf,
         KwStruct,
-        KwReturn,
+        KwTypealias,
         KwVar,
     }
 }

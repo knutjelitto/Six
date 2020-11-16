@@ -11,7 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Samples\Six.six">
+    <None Update="Source\Package.swift">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Source\Six.swift">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

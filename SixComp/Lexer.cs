@@ -1,4 +1,7 @@
-﻿namespace SixComp
+﻿using SixComp.Support;
+using System;
+
+namespace SixComp
 {
     public class Lexer
     {
@@ -17,11 +20,12 @@
 
         public bool Done { get; private set; } = false;
 
-        public string Rest => source.Chars(new Span(source, current, source.Lenght));
+        public string Rest => source.Chars(new Span(source, current, source.Length));
 
-        public char Current => current < source.Lenght ? source[current] : '\0';
-        public char Next => current + 1 < source.Lenght ? source[current + 1] : '\0';
-        public char NextNext => current + 2 < source.Lenght ? source[current + 2] : '\0';
+        public char Current => current < source.Length ? source[current] : '\0';
+        public char Next => current + 1 < source.Length ? source[current + 1] : '\0';
+        public char NextNext => current + 2 < source.Length ? source[current + 2] : '\0';
+        public bool More => current < source.Length;
 
         private bool newlineBefore;
 
@@ -33,21 +37,37 @@
             }
 
             newlineBefore = false;
-            while (char.IsWhiteSpace(Current))
+            do
             {
-                newlineBefore = newlineBefore || source[current] == '\n';
-                current += 1;
+                while (char.IsWhiteSpace(Current))
+                {
+                    newlineBefore = newlineBefore || source[current] == '\n';
+                    current += 1;
+                }
+                if (Current == '/')
+                {
+                    if (Next == '/')
+                    {
+                        SkipLineComment();
+                    }
+                    else if (Next == '*')
+                    {
+                        SkipMultilineComment();
+                    }
+                }
             }
+            while (char.IsWhiteSpace(Current));
 
             start = current;
 
-            if (current == source.Lenght)
+            if (current == source.Length)
             {
                 Done = true;
                 return Token(ToKind.EOF);
             }
 
-            switch (source[current])
+
+            switch (Current)
             {
                 case '.':
                     if (Next == '.')
@@ -152,12 +172,14 @@
                             "enum" => Token(ToKind.KwEnum, 0),
                             "func" => Token(ToKind.KwFunc, 0),
                             "if" => Token(ToKind.KwIf, 0),
+                            "import" => Token(ToKind.KwImport, 0),
                             "init" => Token(ToKind.KwInit, 0),
                             "let" => Token(ToKind.KwLet, 0),
                             "protocol" => Token(ToKind.KwProtocol, 0),
                             "return" => Token(ToKind.KwReturn, 0),
                             "self" => Token(ToKind.KwSelf, 0),
                             "struct" => Token(ToKind.KwStruct, 0),
+                            "typealias" => Token(ToKind.KwTypealias, 0),
                             "var" => Token(ToKind.KwVar, 0),
                             _ => Token(ToKind.Name, 0),
                         };
@@ -168,7 +190,7 @@
                         {
                             current += 1;
                         }
-                        while (current < source.Lenght && char.IsDigit(source[current]));
+                        while (current < source.Length && char.IsDigit(source[current]));
 
                         return Token(ToKind.Number, 0);
                     }
@@ -178,12 +200,39 @@
             return Token(ToKind.ERROR);
         }
 
+        private void SkipLineComment()
+        {
+            current += 2;
+            while (More && Current != '\n')
+            {
+                current += 1;
+            }
+        }
+
+        private void SkipMultilineComment()
+        {
+            current += 2;
+            while (More)
+            {
+                while (More && Current != '*')
+                {
+                    current += 1;
+                }
+                while (Current == '*')
+                {
+                    current += 1;
+                }
+                if (Current == '/')
+                {
+                    current += 1;
+                    break;
+                }
+            }
+        }
+
         private Token Token(ToKind kind, int consume = 1)
         {
-            if (current < source.Lenght)
-            {
-                current += consume;
-            }
+            current = Math.Min(source.Length, current + consume);
             return new Token(Span(), kind, newlineBefore);
         }
 

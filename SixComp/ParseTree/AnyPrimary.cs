@@ -16,6 +16,10 @@ namespace SixComp.ParseTree
                     return NameExpression.Parse(parser);
                 case ToKind.KwSelf:
                     return SelfExpression.Parse(parser);
+                case ToKind.LBracket:
+                    return ArrayLiteral.Parse(parser);
+                case ToKind.Dot:
+                    return ImplicitMemberExpression.Parse(parser);
             }
 
 

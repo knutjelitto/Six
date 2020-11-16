@@ -24,6 +24,8 @@ namespace SixComp.ParseTree
                     return EnumCase.Parse(parser);
                 case ToKind.KwInit:
                     return InitializerDeclaration.Parse(parser);
+                case ToKind.KwImport:
+                    return ImportDeclaration.Parse(parser);
             }
 
             return null;
