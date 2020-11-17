@@ -95,14 +95,14 @@ namespace SixComp
 
                 var tree = parser.Parse();
 
-                if (parser.Current.Kind != ToKind.EOF)
+                if (parser.Current != ToKind.EOF)
                 {
                     Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
-                    var lineinfo = source.Index.GetLine(parser.Current.Span.Start);
+                    var lineinfo = source.Index.GetLine(parser.CurrentToken.Span.Start);
                     Console.WriteLine($"    --> {source.Name}[{lineinfo.lineNumber},{lineinfo.columnNumber}]");
                     Console.WriteLine($"     |");
                     Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
-                    var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
+                    var arrow = parser.CurrentToken.Span.Length > 1 ? $"^{new string('-', parser.CurrentToken.Span.Length - 2)}^" : "^";
                     Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber-1)}{arrow}");
 
                     return false;
@@ -119,11 +119,11 @@ namespace SixComp
             {
                 Console.WriteLine($"error: {error.Message}");
                 Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
-                var lineinfo = source.Index.GetLine(parser.Current.Span.Start);
+                var lineinfo = source.Index.GetLine(parser.CurrentToken.Span.Start);
                 Console.WriteLine($"    --> {source.Name}[{lineinfo.lineNumber},{lineinfo.columnNumber}]");
                 Console.WriteLine($"     |");
                 Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
-                var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
+                var arrow = parser.CurrentToken.Span.Length > 1 ? $"^{new string('-', parser.CurrentToken.Span.Length - 2)}^" : "^";
                 Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber - 1)}{arrow}");
 
                 return false;

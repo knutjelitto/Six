@@ -18,7 +18,7 @@ namespace SixComp.ParseTree
             parser.Consume(ToKind.KwImport);
 
             var kind = (ImportKind?)null;
-            switch (parser.Current.Kind)
+            switch (parser.Current)
             {
                 case ToKind.KwTypealias:
                 case ToKind.KwStruct:

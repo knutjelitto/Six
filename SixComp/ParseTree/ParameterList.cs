@@ -9,11 +9,11 @@ namespace SixComp.ParseTree
 
         public static ParameterList Parse(Parser parser)
         {
-            parser.Consume(ToKind.LParen);
+            parser.Consume(ToKind.LParent);
 
             var parameters = new List<Parameter>();
 
-            while (parser.Current.Kind != ToKind.RParent)
+            while (parser.Current != ToKind.RParent)
             {
                 var parameter = Parameter.Parse(parser);
 

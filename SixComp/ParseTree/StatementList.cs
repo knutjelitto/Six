@@ -12,13 +12,13 @@ namespace SixComp.ParseTree
         {
             var statements = new List<AnyStatement>();
 
-            while (!follow.Contains(parser.Current.Kind))
+            while (!follow.Contains(parser.Current))
             {
                 var statement = AnyStatement.Parse(parser);
 
                 statements.Add(statement);
 
-                while (parser.Current.Kind == ToKind.Semi)
+                while (parser.Current == ToKind.Semi)
                 {
                     parser.ConsumeAny();
                 }

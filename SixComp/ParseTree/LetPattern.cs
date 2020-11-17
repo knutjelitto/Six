@@ -17,5 +17,10 @@
 
             return new LetPattern(pattern);
         }
+
+        public override string ToString()
+        {
+            return $"let {Pattern}";
+        }
     }
 }

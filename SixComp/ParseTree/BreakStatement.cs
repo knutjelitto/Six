@@ -15,7 +15,7 @@
 
             var label = (Name?)null;
 
-            if (parser.Current.Kind == ToKind.Name && !parser.Current.NewLine)
+            if (parser.Current == ToKind.Name && !parser.CurrentToken.NewLine)
             {
                 label = Name.Parse(parser);
             }

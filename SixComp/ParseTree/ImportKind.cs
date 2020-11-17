@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class ImportKind : IWriteable
+    public class ImportKind : IWritable
     {
         public ImportKind(Token token)
         {

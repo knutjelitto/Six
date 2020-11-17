@@ -9,14 +9,14 @@ namespace SixComp.ParseTree
 
         public static TupleType Parse(Parser parser)
         {
-            parser.Consume(ToKind.LParen);
+            parser.Consume(ToKind.LParent);
 
             var items = new List<TupleTypeItem>();
-            while (parser.Current.Kind != ToKind.RParent)
+            while (parser.Current != ToKind.RParent)
             {
                 var item = TupleTypeItem.Parse(parser);
                 items.Add(item);
-                if (parser.Current.Kind != ToKind.RParent)
+                if (parser.Current != ToKind.RParent)
                 {
                     parser.Consume(ToKind.Comma);
                 }

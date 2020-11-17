@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class PatternInitializer : IWriteable
+    public class PatternInitializer : IWritable
     {
         public PatternInitializer(AnyPattern pattern, Initializer? initializer)
         {

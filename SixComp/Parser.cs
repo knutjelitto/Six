@@ -7,7 +7,7 @@ namespace SixComp
 {
     public class Parser
     {
-        private int current;
+        public int Offset;
 
         private readonly Dictionary<ToKind, (Func<AnyExpression> parser, int precedence)> prefix =
             new Dictionary<ToKind, (Func<AnyExpression> parser, int precedence)>();
@@ -20,7 +20,7 @@ namespace SixComp
         public Parser(Lexer lexer)
         {
             Lexer = lexer;
-            current = 0;
+            Offset = 0;
 
             prefix.Add(ToKind.Minus, (ParsePrefixOp, Precedence.Prefix));
             prefix.Add(ToKind.Plus, (ParsePrefixOp, Precedence.Prefix));
@@ -28,7 +28,7 @@ namespace SixComp
             prefix.Add(ToKind.Tilde, (ParsePrefixOp, Precedence.Prefix));
 
             infix.Add(ToKind.Equal, ((left, _) => AssignExpression.Parse(this, left), Precedence.Assignement));
-            infix.Add(ToKind.LParen, ((left, _) => CallExpression.Parse(this, left), Precedence.Call));
+            infix.Add(ToKind.LParent, ((left, _) => CallExpression.Parse(this, left), Precedence.Call));
             infix.Add(ToKind.LBracket, ((left, _) => IndexingExpression.Parse(this, left), Precedence.Index));
             infix.Add(ToKind.Dot, ((left, _) => SelectExpression.Parse(this, left), Precedence.Select));
 
@@ -62,13 +62,13 @@ namespace SixComp
 
         public bool IsOperator()
         {
-            return IsOperator(Current.Kind);
+            return IsOperator(Current);
         }
 
         public T? Try<T>(ToKind start, Func<Parser, T> parse)
             where T : class
         {
-            if (Current.Kind == start)
+            if (Current == start)
             {
                 return parse(this);
             }
@@ -88,30 +88,31 @@ namespace SixComp
         public T TryList<T>(ToKind start, Func<Parser, T> parse)
             where T : class, new()
         {
-            if (Current.Kind == start)
+            if (Current == start)
             {
                 return parse(this);
             }
             return new T();
         }
 
-        public Token Current => Ahead(0);
-        public Token Next => Ahead(1);
+        public ToKind Current => Ahead(0).Kind;
+        public Token CurrentToken => Ahead(0);
+        public ToKind Next => Ahead(1).Kind;
 
         public Token Ahead(int offset)
         {
-            while (tokens.Count <= current + offset)
+            while (this.tokens.Count <= this.Offset + offset)
             {
-                tokens.Add(Lexer.GetNext());
+                this.tokens.Add(Lexer.GetNext());
             }
 
-            return tokens[current + offset];
+            return this.tokens[this.Offset + offset];
         }
 
         public Token ConsumeAny()
         {
-            var token = Current;
-            current += 1;
+            var token = CurrentToken;
+            Offset += 1;
             return token;
         }
 
@@ -120,32 +121,32 @@ namespace SixComp
             var token = Ahead(0);
             if (token.Kind == kind)
             {
-                current += 1;
+                Offset += 1;
                 return token;
             }
 
             Console.WriteLine($"{token.Span.GetLine()}");
-            throw new InvalidOperationException($"expected {kind}, but got {token.Kind}");
+            throw new InvalidOperationException($"expected `{kind.GetRep()}`, but got `{token.Kind.GetRep()}`");
         }
 
         public Token Consume(TokenSet kinds)
         {
-            var token = Current;
+            var token = CurrentToken;
             if (kinds.Contains(token.Kind))
             {
-                current += 1;
+                Offset += 1;
                 return token;
             }
 
             Console.WriteLine($"{token.Span.GetLine()}");
-            throw new InvalidOperationException($"expected {kind}, but got {token.Kind}");
+            throw new InvalidOperationException($"expected {kinds}, but got `{token.Kind.GetRep()}`");
         }
 
         public bool Match(ToKind kind)
         {
-            if (Current.Kind == kind)
+            if (Current == kind)
             {
-                current += 1;
+                Offset += 1;
                 return true;
             }
             return false;
@@ -153,7 +154,7 @@ namespace SixComp
 
         private AnyExpression ParsePrefix()
         {
-            if (prefix.TryGetValue(Current.Kind, out var prefixFun))
+            if (prefix.TryGetValue(Current, out var prefixFun))
             {
                 return prefixFun.parser();
             }
@@ -167,7 +168,7 @@ namespace SixComp
 
             while (true)
             {
-                if (!infix.TryGetValue(Current.Kind, out var infixFun) || precedence > infixFun.precedence)
+                if (!infix.TryGetValue(Current, out var infixFun) || precedence > infixFun.precedence)
                 {
                     break;
                 }

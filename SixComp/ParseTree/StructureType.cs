@@ -32,7 +32,7 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer, string keyword)
         {
-            writer.WriteLine($"{keyword} {Name}{Parameters}");
+            writer.WriteLine($"{keyword} {Name}{Parameters}{Inheritance}");
             using (writer.Block())
             {
                 Declarations.Write(writer);

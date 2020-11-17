@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public interface AnyExpression : IWriteable
+    public interface AnyExpression : IWritable
     {
         public static AnyExpression Parse(Parser parser)
         {

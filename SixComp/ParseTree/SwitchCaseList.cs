@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
             var cases = new List<SwitchCase>();
 
-            while (parser.Current.Kind != ToKind.RBrace)
+            while (parser.Current != ToKind.RBrace)
             {
                 var @case = SwitchCase.Parse(parser);
                 cases.Add(@case);

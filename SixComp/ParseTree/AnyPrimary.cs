@@ -1,4 +1,5 @@
 ﻿using System;
+using SixComp.Support;
 
 namespace SixComp.ParseTree
 {
@@ -6,7 +7,7 @@ namespace SixComp.ParseTree
     {
         public static new AnyPrimary Parse(Parser parser)
         {
-            switch (parser.Current.Kind)
+            switch (parser.Current)
             {
                 case ToKind.Number:
                     return NumberLiteralExpression.Parse(parser);
@@ -20,13 +21,15 @@ namespace SixComp.ParseTree
                     return ArrayLiteral.Parse(parser);
                 case ToKind.Dot:
                     return ImplicitMemberExpression.Parse(parser);
-                case ToKind.KwLet:
-                case ToKind.KwVar:
-                    return ExpressionPattern.Parse(parser);
+                case ToKind.KwFalse:
+                case ToKind.KwTrue:
+                    return BoolLiteralExpression.Parse(parser);
+                case ToKind.KwNil:
+                    return NilLiteralExpression.Parse(parser);
             }
 
 
-            throw new InvalidOperationException($"couldn't continue on {parser.Current.Kind}");
+            throw new InvalidOperationException($"couldn't continue on `{parser.Current.GetRep()}`");
         }
     }
 }

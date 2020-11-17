@@ -11,7 +11,7 @@ namespace SixComp.ParseTree
         {
             var items = new List<ArrayLiteralItem>();
 
-            if (parser.Current.Kind != ToKind.RBracket)
+            if (parser.Current != ToKind.RBracket)
             {
                 do
                 {
@@ -21,7 +21,7 @@ namespace SixComp.ParseTree
 
                     parser.Match(ToKind.Comma);
                 }
-                while (parser.Current.Kind != ToKind.RBracket);
+                while (parser.Current != ToKind.RBracket);
             }
 
             return new ArrayLiteralItemList(items);

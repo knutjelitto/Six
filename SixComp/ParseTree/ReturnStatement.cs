@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
 
             AnyExpression? value = null;
 
-            if (!parser.Current.NewLine)
+            if (!parser.CurrentToken.NewLine)
             {
                 value = AnyExpression.Parse(parser);
             }

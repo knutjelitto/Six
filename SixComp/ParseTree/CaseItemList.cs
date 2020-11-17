@@ -22,5 +22,10 @@ namespace SixComp.ParseTree
 
             return new CaseItemList(items);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

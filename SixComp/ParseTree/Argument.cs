@@ -15,7 +15,7 @@
         {
             Name? label = null;
 
-            if (parser.Current.Kind == ToKind.Name && parser.Next.Kind == ToKind.Colon)
+            if (parser.Current== ToKind.Name && parser.Next == ToKind.Colon)
             {
                 label = Name.Parse(parser);
                 parser.Consume(ToKind.Colon);

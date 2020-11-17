@@ -11,7 +11,7 @@
 
         public static ArgumentClause Parse(Parser parser)
         {
-            parser.Consume(ToKind.LParen);
+            parser.Consume(ToKind.LParent);
 
             var arguments = ArgumentList.Parse(parser);
 

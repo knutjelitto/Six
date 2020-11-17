@@ -20,5 +20,14 @@ namespace SixComp.ParseTree
 
             return new SwitchCase(label, statements);
         }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"{Label}");
+            using (writer.Indent())
+            {
+                Statements.Write(writer);
+            }
+        }
     }
 }

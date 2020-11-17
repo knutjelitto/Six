@@ -9,13 +9,18 @@
 
         public AnyPattern Pattern { get; }
 
-        public static LetPattern Parse(Parser parser)
+        public static VarPattern Parse(Parser parser)
         {
             parser.Consume(ToKind.KwVar);
 
             var pattern = AnyPattern.Parse(parser);
 
-            return new LetPattern(pattern);
+            return new VarPattern(pattern);
+        }
+
+        public override string ToString()
+        {
+            return $"var {Pattern}";
         }
     }
 }

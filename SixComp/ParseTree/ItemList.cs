@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
-    public class ItemList<T> : IReadOnlyList<T>, IWriteable
+    public class ItemList<T> : IReadOnlyList<T>, IWritable
     {
         private List<T> items;
 
@@ -32,7 +32,7 @@ namespace SixComp.ParseTree
         {
             foreach (var item in this)
             {
-                if (item is IWriteable writable)
+                if (item is IWritable writable)
                 {
                     writable.Write(writer);
                 }

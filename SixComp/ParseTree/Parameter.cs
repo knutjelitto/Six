@@ -17,7 +17,7 @@
         {
             Name? label = null;
 
-            if (parser.Next.Kind == ToKind.Name)
+            if (parser.Next == ToKind.Name)
             {
                 label = Name.Parse(parser);
             }

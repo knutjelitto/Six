@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class ExtensionDeclaration : AnyDeclaration
     {
@@ -25,5 +27,15 @@
 
             return new ExtensionDeclaration(name, inheritance, declarations);
         }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"extension {Name}{Inheritance}");
+            using (writer.Block())
+            {
+                Declarations.Write(writer);
+            }
+        }
+
     }
 }

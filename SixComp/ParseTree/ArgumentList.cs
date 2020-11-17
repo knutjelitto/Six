@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
         {
             var arguments = new List<Argument>();
 
-            if (parser.Current.Kind != ToKind.RParent)
+            if (parser.Current != ToKind.RParent)
             {
                 do
                 {

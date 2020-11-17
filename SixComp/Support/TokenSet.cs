@@ -51,7 +51,10 @@ namespace SixComp.Support
                 return $"{kinds[0]}";
             }
 
-            return base.ToString();
+            var prefix = string.Join("`, `", kinds.Take(kinds.Count - 1));
+            var postfx = $" or `{kinds.Last()}`";
+
+            return $"`{prefix}`{postfx}";
         }
     }
 }

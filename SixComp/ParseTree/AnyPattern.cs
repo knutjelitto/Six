@@ -2,20 +2,27 @@
 
 namespace SixComp.ParseTree
 {
-    public interface AnyPattern : IWriteable
+    public interface AnyPattern : IWritable
     {
         public static AnyPattern Parse(Parser parser)
         {
-            switch (parser.Current.Kind)
+            switch (parser.Current)
             {
-                case ToKind.Dot:
-                    return ExpressionPattern.Parse(parser);
+                case ToKind.LParent:
+                    return TuplePattern.Parse(parser);
                 case ToKind.KwLet:
                     return LetPattern.Parse(parser);
                 case ToKind.KwVar:
                     return VarPattern.Parse(parser);
+                case ToKind.Dot:
+                case ToKind.Name when parser.Next == ToKind.Dot:
+                    return EnumCasePattern.Parse(parser);
+                case ToKind.Name:
+                    return IdentifierPattern.Parse(parser);
+                default:
+                    return ExpressionPattern.Parse(parser);
             }
-            return IdentifierPattern.Parse(parser);
+            ;
         }
     }
 }

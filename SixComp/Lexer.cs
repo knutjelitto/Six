@@ -88,9 +88,11 @@ namespace SixComp
                     return Token(ToKind.Colon);
                 case ',':
                     return Token(ToKind.Comma);
+                case '@':
+                    return Token(ToKind.At);
 
                 case '(':
-                    return Token(ToKind.LParen);
+                    return Token(ToKind.LParent);
                 case ')':
                     return Token(ToKind.RParent);
                 case '{':
@@ -173,20 +175,27 @@ namespace SixComp
                             "else" => Token(ToKind.KwElse, 0),
                             "enum" => Token(ToKind.KwEnum, 0),
                             "extension" => Token(ToKind.KwExtension, 0),
+                            "false" => Token(ToKind.KwFalse, 0),
                             "func" => Token(ToKind.KwFunc, 0),
+                            "get" => Token(ToKind.KwGet, 0),
                             "if" => Token(ToKind.KwIf, 0),
                             "import" => Token(ToKind.KwImport, 0),
                             "init" => Token(ToKind.KwInit, 0),
+                            "inout" => Token(ToKind.KwInout, 0),
                             "let" => Token(ToKind.KwLet, 0),
-                            "nul" => Token(ToKind.KwNil, 0),
+                            "nil" => Token(ToKind.KwNil, 0),
+                            "nonmutating" => Token(ToKind.KwNonmutating, 0),
+                            "mutating" => Token(ToKind.KwMutating, 0),
                             "protocol" => Token(ToKind.KwProtocol, 0),
                             "public" => Token(ToKind.KwPublic, 0),
                             "return" => Token(ToKind.KwReturn, 0),
                             "self" => Token(ToKind.KwSelf, 0),
                             "Self" => Token(ToKind.KwSELF, 0),
+                            "set" => Token(ToKind.KwSet, 0),
                             "struct" => Token(ToKind.KwStruct, 0),
                             "super" => Token(ToKind.KwSuper, 0),
                             "switch" => Token(ToKind.KwSwitch, 0),
+                            "true" => Token(ToKind.KwTrue, 0),
                             "typealias" => Token(ToKind.KwTypealias, 0),
                             "var" => Token(ToKind.KwVar, 0),
                             "where" => Token(ToKind.KwWhere, 0),

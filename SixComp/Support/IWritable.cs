@@ -1,6 +1,6 @@
 ﻿namespace SixComp.Support
 {
-    public interface IWriteable
+    public interface IWritable
     {
         void Write(IWriter writer) { writer.WriteLine(this.ToString() ?? "<<<huh?>>>"); }
     }

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class CaseItem : IWritable
     {
@@ -17,6 +19,11 @@
             var where = parser.Try(ToKind.KwWhere, WhereClause.Parse);
 
             return new CaseItem(pattern, where);
+        }
+
+        public override string ToString()
+        {
+            return $"{Pattern}{Where}";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
         public static CaseLabel Parse(Parser parser)
         {
-            switch (parser.Current.Kind)
+            switch (parser.Current)
             {
                 case ToKind.KwCase:
                     parser.ConsumeAny();
@@ -27,6 +27,15 @@ namespace SixComp.ParseTree
             }
 
             throw new InvalidOperationException();
+        }
+
+        public override string ToString()
+        {
+            if (CaseItems.Count == 0)
+            {
+                return "default:";
+            }
+            return $"case {CaseItems}:";
         }
     }
 }

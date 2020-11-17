@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class CodeBlock : IWriteable
+    public class CodeBlock : IWritable
     {
         public CodeBlock(StatementList statements)
         {

@@ -3,11 +3,11 @@ using System;
 
 namespace SixComp.ParseTree
 {
-    public interface AnyStatement : IWriteable
+    public interface AnyStatement : IWritable
     {
         public static AnyStatement Parse(Parser parser)
         {
-            switch(parser.Current.Kind)
+            switch(parser.Current)
             {
                 case ToKind.KwIf:
                     return IfStatement.Parse(parser);

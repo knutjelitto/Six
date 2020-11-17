@@ -2,24 +2,13 @@
 
 namespace SixComp.ParseTree
 {
-    public interface AnyDeclaration : IWriteable
+    public interface AnyDeclaration : IWritable
     {
         public static AnyDeclaration? TryParse(Parser parser)
         {
-            var skip = true;
-            while (skip)
-            {
-                switch (parser.Current.Kind)
-                {
-                    case ToKind.KwPublic:
-                        parser.ConsumeAny();
-                        break;
-                    default:
-                        skip = false;
-                        break;
-                }
-            }
-            switch (parser.Current.Kind)
+            var prefix = Prefix.Parse(parser);
+
+            switch (parser.Current)
             {
                 case ToKind.KwLet:
                     return LetDeclaration.Parse(parser);

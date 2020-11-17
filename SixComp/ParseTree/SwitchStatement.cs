@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class SwitchStatement : AnyStatement
     {
@@ -18,6 +20,15 @@
             var cases = SwitchCaseList.Parse(parser);
 
             return new SwitchStatement(value, cases);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"switch {Value}");
+            using (writer.Block())
+            {
+                Cases.Write(writer);
+            }
         }
     }
 }

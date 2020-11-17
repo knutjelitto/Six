@@ -1,13 +1,11 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 
 namespace SixComp
 {
     [Flags]
     public enum ToKind
     {
-        EOF,
-        ERROR,
-
         Name,
         Number,
         String,
@@ -19,10 +17,12 @@ namespace SixComp
         Colon,
         Comma,
 
-        LParen,
+        [Rep("@")]      At,
+
+        LParent,
         RParent,
-        LBrace,
-        RBrace,
+        [Rep("{")]      LBrace,
+        [Rep("}")]      RBrace,
         LBracket,
         RBracket,
 
@@ -53,23 +53,35 @@ namespace SixComp
         KwElse,
         KwEnum,
         KwExtension,
+        KwFalse,
         KwFunc,
+        KwGet,
         KwIf,
         KwImport,
         KwInit,
+        KwInout,
         KwLet,
         KwNil,
+        KwNonmutating,
+        KwMutating,
         KwProtocol,
         KwPublic,
-        KwReturn,
+        [Rep("return")]     KwReturn,
         KwSelf,
         KwSELF,
+        KwSet,
         KwStruct,
         KwSuper,
         KwSwitch,
+        KwTrue,
         KwTypealias,
         KwVar,
         KwWhere,
+
+        _LAST_,
+
+        [Rep("<-eof->")]    EOF,
+        [Rep("<-error->")]  ERROR,
 
         _FIN_,
     }

@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class GenericArgumentClause : IWriteable
+    public class GenericArgumentClause : IWritable
     {
         public GenericArgumentClause(GenericArgumentList arguments)
         {

@@ -15,7 +15,7 @@
         {
             Name? name = null;
 
-            if (parser.Next.Kind == ToKind.Colon)
+            if (parser.Next == ToKind.Colon)
             {
                 name = Name.Parse(parser);
                 parser.Consume(ToKind.Colon);

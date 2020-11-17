@@ -3,7 +3,7 @@ using System;
 
 namespace SixComp.ParseTree
 {
-    public class ProtocolDeclaration : IWriteable
+    public class ProtocolDeclaration : IWritable
     {
         public ProtocolDeclaration(Name name, GenericParameterClause parameters, TypeInheritanceClause inheritanceClause, DeclarationList declarations)
         {

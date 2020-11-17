@@ -5,7 +5,7 @@
         public static AnyType Parse(Parser parser)
         {
             var type = TypeIdentifier.Parse(parser);
-            switch (parser.Current.Kind)
+            switch (parser.Current)
             {
                 case ToKind.Quest:
                     parser.ConsumeAny();

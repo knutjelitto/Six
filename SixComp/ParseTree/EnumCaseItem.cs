@@ -16,7 +16,7 @@ namespace SixComp.ParseTree
         public static EnumCaseItem Parse(Parser parser)
         {
             var name = Name.Parse(parser);
-            var types = parser.Try(ToKind.LParen, TupleType.Parse);
+            var types = parser.Try(ToKind.LParent, TupleType.Parse);
 
             return new EnumCaseItem(name, types);
         }

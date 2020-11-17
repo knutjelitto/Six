@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class Unit : IWriteable
+    public class Unit : IWritable
     {
 
         public Unit(DeclarationList declarations)
