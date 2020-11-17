@@ -1,7 +1,5 @@
 ﻿using SixComp.Support;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SixComp.ParseTree
 {
@@ -25,7 +23,7 @@ namespace SixComp.ParseTree
             parser.Consume(ToKind.KwProtocol);
             var name = Name.Parse(parser);
             var parameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
-            var inheritance = TypeInheritanceClause.Parse(parser);
+            var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
 
             throw new NotImplementedException();
         }

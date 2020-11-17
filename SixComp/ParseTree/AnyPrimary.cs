@@ -20,6 +20,9 @@ namespace SixComp.ParseTree
                     return ArrayLiteral.Parse(parser);
                 case ToKind.Dot:
                     return ImplicitMemberExpression.Parse(parser);
+                case ToKind.KwLet:
+                case ToKind.KwVar:
+                    return ExpressionPattern.Parse(parser);
             }
 
 

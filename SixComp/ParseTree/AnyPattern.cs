@@ -1,5 +1,4 @@
-﻿using System;
-using SixComp.Support;
+﻿using SixComp.Support;
 
 namespace SixComp.ParseTree
 {
@@ -7,6 +6,15 @@ namespace SixComp.ParseTree
     {
         public static AnyPattern Parse(Parser parser)
         {
+            switch (parser.Current.Kind)
+            {
+                case ToKind.Dot:
+                    return ExpressionPattern.Parse(parser);
+                case ToKind.KwLet:
+                    return LetPattern.Parse(parser);
+                case ToKind.KwVar:
+                    return VarPattern.Parse(parser);
+            }
             return IdentifierPattern.Parse(parser);
         }
     }

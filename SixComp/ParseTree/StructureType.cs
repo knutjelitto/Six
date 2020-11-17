@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Security.Principal;
 
 namespace SixComp.ParseTree
 {
@@ -25,10 +24,10 @@ namespace SixComp.ParseTree
             var generics = parser.TryList(ToKind.Less, GenericParameterList.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
             parser.Consume(ToKind.LBrace);
-            var cases = DeclarationList.Parse(parser);
+            var declarations = DeclarationList.Parse(parser);
             parser.Consume(ToKind.RBrace);
 
-            return (name, generics, cases, inheritance);
+            return (name, generics, declarations, inheritance);
         }
 
         public void Write(IWriter writer, string keyword)

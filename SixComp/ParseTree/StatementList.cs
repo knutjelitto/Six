@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using SixComp.Support;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
     public class StatementList : ItemList<AnyStatement>
     {
         public StatementList(List<AnyStatement> statements) : base(statements) { }
-
         public StatementList() { }
 
-        public static StatementList Parse(Parser parser)
+        public static StatementList Parse(Parser parser, TokenSet follow)
         {
             var statements = new List<AnyStatement>();
 
-            while (parser.Current.Kind != ToKind.RBrace)
+            while (!follow.Contains(parser.Current.Kind))
             {
                 var statement = AnyStatement.Parse(parser);
 
@@ -20,7 +20,7 @@ namespace SixComp.ParseTree
 
                 while (parser.Current.Kind == ToKind.Semi)
                 {
-                    parser.Consume();
+                    parser.ConsumeAny();
                 }
             }
 

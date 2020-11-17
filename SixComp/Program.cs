@@ -1,6 +1,7 @@
 ﻿using SixComp.Support;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace SixComp
 {
@@ -9,11 +10,13 @@ namespace SixComp
         //private bool TRUE = true;
         private DirectoryInfo WorkSpace;
         private DirectoryInfo TempDir;
+        private DirectoryInfo SwiftDir;
 
         static void Main(string[] args)
         {
-            new Program().Test();
+            //new Program().Test();
             //SixRT.PlayCheck();
+            new Program().Swift();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
         }
@@ -23,10 +26,31 @@ namespace SixComp
             WorkSpace = new DirectoryInfo("../../../..");
             TempDir = new DirectoryInfo(Path.Combine(WorkSpace.FullName, "../Temp/Six"));
             TempDir.Create();
+            SwiftDir = new DirectoryInfo(Path.Combine(WorkSpace.FullName, "../Swift"));
 
             Console.WriteLine($"workspace: {WorkSpace.FullName}");
             Console.WriteLine($"temp     : {TempDir.FullName}");
+        }
 
+        private void Swift()
+        {
+            EnumSwifts("swift-package-manager\\Sources");
+        }
+
+        private void EnumSwifts(string swift)
+        {
+            var root = SwiftDir.FullName;
+            var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories);
+
+            foreach (var file in files.Take(10))
+            {
+                var name = file.Substring(root.Length + 1);
+                var text = File.ReadAllText(file);
+                if (!Test(new Source(name, text)))
+                {
+                    break;
+                }
+            }
         }
 
         public void Test()
@@ -39,7 +63,7 @@ namespace SixComp
             Test(new Source(file, text));
         }
 
-        public void Test(Source source)
+        public bool Test(Source source)
         {
             var index = new SourceIndex(source);
             var lexer = new Lexer(source);
@@ -57,6 +81,7 @@ namespace SixComp
             if (!lexer.Done)
             {
                 Console.WriteLine($"lexer error at >>>{lexer.Rest}");
+                return false;
             }
 
             lexer = new Lexer(source);
@@ -79,6 +104,8 @@ namespace SixComp
                     Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
                     var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
                     Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber-1)}{arrow}");
+
+                    return false;
                 }
 
                 var treeFile = Path.Combine(TempDir.FullName, Path.ChangeExtension(source.Name, ".tree"));
@@ -98,7 +125,11 @@ namespace SixComp
                 Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
                 var arrow = parser.Current.Span.Length > 1 ? $"^{new string('-', parser.Current.Span.Length - 2)}^" : "^";
                 Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber - 1)}{arrow}");
+
+                return false;
             }
+
+            return true;
         }
     }
 }

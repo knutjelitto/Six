@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
         {
             Debug.Assert(parser.Current.Kind == ToKind.Name || parser.IsOperator());
 
-            var token = parser.Consume();
+            var token = parser.ConsumeAny();
 
             return new ImportPathIdentifier(token);
         }

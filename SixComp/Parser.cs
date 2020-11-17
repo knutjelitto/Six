@@ -1,4 +1,5 @@
 ﻿using SixComp.ParseTree;
+using SixComp.Support;
 using System;
 using System.Collections.Generic;
 
@@ -107,7 +108,7 @@ namespace SixComp
             return tokens[current + offset];
         }
 
-        public Token Consume()
+        public Token ConsumeAny()
         {
             var token = Current;
             current += 1;
@@ -118,6 +119,19 @@ namespace SixComp
         {
             var token = Ahead(0);
             if (token.Kind == kind)
+            {
+                current += 1;
+                return token;
+            }
+
+            Console.WriteLine($"{token.Span.GetLine()}");
+            throw new InvalidOperationException($"expected {kind}, but got {token.Kind}");
+        }
+
+        public Token Consume(TokenSet kinds)
+        {
+            var token = Current;
+            if (kinds.Contains(token.Kind))
             {
                 current += 1;
                 return token;
@@ -174,21 +188,21 @@ namespace SixComp
 
         private AnyExpression ParsePrefixOp()
         {
-            var token = Consume();
+            var token = ConsumeAny();
             var operand = ParseExpression(Precedence.Prefix);
             return new PrefixExpression(token, operand);
         }
 
         private AnyExpression ParseInfixOp(AnyExpression left, int precedence)
         {
-            var token = Consume();
+            var token = ConsumeAny();
             var right = AnyExpression.Parse(this, precedence);
             return new InfixExpression(left, token, right);
         }
 
         private AnyExpression ParsePostfixOp(AnyExpression left, int precedence)
         {
-            var token = Consume();
+            var token = ConsumeAny();
             return new PostfixExpression(left, token);
         }
     }

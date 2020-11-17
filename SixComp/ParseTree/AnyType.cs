@@ -4,7 +4,15 @@
     {
         public static AnyType Parse(Parser parser)
         {
-            return TypeIdentifier.Parse(parser);
+            var type = TypeIdentifier.Parse(parser);
+            switch (parser.Current.Kind)
+            {
+                case ToKind.Quest:
+                    parser.ConsumeAny();
+                    return new OptionalType(type);
+            }
+
+            return type;
         }
     }
 }

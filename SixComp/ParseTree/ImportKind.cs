@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
         public static ImportKind Parse(Parser parser)
         {
-            var token = parser.Consume();
+            var token = parser.ConsumeAny();
 
             return new ImportKind(token);
         }

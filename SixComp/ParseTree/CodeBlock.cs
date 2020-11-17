@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.LBrace);
 
-            var statements = StatementList.Parse(parser);
+            var statements = StatementList.Parse(parser, new TokenSet(ToKind.RBrace));
 
             parser.Consume(ToKind.RBrace);
 

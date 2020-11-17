@@ -17,6 +17,8 @@ namespace SixComp.ParseTree
                     return ContinueStatement.Parse(parser);
                 case ToKind.KwReturn:
                     return ReturnStatement.Parse(parser);
+                case ToKind.KwSwitch:
+                    return SwitchStatement.Parse(parser);
                 default:
                     return ExpressionStatement.Parse(parser);
             }

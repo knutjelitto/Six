@@ -166,21 +166,30 @@ namespace SixComp
 
                         return text switch
                         {
+                            "Any" => Token(ToKind.KwANY, 0),
                             "case" => Token(ToKind.KwCase, 0),
                             "class" => Token(ToKind.KwClass, 0),
+                            "default" => Token(ToKind.KwDefault, 0),
                             "else" => Token(ToKind.KwElse, 0),
                             "enum" => Token(ToKind.KwEnum, 0),
+                            "extension" => Token(ToKind.KwExtension, 0),
                             "func" => Token(ToKind.KwFunc, 0),
                             "if" => Token(ToKind.KwIf, 0),
                             "import" => Token(ToKind.KwImport, 0),
                             "init" => Token(ToKind.KwInit, 0),
                             "let" => Token(ToKind.KwLet, 0),
+                            "nul" => Token(ToKind.KwNil, 0),
                             "protocol" => Token(ToKind.KwProtocol, 0),
+                            "public" => Token(ToKind.KwPublic, 0),
                             "return" => Token(ToKind.KwReturn, 0),
                             "self" => Token(ToKind.KwSelf, 0),
+                            "Self" => Token(ToKind.KwSELF, 0),
                             "struct" => Token(ToKind.KwStruct, 0),
+                            "super" => Token(ToKind.KwSuper, 0),
+                            "switch" => Token(ToKind.KwSwitch, 0),
                             "typealias" => Token(ToKind.KwTypealias, 0),
                             "var" => Token(ToKind.KwVar, 0),
+                            "where" => Token(ToKind.KwWhere, 0),
                             _ => Token(ToKind.Name, 0),
                         };
                     }
@@ -190,7 +199,7 @@ namespace SixComp
                         {
                             current += 1;
                         }
-                        while (current < source.Length && char.IsDigit(source[current]));
+                        while (char.IsDigit(Current) || Current == '_');
 
                         return Token(ToKind.Number, 0);
                     }
