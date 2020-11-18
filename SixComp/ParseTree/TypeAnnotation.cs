@@ -1,33 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class TypeAnnotation : AnyType
     {
-        private TypeAnnotation(AnyType type, bool inout)
+        private TypeAnnotation(Prefix prefix, AnyType type)
         {
+            Prefix = prefix;
             Type = type;
-            Inout = inout;
         }
 
+        public Prefix Prefix { get; }
         public AnyType Type { get; }
-        public bool Inout { get; }
 
         public static TypeAnnotation Parse(Parser parser)
         {
+            //TODO: prefix 
             parser.Consume(ToKind.Colon);
-            var inout = parser.Match(ToKind.KwInout);
+            var prefix = Prefix.Parse(parser);
             var type = AnyType.Parse(parser);
 
-            return new TypeAnnotation(type, inout);
+            return new TypeAnnotation(prefix, type);
         }
 
         public override string ToString()
         {
-            var inout = Inout ? "inout " : string.Empty;
-            return $": {inout}{Type}";
+            return $": {Prefix}{Type}";
         }
     }
 }

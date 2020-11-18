@@ -30,6 +30,9 @@ namespace SixComp.ParseTree
                     return ImportDeclaration.Parse(parser);
                 case ToKind.KwExtension:
                     return ExtensionDeclaration.Parse(parser);
+
+                case ToKind.CdIf:
+                    return CcBlock.Parse(parser);
             }
 
             return null;

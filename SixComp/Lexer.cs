@@ -11,11 +11,11 @@ namespace SixComp
         {
             this.source = source;
 
-            start = 0;
+            Start = 0;
             current = 0;
         }
 
-        private int start;
+        public int Start;
         private int current;
 
         public bool Done { get; private set; } = false;
@@ -58,7 +58,7 @@ namespace SixComp
             }
             while (char.IsWhiteSpace(Current));
 
-            start = current;
+            Start = current;
 
             if (current == source.Length)
             {
@@ -186,6 +186,7 @@ namespace SixComp
                             "nil" => Token(ToKind.KwNil, 0),
                             "nonmutating" => Token(ToKind.KwNonmutating, 0),
                             "mutating" => Token(ToKind.KwMutating, 0),
+                            "private" => Token(ToKind.KwPrivate, 0),
                             "protocol" => Token(ToKind.KwProtocol, 0),
                             "public" => Token(ToKind.KwPublic, 0),
                             "return" => Token(ToKind.KwReturn, 0),
@@ -199,6 +200,7 @@ namespace SixComp
                             "typealias" => Token(ToKind.KwTypealias, 0),
                             "var" => Token(ToKind.KwVar, 0),
                             "where" => Token(ToKind.KwWhere, 0),
+                            "while" => Token(ToKind.KwWhile, 0),
                             _ => Token(ToKind.Name, 0),
                         };
                     }
@@ -211,6 +213,25 @@ namespace SixComp
                         while (char.IsDigit(Current) || Current == '_');
 
                         return Token(ToKind.Number, 0);
+                    }
+                    if (Current == '#')
+                    {
+                        do
+                        {
+                            current += 1;
+                        }
+                        while (char.IsLetter(Current));
+
+                        var text = Span().ToString();
+
+                        return text switch
+                        {
+                            "#if" => Token(ToKind.CdIf, 0),
+                            "#elseif" => Token(ToKind.CdElseif, 0),
+                            "#else" => Token(ToKind.CdElse, 0),
+                            "#endif" => Token(ToKind.CdEndif, 0),
+                            _ => Token(ToKind.ERROR, 0),
+                        };
                     }
                     break;
             }
@@ -256,7 +277,7 @@ namespace SixComp
 
         private Span Span()
         {
-            return new Span(source, start, current);
+            return new Span(source, Start, current);
         }
     }
 }

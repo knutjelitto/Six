@@ -4,21 +4,21 @@ namespace SixComp.ParseTree
 {
     public class IfStatement : AnyStatement
     {
-        public IfStatement(AnyExpression condition, CodeBlock thenPart, CodeBlock? elsePart)
+        public IfStatement(AnyCondition condition, CodeBlock thenPart, CodeBlock? elsePart)
         {
             Condition = condition;
             ThenPart = thenPart;
             ElsePart = elsePart;
         }
 
-        public AnyExpression Condition { get; }
+        public AnyCondition Condition { get; }
         public CodeBlock ThenPart { get; }
         public CodeBlock? ElsePart { get; }
 
         public static IfStatement Parse(Parser parser)
         {
             parser.Consume(ToKind.KwIf);
-            var condition = AnyExpression.Parse(parser);
+            var condition = AnyCondition.Parse(parser);
             var thenPart = CodeBlock.Parse(parser);
             var elsePart = parser.TryMatch(ToKind.KwElse, CodeBlock.Parse);
 

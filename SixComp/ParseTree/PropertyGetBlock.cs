@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class PropertyGetBlock : AnyPropertyBlock
     {
-        public PropertyGetBlock(Prefix prefix, CodeBlock? block)
+        public PropertyGetBlock(Prefix? prefix, CodeBlock? block)
             : base(prefix, null, block)
         {
         }

@@ -25,5 +25,15 @@ namespace SixComp.ParseTree
 
             return new AttributeList();
         }
+
+        public override string ToString()
+        {
+            if (Count > 0)
+            {
+                return string.Join(" ", this) + " ";
+            }
+            return string.Empty;
+        }
+
     }
 }

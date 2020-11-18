@@ -25,5 +25,14 @@ namespace SixComp.ParseTree
 
             return new ModifierList();
         }
+
+        public override string ToString()
+        {
+            if (Count > 0)
+            {
+                return string.Join(" ", this) + " ";
+            }
+            return string.Empty;
+        }
     }
 }

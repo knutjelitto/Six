@@ -34,7 +34,7 @@ namespace SixComp.Support
             return index;
         }
 
-        public (int lineNumber, int columnNumber, string line) GetLine(int offset)
+        public (int lineNumber, int columnNumber, string line) GetInfo(int offset)
         {
             if (offset < 0 || offset > Source.Length)
             {
@@ -46,6 +46,15 @@ namespace SixComp.Support
             var end = lineNo + 1 < Index.Count ? Index[lineNo + 1] : Source.Length;
 
             return (lineNo + 1, offset - start + 1, Source.Content.Substring(start, end - start).TrimEnd());
+        }
+
+        public string? GetLine(int lineIndex)
+        {
+            if (lineIndex >= 0 && lineIndex < Index.Count)
+            {
+                return GetInfo(Index[lineIndex]).line;
+            }
+            return null;
         }
 
         public int GetLineIndex(int offset)

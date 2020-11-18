@@ -18,5 +18,10 @@
 
             return new Prefix(attributes, modifiers);
         }
+
+        public override string ToString()
+        {
+            return $"{Attributes}{Modifiers}";
+        }
     }
 }

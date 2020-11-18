@@ -2,7 +2,7 @@
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, AnyType type)
+        public Parameter(Name? label, Name name, TypeAnnotation type)
         {
             Label = label;
             Name = name;
@@ -24,8 +24,7 @@
 
             var name = Name.Parse(parser);
 
-            parser.Consume(ToKind.Colon);
-            var type = AnyType.Parse(parser);
+            var type = TypeAnnotation.Parse(parser);
 
             return new Parameter(label, name, type);
         }

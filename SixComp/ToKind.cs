@@ -36,13 +36,18 @@ namespace SixComp
         LessEqual,
         Greater,
         GreaterEqual,
-        MinusGreater,
+        [Rep("->")]     MinusGreater,
 
         Plus,
         Minus,
         Asterisk,
         Slash,
         Percent,
+
+        CdIf,
+        CdElseif,
+        CdElse,
+        CdEndif,
 
         KwANY,
         KwBreak,
@@ -64,6 +69,7 @@ namespace SixComp
         KwNil,
         KwNonmutating,
         KwMutating,
+        KwPrivate,
         KwProtocol,
         KwPublic,
         [Rep("return")]     KwReturn,
@@ -77,6 +83,7 @@ namespace SixComp
         KwTypealias,
         KwVar,
         KwWhere,
+        KwWhile,
 
         _LAST_,
 

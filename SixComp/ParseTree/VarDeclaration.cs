@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -18,6 +17,8 @@ namespace SixComp.ParseTree
 
         public static VarDeclaration Parse(Parser parser)
         {
+            //TODO: incomplete
+
             parser.Consume(ToKind.KwVar);
 
             var offset = parser.Offset;
@@ -30,19 +31,38 @@ namespace SixComp.ParseTree
 
                 if (parser.Current == ToKind.LBrace)
                 {
+                    var braceOffset = parser.Offset;
                     parser.Consume(ToKind.LBrace);
 
                     var prefix = Prefix.Parse(parser);
 
                     var getter = (PropertyGetBlock?)null;
+                    var setter = (PropertySetBlock?)null;
 
                     switch (parser.Current)
                     {
                         case ToKind.KwGet:
-                            getter
+                            getter = PropertyGetBlock.Parse(parser, prefix);
+                            prefix = Prefix.Parse(parser);
+                            if (parser.Current == ToKind.KwSet)
+                            {
+                                setter = PropertySetBlock.Parse(parser, prefix);
+                            }
+                            parser.Consume(ToKind.RBrace);
+                            break;
+                        case ToKind.KwSet:
+                            setter = PropertySetBlock.Parse(parser, prefix);
+                            prefix = Prefix.Parse(parser);
+                            getter = PropertyGetBlock.Parse(parser, prefix);
+                            parser.Consume(ToKind.RBrace);
+                            break;
+                        default:
+                            parser.Offset = braceOffset;
+                            var block = CodeBlock.Parse(parser);
+                            getter = new PropertyGetBlock(null, block);
+                            break;
                     }
 
-                    parser.Consume(ToKind.RBrace);
                 }
 
                 return new VarDeclaration(name, type, init);
