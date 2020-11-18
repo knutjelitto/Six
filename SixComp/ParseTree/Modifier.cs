@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class Modifier
     {
-        public static TokenSet Firsts = new TokenSet(ToKind.KwPublic, ToKind.KwPrivate, ToKind.KwInout);
+        public static TokenSet Firsts = new TokenSet(ToKind.KwPublic, ToKind.KwInternal, ToKind.KwPrivate, ToKind.KwInout, ToKind.KwStatic);
 
         private Modifier(Token token)
         {

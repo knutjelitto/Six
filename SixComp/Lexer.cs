@@ -1,18 +1,23 @@
 ﻿using SixComp.Support;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SixComp
 {
     public class Lexer
     {
-        private readonly Source source;
+        public readonly Source Source;
+        private readonly Dictionary<string, ToKind> keywords;
 
         public Lexer(Source source)
         {
-            this.source = source;
+            Source = source;
 
             Start = 0;
             current = 0;
+
+            keywords = TokenHelper.GetKeywords().ToDictionary(kw => kw.rep, kw => kw.kind);
         }
 
         public int Start;
@@ -20,12 +25,10 @@ namespace SixComp
 
         public bool Done { get; private set; } = false;
 
-        public string Rest => source.Chars(new Span(source, current, source.Length));
-
-        public char Current => current < source.Length ? source[current] : '\0';
-        public char Next => current + 1 < source.Length ? source[current + 1] : '\0';
-        public char NextNext => current + 2 < source.Length ? source[current + 2] : '\0';
-        public bool More => current < source.Length;
+        public char Current => current < Source.Length ? Source[current] : '\0';
+        public char Next => current + 1 < Source.Length ? Source[current + 1] : '\0';
+        public char NextNext => current + 2 < Source.Length ? Source[current + 2] : '\0';
+        public bool More => current < Source.Length;
 
         private bool newlineBefore;
 
@@ -41,7 +44,7 @@ namespace SixComp
             {
                 while (char.IsWhiteSpace(Current))
                 {
-                    newlineBefore = newlineBefore || source[current] == '\n';
+                    newlineBefore = newlineBefore || Source[current] == '\n';
                     current += 1;
                 }
                 if (Current == '/')
@@ -60,7 +63,7 @@ namespace SixComp
 
             Start = current;
 
-            if (current == source.Length)
+            if (current == Source.Length)
             {
                 Done = true;
                 return Token(ToKind.EOF);
@@ -105,8 +108,16 @@ namespace SixComp
                     return Token(ToKind.RBracket);
 
                 case '=':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.EqualEqual, 2);
+                    }
                     return Token(ToKind.Equal);
                 case '!':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.BangEqual, 2);
+                    }
                     return Token(ToKind.Bang);
                 case '?':
                     return Token(ToKind.Quest);
@@ -114,7 +125,18 @@ namespace SixComp
                     return Token(ToKind.Caret);
                 case '~':
                     return Token(ToKind.Tilde);
-
+                case '&':
+                    if (Next == '&')
+                    {
+                        return Token(ToKind.AmperAmper, 2);
+                    }
+                    return Token(ToKind.Amper);
+                case '|':
+                    if (Next == '|')
+                    {
+                        return Token(ToKind.VBarVBar, 2);
+                    }
+                    return Token(ToKind.VBar);
                 case '<':
                     if (Next == '=')
                     {
@@ -128,16 +150,32 @@ namespace SixComp
                     }
                     return Token(ToKind.Greater);
                 case '+':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.PlusEqual, 2);
+                    }
                     return Token(ToKind.Plus);
                 case '-':
                     if (Next == '>')
                     {
                         return Token(ToKind.MinusGreater, 2);
                     }
+                    else if (Next == '=')
+                    {
+                        return Token(ToKind.MinusEqual, 2);
+                    }
                     return Token(ToKind.Minus);
                 case '*':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.AsteriskEqual, 2);
+                    }
                     return Token(ToKind.Asterisk);
                 case '/':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.SlashEqual, 2);
+                    }
                     return Token(ToKind.Slash);
                 case '%':
                     return Token(ToKind.Percent);
@@ -155,8 +193,46 @@ namespace SixComp
                         }
                         return Token(ToKind.String, 0);
                     }
+                case '`':
+                    {
+                        do
+                        {
+                            current += 1;
+                        }
+                        while (char.IsLetter(Current));
+
+                        if (Current == '`')
+                        {
+                            current += 1;
+
+                            var text = Span().ToString();
+                            var kw = text.Substring(1, text.Length - 2);
+
+                            if (keywords.ContainsKey(kw))
+                            {
+                                return Token(ToKind.Name, 0);
+                            }
+                        }
+                        break;
+                    }
+                case '$':
+                    {
+                        do
+                        {
+                            current += 1;
+                        }
+                        while (char.IsDigit(Current));
+
+                        var text = Span().ToString();
+                        if (text.Length > 1)
+                        {
+                            return Token(ToKind.Name, 0);
+                        }
+
+                        break;
+                    }
                 default:
-                    if (char.IsLetter(Current) || Current == '_')
+                    if (char.IsLetter(Current) || Current == '_' || Current == '#')
                     {
                         do
                         {
@@ -166,45 +242,18 @@ namespace SixComp
 
                         var text = Span().ToString();
 
-                        return text switch
+                        if (keywords.TryGetValue(text, out var kind))
                         {
-                            "Any" => Token(ToKind.KwANY, 0),
-                            "case" => Token(ToKind.KwCase, 0),
-                            "class" => Token(ToKind.KwClass, 0),
-                            "default" => Token(ToKind.KwDefault, 0),
-                            "else" => Token(ToKind.KwElse, 0),
-                            "enum" => Token(ToKind.KwEnum, 0),
-                            "extension" => Token(ToKind.KwExtension, 0),
-                            "false" => Token(ToKind.KwFalse, 0),
-                            "func" => Token(ToKind.KwFunc, 0),
-                            "get" => Token(ToKind.KwGet, 0),
-                            "if" => Token(ToKind.KwIf, 0),
-                            "import" => Token(ToKind.KwImport, 0),
-                            "init" => Token(ToKind.KwInit, 0),
-                            "inout" => Token(ToKind.KwInout, 0),
-                            "let" => Token(ToKind.KwLet, 0),
-                            "nil" => Token(ToKind.KwNil, 0),
-                            "nonmutating" => Token(ToKind.KwNonmutating, 0),
-                            "mutating" => Token(ToKind.KwMutating, 0),
-                            "private" => Token(ToKind.KwPrivate, 0),
-                            "protocol" => Token(ToKind.KwProtocol, 0),
-                            "public" => Token(ToKind.KwPublic, 0),
-                            "return" => Token(ToKind.KwReturn, 0),
-                            "self" => Token(ToKind.KwSelf, 0),
-                            "Self" => Token(ToKind.KwSELF, 0),
-                            "set" => Token(ToKind.KwSet, 0),
-                            "struct" => Token(ToKind.KwStruct, 0),
-                            "super" => Token(ToKind.KwSuper, 0),
-                            "switch" => Token(ToKind.KwSwitch, 0),
-                            "true" => Token(ToKind.KwTrue, 0),
-                            "typealias" => Token(ToKind.KwTypealias, 0),
-                            "var" => Token(ToKind.KwVar, 0),
-                            "where" => Token(ToKind.KwWhere, 0),
-                            "while" => Token(ToKind.KwWhile, 0),
-                            _ => Token(ToKind.Name, 0),
-                        };
+                            return Token(kind, 0);
+                        }
+
+                        if (text[0] == '#')
+                        {
+                            break; // -> error
+                        }
+                        return Token(ToKind.Name, 0);
                     }
-                    if (char.IsDigit(source[current]))
+                    if (char.IsDigit(Source[current]))
                     {
                         do
                         {
@@ -213,25 +262,6 @@ namespace SixComp
                         while (char.IsDigit(Current) || Current == '_');
 
                         return Token(ToKind.Number, 0);
-                    }
-                    if (Current == '#')
-                    {
-                        do
-                        {
-                            current += 1;
-                        }
-                        while (char.IsLetter(Current));
-
-                        var text = Span().ToString();
-
-                        return text switch
-                        {
-                            "#if" => Token(ToKind.CdIf, 0),
-                            "#elseif" => Token(ToKind.CdElseif, 0),
-                            "#else" => Token(ToKind.CdElse, 0),
-                            "#endif" => Token(ToKind.CdEndif, 0),
-                            _ => Token(ToKind.ERROR, 0),
-                        };
                     }
                     break;
             }
@@ -271,13 +301,13 @@ namespace SixComp
 
         private Token Token(ToKind kind, int consume = 1)
         {
-            current = Math.Min(source.Length, current + consume);
+            current = Math.Min(Source.Length, current + consume);
             return new Token(Span(), kind, newlineBefore);
         }
 
         private Span Span()
         {
-            return new Span(source, Start, current);
+            return new Span(Source, Start, current);
         }
     }
 }

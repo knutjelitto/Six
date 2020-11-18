@@ -1,21 +1,23 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SixComp.ParseTree
 {
-    public class SelfExpression : AnyPrimary
+    public class SelfExpression : AnySelfExpression
     {
-        public SelfExpression()
+        private SelfExpression(Token self)
         {
+            Self = self;
         }
+
+        public Token Self { get; }
 
         public static SelfExpression Parse(Parser parser)
         {
-            parser.Consume(ToKind.KwSelf);
+            var self = parser.Consume(ToKind.KwSelf);
 
-            return new SelfExpression();
-        }
-
-        public override string ToString()
-        {
-            return "self";
+            return new SelfExpression(self);
         }
     }
 }

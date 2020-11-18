@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class EnumDeclaration : StructureType
     {
-        public EnumDeclaration((Name name, GenericParameterList parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
+        public EnumDeclaration((Name name, GenericParameterClause parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
             : base(args)
         {
         }

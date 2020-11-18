@@ -19,8 +19,15 @@ namespace SixComp.ParseTree
                     return ReturnStatement.Parse(parser);
                 case ToKind.KwSwitch:
                     return SwitchStatement.Parse(parser);
+                case ToKind.KwGuard:
+                    return GuardStatement.Parse(parser);
                 default:
-                    return ExpressionStatement.Parse(parser);
+                    var statement = (AnyStatement?)DeclarationStatement.TryParse(parser);
+                    if (statement == null)
+                    {
+                        statement = ExpressionStatement.Parse(parser);
+                    }
+                    return statement;
             }
 
             throw new NotImplementedException();

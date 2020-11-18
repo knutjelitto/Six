@@ -16,7 +16,8 @@
             parser.Consume(ToKind.At);
 
             var name = Name.Parse(parser);
-            var arguments = parser.Current == ToKind.LParent
+            var adjacent = name.Token.Span.End == parser.CurrentToken.Span.Start;
+            var arguments = adjacent && parser.Current == ToKind.LParent
                 ? AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent)
                 : null;
 

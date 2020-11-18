@@ -32,13 +32,20 @@ namespace SixComp
             infix.Add(ToKind.LBracket, ((left, _) => IndexingExpression.Parse(this, left), Precedence.Index));
             infix.Add(ToKind.Dot, ((left, _) => SelectExpression.Parse(this, left), Precedence.Select));
 
-            infix.Add(ToKind.Quest, (ParsePostfixOp, Precedence.Postfix));
+            //infix.Add(ToKind.Quest, (ParsePostfixOp, Precedence.Postfix));
+            infix.Add(ToKind.Quest, (ParseTernaryOp, Precedence.Ternary));
             infix.Add(ToKind.Bang, (ParsePostfixOp, Precedence.Postfix));
 
-            infix.Add(ToKind.Less, (ParseInfixOp, Precedence.Relation));
-            infix.Add(ToKind.LessEqual, (ParseInfixOp, Precedence.Relation));
-            infix.Add(ToKind.Greater, (ParseInfixOp, Precedence.Relation));
-            infix.Add(ToKind.GreaterEqual, (ParseInfixOp, Precedence.Relation));
+            infix.Add(ToKind.AmperAmper, (ParseInfixOp, Precedence.Conjunction));
+            infix.Add(ToKind.VBarVBar, (ParseInfixOp, Precedence.Conjunction));
+
+            infix.Add(ToKind.EqualEqual, (ParseInfixOp, Precedence.Comparison));
+            infix.Add(ToKind.BangEqual, (ParseInfixOp, Precedence.Comparison));
+
+            infix.Add(ToKind.Less, (ParseInfixOp, Precedence.Comparison));
+            infix.Add(ToKind.LessEqual, (ParseInfixOp, Precedence.Comparison));
+            infix.Add(ToKind.Greater, (ParseInfixOp, Precedence.Comparison));
+            infix.Add(ToKind.GreaterEqual, (ParseInfixOp, Precedence.Comparison));
 
             infix.Add(ToKind.Minus, (ParseInfixOp, Precedence.Addition));
             infix.Add(ToKind.Plus, (ParseInfixOp, Precedence.Addition));
@@ -49,6 +56,7 @@ namespace SixComp
         }
 
         public Lexer Lexer { get; }
+        public Source Source => Lexer.Source;
 
         public Unit Parse()
         {
@@ -98,6 +106,7 @@ namespace SixComp
         public ToKind Current => Ahead(0).Kind;
         public Token CurrentToken => Ahead(0);
         public ToKind Next => Ahead(1).Kind;
+        public ToKind NextNext => Ahead(2).Kind;
 
         public Token Ahead(int offset)
         {
@@ -125,8 +134,7 @@ namespace SixComp
                 return token;
             }
 
-            Console.WriteLine($"{token.Span.GetLine()}");
-            throw new InvalidOperationException($"expected `{kind.GetRep()}`, but got `{token.Kind.GetRep()}`");
+            throw new InvalidOperationException($"expected `{kind.GetRep()}`, but got `{token}`");
         }
 
         public Token Consume(TokenSet kinds)
@@ -138,8 +146,7 @@ namespace SixComp
                 return token;
             }
 
-            Console.WriteLine($"{token.Span.GetLine()}");
-            throw new InvalidOperationException($"expected {kinds}, but got `{token.Kind.GetRep()}`");
+            throw new InvalidOperationException($"expected {kinds}, but got `{token}`");
         }
 
         public bool Match(ToKind kind)
@@ -192,6 +199,13 @@ namespace SixComp
             var token = ConsumeAny();
             var operand = ParseExpression(Precedence.Prefix);
             return new PrefixExpression(token, operand);
+        }
+
+        private AnyExpression ParseTernaryOp(AnyExpression left, int precedence)
+        {
+            var conditional = ConditionalExpression.Parse(this, left, precedence);
+
+            return conditional;
         }
 
         private AnyExpression ParseInfixOp(AnyExpression left, int precedence)

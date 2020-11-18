@@ -3,8 +3,9 @@
     public static class Precedence
     {
         public const int Assignement = 10;
-        public const int Conditional = 20;
-        public const int Relation = 30;
+        public const int Ternary = 15;
+        public const int Conjunction = 20;
+        public const int Comparison = 30;
         public const int Addition = 40;
         public const int Multiplication = 50;
         public const int Exponent = 60;

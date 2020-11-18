@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class FuncDeclaration : AnyDeclaration
     {
-        public FuncDeclaration(Name name, GenericParameterList genericParameters, ParameterList parameters, AnyType? returns, CodeBlock block)
+        public FuncDeclaration(Name name, GenericParameterList genericParameters, ParameterClause parameters, AnyType? returns, CodeBlock block)
         {
             Name = name;
             GenericParameters = genericParameters;
@@ -15,16 +15,16 @@ namespace SixComp.ParseTree
 
         public Name Name { get; }
         public GenericParameterList GenericParameters { get; }
-        public ParameterList Parameters { get; }
+        public ParameterClause Parameters { get; }
         public AnyType? Returns { get; }
         public CodeBlock Block { get; }
 
         public static FuncDeclaration Parse(Parser parser)
         {
             parser.Consume(ToKind.KwFunc);
-            var name = Name.Parse(parser);
+            var name = Name.Parse(parser, withOperators: true);
             var genericParameters = parser.TryList(ToKind.Less, GenericParameterList.Parse);
-            var parameters = ParameterList.Parse(parser);
+            var parameters = ParameterClause.Parse(parser);
             var returns = parser.TryMatch(ToKind.MinusGreater, AnyType.Parse);
             var block = CodeBlock.Parse(parser);
 

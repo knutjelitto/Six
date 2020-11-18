@@ -2,28 +2,24 @@
 {
     public class TypeAnnotation : AnyType
     {
-        private TypeAnnotation(Prefix prefix, AnyType type)
+        private TypeAnnotation(PrefixedType type)
         {
-            Prefix = prefix;
             Type = type;
         }
 
-        public Prefix Prefix { get; }
-        public AnyType Type { get; }
+        public PrefixedType Type { get; }
 
         public static TypeAnnotation Parse(Parser parser)
         {
-            //TODO: prefix 
             parser.Consume(ToKind.Colon);
-            var prefix = Prefix.Parse(parser);
-            var type = AnyType.Parse(parser);
+            var type = PrefixedType.Parse(parser);
 
-            return new TypeAnnotation(prefix, type);
+            return new TypeAnnotation(type);
         }
 
         public override string ToString()
         {
-            return $": {Prefix}{Type}";
+            return $": {Type}";
         }
     }
 }

@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public abstract class StructureType : AnyDeclaration
     {
-        public StructureType((Name name, GenericParameterList parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
+        public StructureType((Name name, GenericParameterClause parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
         {
             Name = args.name;
             Parameters = args.parameters;
@@ -13,16 +13,17 @@ namespace SixComp.ParseTree
         }
 
         public Name Name { get; }
-        public GenericParameterList Parameters { get; }
+        public GenericParameterClause Parameters { get; }
         public DeclarationList Declarations { get; }
         public TypeInheritanceClause Inheritance { get; }
 
-        public static (Name, GenericParameterList, DeclarationList, TypeInheritanceClause) Parse(Parser parser, ToKind kind)
+        public static (Name, GenericParameterClause, DeclarationList, TypeInheritanceClause) Parse(Parser parser, ToKind kind)
         {
             parser.Consume(kind);
             var name = Name.Parse(parser);
-            var generics = parser.TryList(ToKind.Less, GenericParameterList.Parse);
+            var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
+            var requirements = RequirementClause.Parse(parser);
             parser.Consume(ToKind.LBrace);
             var declarations = DeclarationList.Parse(parser);
             parser.Consume(ToKind.RBrace);

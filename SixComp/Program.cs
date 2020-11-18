@@ -32,17 +32,50 @@ namespace SixComp
             Console.WriteLine($"temp     : {TempDir.FullName}");
         }
 
+        private void Error(Source source, string error, int start, int length)
+        {
+            Console.WriteLine($"error: {error}");
+            var info = source.Index.GetInfo(start);
+            Console.WriteLine($"    --> {source.Name}[{info.lineNumber},{info.columnNumber}]");
+            if (info.lineNumber == 1)
+            {
+                Console.WriteLine($"     |");
+            }
+            else
+            {
+                for (var i = info.lineNumber - 1 - 15; i < info.lineNumber - 1; i += 1)
+                {
+                    var line = source.Index.GetLine(i);
+                    if (line != null)
+                    {
+                        Console.WriteLine($"     | {line}");
+                    }
+                }
+            }
+            Console.WriteLine($"{info.lineNumber,4} | {info.line}");
+            var arrow = length > 1 ? $"^{new string('-', length - 2)}^" : "^";
+            Console.WriteLine($"     | {new string(' ', info.columnNumber - 1)}{arrow}");
+            Console.WriteLine($"error: {error}");
+        }
+
         private void Swift()
         {
-            EnumSwifts("swift-package-manager\\Sources");
+            EnumSwifts("swift-numerics");
+            //EnumSwifts("swift");
+            //EnumSwifts("swift-package-manager\\Sources");
         }
 
         private void EnumSwifts(string swift)
         {
             var root = SwiftDir.FullName;
-            var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories);
+            var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories)
+                .Where(n => !n.EndsWith("Template.swift"))
+                .ToList();
+            Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
-            foreach (var file in files.Skip(2))
+            const int skip = 4;
+            const int take = 10;
+            foreach (var file in files.Skip(skip).Take(take))
             {
                 var name = file.Substring(root.Length + 1);
                 var text = File.ReadAllText(file);
@@ -79,13 +112,7 @@ namespace SixComp
 
                 if (token.Kind == ToKind.ERROR)
                 {
-                    Console.WriteLine($"error: can't continue lexing (illegal character in input stream)");
-                    var info = source.Index.GetInfo(lexer.Start);
-                    Console.WriteLine($"    --> {source.Name}[{info.lineNumber},{info.columnNumber}]");
-                    Console.WriteLine($"     |");
-                    Console.WriteLine($"{info.lineNumber,4} | {info.line}");
-                    var arrow = "^";
-                    Console.WriteLine($"     | {new string(' ', info.columnNumber - 1)}{arrow}");
+                    Error(source, "can't continue lexing (illegal character in input stream)", lexer.Start, 1);
 
                     break;
                 }
@@ -105,13 +132,9 @@ namespace SixComp
 
                 if (parser.Current != ToKind.EOF)
                 {
-                    Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
-                    var lineinfo = source.Index.GetInfo(parser.CurrentToken.Span.Start);
-                    Console.WriteLine($"    --> {source.Name}[{lineinfo.lineNumber},{lineinfo.columnNumber}]");
-                    Console.WriteLine($"     |");
-                    Console.WriteLine($"{lineinfo.lineNumber,4} | {lineinfo.line}");
-                    var arrow = parser.CurrentToken.Span.Length > 1 ? $"^{new string('-', parser.CurrentToken.Span.Length - 2)}^" : "^";
-                    Console.WriteLine($"     | {new string(' ', lineinfo.columnNumber-1)}{arrow}");
+                    var span = parser.CurrentToken.Span;
+
+                    Error(source, $"can't continue parsing at `{parser.Current.GetRep()}`", span.Start, span.Length);
 
                     return false;
                 }
@@ -125,28 +148,8 @@ namespace SixComp
             }
             catch (InvalidOperationException error)
             {
-                Console.WriteLine($"error: {error.Message}");
-                Console.WriteLine($"error: can't continue parsing at `{parser.Current}`");
-                var info = source.Index.GetInfo(parser.CurrentToken.Span.Start);
-                Console.WriteLine($"    --> {source.Name}[{info.lineNumber},{info.columnNumber}]");
-                if (info.lineNumber == 1)
-                {
-                    Console.WriteLine($"     |");
-                }
-                else
-                {
-                    for (var i = info.lineNumber - 1 - 15; i < info.lineNumber - 1; i += 1)
-                    {
-                        var line = source.Index.GetLine(i);
-                        if (line != null)
-                        {
-                            Console.WriteLine($"     | {line}");
-                        }
-                    }
-                }
-                Console.WriteLine($"{info.lineNumber,4} | {info.line}");
-                var arrow = parser.CurrentToken.Span.Length > 1 ? $"^{new string('-', parser.CurrentToken.Span.Length - 2)}^" : "^";
-                Console.WriteLine($"     | {new string(' ', info.columnNumber - 1)}{arrow}");
+                var span = parser.CurrentToken.Span;
+                Error(source, error.Message, span.Start, span.Length);
 
                 return false;
             }

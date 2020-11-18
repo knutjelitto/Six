@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SixComp.Support;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
@@ -7,13 +8,11 @@ namespace SixComp.ParseTree
         public ParameterList(List<Parameter> items) : base(items) { }
         public ParameterList() { }
 
-        public static ParameterList Parse(Parser parser)
+        public static ParameterList Parse(Parser parser, TokenSet follow)
         {
-            parser.Consume(ToKind.LParent);
-
             var parameters = new List<Parameter>();
 
-            while (parser.Current != ToKind.RParent)
+            while (!follow.Contains(parser.Current))
             {
                 var parameter = Parameter.Parse(parser);
 
@@ -24,7 +23,6 @@ namespace SixComp.ParseTree
                     break;
                 }
             }
-            parser.Consume(ToKind.RParent);
 
             return new ParameterList(parameters);
         }

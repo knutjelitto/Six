@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SixComp.Support;
 
 namespace SixComp.ParseTree
@@ -14,9 +15,16 @@ namespace SixComp.ParseTree
                 case ToKind.String:
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
-                    return NameExpression.Parse(parser);
+                    var name = NameExpression.Parse(parser);
+                    if (name.ToString() == "isFinite")
+                    {
+                        Debug.Assert(true);
+                    }
+                    return name;
                 case ToKind.KwSelf:
-                    return SelfExpression.Parse(parser);
+                    return AnySelfExpression.Parse(parser);
+                case ToKind.LParent:
+                    return NestedExpression.Parse(parser);
                 case ToKind.LBracket:
                     return ArrayLiteral.Parse(parser);
                 case ToKind.Dot:

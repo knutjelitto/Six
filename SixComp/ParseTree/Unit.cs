@@ -5,31 +5,31 @@ namespace SixComp.ParseTree
     public class Unit : IWritable
     {
 
-        public Unit(DeclarationList declarations)
+        public Unit(StatementList statements)
         {
-            Declarations = declarations;
+            Statements = statements;
         }
 
-        public DeclarationList Declarations { get; }
+        public StatementList Statements { get; }
 
         public void Write(IWriter writer)
         {
             bool more = false;
 
-            foreach (var declaration in Declarations)
+            foreach (var statement in Statements)
             {
                 if (more)
                 {
                     writer.WriteLine();
                 }
-                declaration.Write(writer);
+                statement.Write(writer);
                 more = true;
             }
         }
 
         public static Unit Parse(Parser parser)
         {
-            var declarations = DeclarationList.Parse(parser);
+            var declarations = StatementList.Parse(parser, new TokenSet(ToKind.EOF));
 
             return new Unit(declarations);
         }

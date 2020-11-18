@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class StructDeclaration : StructureType
     {
-        public StructDeclaration((Name name, GenericParameterList parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
+        public StructDeclaration((Name name, GenericParameterClause parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
             : base(args)
         {
         }

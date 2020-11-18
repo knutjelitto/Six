@@ -5,7 +5,7 @@ namespace SixComp.ParseTree
 {
     public class InitializerDeclaration : AnyDeclaration
     {
-        public InitializerDeclaration(GenericParameterList genericParameters, ParameterList parameters, CodeBlock block)
+        public InitializerDeclaration(GenericParameterList genericParameters, ParameterClause parameters, CodeBlock block)
         {
             GenericParameters = genericParameters;
             Parameters = parameters;
@@ -13,14 +13,14 @@ namespace SixComp.ParseTree
         }
 
         public GenericParameterList GenericParameters { get; }
-        public ParameterList Parameters { get; }
+        public ParameterClause Parameters { get; }
         public CodeBlock Block { get; }
 
         public static InitializerDeclaration Parse(Parser parser)
         {
             parser.Consume(ToKind.KwInit);
             var genericParameters = parser.TryList(ToKind.Less, GenericParameterList.Parse);
-            var parameters = ParameterList.Parse(parser);
+            var parameters = ParameterClause.Parse(parser);
             var block = CodeBlock.Parse(parser);
 
             return new InitializerDeclaration(genericParameters, parameters, block);
