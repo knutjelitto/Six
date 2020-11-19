@@ -54,8 +54,17 @@ namespace SixComp
             }
             Console.WriteLine($"{info.lineNumber,4} | {info.line}");
             var arrow = length > 1 ? $"^{new string('-', length - 2)}^" : "^";
-            Console.WriteLine($"     | {new string(' ', info.columnNumber - 1)}{arrow}");
-            Console.WriteLine($"error: {error}");
+            Console.WriteLine($"     = {new string(' ', info.columnNumber - 1)}{arrow}");
+            Console.WriteLine($"     = {new string(' ', info.columnNumber - 1)}`-- {error}");
+            Console.WriteLine($"     =");
+            for (var i = info.lineNumber; i < info.lineNumber + 3; i += 1)
+            {
+                var line = source.Index.GetLine(i);
+                if (line != null)
+                {
+                    Console.WriteLine($"     | {line}");
+                }
+            }
         }
 
         private void Swift()

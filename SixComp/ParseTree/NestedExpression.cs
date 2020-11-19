@@ -17,5 +17,10 @@
 
             return new NestedExpression(expression);
         }
+
+        public static NestedExpression From(AnyExpression expression)
+        {
+            return new NestedExpression(expression);
+        }
     }
 }

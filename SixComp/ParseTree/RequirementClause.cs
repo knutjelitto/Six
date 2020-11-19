@@ -1,10 +1,18 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class RequirementClause
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
+
         public RequirementClause(RequirementList requirements)
         {
             Requirements = requirements;
+        }
+
+        public RequirementClause() : this(new RequirementList())
+        {
         }
 
         public RequirementList Requirements { get; }

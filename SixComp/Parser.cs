@@ -28,13 +28,6 @@ namespace SixComp
             prefix.Add(ToKind.Tilde, (ParsePrefixOp, Precedence.Prefix));
 
             infix.Add(ToKind.Equal, ((left, _) => AssignExpression.Parse(this, left), Precedence.Assignement));
-            infix.Add(ToKind.LParent, ((left, _) => CallExpression.Parse(this, left), Precedence.Call));
-            infix.Add(ToKind.LBracket, ((left, _) => IndexingExpression.Parse(this, left), Precedence.Index));
-            infix.Add(ToKind.Dot, ((left, _) => SelectExpression.Parse(this, left), Precedence.Select));
-
-            //infix.Add(ToKind.Quest, (ParsePostfixOp, Precedence.Postfix));
-            infix.Add(ToKind.Quest, (ParseTernaryOp, Precedence.Ternary));
-            infix.Add(ToKind.Bang, (ParsePostfixOp, Precedence.Postfix));
 
             infix.Add(ToKind.AmperAmper, (ParseInfixOp, Precedence.Conjunction));
             infix.Add(ToKind.VBarVBar, (ParseInfixOp, Precedence.Conjunction));
@@ -103,10 +96,24 @@ namespace SixComp
             return new T();
         }
 
+        public T TryList<T>(TokenSet start, Func<Parser, T> parse)
+            where T : class, new()
+        {
+            if (start.Contains(Current))
+            {
+                return parse(this);
+            }
+            return new T();
+        }
+
+        public ToKind Prev => Ahead(-1).Kind;
         public ToKind Current => Ahead(0).Kind;
-        public Token CurrentToken => Ahead(0);
         public ToKind Next => Ahead(1).Kind;
         public ToKind NextNext => Ahead(2).Kind;
+
+        public Token CurrentToken => Ahead(0);
+
+        public bool Adjacent => Ahead(-1).Span.End == Ahead(0).Span.Start;
 
         public Token Ahead(int offset)
         {
@@ -115,7 +122,7 @@ namespace SixComp
                 this.tokens.Add(Lexer.GetNext());
             }
 
-            return this.tokens[this.Offset + offset];
+            return this.tokens[Offset + offset];
         }
 
         public Token ConsumeAny()
@@ -173,6 +180,8 @@ namespace SixComp
         {
             var left = ParsePrefix();
 
+            left = AnyPostfix.Parse(this, left);
+
             while (true)
             {
                 if (!infix.TryGetValue(Current, out var infixFun) || precedence > infixFun.precedence)
@@ -201,24 +210,11 @@ namespace SixComp
             return new PrefixExpression(token, operand);
         }
 
-        private AnyExpression ParseTernaryOp(AnyExpression left, int precedence)
-        {
-            var conditional = ConditionalExpression.Parse(this, left, precedence);
-
-            return conditional;
-        }
-
         private AnyExpression ParseInfixOp(AnyExpression left, int precedence)
         {
             var token = ConsumeAny();
             var right = AnyExpression.Parse(this, precedence);
             return new InfixExpression(left, token, right);
-        }
-
-        private AnyExpression ParsePostfixOp(AnyExpression left, int precedence)
-        {
-            var token = ConsumeAny();
-            return new PostfixExpression(left, token);
         }
     }
 }

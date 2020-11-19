@@ -6,11 +6,12 @@ namespace SixComp.ParseTree
     {
         public static AnyType Parse(Parser parser)
         {
+            var prefix = Prefix.Parse(parser);
             AnyType? type;
             switch (parser.Current)
             {
                 case ToKind.LParent:
-                    type = FunctionType.Parse(parser);
+                    type = TupleOrFunctionType(parser, prefix);
                     break;
                 case ToKind.LBracket:
                     type = ArrayOrDictionayType(parser);
@@ -53,7 +54,18 @@ namespace SixComp.ParseTree
             }
             parser.Consume(ToKind.RBracket);
             return ArrayType.From(type);
+        }
 
+        private static AnyType TupleOrFunctionType(Parser parser, Prefix prefix)
+        {
+            var funArgs = FunctionTypeArgumentClause.Parse(parser);
+
+            if (parser.Current == ToKind.MinusGreater)
+            {
+                return FunctionType.Parse(parser, prefix, funArgs);
+            }
+
+            return TupleType.From(prefix, funArgs.Arguments);
         }
     }
 }

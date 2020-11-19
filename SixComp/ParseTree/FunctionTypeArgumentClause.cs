@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class FunctionTypeArgumentClause
     {
-        public FunctionTypeArgumentClause(FunctionTypeArgumentList arguments, Token? variadic)
+        private FunctionTypeArgumentClause(LabeledTypeList arguments, bool variadic)
         {
             Arguments = arguments;
+            Variadic = variadic;
         }
 
-        public FunctionTypeArgumentList Arguments { get; }
+        public LabeledTypeList Arguments { get; }
+        public bool Variadic { get; }
 
         public static FunctionTypeArgumentClause Parse(Parser parser)
         {
             parser.Consume(ToKind.LParent);
 
-            if (parser.Current != ToKind.RParent)
-            {
-                var arguments = FunctionTypeArgumentList.Parse(parser);
-                var variadic = (Token?)null;
-                if (parser.Current == ToKind.DotDotDot)
-                {
-                    variadic = parser.Consume(ToKind.DotDotDot);
-                }
+            var arguments = LabeledTypeList.Parse(parser);
+            var variadic = parser.Match(ToKind.DotDotDot);
 
-                parser.Consume(ToKind.RParent);
+            parser.Consume(ToKind.RParent);
 
-                return new FunctionTypeArgumentClause(arguments, variadic);
-            }
+            return new FunctionTypeArgumentClause(arguments, variadic);
+        }
 
-            return new FunctionTypeArgumentClause(new FunctionTypeArgumentList(), null);
-
+        public static FunctionTypeArgumentClause From(LabeledTypeList arguments)
+        {
+            return new FunctionTypeArgumentClause(arguments, false);
         }
     }
 }

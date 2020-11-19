@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using SixComp.Support;
 
@@ -24,7 +25,7 @@ namespace SixComp.ParseTree
                 case ToKind.KwSelf:
                     return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
-                    return NestedExpression.Parse(parser);
+                    return NestedOrTuple(parser);
                 case ToKind.LBracket:
                     return ArrayLiteral.Parse(parser);
                 case ToKind.Dot:
@@ -38,6 +39,31 @@ namespace SixComp.ParseTree
 
 
             throw new InvalidOperationException($"couldn't continue on `{parser.Current.GetRep()}`");
+        }
+
+        private static AnyPrimary NestedOrTuple(Parser parser)
+        {
+            parser.Consume(ToKind.LParent);
+
+            var expressions = new List<AnyExpression>();
+            if (parser.Current != ToKind.RParent)
+            {
+                do
+                {
+                    var expression = AnyExpression.Parse(parser);
+                    expressions.Add(expression);
+                }
+                while (parser.Match(ToKind.Comma));
+            }
+
+            parser.Consume(ToKind.RParent);
+
+            if (expressions.Count == 1)
+            {
+                return NestedExpression.From(expressions[0]);
+            }
+
+            return TupleExpression.From(new ExpressionList(expressions));
         }
     }
 }

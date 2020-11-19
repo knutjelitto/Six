@@ -2,26 +2,26 @@
 {
     public class FunctionType : AnyType
     {
-        public FunctionType(Prefix prefix, FunctionTypeArgumentClause arguments, AnyType type)
+        public FunctionType(Prefix prefix, FunctionTypeArgumentClause arguments, bool throws, AnyType type)
         {
             Prefix = prefix;
             Arguments = arguments;
+            Throws = throws;
             Type = type;
         }
 
         public Prefix Prefix { get; }
         public FunctionTypeArgumentClause Arguments { get; }
+        public bool Throws { get; }
         public AnyType Type { get; }
 
-        public static FunctionType Parse(Parser parser)
+        public static FunctionType Parse(Parser parser, Prefix prefix, FunctionTypeArgumentClause arguments)
         {
-            var prefix = Prefix.Parse(parser);
-            var arguments = FunctionTypeArgumentClause.Parse(parser);
-            parser.Match(ToKind.KwThrows);
+            var throws = parser.Match(ToKind.KwThrows);
             parser.Consume(ToKind.MinusGreater);
             var type = AnyType.Parse(parser);
 
-            return new FunctionType(prefix, arguments, type);
+            return new FunctionType(prefix, arguments, throws, type);
         }
     }
 }

@@ -15,13 +15,10 @@
         {
             Name? name = null;
 
-            if (parser.Next == ToKind.Colon)
-            {
-                name = Name.Parse(parser);
-                parser.Consume(ToKind.Colon);
-            }
-
-            var type = AnyType.Parse(parser);
+            var type = parser.Current == ToKind.Name && parser.Next == ToKind.Colon
+                ? (AnyType)LabeledType.Parse(parser)
+                : PrefixedType.Parse(parser)
+                ;
 
             return new TupleTypeItem(name, type);
         }

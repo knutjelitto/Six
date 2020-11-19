@@ -23,7 +23,7 @@ namespace SixComp.ParseTree
             var name = Name.Parse(parser);
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
-            var requirements = RequirementClause.Parse(parser);
+            var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
             parser.Consume(ToKind.LBrace);
             var declarations = DeclarationList.Parse(parser);
             parser.Consume(ToKind.RBrace);

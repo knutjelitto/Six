@@ -29,7 +29,10 @@ namespace SixComp.ParseTree
                 case ToKind.KwImport:
                     return ImportDeclaration.Parse(parser);
                 case ToKind.KwExtension:
-                    return ExtensionDeclaration.Parse(parser);
+                    return ExtensionDeclaration.Parse(parser, prefix);
+                case ToKind.KwTypealias:
+                    return TypealiasDeclaration.Parse(parser, prefix
+                        );
 
                 case ToKind.CdIf:
                     return CcBlock.Parse(parser);

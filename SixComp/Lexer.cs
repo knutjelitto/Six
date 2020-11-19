@@ -238,7 +238,7 @@ namespace SixComp
                         {
                             current += 1;
                         }
-                        while (char.IsLetterOrDigit(Current) || Current == '_');
+                        while (char.IsLetterOrDigit(Current) || Current == '_' || Current == '²');
 
                         var text = Span().ToString();
 

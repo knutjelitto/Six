@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class ConditionalExpression : AnyExpression
     {
@@ -34,7 +30,7 @@ namespace SixComp.ParseTree
 
             parser.Offset = offset;
 
-            return new PostfixExpression(condition, token);
+            return OptionalChainingExpression.From(condition);
         }
 
         public override string ToString()

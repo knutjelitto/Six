@@ -21,10 +21,13 @@ namespace SixComp.ParseTree
 
         public static FuncDeclaration Parse(Parser parser)
         {
+            //TODO: is incomplete
             parser.Consume(ToKind.KwFunc);
             var name = Name.Parse(parser, withOperators: true);
             var genericParameters = parser.TryList(ToKind.Less, GenericParameterList.Parse);
             var parameters = ParameterClause.Parse(parser);
+            var throws = parser.Match(ToKind.KwThrows);
+            var rethrows = parser.Match(ToKind.KwRethrows);
             var returns = parser.TryMatch(ToKind.MinusGreater, AnyType.Parse);
             var block = CodeBlock.Parse(parser);
 

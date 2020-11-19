@@ -1,26 +1,31 @@
 ﻿using SixComp.Support;
-using System;
 
 namespace SixComp.ParseTree
 {
     public class InitializerDeclaration : AnyDeclaration
     {
-        public InitializerDeclaration(GenericParameterList genericParameters, ParameterClause parameters, CodeBlock block)
+        public InitializerDeclaration(GenericParameterClause genericParameters, ParameterClause parameters, CodeBlock block)
         {
             GenericParameters = genericParameters;
             Parameters = parameters;
             Block = block;
         }
 
-        public GenericParameterList GenericParameters { get; }
+        public GenericParameterClause GenericParameters { get; }
         public ParameterClause Parameters { get; }
         public CodeBlock Block { get; }
 
         public static InitializerDeclaration Parse(Parser parser)
         {
+            //TODO: incomplete
             parser.Consume(ToKind.KwInit);
-            var genericParameters = parser.TryList(ToKind.Less, GenericParameterList.Parse);
+            var failable = parser.Match(ToKind.Quest);
+            var forced = parser.Match(ToKind.Quest);
+            var genericParameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var parameters = ParameterClause.Parse(parser);
+            var throws = parser.Match(ToKind.KwThrows);
+            var rethrows = parser.Match(ToKind.KwRethrows);
+            var requirement = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
             var block = CodeBlock.Parse(parser);
 
             return new InitializerDeclaration(genericParameters, parameters, block);
