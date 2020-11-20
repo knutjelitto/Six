@@ -2,31 +2,29 @@
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, TypeAnnotation type)
+        public Parameter(Name? label, Name name, TypeAnnotation type, Initializer? initializer)
         {
             Label = label;
             Name = name;
             Type = type;
+            Initializer = initializer;
         }
 
         public Name? Label { get; }
         public Name Name { get; }
         public AnyType Type { get; }
+        public Initializer? Initializer { get; }
 
         public static Parameter Parse(Parser parser)
         {
-            Name? label = null;
-
-            if (parser.Next == ToKind.Name)
-            {
-                label = Name.Parse(parser);
-            }
-
+            var label = parser.Next == ToKind.Name
+                ? Name.Parse(parser)
+                : null;
             var name = Name.Parse(parser);
-
             var type = TypeAnnotation.Parse(parser);
+            var initializer = parser.Try(ToKind.Equal, Initializer.Parse);
 
-            return new Parameter(label, name, type);
+            return new Parameter(label, name, type, initializer);
         }
 
         public override string ToString()

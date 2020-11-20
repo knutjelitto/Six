@@ -27,7 +27,13 @@ namespace SixComp
             prefix.Add(ToKind.Bang, (ParsePrefixOp, Precedence.Prefix));
             prefix.Add(ToKind.Tilde, (ParsePrefixOp, Precedence.Prefix));
 
-            infix.Add(ToKind.Equal, ((left, _) => AssignExpression.Parse(this, left), Precedence.Assignement));
+            infix.Add(ToKind.Equal, ((left, _) => AssignExpression.Parse(this, left), Precedence.Assignment));
+
+            infix.Add(ToKind.PlusEqual, (ParseInfixOp, Precedence.Assignment));
+            infix.Add(ToKind.MinusEqual, (ParseInfixOp, Precedence.Assignment));
+            infix.Add(ToKind.AsteriskEqual, (ParseInfixOp, Precedence.Assignment));
+            infix.Add(ToKind.SlashEqual, (ParseInfixOp, Precedence.Assignment));
+            infix.Add(ToKind.PercentEqual, (ParseInfixOp, Precedence.Assignment));
 
             infix.Add(ToKind.AmperAmper, (ParseInfixOp, Precedence.Conjunction));
             infix.Add(ToKind.VBarVBar, (ParseInfixOp, Precedence.Conjunction));
@@ -40,12 +46,22 @@ namespace SixComp
             infix.Add(ToKind.Greater, (ParseInfixOp, Precedence.Comparison));
             infix.Add(ToKind.GreaterEqual, (ParseInfixOp, Precedence.Comparison));
 
+            infix.Add(ToKind.DotDotDot, (ParseInfixOp, Precedence.RangeFormation));
+            infix.Add(ToKind.DotDotLess, (ParseInfixOp, Precedence.RangeFormation));
+
             infix.Add(ToKind.Minus, (ParseInfixOp, Precedence.Addition));
+            infix.Add(ToKind.AmperMinus, (ParseInfixOp, Precedence.Addition));
             infix.Add(ToKind.Plus, (ParseInfixOp, Precedence.Addition));
+            infix.Add(ToKind.AmperPlus, (ParseInfixOp, Precedence.Addition));
+            infix.Add(ToKind.VBar, (ParseInfixOp, Precedence.Addition));
 
             infix.Add(ToKind.Asterisk, (ParseInfixOp, Precedence.Multiplication));
+            infix.Add(ToKind.AmperAsterisk, (ParseInfixOp, Precedence.Multiplication));
             infix.Add(ToKind.Slash, (ParseInfixOp, Precedence.Multiplication));
+            infix.Add(ToKind.AmperSlash, (ParseInfixOp, Precedence.Multiplication));
             infix.Add(ToKind.Percent, (ParseInfixOp, Precedence.Multiplication));
+            infix.Add(ToKind.AmperPercent, (ParseInfixOp, Precedence.Multiplication));
+            infix.Add(ToKind.Amper, (ParseInfixOp, Precedence.Multiplication));
         }
 
         public Lexer Lexer { get; }
@@ -70,6 +86,16 @@ namespace SixComp
             where T : class
         {
             if (Current == start)
+            {
+                return parse(this);
+            }
+            return null;
+        }
+
+        public T? Try<T>(TokenSet start, Func<Parser, T> parse)
+            where T : class
+        {
+            if (start.Contains(Current))
             {
                 return parse(this);
             }
@@ -153,7 +179,7 @@ namespace SixComp
                 return token;
             }
 
-            throw new InvalidOperationException($"expected {kinds}, but got `{token}`");
+            throw new ParserException(token, $"expected {kinds}, but got `{token}`");
         }
 
         public bool Match(ToKind kind)
@@ -171,6 +197,11 @@ namespace SixComp
             if (prefix.TryGetValue(Current, out var prefixFun))
             {
                 return prefixFun.parser();
+            }
+
+            if (Current == ToKind.Amper)
+            {
+                return InOutExpression.Parse(this);
             }
 
             return AnyPrimary.Parse(this);

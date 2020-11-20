@@ -93,6 +93,8 @@ namespace SixComp
                     return Token(ToKind.Comma);
                 case '@':
                     return Token(ToKind.At);
+                case '\\':
+                    return Token(ToKind.Backslash);
 
                 case '(':
                     return Token(ToKind.LParent);
@@ -126,9 +128,20 @@ namespace SixComp
                 case '~':
                     return Token(ToKind.Tilde);
                 case '&':
-                    if (Next == '&')
+                    switch (Next)
                     {
-                        return Token(ToKind.AmperAmper, 2);
+                        case '&':
+                            return Token(ToKind.AmperAmper, 2);
+                        case '+':
+                            return Token(ToKind.AmperPlus, 2);
+                        case '-':
+                            return Token(ToKind.AmperMinus, 2);
+                        case '*':
+                            return Token(ToKind.AmperAsterisk, 2);
+                        case '/':
+                            return Token(ToKind.AmperSlash, 2);
+                        case '%':
+                            return Token(ToKind.AmperPercent, 2);
                     }
                     return Token(ToKind.Amper);
                 case '|':
@@ -178,6 +191,10 @@ namespace SixComp
                     }
                     return Token(ToKind.Slash);
                 case '%':
+                    if (Next == '=')
+                    {
+                        return Token(ToKind.PercentEqual, 2);
+                    }
                     return Token(ToKind.Percent);
                 case '"':
                     {
@@ -253,8 +270,29 @@ namespace SixComp
                         }
                         return Token(ToKind.Name, 0);
                     }
-                    if (char.IsDigit(Source[current]))
+                    if (char.IsDigit(Current))
                     {
+                        if (Current == '0' && (Next == 'x' || Next == 'X'))
+                        {
+                            // HEX
+                            current += 2;
+
+                            int digits = 0;
+
+                            while (IsHexDigit() || Current == '_')
+                            {
+                                digits += Current == '_' ? 0 : 1;
+                                current += 1;
+                            }
+
+                            if (digits == 0)
+                            {
+                                throw new LexerException(Start, $"no digits in hexadecimal literal");
+                            }
+
+                            return Token(ToKind.Number, 0);
+
+                        }
                         do
                         {
                             current += 1;
@@ -267,6 +305,13 @@ namespace SixComp
             }
 
             return Token(ToKind.ERROR);
+        }
+
+        private bool IsHexDigit()
+        {
+            var digit = Current;
+
+            return char.IsDigit(digit) || (digit >= 'a' && digit <= 'f') || (digit >= 'A' && digit <= 'F');
         }
 
         private void SkipLineComment()

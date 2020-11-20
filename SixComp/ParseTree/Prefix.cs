@@ -19,6 +19,10 @@
             return new Prefix(attributes, modifiers);
         }
 
+        public static readonly Prefix Empty = new Prefix(new AttributeList(), new ModifierList());
+
+        public bool Missing => Attributes.Missing && Modifiers.Missing;
+
         public override string ToString()
         {
             return $"{Attributes}{Modifiers}";

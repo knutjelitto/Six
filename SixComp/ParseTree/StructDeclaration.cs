@@ -2,21 +2,41 @@
 
 namespace SixComp.ParseTree
 {
-    public class StructDeclaration : StructureType
+    public class StructDeclaration : AnyDeclaration
     {
-        public StructDeclaration((Name name, GenericParameterClause parameters, DeclarationList declarations, TypeInheritanceClause inheritance) args)
-            : base(args)
+        public StructDeclaration(Prefix prefix, Name name, GenericParameterClause generics, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
         {
+            Prefix = prefix;
+            Name = name;
+            Generics = generics;
+            Inheritance = inheritance;
+            Requirements = requirements;
+            Declarations = declarations;
         }
 
-        public static StructDeclaration Parse(Parser parser)
+        public Prefix Prefix { get; }
+        public Name Name { get; }
+        public GenericParameterClause Generics { get; }
+        public TypeInheritanceClause Inheritance { get; }
+        public RequirementClause Requirements { get; }
+        public DeclarationClause Declarations { get; }
+
+        public static StructDeclaration Parse(Parser parser, Prefix prefix)
         {
-            return new StructDeclaration(Parse(parser, ToKind.KwStruct));
+            parser.Consume(ToKind.KwStruct);
+            var name = Name.Parse(parser);
+            var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
+            var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
+            var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
+            var declarations = DeclarationClause.Parse(parser);
+
+            return new StructDeclaration(prefix, name, generics, inheritance, requirements, declarations);
         }
 
-        public override void Write(IWriter writer)
+        public void Write(IWriter writer)
         {
-            Write(writer, "struct");
+            writer.WriteLine($"{Prefix}struct {Name}{Generics}{Inheritance}{Requirements}");
+            Declarations.Write(writer);
         }
     }
 }

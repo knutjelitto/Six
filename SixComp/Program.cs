@@ -83,7 +83,7 @@ namespace SixComp
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
             const int skip = 4;
-            const int take = 10;
+            const int take = 10000;
             foreach (var file in files.Skip(skip).Take(take))
             {
                 var name = file.Substring(root.Length + 1);

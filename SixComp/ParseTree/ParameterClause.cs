@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class ParameterClause
     {
-        public ParameterClause(ParameterList parameters, bool variadic)
+        private ParameterClause(ParameterList parameters, bool variadic)
         {
             Parameters = parameters;
             Variadic = variadic;

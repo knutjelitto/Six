@@ -13,15 +13,15 @@ namespace SixComp.ParseTree
                 case ToKind.KwLet:
                     return LetDeclaration.Parse(parser);
                 case ToKind.KwVar:
-                    return VarDeclaration.Parse(parser);
+                    return AnyVarDeclaration.Parse(parser, prefix);
                 case ToKind.KwFunc:
-                    return FuncDeclaration.Parse(parser);
+                    return FunctionDeclaration.Parse(parser);
                 case ToKind.KwClass:
-                    return ClassDeclaration.Parse(parser);
+                    return ClassDeclaration.Parse(parser, prefix);
                 case ToKind.KwStruct:
-                    return StructDeclaration.Parse(parser);
+                    return StructDeclaration.Parse(parser, prefix);
                 case ToKind.KwEnum:
-                    return EnumDeclaration.Parse(parser);
+                    return EnumDeclaration.Parse(parser, prefix);
                 case ToKind.KwCase:
                     return EnumCase.Parse(parser);
                 case ToKind.KwInit:
@@ -31,8 +31,9 @@ namespace SixComp.ParseTree
                 case ToKind.KwExtension:
                     return ExtensionDeclaration.Parse(parser, prefix);
                 case ToKind.KwTypealias:
-                    return TypealiasDeclaration.Parse(parser, prefix
-                        );
+                    return TypealiasDeclaration.Parse(parser, prefix);
+                case ToKind.KwProtocol:
+                    return ProtocolDeclaration.Parse(parser, prefix);
 
                 case ToKind.CdIf:
                     return CcBlock.Parse(parser);

@@ -2,15 +2,17 @@
 {
     public abstract class AnyPropertyBlock
     {
-        public AnyPropertyBlock(Prefix? prefix, Name? setterName, CodeBlock? block)
+        protected AnyPropertyBlock(Prefix prefix, Token keyword, SetterName? setterName, CodeBlock? block)
         {
             Prefix = prefix;
+            Keyword = keyword;
             SetterName = setterName;
             Block = block;
         }
 
-        public Prefix? Prefix { get; }
-        public Name? SetterName { get; }
+        public Prefix Prefix { get; }
+        public Token Keyword { get; }
+        public SetterName? SetterName { get; }
         public CodeBlock? Block { get; }
     }
 }

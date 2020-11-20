@@ -16,12 +16,7 @@ namespace SixComp.ParseTree
                 case ToKind.String:
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
-                    var name = NameExpression.Parse(parser);
-                    if (name.ToString() == "isFinite")
-                    {
-                        Debug.Assert(true);
-                    }
-                    return name;
+                    return NameExpression.Parse(parser);
                 case ToKind.KwSelf:
                     return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
@@ -35,6 +30,8 @@ namespace SixComp.ParseTree
                     return BoolLiteralExpression.Parse(parser);
                 case ToKind.KwNil:
                     return NilLiteralExpression.Parse(parser);
+                case ToKind.Backslash:
+                    return KeyPathExpression.Parse(parser);
             }
 
 

@@ -11,12 +11,15 @@ namespace SixComp.ParseTree
         {
             var arguments = new List<FunctionTypeArgument>();
 
-            do
+            if (parser.Current != ToKind.RParent)
             {
-                var argument = FunctionTypeArgument.Parse(parser);
-                arguments.Add(argument);
+                do
+                {
+                    var argument = FunctionTypeArgument.Parse(parser);
+                    arguments.Add(argument);
+                }
+                while (parser.Match(ToKind.Comma));
             }
-            while (parser.Match(ToKind.Comma));
 
             return new FunctionTypeArgumentList(arguments);
         }

@@ -2,17 +2,17 @@
 
 namespace SixComp.ParseTree
 {
-    public class LabeledTypeList : ItemList<LabeledType>, AnyType
+    public class LabeledTypeList : ItemList<TupleTypeElement>, AnyType
     {
-        public LabeledTypeList(List<LabeledType> items) : base(items) { }
+        public LabeledTypeList(List<TupleTypeElement> items) : base(items) { }
         public LabeledTypeList() { }
 
         public static LabeledTypeList Parse(Parser parser)
         {
-            var items = new List<LabeledType>();
+            var items = new List<TupleTypeElement>();
             while (parser.Current != ToKind.RParent)
             {
-                var item = LabeledType.Parse(parser);
+                var item = TupleTypeElement.Parse(parser);
                 items.Add(item);
                 if (parser.Current != ToKind.RParent)
                 {

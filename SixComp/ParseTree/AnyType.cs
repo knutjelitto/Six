@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SixComp.ParseTree
 {
@@ -65,7 +66,11 @@ namespace SixComp.ParseTree
                 return FunctionType.Parse(parser, prefix, funArgs);
             }
 
-            return TupleType.From(prefix, funArgs.Arguments);
+            var elements = funArgs.Arguments
+                .Select(a => TupleTypeElement.From(a.Label, a.Type))
+                .ToList();
+
+            return TupleType.From(prefix, new TupleTypeElementList(elements));
         }
     }
 }

@@ -14,7 +14,10 @@
         public static NameExpression Parse(Parser parser)
         {
             var name = Name.Parse(parser);
-            var arguments = parser.TryList(ToKind.Less, GenericArgumentClause.Parse);
+            var arguments = parser.Current == ToKind.Less && parser.Adjacent
+                ? GenericArgumentClause.Parse(parser)
+                : new GenericArgumentClause()
+                ;
 
             return new NameExpression(name, arguments);
         }

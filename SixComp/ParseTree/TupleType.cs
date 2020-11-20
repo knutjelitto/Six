@@ -2,18 +2,18 @@
 {
     public class TupleType : AnyType
     {
-        private TupleType(Prefix prefix, LabeledTypeList items)
+        private TupleType(Prefix prefix, TupleTypeElementList elements)
         {
             Prefix = prefix;
-            Items = items;
+            Elements = elements;
         }
 
         public Prefix Prefix { get; }
-        public LabeledTypeList Items { get; }
+        public TupleTypeElementList Elements { get; }
 
-        public static TupleType From(Prefix prefix, LabeledTypeList items)
+        public static TupleType From(Prefix prefix, TupleTypeElementList elements)
         {
-            return new TupleType(prefix, items);
+            return new TupleType(prefix, elements);
         }
     }
 }

@@ -2,17 +2,15 @@
 {
     public static class Precedence
     {
-        public const int Assignement = 10;
-        public const int Ternary = 15;
-        public const int Conjunction = 20;
-        public const int Comparison = 30;
-        public const int Addition = 40;
-        public const int Multiplication = 50;
-        public const int Exponent = 60;
-        public const int Prefix = 70;
-        public const int Postfix = 80;
-        public const int Call = 90;
-        public const int Index = 90;
-        public const int Select = 90;
+        public const int Prefix = 1000;
+        public const int Exponent = 900;
+        public const int Multiplication = 800;
+        public const int Addition = 700;
+        public const int RangeFormation = 600;
+        public const int Casting = 500;
+        public const int Comparison = 400;
+        public const int Conjunction = 300;
+        public const int Ternary = 200;
+        public const int Assignment = 100;
     }
 }
