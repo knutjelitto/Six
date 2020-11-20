@@ -50,6 +50,7 @@
             public Name Name { get; }
             public GenericArgumentClause Generics { get; }
             public ArgumentNameClause Names { get; }
+
             public static new NamedMemberSelector Parse(Parser parser, AnyExpression left)
             {
                 var name = Name.Parse(parser);
@@ -60,6 +61,11 @@
                 var names = ArgumentNameClause.TryParse(parser) ?? new ArgumentNameClause();
 
                 return new NamedMemberSelector(left, name, generics, names);
+            }
+
+            public override string ToString()
+            {
+                return $"{Left}.{Name}{Generics}{Names}";
             }
         }
     }

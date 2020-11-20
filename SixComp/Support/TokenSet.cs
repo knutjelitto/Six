@@ -44,7 +44,7 @@ namespace SixComp.Support
 
         public override string ToString()
         {
-            var kinds = GetKinds().ToList();
+            var kinds = GetKinds().Select(k => k.GetRep()).ToList();
 
             if (kinds.Count == 1)
             {

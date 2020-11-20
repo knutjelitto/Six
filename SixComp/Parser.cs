@@ -35,6 +35,8 @@ namespace SixComp
             infix.Add(ToKind.SlashEqual, (ParseInfixOp, Precedence.Assignment));
             infix.Add(ToKind.PercentEqual, (ParseInfixOp, Precedence.Assignment));
 
+            infix.Add(ToKind.Quest, ((left, precedence) => TernaryExpression.Parse(this, left, precedence), Precedence.Ternary));
+
             infix.Add(ToKind.AmperAmper, (ParseInfixOp, Precedence.Conjunction));
             infix.Add(ToKind.VBarVBar, (ParseInfixOp, Precedence.Conjunction));
 
@@ -46,8 +48,8 @@ namespace SixComp
             infix.Add(ToKind.Greater, (ParseInfixOp, Precedence.Comparison));
             infix.Add(ToKind.GreaterEqual, (ParseInfixOp, Precedence.Comparison));
 
-            infix.Add(ToKind.DotDotDot, (ParseInfixOp, Precedence.RangeFormation));
-            infix.Add(ToKind.DotDotLess, (ParseInfixOp, Precedence.RangeFormation));
+            infix.Add(ToKind.DotDotDot, (ParseRangeInfix, Precedence.RangeFormation));
+            infix.Add(ToKind.DotDotLess, (ParseRangeInfix, Precedence.RangeFormation));
 
             infix.Add(ToKind.Minus, (ParseInfixOp, Precedence.Addition));
             infix.Add(ToKind.AmperMinus, (ParseInfixOp, Precedence.Addition));
@@ -80,6 +82,16 @@ namespace SixComp
         public bool IsOperator()
         {
             return IsOperator(Current);
+        }
+
+        public bool IsKeyword(ToKind kind)
+        {
+            return Lexer.IsKeyword(kind);
+        }
+
+        public bool IsKeyword()
+        {
+            return IsKeyword(Current);
         }
 
         public T? Try<T>(ToKind start, Func<Parser, T> parse)
@@ -151,6 +163,11 @@ namespace SixComp
             return this.tokens[Offset + offset];
         }
 
+        public Token At(int offset)
+        {
+            return Ahead(offset - Offset);
+        }
+
         public Token ConsumeAny()
         {
             var token = CurrentToken;
@@ -160,14 +177,14 @@ namespace SixComp
 
         public Token Consume(ToKind kind)
         {
-            var token = Ahead(0);
+            var token = CurrentToken;
             if (token.Kind == kind)
             {
                 Offset += 1;
                 return token;
             }
 
-            throw new InvalidOperationException($"expected `{kind.GetRep()}`, but got `{token}`");
+            throw new ParserException(token, $"expected `{kind.GetRep()}`, but got `{token}`");
         }
 
         public Token Consume(TokenSet kinds)
@@ -246,6 +263,25 @@ namespace SixComp
             var token = ConsumeAny();
             var right = AnyExpression.Parse(this, precedence);
             return new InfixExpression(left, token, right);
+        }
+
+        private AnyExpression ParseRangeInfix(AnyExpression left, int precedence)
+        {
+            var exclusive = Current == ToKind.DotDotLess;
+            Consume(new TokenSet(ToKind.DotDotDot, ToKind.DotDotLess));
+
+            var offset = Offset;
+
+            try
+            {
+                var right = AnyExpression.Parse(this, precedence);
+                return new RangeExpression(left, right, exclusive);
+            }
+            catch
+            {
+                Offset = offset;
+                return new RangeExpression(left, null, exclusive);
+            }
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class WhereClause
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
+
         private WhereClause(AnyExpression expression)
         {
             Expression = expression;

@@ -23,7 +23,7 @@ namespace SixComp.ParseTree
 
             parser.Consume(Firsts);
 
-            throw new InvalidOperationException();
+            throw new NotSupportedException();
         }
     }
 }

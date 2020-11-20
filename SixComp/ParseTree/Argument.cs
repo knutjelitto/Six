@@ -2,33 +2,26 @@
 {
     public class Argument
     {
-        public Argument(Name? label, AnyExpression value)
+        public Argument(ArgumentName? label, AnyExpression value)
         {
             Label = label;
             Value = value;
         }
 
-        public Name? Label { get; }
+        public ArgumentName? Label { get; }
         public AnyExpression Value { get; }
 
         public static Argument Parse(Parser parser)
         {
-            Name? label = null;
-
-            if (parser.Current== ToKind.Name && parser.Next == ToKind.Colon)
-            {
-                label = Name.Parse(parser);
-                parser.Consume(ToKind.Colon);
-            }
-
+            var name = ArgumentName.TryParse(parser);
             var expression = AnyExpression.Parse(parser);
 
-            return new Argument(label, expression);
+            return new Argument(name, expression);
         }
 
         public override string ToString()
         {
-            var label = Label == null ? string.Empty : $"{Label}: ";
+            var label = Label == null ? string.Empty : $"{Label} ";
 
             return $"{label}{Value}";
         }

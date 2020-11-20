@@ -15,6 +15,7 @@ namespace SixComp.ParseTree
         }
 
         public ArgumentNameList Names { get; }
+        public bool Missing => Names.Missing;
 
         public static ArgumentNameClause? TryParse(Parser parser)
         {
@@ -33,6 +34,11 @@ namespace SixComp.ParseTree
             }
 
             return null;
+        }
+
+        public override string ToString()
+        {
+            return Missing ? string.Empty : $"({Names})";
         }
     }
 }

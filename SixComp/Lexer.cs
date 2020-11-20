@@ -8,7 +8,8 @@ namespace SixComp
     public class Lexer
     {
         public readonly Source Source;
-        private readonly Dictionary<string, ToKind> keywords;
+        private readonly Dictionary<string, ToKind> keywordMap;
+        private readonly HashSet<ToKind> keywordSet;
 
         public Lexer(Source source)
         {
@@ -17,7 +18,8 @@ namespace SixComp
             Start = 0;
             current = 0;
 
-            keywords = TokenHelper.GetKeywords().ToDictionary(kw => kw.rep, kw => kw.kind);
+            keywordMap = TokenHelper.GetKeywords().ToDictionary(kw => kw.rep, kw => kw.kind);
+            keywordSet = new HashSet<ToKind>(keywordMap.Values);
         }
 
         public int Start;
@@ -225,7 +227,7 @@ namespace SixComp
                             var text = Span().ToString();
                             var kw = text.Substring(1, text.Length - 2);
 
-                            if (keywords.ContainsKey(kw))
+                            if (keywordMap.ContainsKey(kw))
                             {
                                 return Token(ToKind.Name, 0);
                             }
@@ -259,7 +261,7 @@ namespace SixComp
 
                         var text = Span().ToString();
 
-                        if (keywords.TryGetValue(text, out var kind))
+                        if (keywordMap.TryGetValue(text, out var kind))
                         {
                             return Token(kind, 0);
                         }
@@ -272,34 +274,7 @@ namespace SixComp
                     }
                     if (char.IsDigit(Current))
                     {
-                        if (Current == '0' && (Next == 'x' || Next == 'X'))
-                        {
-                            // HEX
-                            current += 2;
-
-                            int digits = 0;
-
-                            while (IsHexDigit() || Current == '_')
-                            {
-                                digits += Current == '_' ? 0 : 1;
-                                current += 1;
-                            }
-
-                            if (digits == 0)
-                            {
-                                throw new LexerException(Start, $"no digits in hexadecimal literal");
-                            }
-
-                            return Token(ToKind.Number, 0);
-
-                        }
-                        do
-                        {
-                            current += 1;
-                        }
-                        while (char.IsDigit(Current) || Current == '_');
-
-                        return Token(ToKind.Number, 0);
+                        return LexNumber();
                     }
                     break;
             }
@@ -307,11 +282,139 @@ namespace SixComp
             return Token(ToKind.ERROR);
         }
 
-        private bool IsHexDigit()
+        public bool IsKeyword(ToKind kind)
         {
-            var digit = Current;
+            return keywordSet.Contains(kind);
+        }
 
+        private bool IsHexDigit(char digit)
+        {
             return char.IsDigit(digit) || (digit >= 'a' && digit <= 'f') || (digit >= 'A' && digit <= 'F');
+        }
+
+        private bool IsBinDigit(char digit)
+        {
+            return digit == '0' || digit == '1';
+        }
+
+        private bool IsDecDigit(char digit)
+        {
+            return '0' <= digit && digit <= '9';
+        }
+
+        private Token LexNumber()
+        {
+            if (Current == '0')
+            {
+                if (Next == 'x')
+                {
+                    current += 2;
+
+                    LexHex();
+
+                    if (Current == '.' && IsHexDigit(Next))
+                    {
+                        current += 1;
+
+                        LexHex();
+                    }
+
+                    if (Current == 'p' || Current == 'P')
+                    {
+                        current += 1;
+
+                        if (Current == '+' || Current == '-')
+                        {
+                            current += 1;
+                        }
+
+                        LexDec();
+                    }
+
+                    return Token(ToKind.Number, 0);
+                }
+                else if (Next == 'b')
+                {
+                    current += 2;
+
+                    LexBin();
+
+                    return Token(ToKind.Number, 0);
+                }
+            }
+
+            LexDec();
+
+            if (Current == '.' && IsDecDigit(Next))
+            {
+                current += 1;
+
+                LexDec();
+            }
+
+            if (Current == 'e' || Current == 'E')
+            {
+                current += 1;
+
+                if (Current == '+' || Current == '-')
+                {
+                    current += 1;
+                }
+
+                LexDec();
+            }
+
+            return Token(ToKind.Number, 0);
+
+            void LexHex()
+            {
+                if (IsHexDigit(Current))
+                {
+                    do
+                    {
+                        current += 1;
+                    }
+                    while (IsHexDigit(Current) || Current == '_');
+
+                }
+                else
+                {
+                    throw new LexerException(Start, $"illformed hexadecimal literal");
+                }
+            }
+
+            void LexBin()
+            {
+                if (IsBinDigit(Current))
+                {
+                    do
+                    {
+                        current += 1;
+                    }
+                    while (IsBinDigit(Current) || Current == '_');
+                }
+                else
+                {
+                    throw new LexerException(Start, $"illformed binary literal");
+                }
+            }
+
+            void LexDec()
+            {
+                if (IsDecDigit(Current))
+                {
+                    do
+                    {
+                        current += 1;
+                    }
+                    while (IsDecDigit(Current) || Current == '_');
+                }
+                else
+                {
+                    throw new LexerException(Start, $"illformed decimal literal");
+                }
+            }
+
         }
 
         private void SkipLineComment()

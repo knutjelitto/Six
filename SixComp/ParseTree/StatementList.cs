@@ -17,10 +17,9 @@ namespace SixComp.ParseTree
                 var statement = AnyStatement.Parse(parser);
 
                 statements.Add(statement);
-
-                while (parser.Current == ToKind.Semi)
+                while (parser.Match(ToKind.Semi))
                 {
-                    parser.ConsumeAny();
+                    ;
                 }
             }
 

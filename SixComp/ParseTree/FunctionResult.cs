@@ -1,7 +1,11 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class FunctionResult : AnyType
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.MinusGreater);
+
         private FunctionResult(AnyType type)
         {
             Type = type;

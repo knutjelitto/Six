@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 using System.Linq;
 
 namespace SixComp.ParseTree
@@ -35,7 +36,7 @@ namespace SixComp.ParseTree
 
             if (type == null)
             {
-                throw new InvalidOperationException("can't parse type");
+                throw new ParserException(parser.CurrentToken, "can't parse type");
             }
 
             return type;

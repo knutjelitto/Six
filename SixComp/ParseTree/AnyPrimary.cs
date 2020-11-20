@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SixComp.Support;
 
 namespace SixComp.ParseTree
 {
     public interface AnyPrimary : AnyExpression
     {
+        private static TokenSet Firsts = new TokenSet(
+            ToKind.Number, ToKind.String, ToKind.Name, ToKind.KwSelf, ToKind.LParent, ToKind.LBracket, ToKind.Dot, ToKind.KwFalse, ToKind.KwTrue,
+            ToKind.KwNil, ToKind.Backslash);
+
         public static new AnyPrimary Parse(Parser parser)
         {
             switch (parser.Current)
@@ -34,8 +37,9 @@ namespace SixComp.ParseTree
                     return KeyPathExpression.Parse(parser);
             }
 
+            parser.Consume(Firsts);
 
-            throw new InvalidOperationException($"couldn't continue on `{parser.Current.GetRep()}`");
+            throw new NotSupportedException();
         }
 
         private static AnyPrimary NestedOrTuple(Parser parser)

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class DeclarationStatement : AnyStatement
     {
@@ -19,6 +21,11 @@
             }
 
             return null;
+        }
+
+        public void Write(IWriter writer)
+        {
+            Declaration.Write(writer);
         }
     }
 }

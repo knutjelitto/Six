@@ -15,5 +15,10 @@
 
             return new ExpressionCondition(expression);
         }
+
+        public override string ToString()
+        {
+            return $"{Expression}";
+        }
     }
 }

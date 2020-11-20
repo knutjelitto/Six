@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
     public interface AnyPostfix : AnyExpression
     {
@@ -12,18 +14,24 @@
                     case ToKind.Bang:
                         left = ForcedValueExpression.Parse(parser, left);
                         break;
-                    case ToKind.Quest:
-                        left = HandlePossibleTernary(parser, left);
-                        if (left is ConditionalExpression)
-                        {
-                            return left;
-                        }
+                    case ToKind.Quest when parser.Adjacent:
+                        left = OptionalChainingExpression.Parse(parser, left);
                         break;
                     case ToKind.LBracket:
                         left = SubscriptExpression.Parse(parser, left);
                         break;
                     case ToKind.LParent:
                         left = FunctionCallExpression.Parse(parser, left);
+                        break;
+                    case ToKind.LBrace:
+                        if (TrailingClosure.Try(parser))
+                        {
+                            left = FunctionCallExpression.Parse(parser, left);
+                        }
+                        else
+                        {
+                            done = true;
+                        }
                         break;
                     case ToKind.Dot:
                         {
@@ -49,26 +57,6 @@
             while (!done);
 
             return left;
-        }
-
-        private static AnyExpression HandlePossibleTernary(Parser parser, AnyExpression left)
-        {
-            parser.Consume(ToKind.Quest);
-
-            var offset = parser.Offset;
-
-            var expr1 = AnyExpression.Parse(parser, Precedence.Ternary);
-
-            if (parser.Match(ToKind.Colon))
-            {
-                var expr2 = AnyExpression.Parse(parser, Precedence.Ternary + 1);
-
-                return new ConditionalExpression(left, expr1, expr2);
-            }
-
-            parser.Offset = offset;
-
-            return OptionalChainingExpression.From(left);
         }
     }
 }

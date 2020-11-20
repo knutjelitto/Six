@@ -11,10 +11,12 @@
         public Name Name { get; }
         public TypeAnnotation? Type { get; }
 
-        public static ClosureParameter Parse(Parser parser)
+        public static ClosureParameter Parse(Parser parser, bool nameOnly)
         {
             var name = Name.Parse(parser);
-            var type = parser.Try(ToKind.Colon, TypeAnnotation.Parse);
+            var type = nameOnly
+                ? null
+                : parser.Try(ToKind.Colon, TypeAnnotation.Parse);
 
             return new ClosureParameter(name, type);
         }

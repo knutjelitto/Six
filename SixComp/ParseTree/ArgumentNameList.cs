@@ -24,7 +24,11 @@ namespace SixComp.ParseTree
             while (!follow.Contains(parser.Current));
 
             return new ArgumentNameList(names);
+        }
 
+        public override string ToString()
+        {
+            return string.Join(string.Empty, this);
         }
     }
 }

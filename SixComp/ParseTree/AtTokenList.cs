@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -38,7 +39,7 @@ namespace SixComp.ParseTree
 
                 if (token == null)
                 {
-                    throw new InvalidOperationException("parsing attribute");
+                    throw new ParserException(parser.CurrentToken, "illformed attribute");
                 }
 
                 tokens.Add(token);

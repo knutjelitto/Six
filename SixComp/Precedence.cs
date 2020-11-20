@@ -3,7 +3,6 @@
     public static class Precedence
     {
         public const int Prefix = 1000;
-        public const int Exponent = 900;
         public const int Multiplication = 800;
         public const int Addition = 700;
         public const int RangeFormation = 600;

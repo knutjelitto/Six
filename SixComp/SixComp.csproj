@@ -14,7 +14,7 @@
     <None Update="Source\Package.swift">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Source\Six.swift">
+    <None Update="Source\Checker.swift">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

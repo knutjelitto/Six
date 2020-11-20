@@ -14,9 +14,9 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            //new Program().Test();
+            new Program().Checker();
+            //new Program().Swift();
             //SixRT.PlayCheck();
-            new Program().Swift();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
         }
@@ -28,8 +28,8 @@ namespace SixComp
             TempDir.Create();
             SwiftDir = new DirectoryInfo(Path.Combine(WorkSpace.FullName, "../Swift"));
 
-            Console.WriteLine($"workspace: {WorkSpace.FullName}");
-            Console.WriteLine($"temp     : {TempDir.FullName}");
+            //Console.WriteLine($"workspace: {WorkSpace.FullName}");
+            //Console.WriteLine($"temp     : {TempDir.FullName}");
         }
 
         private void Error(Source source, string error, int start, int length)
@@ -82,12 +82,13 @@ namespace SixComp
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
-            const int skip = 4;
-            const int take = 10000;
+            const int skip = 0;
+            const int take = 100000;
             foreach (var file in files.Skip(skip).Take(take))
             {
                 var name = file.Substring(root.Length + 1);
                 var text = File.ReadAllText(file);
+                Console.WriteLine($"FILE: {name}");
                 if (!Test(new Source(name, text)))
                 {
                     break;
@@ -95,48 +96,44 @@ namespace SixComp
             }
         }
 
-        public void Test()
+        public void Checker()
         {
 #if false
             var file = @"./Source/Package.swift";
 #endif
-            var file = @"./Source/Six.swift";
+            var file = @"./Source/Checker.swift";
             var text = File.ReadAllText(file);
+            Console.WriteLine($"FILE: {file}");
             Test(new Source(file, text));
         }
 
         public bool Test(Source source)
         {
-            Console.WriteLine($"FILE: {source.Name}");
-            //Console.WriteLine($"parsing \"\"\"");
-            //Console.Write(source.Content);
-            //Console.WriteLine("\"\"\"");
-
-            var index = new SourceIndex(source);
-            var lexer = new Lexer(source);
-            while (!lexer.Done)
-            {
-                var token = lexer.GetNext();
-                var line = index.GetInfo(token.Span.Start);
-
-                if (token.Kind == ToKind.ERROR)
-                {
-                    Error(source, "can't continue lexing (illegal character in input stream)", lexer.Start, 1);
-
-                    break;
-                }
-            }
-
-            if (!lexer.Done)
-            {
-                return false;
-            }
-
-            lexer = new Lexer(source);
-            var parser = new Parser(lexer);
-
             try
             {
+                var index = new SourceIndex(source);
+                var lexer = new Lexer(source);
+                while (!lexer.Done)
+                {
+                    var token = lexer.GetNext();
+                    var line = index.GetInfo(token.Span.Start);
+
+                    if (token.Kind == ToKind.ERROR)
+                    {
+                        Error(source, "can't continue lexing (illegal character in input stream)", lexer.Start, 1);
+
+                        break;
+                    }
+                }
+
+                if (!lexer.Done)
+                {
+                    return false;
+                }
+
+                lexer = new Lexer(source);
+                var parser = new Parser(lexer);
+
                 var tree = parser.Parse();
 
                 if (parser.Current != ToKind.EOF)
@@ -155,10 +152,16 @@ namespace SixComp
                     tree.Write(writer);
                 }
             }
-            catch (InvalidOperationException error)
+            catch (ParserException pe)
             {
-                var span = parser.CurrentToken.Span;
-                Error(source, error.Message, span.Start, span.Length);
+                Error(source, pe.Message, pe.Token.Span.Start, pe.Token.Span.Length);
+
+                return false;
+
+            }
+            catch (LexerException le)
+            {
+                Error(source, le.Message, le.Offset, 1);
 
                 return false;
             }

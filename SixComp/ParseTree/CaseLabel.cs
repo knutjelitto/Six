@@ -1,9 +1,12 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
     public class CaseLabel
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwDefault);
+
         public CaseLabel(CaseItemList caseItems)
         {
             CaseItems = caseItems;
@@ -26,7 +29,9 @@ namespace SixComp.ParseTree
                     return new CaseLabel(new CaseItemList());
             }
 
-            throw new InvalidOperationException();
+            parser.Consume(Firsts);
+
+            throw new NotSupportedException();
         }
 
         public override string ToString()
