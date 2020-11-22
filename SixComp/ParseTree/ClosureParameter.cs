@@ -11,6 +11,8 @@
         public Name Name { get; }
         public TypeAnnotation? Type { get; }
 
+        public bool NameOnly => Type == null;
+
         public static ClosureParameter Parse(Parser parser, bool nameOnly)
         {
             var name = Name.Parse(parser);

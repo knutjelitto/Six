@@ -2,18 +2,18 @@
 {
     public class ConformanceRequirement : AnyRequirement
     {
-        private ConformanceRequirement(TypeIdentifier typeIdentifier, ProtocolCompositionType composition)
+        private ConformanceRequirement(AnyType name, ProtocolCompositionType composition)
         {
-            TypeIdentifier = typeIdentifier;
+            Name = name;
             Composition = composition;
         }
 
-        public TypeIdentifier TypeIdentifier { get; }
+        public AnyType Name { get; }
         public ProtocolCompositionType Composition { get; }
 
-        public static ConformanceRequirement From(TypeIdentifier typeIdentifier, ProtocolCompositionType composition)
+        public static ConformanceRequirement From(AnyType name, ProtocolCompositionType composition)
         {
-            return new ConformanceRequirement(typeIdentifier, composition);
+            return new ConformanceRequirement(name, composition);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
         public static DeclarationStatement? TryParse(Parser parser)
         {
-            var declaration = AnyDeclaration.TryParse(parser);
+            var declaration = AnyDeclaration.TryParse(parser, AnyDeclaration.Context.Statement);
 
             if (declaration != null)
             {

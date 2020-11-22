@@ -2,16 +2,18 @@
 {
     public struct Token
     {
-        public Token(Span span, ToKind kind, bool newLine)
+        public Token(Span span, ToKind kind, bool newlineBefore)
         {
             Span = span;
             Kind = kind;
-            NewLine = newLine;
+            NewlineBefore = newlineBefore;
         }
 
         public Span Span { get; }
         public ToKind Kind { get; }
-        public bool NewLine { get; }
+        public bool NewlineBefore { get; }
+
+        public bool IsDollar => Kind == ToKind.Name && Span.IsDollar;
 
         public override bool Equals(object? obj)
         {

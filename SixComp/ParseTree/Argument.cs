@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
     public class Argument
     {
@@ -14,7 +16,7 @@
         public static Argument Parse(Parser parser)
         {
             var name = ArgumentName.TryParse(parser);
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new Argument(name, expression);
         }

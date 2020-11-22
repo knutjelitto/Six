@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
-    public class ConditionList : ItemList<AnyCondition>
+    public class ConditionList : ExpressionItemList<AnyCondition>, AnyExpression
     {
         public ConditionList(List<AnyCondition> conditions) : base(conditions) { }
         public ConditionList() { }
@@ -13,7 +14,7 @@ namespace SixComp.ParseTree
 
             do
             {
-                var condition = AnyCondition.Parse(parser);
+                var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException();
                 conditions.Add(condition);
             }
             while (parser.Match(ToKind.Comma));
@@ -23,7 +24,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            return string.Join(", ", this);
+            return "CL:" + string.Join(", ", this);
         }
     }
 }

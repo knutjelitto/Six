@@ -7,6 +7,8 @@ namespace SixComp.ParseTree
         public ClosureParameterList(List<ClosureParameter> parameters) : base(parameters) { }
         public ClosureParameterList() { }
 
+        public bool NameOnly => Count == 1 && this[0].NameOnly;
+
         public static ClosureParameterList Parse(Parser parser, bool nameOnly)
         {
             var parameters = new List<ClosureParameter>();

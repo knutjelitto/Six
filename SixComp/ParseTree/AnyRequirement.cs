@@ -4,20 +4,20 @@
     {
         public static AnyRequirement Parse(Parser parser)
         {
-            var typeIdentifier = TypeIdentifier.Parse(parser);
+            TypeIdentifier name = TypeIdentifier.Parse(parser);
 
             if (parser.Match(ToKind.EqualEqual))
             {
                 var type = AnyType.Parse(parser);
 
-                return SameTypeRequirement.From(typeIdentifier, type);
+                return SameTypeRequirement.From(name, type);
             }
 
             parser.Match(ToKind.Colon);
 
             var composition = ProtocolCompositionType.Parse(parser);
 
-            return ConformanceRequirement.From(typeIdentifier, composition);
+            return ConformanceRequirement.From(name, composition);
         }
     }
 }

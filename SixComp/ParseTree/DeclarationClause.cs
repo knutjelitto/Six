@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
@@ -12,11 +11,11 @@ namespace SixComp.ParseTree
 
         public DeclarationList Declarations { get; }
 
-        public static DeclarationClause Parse(Parser parser)
+        public static DeclarationClause Parse(Parser parser, AnyDeclaration.Context context)
         {
             parser.Consume(ToKind.LBrace);
 
-            var declarations = DeclarationList.Parse(parser);
+            var declarations = DeclarationList.Parse(parser, context);
 
             parser.Consume(ToKind.RBrace);
 

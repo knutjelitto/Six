@@ -1,6 +1,8 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
-    public class ExpressionPattern : AnyPattern
+    public class ExpressionPattern : SyntaxNode, AnyPattern
     {
         private ExpressionPattern(AnyExpression? expression, AnyPattern? pattern)
         {
@@ -13,7 +15,7 @@
 
         public static ExpressionPattern Parse(Parser parser)
         {
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new ExpressionPattern(expression, null);
         }

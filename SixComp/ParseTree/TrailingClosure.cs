@@ -1,6 +1,4 @@
-﻿using SixComp.Support;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class TrailingClosure
     {
@@ -13,14 +11,7 @@ namespace SixComp.ParseTree
         public Label Label { get; }
         public ClosureExpression Closure { get; }
 
-        public static bool Try(Parser parser)
-        {
-            var offset = parser.Offset;
-            var closure = TryParse(parser, true);
-            parser.Offset = offset;
-
-            return closure != null;
-        }
+        public bool BlockOnly => Label == Label.Empty && Closure.BlockOnly;
 
         public static TrailingClosure? TryParse(Parser parser, bool first)
         {
@@ -33,24 +24,6 @@ namespace SixComp.ParseTree
             }
 
             return new TrailingClosure(label, closure);
-        }
-
-        public static TrailingClosure Parse(Parser parser, bool first)
-        {
-            var offset = parser.Offset;
-
-            var trailingClosure = TryParse(parser, first);
-
-            if (trailingClosure == null)
-            {
-                var token = parser.CurrentToken;
-                parser.Offset = offset;
-
-                throw new ParserException(token, $"failed to parse `trailing closure` at `{token.Kind.GetRep()}`");
-            }
-
-            return trailingClosure;
-
         }
     }
 }

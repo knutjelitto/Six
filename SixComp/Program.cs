@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Linq;
 
+#pragma warning disable IDE0051 // Remove unused private members
+
 namespace SixComp
 {
     internal class Program
@@ -14,8 +16,8 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            new Program().Checker();
-            //new Program().Swift();
+            //new Program().Checker();
+            new Program().Swift();
             //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
@@ -69,9 +71,9 @@ namespace SixComp
 
         private void Swift()
         {
-            EnumSwifts("swift-numerics");
+            //EnumSwifts("swift-numerics");
             //EnumSwifts("swift");
-            //EnumSwifts("swift-package-manager\\Sources");
+            EnumSwifts("swift-package-manager\\Sources");
         }
 
         private void EnumSwifts(string swift)
@@ -82,13 +84,21 @@ namespace SixComp
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
+            var count = files.Count;
+            var digits = (int)Math.Truncate(Math.Log10(count)) + 1;
+
             const int skip = 0;
             const int take = 100000;
-            foreach (var file in files.Skip(skip).Take(take))
+            files = files.Skip(skip).Take(take).ToList();
+            for (var i = 0; i < files.Count; i += 1)
             {
+                var file = files[i];
                 var name = file.Substring(root.Length + 1);
                 var text = File.ReadAllText(file);
-                Console.WriteLine($"FILE: {name}");
+                var index = i + 1 + skip;
+                var fill = new string(' ', digits - ((int)Math.Truncate(Math.Log10(index)) + 1));
+                var currentDigits = (int)Math.Truncate(Math.Log10(index)) + 1;
+                Console.WriteLine($"FILE({fill}{index}/{count}: {name}");
                 if (!Test(new Source(name, text)))
                 {
                     break;

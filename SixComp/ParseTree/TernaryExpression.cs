@@ -1,6 +1,8 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
-    public class TernaryExpression : AnyExpression
+    public class TernaryExpression : BaseExpression, AnyExpression
     {
         public TernaryExpression(AnyExpression condition, AnyExpression whenTrue, AnyExpression whenFalse)
         {
@@ -17,11 +19,11 @@
         {
             parser.Consume(ToKind.Quest);
 
-            var whenTrue = AnyExpression.Parse(parser, precedence);
+            var whenTrue = AnyExpression.TryParse(parser, precedence) ?? throw new InvalidOperationException();
 
             parser.Consume(ToKind.Colon);
 
-            var whenFalse = AnyExpression.Parse(parser, precedence + 1);
+            var whenFalse = AnyExpression.TryParse(parser, precedence + 1) ?? throw new InvalidOperationException();
 
             return new TernaryExpression(condition, whenTrue, whenFalse);
         }

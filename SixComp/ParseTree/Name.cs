@@ -13,10 +13,14 @@
         {
             if (withOperators)
             {
-                if (parser.Current == ToKind.Name || Operator.Firsts.Contains(parser.Current))
+                if (parser.IsOperator(parser.Current))
                 {
                     return new Name(parser.ConsumeAny());
                 }
+            }
+            if (parser.Current == ToKind.KwSELF)
+            {
+                return new Name(parser.ConsumeAny());
             }
 
             return new Name(parser.Consume(ToKind.Name));

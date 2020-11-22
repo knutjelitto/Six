@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class LetPattern : AnyPattern
+    public class LetPattern : SyntaxNode, AnyPattern
     {
         public LetPattern(AnyPattern pattern)
         {

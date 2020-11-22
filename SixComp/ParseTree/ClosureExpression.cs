@@ -2,12 +2,13 @@
 
 namespace SixComp.ParseTree
 {
-    public class ClosureExpression : AnyExpression
+    public class ClosureExpression : BaseExpression, AnyExpression
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 
-        public ClosureExpression(CaptureList? captures, ClosureParameterClause? parameters, bool throws, FunctionResult? result, StatementList statements)
+        public ClosureExpression(bool minimal, CaptureList captures, ClosureParameterClause? parameters, bool throws, FunctionResult? result, StatementList statements)
         {
+            Minimal = minimal;
             Captures = captures;
             Parameters = parameters;
             Throws = throws;
@@ -15,33 +16,50 @@ namespace SixComp.ParseTree
             Statements = statements;
         }
 
-        public CaptureList? Captures { get; }
+        public bool Minimal { get; }
+        public CaptureList Captures { get; }
         public ClosureParameterClause? Parameters { get; }
         public bool Throws { get; }
         public FunctionResult? Result { get; }
         public StatementList Statements { get; }
 
+        public bool BlockOnly => Minimal;
+
         public static ClosureExpression? TryParse(Parser parser)
         {
-            if (!parser.Match(ToKind.LBrace))
-            {
-                return null;
-            }
-            var captures = parser.Try(CaptureList.Firsts, CaptureList.Parse);
-            var parameters = parser.Try(ClosureParameterClause.Firsts, ClosureParameterClause.Parse);
-            bool throws = parser.Match(ToKind.KwThrows);
+            var outerOffset = parser.Offset;
+
+            parser.Consume(ToKind.LBrace);
+
+            var innerOffset = parser.Offset;
+            var minimal = false;
+
+            var captures = parser.TryList(CaptureList.Firsts, CaptureList.Parse);
+            var parameters = parser.TryList(ClosureParameterClause.Firsts, ClosureParameterClause.Parse);
+            var throws = parser.Match(ToKind.KwThrows);
             var result = parser.Try(FunctionResult.Firsts, FunctionResult.Parse);
-            if (!parser.Match(ToKind.KwIn))
+            var inNeeded = !captures.Missing || parameters.Definite || throws || result != null;
+            if (inNeeded || parser.Current == ToKind.KwIn)
             {
-                return null;
+                parser.Consume(ToKind.KwIn);
+            }
+            else
+            {
+                parameters = new ClosureParameterClause();
+                minimal = true;
+                parser.Offset = innerOffset;
             }
             var statements = StatementList.Parse(parser, new TokenSet(ToKind.RBrace));
-            if (!parser.Match(ToKind.RBrace))
+
+            if (minimal && statements.Missing && parser.Current != ToKind.RBrace)
             {
+                parser.Offset = outerOffset;
                 return null;
             }
 
-            return new ClosureExpression(captures, parameters, throws, result, statements);
+            parser.Consume(ToKind.RBrace);
+
+            return new ClosureExpression(minimal, captures, parameters, throws, result, statements);
         }
     }
 }

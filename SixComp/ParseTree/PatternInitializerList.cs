@@ -22,6 +22,11 @@ namespace SixComp.ParseTree
             return new PatternInitializerList(list);
         }
 
+        public static PatternInitializerList From(List<PatternInitializer> pattInits)
+        {
+            return new PatternInitializerList(pattInits);
+        }
+
         public override string ToString()
         {
             return string.Join(", ", this);

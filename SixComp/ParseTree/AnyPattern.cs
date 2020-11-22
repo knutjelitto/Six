@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public interface AnyPattern : IWritable
+    public interface AnyPattern : AnySyntaxNode, IWritable
     {
         public static AnyPattern Parse(Parser parser)
         {
@@ -22,7 +22,8 @@ namespace SixComp.ParseTree
                 default:
                     return ExpressionPattern.Parse(parser);
             }
-            ;
         }
+
+        public bool NameOnly => false;
     }
 }

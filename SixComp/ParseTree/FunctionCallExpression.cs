@@ -2,7 +2,7 @@
 {
     public class FunctionCallExpression : PostfixExpression
     {
-        public FunctionCallExpression(AnyExpression left, ArgumentClause arguments, TrailingClosureList closures) : base(left)
+        private FunctionCallExpression(AnyExpression left, Token op, ArgumentClause arguments, TrailingClosureList closures) : base(left, op)
         {
             Arguments = arguments;
             Closures = closures;
@@ -13,13 +13,12 @@
 
         public static FunctionCallExpression Parse(Parser parser, AnyExpression left)
         {
-            var arguments = parser.TryList(ArgumentClause.Firsts, ArgumentClause.Parse);
-            TrailingClosureList? closures =
-                arguments.Missing || TrailingClosure.Try(parser)
-                ? TrailingClosureList.Parse(parser)
-                : new TrailingClosureList();
+            var op = parser.CurrentToken;
 
-            return new FunctionCallExpression(left, arguments, closures);
+            var arguments = parser.TryList(ArgumentClause.Firsts, ArgumentClause.Parse);
+            var closures = parser.TryList(TrailingClosureList.Firsts, TrailingClosureList.Parse);
+
+            return new FunctionCallExpression(left, op, arguments, closures);
         }
 
         public override string ToString()

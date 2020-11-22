@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class ExpressionCondition : AnyCondition
+    public class ExpressionCondition : BaseExpression, AnyCondition
     {
         private ExpressionCondition(AnyExpression expression)
         {
@@ -9,11 +9,25 @@
 
         public AnyExpression Expression { get; }
 
-        public static ExpressionCondition Parse(Parser parser)
+        public static ExpressionCondition? TryParse(Parser parser)
         {
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser);
+
+            if (expression == null)
+            {
+                return null;
+            }
 
             return new ExpressionCondition(expression);
+        }
+
+        public override AnyExpression? LastExpression
+        {
+            get
+            {
+                var last = Expression.LastExpression;
+                return last;
+            }
         }
 
         public override string ToString()

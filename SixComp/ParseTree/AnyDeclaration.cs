@@ -4,7 +4,18 @@ namespace SixComp.ParseTree
 {
     public interface AnyDeclaration : IWritable
     {
-        public static AnyDeclaration? TryParse(Parser parser)
+        public enum Context
+        {
+            Any,
+            Class,
+            Enum,
+            Extension,
+            Protocol,
+            Statement,
+            Struct,
+        }
+
+        public static AnyDeclaration? TryParse(Parser parser, Context context)
         {
             var prefix = Prefix.Parse(parser);
 
@@ -22,7 +33,7 @@ namespace SixComp.ParseTree
                     return StructDeclaration.Parse(parser, prefix);
                 case ToKind.KwEnum:
                     return EnumDeclaration.Parse(parser, prefix);
-                case ToKind.KwCase:
+                case ToKind.KwCase when context == Context.Enum:
                     return EnumCase.Parse(parser);
                 case ToKind.KwInit:
                     return InitializerDeclaration.Parse(parser);

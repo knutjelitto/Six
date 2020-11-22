@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System;
 using System.Linq;
 
 namespace SixComp.ParseTree

@@ -1,8 +1,8 @@
 ﻿namespace SixComp.ParseTree
 {
-    public interface AnyCondition
+    public interface AnyCondition : AnyExpression
     {
-        public static AnyCondition Parse(Parser parser)
+        public static new AnyCondition? TryParse(Parser parser)
         {
             switch (parser.Current)
             {
@@ -10,8 +10,9 @@
                 case ToKind.KwLet:
                 case ToKind.KwVar:
                     return PatternCondition.Parse(parser);
+                case ToKind.CdAvailable:
                 default:
-                    return ExpressionCondition.Parse(parser);
+                    return ExpressionCondition.TryParse(parser);
             }
         }
     }

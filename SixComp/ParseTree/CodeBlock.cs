@@ -2,9 +2,11 @@
 
 namespace SixComp.ParseTree
 {
-    public class CodeBlock : IWritable
+    public class CodeBlock : SyntaxNode, IWritable
     {
-        public CodeBlock(StatementList statements)
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
+
+        private CodeBlock(StatementList statements)
         {
             Statements = statements;
         }
@@ -19,6 +21,11 @@ namespace SixComp.ParseTree
 
             parser.Consume(ToKind.RBrace);
 
+            return new CodeBlock(statements);
+        }
+
+        public static CodeBlock From(StatementList statements)
+        {
             return new CodeBlock(statements);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
     public class CaptureListItem
     {
@@ -14,7 +16,7 @@
         public static CaptureListItem Parse(Parser parser)
         {
             var specifier = CaptureSpecifier.Parse(parser);
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new CaptureListItem(specifier, expression);
         }

@@ -2,18 +2,20 @@
 
 namespace SixComp.ParseTree
 {
-    public class PatternCondition : AnyCondition
+    public class PatternCondition : BaseExpression, AnyCondition
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwLet, ToKind.KwVar);
 
-        public PatternCondition(AnyPattern pattern, Initializer init)
+        public PatternCondition(AnyPattern pattern, Initializer initializer)
         {
             Pattern = pattern;
-            Init = init;
+            Initializer = initializer;
         }
 
         public AnyPattern Pattern { get; }
-        public Initializer Init { get; }
+        public Initializer Initializer { get; }
+
+        public override AnyExpression? LastExpression => Initializer.LastExpression;
 
         public static PatternCondition Parse(Parser parser)
         {

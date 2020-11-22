@@ -1,11 +1,10 @@
 ﻿using SixComp.Support;
-using System;
 
 namespace SixComp.ParseTree
 {
     public interface AnyStatement : IWritable
     {
-        public static AnyStatement Parse(Parser parser)
+        public static AnyStatement? TryParse(Parser parser)
         {
             switch(parser.Current)
             {
@@ -27,12 +26,12 @@ namespace SixComp.ParseTree
                     var statement = (AnyStatement?)DeclarationStatement.TryParse(parser);
                     if (statement == null)
                     {
-                        statement = ExpressionStatement.Parse(parser);
+                        statement = ExpressionStatement.TryParse(parser);
                     }
                     return statement;
             }
 
-            throw new NotImplementedException();
+            //return null;
         }
     }
 }

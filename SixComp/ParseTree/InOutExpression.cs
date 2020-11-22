@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class InOutExpression : AnyExpression
+    public class InOutExpression : BaseExpression, AnyPrefix
     {
         public InOutExpression(Name name)
         {

@@ -10,27 +10,31 @@ namespace SixComp
         public readonly Source Source;
         private readonly Dictionary<string, ToKind> keywordMap;
         private readonly HashSet<ToKind> keywordSet;
+        private readonly HashSet<ToKind> operatorSet;
 
         public Lexer(Source source)
         {
             Source = source;
 
             Start = 0;
-            current = 0;
+            Before = 0;
+            Index = 0;
 
             keywordMap = TokenHelper.GetKeywords().ToDictionary(kw => kw.rep, kw => kw.kind);
             keywordSet = new HashSet<ToKind>(keywordMap.Values);
+            operatorSet = new HashSet<ToKind>(TokenHelper.GetOperators());
         }
 
         public int Start;
-        private int current;
+        public int Before;
+        public int Index;
 
         public bool Done { get; private set; } = false;
 
-        public char Current => current < Source.Length ? Source[current] : '\0';
-        public char Next => current + 1 < Source.Length ? Source[current + 1] : '\0';
-        public char NextNext => current + 2 < Source.Length ? Source[current + 2] : '\0';
-        public bool More => current < Source.Length;
+        public char Current => Index < Source.Length ? Source[Index] : '\0';
+        public char Next => Index + 1 < Source.Length ? Source[Index + 1] : '\0';
+        public char NextNext => Index + 2 < Source.Length ? Source[Index + 2] : '\0';
+        public bool More => Index < Source.Length;
 
         private bool newlineBefore;
 
@@ -41,13 +45,15 @@ namespace SixComp
                 return Token(ToKind.ERROR);
             }
 
+            Before = Index;
+
             newlineBefore = false;
             do
             {
                 while (char.IsWhiteSpace(Current))
                 {
-                    newlineBefore = newlineBefore || Source[current] == '\n';
-                    current += 1;
+                    newlineBefore = newlineBefore || Source[Index] == '\n';
+                    Index += 1;
                 }
                 if (Current == '/')
                 {
@@ -63,9 +69,9 @@ namespace SixComp
             }
             while (char.IsWhiteSpace(Current));
 
-            Start = current;
+            Start = Index;
 
-            if (current == Source.Length)
+            if (Index == Source.Length)
             {
                 Done = true;
                 return Token(ToKind.EOF);
@@ -202,13 +208,13 @@ namespace SixComp
                     {
                         do
                         {
-                            current += 1;
+                            Index += 1;
                         }
                         while (Current != 0 && Current != '\n' && Current != '\r' && Current != '"');
 
                         if (Current == '"')
                         {
-                            current += 1;
+                            Index += 1;
                         }
                         return Token(ToKind.String, 0);
                     }
@@ -216,15 +222,15 @@ namespace SixComp
                     {
                         do
                         {
-                            current += 1;
+                            Index += 1;
                         }
                         while (char.IsLetter(Current));
 
                         if (Current == '`')
                         {
-                            current += 1;
+                            Index += 1;
 
-                            var text = Span().ToString();
+                            var text = Text();
                             var kw = text.Substring(1, text.Length - 2);
 
                             if (keywordMap.ContainsKey(kw))
@@ -238,11 +244,11 @@ namespace SixComp
                     {
                         do
                         {
-                            current += 1;
+                            Index += 1;
                         }
                         while (char.IsDigit(Current));
 
-                        var text = Span().ToString();
+                        var text = Text();
                         if (text.Length > 1)
                         {
                             return Token(ToKind.Name, 0);
@@ -255,11 +261,11 @@ namespace SixComp
                     {
                         do
                         {
-                            current += 1;
+                            Index += 1;
                         }
                         while (char.IsLetterOrDigit(Current) || Current == '_' || Current == '²');
 
-                        var text = Span().ToString();
+                        var text = Text();
 
                         if (keywordMap.TryGetValue(text, out var kind))
                         {
@@ -287,6 +293,11 @@ namespace SixComp
             return keywordSet.Contains(kind);
         }
 
+        public bool IsOperator(ToKind kind)
+        {
+            return operatorSet.Contains(kind);
+        }
+
         private bool IsHexDigit(char digit)
         {
             return char.IsDigit(digit) || (digit >= 'a' && digit <= 'f') || (digit >= 'A' && digit <= 'F');
@@ -308,24 +319,24 @@ namespace SixComp
             {
                 if (Next == 'x')
                 {
-                    current += 2;
+                    Index += 2;
 
                     LexHex();
 
                     if (Current == '.' && IsHexDigit(Next))
                     {
-                        current += 1;
+                        Index += 1;
 
                         LexHex();
                     }
 
                     if (Current == 'p' || Current == 'P')
                     {
-                        current += 1;
+                        Index += 1;
 
                         if (Current == '+' || Current == '-')
                         {
-                            current += 1;
+                            Index += 1;
                         }
 
                         LexDec();
@@ -335,7 +346,7 @@ namespace SixComp
                 }
                 else if (Next == 'b')
                 {
-                    current += 2;
+                    Index += 2;
 
                     LexBin();
 
@@ -347,18 +358,18 @@ namespace SixComp
 
             if (Current == '.' && IsDecDigit(Next))
             {
-                current += 1;
+                Index += 1;
 
                 LexDec();
             }
 
             if (Current == 'e' || Current == 'E')
             {
-                current += 1;
+                Index += 1;
 
                 if (Current == '+' || Current == '-')
                 {
-                    current += 1;
+                    Index += 1;
                 }
 
                 LexDec();
@@ -372,7 +383,7 @@ namespace SixComp
                 {
                     do
                     {
-                        current += 1;
+                        Index += 1;
                     }
                     while (IsHexDigit(Current) || Current == '_');
 
@@ -389,7 +400,7 @@ namespace SixComp
                 {
                     do
                     {
-                        current += 1;
+                        Index += 1;
                     }
                     while (IsBinDigit(Current) || Current == '_');
                 }
@@ -405,7 +416,7 @@ namespace SixComp
                 {
                     do
                     {
-                        current += 1;
+                        Index += 1;
                     }
                     while (IsDecDigit(Current) || Current == '_');
                 }
@@ -419,29 +430,29 @@ namespace SixComp
 
         private void SkipLineComment()
         {
-            current += 2;
+            Index += 2;
             while (More && Current != '\n')
             {
-                current += 1;
+                Index += 1;
             }
         }
 
         private void SkipMultilineComment()
         {
-            current += 2;
+            Index += 2;
             while (More)
             {
                 while (More && Current != '*')
                 {
-                    current += 1;
+                    Index += 1;
                 }
                 while (Current == '*')
                 {
-                    current += 1;
+                    Index += 1;
                 }
                 if (Current == '/')
                 {
-                    current += 1;
+                    Index += 1;
                     break;
                 }
             }
@@ -449,13 +460,14 @@ namespace SixComp
 
         private Token Token(ToKind kind, int consume = 1)
         {
-            current = Math.Min(Source.Length, current + consume);
-            return new Token(Span(), kind, newlineBefore);
+            Index = Math.Min(Source.Length, Index + consume);
+            var span = new Span(Source, Before, Start, Index);
+            return new Token(span, kind, newlineBefore);
         }
 
-        private Span Span()
+        private string Text()
         {
-            return new Span(Source, Start, current);
+            return Source.Content.Substring(Start, Index - Start);
         }
     }
 }

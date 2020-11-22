@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class SameTypeRequirement : AnyRequirement
     {
-        private SameTypeRequirement(TypeIdentifier typeIdentifier, AnyType type)
+        private SameTypeRequirement(AnyType name, AnyType type)
         {
-            TypeIdentifier = typeIdentifier;
+            Name = name;
             Type = type;
         }
 
-        public TypeIdentifier TypeIdentifier { get; }
+        public AnyType Name { get; }
         public AnyType Type { get; }
 
-        public static SameTypeRequirement From(TypeIdentifier typeIdentifier, AnyType type)
+        public static SameTypeRequirement From(AnyType name, AnyType type)
         {
-            return new SameTypeRequirement(typeIdentifier, type);
+            return new SameTypeRequirement(name, type);
         }
     }
 }

@@ -4,13 +4,13 @@ using SixComp.Support;
 
 namespace SixComp.ParseTree
 {
-    public interface AnyPrimary : AnyExpression
+    public interface AnyPrimary : AnyPostfix
     {
         private static TokenSet Firsts = new TokenSet(
             ToKind.Number, ToKind.String, ToKind.Name, ToKind.KwSelf, ToKind.LParent, ToKind.LBracket, ToKind.Dot, ToKind.KwFalse, ToKind.KwTrue,
             ToKind.KwNil, ToKind.Backslash);
 
-        public static new AnyPrimary Parse(Parser parser)
+        public static new AnyPrimary? TryParse(Parser parser)
         {
             switch (parser.Current)
             {
@@ -19,7 +19,12 @@ namespace SixComp.ParseTree
                 case ToKind.String:
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
+                case ToKind.KwSELF:
                     return NameExpression.Parse(parser);
+                case ToKind.CdFile:
+                    return FileLiteralExpression.Parse(parser);
+                case ToKind.CdLine:
+                    return LineLiteralExpression.Parse(parser);
                 case ToKind.KwSelf:
                     return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
@@ -35,11 +40,9 @@ namespace SixComp.ParseTree
                     return NilLiteralExpression.Parse(parser);
                 case ToKind.Backslash:
                     return KeyPathExpression.Parse(parser);
+                default:
+                    return null;
             }
-
-            parser.Consume(Firsts);
-
-            throw new NotSupportedException();
         }
 
         private static AnyPrimary NestedOrTuple(Parser parser)
@@ -51,7 +54,7 @@ namespace SixComp.ParseTree
             {
                 do
                 {
-                    var expression = AnyExpression.Parse(parser);
+                    var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
                     expressions.Add(expression);
                 }
                 while (parser.Match(ToKind.Comma));

@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class VarPattern : AnyPattern
+    public class VarPattern : SyntaxNode, AnyPattern
     {
         public VarPattern(AnyPattern pattern)
         {

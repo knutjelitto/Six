@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class SelfMethodExpression : AnySelfExpression
+    public class SelfMethodExpression : BaseExpression, AnySelfExpression
     {
         private SelfMethodExpression(Token self, Name name)
         {

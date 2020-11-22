@@ -6,5 +6,10 @@ namespace SixComp.ParseTree
     {
         public ExpressionList(List<AnyExpression> items) : base(items) { }
         public ExpressionList() { }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
     public class ForInStatement : AnyStatement
     {
@@ -21,9 +23,17 @@
             parser.Match(ToKind.KwCase);
             var pattern = AnyPattern.Parse(parser);
             parser.Consume(ToKind.KwIn);
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
             var where = parser.Try(WhereClause.Firsts, WhereClause.Parse);
-            var block = CodeBlock.Parse(parser);
+            CodeBlock block;
+            if (where == null && parser.Current != ToKind.LBrace && expression.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
+            {
+                block = call.Closures.ExtractBlock();
+            }
+            else
+            {
+                block = CodeBlock.Parse(parser);
+            }
 
             return new ForInStatement(pattern, expression, where, block);
         }

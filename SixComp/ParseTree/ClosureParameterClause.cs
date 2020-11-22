@@ -6,14 +6,22 @@ namespace SixComp.ParseTree
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LParent, ToKind.Name);
 
-        public ClosureParameterClause(ClosureParameterList parameters, bool variadic)
+        public ClosureParameterClause(ClosureParameterList parameters, bool parents, bool variadic)
         {
             Parameters = parameters;
+            Parents = parents;
             Variadic = variadic;
         }
 
+        public ClosureParameterClause() : this(new ClosureParameterList(), false, false) { }
+
         public ClosureParameterList Parameters { get; }
+        public bool Parents { get; }
         public bool Variadic { get; }
+
+        public bool Missing => Parameters.Missing;
+        public bool NameOnly => !Parents && Parameters.NameOnly;
+        public bool Definite => !Missing && !NameOnly;
 
         public static ClosureParameterClause Parse(Parser parser)
         {
@@ -23,12 +31,12 @@ namespace SixComp.ParseTree
                 var variadic = parser.Match(ToKind.DotDotDot);
                 parser.Consume(ToKind.RParent);
 
-                return new ClosureParameterClause(fullParameters, variadic);
+                return new ClosureParameterClause(fullParameters, true, variadic);
             }
 
             var nameParameters = ClosureParameterList.Parse(parser, true);
 
-            return new ClosureParameterClause(nameParameters, false);
+            return new ClosureParameterClause(nameParameters, false, false);
         }
     }
 }

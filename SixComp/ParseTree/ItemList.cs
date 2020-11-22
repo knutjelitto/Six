@@ -22,10 +22,15 @@ namespace SixComp.ParseTree
         public T this[int index] => items[index];
         public int Count => items.Count;
 
-        public bool Missing { get; }
+        public bool Missing { get; private set; }
+
+        protected void ClearToMissing()
+        {
+            items.Clear();
+            Missing = true;
+        }
 
         public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
         public virtual void Write(IWriter writer)

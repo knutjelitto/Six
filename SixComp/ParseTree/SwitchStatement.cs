@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
@@ -16,7 +17,7 @@ namespace SixComp.ParseTree
         public static SwitchStatement Parse(Parser parser)
         {
             parser.Consume(ToKind.KwSwitch);
-            var value = AnyExpression.Parse(parser);
+            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
             var cases = SwitchCaseList.Parse(parser);
 
             return new SwitchStatement(value, cases);

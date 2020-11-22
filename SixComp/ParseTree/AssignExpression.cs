@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SixComp.ParseTree
 {
-    public class AssignExpression : AnyExpression
+    public class AssignExpression : BaseExpression, AnyExpression
     {
         public AssignExpression(AnyExpression left, AnyExpression right)
         {
@@ -19,7 +17,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.Equal);
 
-            var right = AnyExpression.Parse(parser);
+            var right = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new AssignExpression(left, right);
         }

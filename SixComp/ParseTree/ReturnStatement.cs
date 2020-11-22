@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
@@ -17,9 +18,9 @@ namespace SixComp.ParseTree
 
             AnyExpression? value = null;
 
-            if (!parser.CurrentToken.NewLine)
+            if (!parser.CurrentToken.NewlineBefore)
             {
-                value = AnyExpression.Parse(parser);
+                value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
             }
 
             return new ReturnStatement(value);

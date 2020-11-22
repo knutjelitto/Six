@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public interface AnySelfExpression : AnyPrimary
     {
-        public static new AnySelfExpression Parse(Parser parser)
+        public static AnySelfExpression Parse(Parser parser)
         {
             Debug.Assert(parser.Current == ToKind.KwSelf);
 

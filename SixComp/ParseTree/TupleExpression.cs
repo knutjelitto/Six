@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class TupleExpression : AnyPrimary
+    public class TupleExpression : BaseExpression, AnyPrimary
     {
         private TupleExpression(ExpressionList expressions)
         {
@@ -16,6 +12,11 @@ namespace SixComp.ParseTree
         public static TupleExpression From(ExpressionList expressions)
         {
             return new TupleExpression(expressions);
+        }
+
+        public override string ToString()
+        {
+            return $"({Expressions})";
         }
     }
 }

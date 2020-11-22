@@ -4,30 +4,39 @@ namespace SixComp.ParseTree
 {
     public class IfStatement : AnyStatement
     {
-        public IfStatement(AnyCondition condition, CodeBlock thenPart, CodeBlock? elsePart)
+        public IfStatement(ConditionList conditions, CodeBlock thenPart, CodeBlock? elsePart)
         {
-            Condition = condition;
+            Conditions = conditions;
             ThenPart = thenPart;
             ElsePart = elsePart;
         }
 
-        public AnyCondition Condition { get; }
+        public ConditionList Conditions { get; }
         public CodeBlock ThenPart { get; }
         public CodeBlock? ElsePart { get; }
 
         public static IfStatement Parse(Parser parser)
         {
             parser.Consume(ToKind.KwIf);
-            var condition = AnyCondition.Parse(parser);
-            var thenPart = CodeBlock.Parse(parser);
+            var conditions = ConditionList.Parse(parser);
+            CodeBlock thenPart;
+            if (parser.Current != ToKind.LBrace && conditions.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
+            {
+                thenPart = call.Closures.ExtractBlock();
+            }
+            else
+            {
+                thenPart = CodeBlock.Parse(parser);
+            }
             var elsePart = parser.TryMatch(ToKind.KwElse, CodeBlock.Parse);
 
-            return new IfStatement(condition, thenPart, elsePart);
+
+            return new IfStatement(conditions, thenPart, elsePart);
         }
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"if {Condition.StripParents()}");
+            writer.WriteLine($"if {Conditions.StripParents()}");
             ThenPart.Write(writer);
             if (ElsePart != null)
             {

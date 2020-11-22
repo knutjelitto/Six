@@ -28,13 +28,28 @@ namespace SixComp.Support
         {
             var type = typeof(ToKind);
 
-            foreach (var field in type.GetFields(BindingFlags.Static|BindingFlags.Public))
+            foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
             {
                 var rep = field.GetCustomAttributes(typeof(RepAttribute), false).FirstOrDefault() as RepAttribute;
-                if (rep != null && rep.Cls == ToClass.Keyword)
+                if (rep != null && (rep.Cls & ToClass.Keyword) != 0)
                 {
                     var kind = (ToKind)(field.GetValue(null) ?? ToKind.ERROR);
                     yield return (kind, rep.Rep);
+                }
+            }
+        }
+
+        public static IEnumerable<ToKind> GetOperators()
+        {
+            var type = typeof(ToKind);
+
+            foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
+            {
+                var rep = field.GetCustomAttributes(typeof(RepAttribute), false).FirstOrDefault() as RepAttribute;
+                if (rep != null && (rep.Cls & ToClass.Operator) != 0)
+                {
+                    var kind = (ToKind)(field.GetValue(null) ?? ToKind.ERROR);
+                    yield return kind;
                 }
             }
         }

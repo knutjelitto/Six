@@ -28,7 +28,7 @@ namespace SixComp.ParseTree
             var parameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-            var declarations = DeclarationClause.Parse(parser);
+            var declarations = DeclarationClause.Parse(parser, AnyDeclaration.Context.Protocol);
 
             return new ProtocolDeclaration(prefix, name, parameters, inheritance, requirements, declarations);
         }

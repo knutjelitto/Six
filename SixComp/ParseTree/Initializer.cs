@@ -1,6 +1,8 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
-    public class Initializer : AnyExpression
+    public class Initializer : BaseExpression, AnyExpression
     {
         public Initializer(AnyExpression expression)
         {
@@ -9,11 +11,13 @@
 
         public AnyExpression Expression { get; }
 
+        public override AnyExpression? LastExpression => Expression;
+
         public static Initializer Parse(Parser parser)
         {
             parser.Consume(ToKind.Equal);
 
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new Initializer(expression);
         }

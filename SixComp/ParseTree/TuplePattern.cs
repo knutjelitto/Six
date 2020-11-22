@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class TuplePattern : AnyPattern
+    public class TuplePattern : SyntaxNode, AnyPattern
     {
         private TuplePattern(TuplePatternElementList elements)
         {

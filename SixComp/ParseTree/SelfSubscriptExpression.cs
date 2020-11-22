@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class SelfSubscriptExpression : AnySelfExpression
+    public class SelfSubscriptExpression : BaseExpression, AnySelfExpression
     {
         private SelfSubscriptExpression(Token self, SubscriptClause subscript)
         {

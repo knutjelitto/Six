@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
-    public class EnumCasePattern : AnyPattern
+    public class EnumCasePattern : SyntaxNode, AnyPattern
     {
         //
         // enum-case-pattern -> type-name? '.' enum-case-name tuple-pattern?

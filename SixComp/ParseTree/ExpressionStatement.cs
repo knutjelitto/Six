@@ -11,9 +11,14 @@ namespace SixComp.ParseTree
 
         public AnyExpression Expression { get; }
 
-        public static ExpressionStatement Parse(Parser parser)
+        public static ExpressionStatement? TryParse(Parser parser)
         {
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser);
+
+            if (expression == null)
+            {
+                return null;
+            }
 
             return new ExpressionStatement(expression);
         }

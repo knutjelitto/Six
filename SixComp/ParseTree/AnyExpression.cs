@@ -4,14 +4,16 @@ namespace SixComp.ParseTree
 {
     public interface AnyExpression : IWritable
     {
-        public static AnyExpression Parse(Parser parser)
+        public static AnyExpression? TryParse(Parser parser)
         {
-            return parser.ParseExpression();
+            return parser.TryParseExpression(0);
         }
 
-        public static AnyExpression Parse(Parser parser, int precedence)
+        public static AnyExpression? TryParse(Parser parser, int precedence)
         {
-            return parser.ParseExpression(precedence);
+            return parser.TryParseExpression(precedence);
         }
+
+        AnyExpression? LastExpression { get; }
     }
 }

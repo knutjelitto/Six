@@ -2,6 +2,7 @@
 
 namespace SixComp.ParseTree
 {
+
     public class TypeIdentifier : ItemList<TypeName>, AnyType
     {
         public TypeIdentifier(List<TypeName> names) : base(names) { }

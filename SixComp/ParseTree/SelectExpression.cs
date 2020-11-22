@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class SelectExpression : AnyExpression
+    public class SelectExpression : BaseExpression, AnyExpression
     {
         public SelectExpression(AnyExpression left, Name name)
         {

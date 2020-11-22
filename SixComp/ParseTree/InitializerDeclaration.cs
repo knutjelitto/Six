@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
 
         public static InitializerDeclaration Parse(Parser parser)
         {
-            //TODO: incomplete
+            //TODO: is incomplete
             parser.Consume(ToKind.KwInit);
             var failable = parser.Match(ToKind.Quest);
             var forced = parser.Match(ToKind.Quest);

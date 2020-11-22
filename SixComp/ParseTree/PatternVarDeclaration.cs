@@ -22,6 +22,11 @@ namespace SixComp.ParseTree
             return new PatternVarDeclaration(prefix, initializers);
         }
 
+        public static PatternVarDeclaration From(Prefix prefix, PatternInitializerList pattInits)
+        {
+            return new PatternVarDeclaration(prefix, pattInits);
+        }
+
         public void Write(IWriter writer)
         {
             writer.WriteLine($"var {Prefix}{Initializers}");

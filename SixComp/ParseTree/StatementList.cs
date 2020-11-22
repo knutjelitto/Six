@@ -14,13 +14,22 @@ namespace SixComp.ParseTree
 
             while (!follow.Contains(parser.Current))
             {
-                var statement = AnyStatement.Parse(parser);
+                var statement = AnyStatement.TryParse(parser);
 
+                if (statement == null)
+                {
+                    break;
+                }
                 statements.Add(statement);
                 while (parser.Match(ToKind.Semi))
                 {
                     ;
                 }
+            }
+
+            if (statements.Count == 0)
+            {
+                return new StatementList();
             }
 
             return new StatementList(statements);

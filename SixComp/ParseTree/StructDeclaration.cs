@@ -28,7 +28,7 @@ namespace SixComp.ParseTree
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-            var declarations = DeclarationClause.Parse(parser);
+            var declarations = DeclarationClause.Parse(parser, AnyDeclaration.Context.Struct);
 
             return new StructDeclaration(prefix, name, generics, inheritance, requirements, declarations);
         }

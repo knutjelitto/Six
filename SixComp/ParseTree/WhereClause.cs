@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
@@ -17,7 +18,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.KwWhere);
 
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new WhereClause(expression);
         }

@@ -1,6 +1,8 @@
-﻿namespace SixComp.ParseTree
+﻿using System;
+
+namespace SixComp.ParseTree
 {
-    public class ArrayLiteralItem : AnyExpression
+    public class ArrayLiteralItem : BaseExpression, AnyExpression
     {
         public ArrayLiteralItem(AnyExpression expression)
         {
@@ -11,7 +13,7 @@
 
         public static ArrayLiteralItem Parse(Parser parser)
         {
-            var expression = AnyExpression.Parse(parser);
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 
             return new ArrayLiteralItem(expression);
         }

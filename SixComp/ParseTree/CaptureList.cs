@@ -11,6 +11,13 @@ namespace SixComp.ParseTree
             Captures = captures;
         }
 
+        public CaptureList()
+            : this(new CaptureListItemList())
+        {
+        }
+
+        public bool Missing => Captures.Missing;
+
         public CaptureListItemList Captures { get; }
 
         public static CaptureList Parse(Parser parser)

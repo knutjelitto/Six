@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class ArrayLiteral : AnyPrimary
+    public sealed class ArrayLiteral : BaseExpression, AnyPrimary
     {
         public ArrayLiteral(ArrayLiteralItemList items)
         {

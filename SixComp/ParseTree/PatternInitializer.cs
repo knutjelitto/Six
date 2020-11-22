@@ -16,7 +16,9 @@ namespace SixComp.ParseTree
         public static PatternInitializer Parse(Parser parser)
         {
             var pattern = AnyPattern.Parse(parser);
-            var initializer = parser.Try(ToKind.Equal, Initializer.Parse);
+            var initializer = parser.InContext(
+                ParserContext.LetVarDeclaration, 
+                () => parser.Try(ToKind.Equal, Initializer.Parse));
 
             return new PatternInitializer(pattern, initializer);
         }

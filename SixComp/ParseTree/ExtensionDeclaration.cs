@@ -27,7 +27,7 @@ namespace SixComp.ParseTree
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
             parser.Consume(ToKind.LBrace);
-            var declarations = DeclarationList.Parse(parser);
+            var declarations = DeclarationList.Parse(parser, AnyDeclaration.Context.Extension);
             parser.Consume(ToKind.RBrace);
 
             return new ExtensionDeclaration(prefix, name, inheritance, requirements, declarations);
