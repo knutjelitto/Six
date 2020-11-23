@@ -20,7 +20,7 @@ namespace SixComp.ParseTree
 
             if (!parser.CurrentToken.NewlineBefore)
             {
-                value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+                value = AnyExpression.TryParse(parser);
             }
 
             return new ReturnStatement(value);

@@ -11,7 +11,7 @@
 
         public static TypealiasAssignment Parse(Parser parser)
         {
-            parser.Consume(ToKind.Equal);
+            parser.Consume(ToKind.Assign);
 
             var type = AnyType.Parse(parser);
 

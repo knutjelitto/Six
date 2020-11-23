@@ -21,16 +21,14 @@ namespace SixComp.ParseTree
                 case ToKind.Name:
                 case ToKind.KwSELF:
                     return NameExpression.Parse(parser);
-                case ToKind.CdFile:
-                    return FileLiteralExpression.Parse(parser);
-                case ToKind.CdLine:
-                    return LineLiteralExpression.Parse(parser);
                 case ToKind.KwSelf:
                     return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
                     return NestedOrTuple(parser);
                 case ToKind.LBracket:
-                    return ArrayLiteral.Parse(parser);
+                    return DirayLiteral.Parse(parser);
+                case ToKind.LBrace:
+                    return ClosureExpression.TryParse(parser) ?? throw new InvalidOperationException();
                 case ToKind.Dot:
                     return ImplicitMemberExpression.Parse(parser);
                 case ToKind.KwFalse:
@@ -40,6 +38,10 @@ namespace SixComp.ParseTree
                     return NilLiteralExpression.Parse(parser);
                 case ToKind.Backslash:
                     return KeyPathExpression.Parse(parser);
+                case ToKind.CdFile:
+                    return FileLiteralExpression.Parse(parser);
+                case ToKind.CdLine:
+                    return LineLiteralExpression.Parse(parser);
                 default:
                     return null;
             }

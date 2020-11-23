@@ -2,21 +2,24 @@
 {
     public class PrefixedType : AnyType
     {
-        public PrefixedType(Prefix prefix, AnyType type)
+        public PrefixedType(Prefix prefix, bool inout, AnyType type)
         {
             Prefix = prefix;
+            Inout = inout;
             Type = type;
         }
 
         public Prefix Prefix { get; }
+        public bool Inout { get; }
         public AnyType Type { get; }
 
         public static PrefixedType Parse(Parser parser)
         {
             var prefix = Prefix.Parse(parser);
+            var inout = parser.Match(ToKind.KwInout);
             var type = AnyType.Parse(parser);
 
-            return new PrefixedType(prefix, type);
+            return new PrefixedType(prefix, inout, type);
         }
 
         public override string ToString()

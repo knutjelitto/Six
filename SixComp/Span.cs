@@ -21,11 +21,6 @@ namespace SixComp
 
         public bool IsDollar => End > Start && Source.Content[Start] == '$';
 
-        public string GetLine()
-        {
-            return Source.LineFor(this);
-        }
-
         public override string ToString()
         {
             return Source.Chars(this);

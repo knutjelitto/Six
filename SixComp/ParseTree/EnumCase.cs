@@ -23,7 +23,10 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer)
         {
-            throw new NotImplementedException();
+            foreach (var items in CaseItems)
+            {
+                items.Write(writer);
+            }
         }
     }
 }

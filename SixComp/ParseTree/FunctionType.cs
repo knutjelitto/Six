@@ -18,7 +18,7 @@
         public static FunctionType Parse(Parser parser, Prefix prefix, FunctionTypeArgumentClause arguments)
         {
             var throws = parser.Match(ToKind.KwThrows);
-            parser.Consume(ToKind.MinusGreater);
+            parser.Consume(ToKind.Arrow);
             var type = AnyType.Parse(parser);
 
             return new FunctionType(prefix, arguments, throws, type);

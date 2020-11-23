@@ -11,10 +11,10 @@
         public AttributeList Attributes { get; }
         public ModifierList Modifiers { get; }
 
-        public static Prefix Parse(Parser parser)
+        public static Prefix Parse(Parser parser, bool exclude = false)
         {
             var attributes = AttributeList.TryParse(parser);
-            var modifiers = ModifierList.TryParse(parser);
+            var modifiers = ModifierList.TryParse(parser, exclude);
 
             return new Prefix(attributes, modifiers);
         }

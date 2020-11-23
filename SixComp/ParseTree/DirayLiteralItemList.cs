@@ -2,20 +2,20 @@
 
 namespace SixComp.ParseTree
 {
-    public class ArrayLiteralItemList : ItemList<ArrayLiteralItem>
+    public class DirayLiteralItemList : ItemList<DirayLiteralItem>
     {
-        public ArrayLiteralItemList(List<ArrayLiteralItem> items) : base(items) { }
-        public ArrayLiteralItemList() { }
+        public DirayLiteralItemList(List<DirayLiteralItem> items) : base(items) { }
+        public DirayLiteralItemList() { }
 
-        public static ArrayLiteralItemList Parse(Parser parser)
+        public static DirayLiteralItemList Parse(Parser parser)
         {
-            var items = new List<ArrayLiteralItem>();
+            var items = new List<DirayLiteralItem>();
 
             if (parser.Current != ToKind.RBracket)
             {
                 do
                 {
-                    var item = ArrayLiteralItem.Parse(parser);
+                    var item = DirayLiteralItem.Parse(parser);
 
                     items.Add(item);
 
@@ -24,7 +24,7 @@ namespace SixComp.ParseTree
                 while (parser.Current != ToKind.RBracket);
             }
 
-            return new ArrayLiteralItemList(items);
+            return new DirayLiteralItemList(items);
         }
 
         public override string ToString()

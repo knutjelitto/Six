@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static Initializer Parse(Parser parser)
         {
-            parser.Consume(ToKind.Equal);
+            parser.Consume(ToKind.Assign);
 
             var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 

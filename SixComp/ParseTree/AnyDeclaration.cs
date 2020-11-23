@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
 
         public static AnyDeclaration? TryParse(Parser parser, Context context)
         {
-            var prefix = Prefix.Parse(parser);
+            var prefix = Prefix.Parse(parser, true);
 
             switch (parser.Current)
             {

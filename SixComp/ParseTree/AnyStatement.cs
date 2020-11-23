@@ -22,6 +22,8 @@ namespace SixComp.ParseTree
                     return GuardStatement.Parse(parser);
                 case ToKind.KwFor:
                     return ForInStatement.Parse(parser);
+                case ToKind.KwWhile:
+                    return WhileStatement.Parse(parser);
                 default:
                     var statement = (AnyStatement?)DeclarationStatement.TryParse(parser);
                     if (statement == null)

@@ -61,7 +61,7 @@ namespace SixComp.ParseTree
         {
             var funArgs = FunctionTypeArgumentClause.Parse(parser);
 
-            if (parser.Current == ToKind.MinusGreater)
+            if (parser.Current == ToKind.Arrow || parser.Current == ToKind.KwThrows)
             {
                 return FunctionType.Parse(parser, prefix, funArgs);
             }

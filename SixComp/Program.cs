@@ -14,6 +14,9 @@ namespace SixComp
         private DirectoryInfo TempDir;
         private DirectoryInfo SwiftDir;
 
+        const int SkipFiles = 0;
+        const int TakeFiles = 100000;
+
         static void Main(string[] args)
         {
             //new Program().Checker();
@@ -21,6 +24,13 @@ namespace SixComp
             //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
+        }
+
+        private void Swift()
+        {
+            //EnumSwifts("swift-numerics");
+            EnumSwifts("swift/stdlib/public/core");
+            //EnumSwifts("swift-package-manager\\Sources");
         }
 
         public Program()
@@ -69,37 +79,29 @@ namespace SixComp
             }
         }
 
-        private void Swift()
-        {
-            //EnumSwifts("swift-numerics");
-            //EnumSwifts("swift");
-            EnumSwifts("swift-package-manager\\Sources");
-        }
-
         private void EnumSwifts(string swift)
         {
             var root = SwiftDir.FullName;
             var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories)
                 .Where(n => !n.EndsWith("Template.swift"))
+                .Where(n => n.EndsWith("Policy.swift"))
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
             var count = files.Count;
             var digits = (int)Math.Truncate(Math.Log10(count)) + 1;
 
-            const int skip = 0;
-            const int take = 100000;
-            files = files.Skip(skip).Take(take).ToList();
+            files = files.Skip(SkipFiles).Take(TakeFiles).ToList();
             for (var i = 0; i < files.Count; i += 1)
             {
                 var file = files[i];
                 var name = file.Substring(root.Length + 1);
                 var text = File.ReadAllText(file);
-                var index = i + 1 + skip;
+                var index = i + 1 + SkipFiles;
                 var fill = new string(' ', digits - ((int)Math.Truncate(Math.Log10(index)) + 1));
                 var currentDigits = (int)Math.Truncate(Math.Log10(index)) + 1;
                 Console.WriteLine($"FILE({fill}{index}/{count}: {name}");
-                if (!Test(new Source(name, text)))
+                if (!Test(new Context(name, text)))
                 {
                     break;
                 }
@@ -114,36 +116,16 @@ namespace SixComp
             var file = @"./Source/Checker.swift";
             var text = File.ReadAllText(file);
             Console.WriteLine($"FILE: {file}");
-            Test(new Source(file, text));
+            Test(new Context(file, text));
         }
 
-        public bool Test(Source source)
+        public bool Test(Context context)
         {
+            var parser = context.Parser;
+            var source = context.Source;
+
             try
             {
-                var index = new SourceIndex(source);
-                var lexer = new Lexer(source);
-                while (!lexer.Done)
-                {
-                    var token = lexer.GetNext();
-                    var line = index.GetInfo(token.Span.Start);
-
-                    if (token.Kind == ToKind.ERROR)
-                    {
-                        Error(source, "can't continue lexing (illegal character in input stream)", lexer.Start, 1);
-
-                        break;
-                    }
-                }
-
-                if (!lexer.Done)
-                {
-                    return false;
-                }
-
-                lexer = new Lexer(source);
-                var parser = new Parser(lexer);
-
                 var tree = parser.Parse();
 
                 if (parser.Current != ToKind.EOF)
@@ -172,6 +154,12 @@ namespace SixComp
             catch (LexerException le)
             {
                 Error(source, le.Message, le.Offset, 1);
+
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                Error(source, "internal error", parser.CurrentToken.Span.Start, parser.CurrentToken.Span.Length);
 
                 return false;
             }

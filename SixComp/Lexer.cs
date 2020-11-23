@@ -8,13 +8,21 @@ namespace SixComp
     public class Lexer
     {
         public readonly Source Source;
+        public readonly string Text;
+        public readonly Tokens Tokens;
+
         private readonly Dictionary<string, ToKind> keywordMap;
         private readonly HashSet<ToKind> keywordSet;
         private readonly HashSet<ToKind> operatorSet;
+        private readonly Queue<Token> greaters;
 
-        public Lexer(Source source)
+        public Lexer(Context context)
         {
-            Source = source;
+            Context = context;
+
+            Source = Context.Source;
+            Text = Context.Source.Content;
+            Tokens = Context.Tokens;
 
             Start = 0;
             Before = 0;
@@ -23,11 +31,16 @@ namespace SixComp
             keywordMap = TokenHelper.GetKeywords().ToDictionary(kw => kw.rep, kw => kw.kind);
             keywordSet = new HashSet<ToKind>(keywordMap.Values);
             operatorSet = new HashSet<ToKind>(TokenHelper.GetOperators());
+            greaters = new Queue<Token>();
         }
 
-        public int Start;
         public int Before;
+        public int Start;
         public int Index;
+
+        private int Length => Index - Start;
+
+        public Context Context { get; }
 
         public bool Done { get; private set; } = false;
 
@@ -35,6 +48,16 @@ namespace SixComp
         public char Next => Index + 1 < Source.Length ? Source[Index + 1] : '\0';
         public char NextNext => Index + 2 < Source.Length ? Source[Index + 2] : '\0';
         public bool More => Index < Source.Length;
+
+        public bool IsKeyword(ToKind kind)
+        {
+            return keywordSet.Contains(kind);
+        }
+
+        public bool IsOperator(ToKind kind)
+        {
+            return operatorSet.Contains(kind);
+        }
 
         private bool newlineBefore;
 
@@ -47,6 +70,175 @@ namespace SixComp
 
             Before = Index;
 
+            SkipWhitespace();
+
+            Start = Index;
+
+            if (Index == Source.Length)
+            {
+                Done = true;
+                return Token(ToKind.EOF);
+            }
+
+            switch (Current)
+            {
+                case ';':
+                    return Token(ToKind.SemiColon);
+                case ':':
+                    return Token(ToKind.Colon);
+                case ',':
+                    return Token(ToKind.Comma);
+
+                case '@':
+                    return Token(ToKind.At);
+                case '\\':
+                    return Token(ToKind.Backslash);
+
+                case '(':
+                    return Token(ToKind.LParent);
+                case ')':
+                    return Token(ToKind.RParent);
+                case '{':
+                    return Token(ToKind.LBrace);
+                case '}':
+                    return Token(ToKind.RBrace);
+                case '[':
+                    return Token(ToKind.LBracket);
+                case ']':
+                    return Token(ToKind.RBracket);
+
+                case '"':
+                    return LexStringLiteral();
+                case '`':
+                    {
+                        do
+                        {
+                            Index += 1;
+                        }
+                        while (char.IsLetter(Current));
+
+                        if (Current == '`')
+                        {
+                            Index += 1;
+
+                            var text = CurrentText();
+                            var kw = text.Substring(1, text.Length - 2);
+
+                            if (keywordMap.ContainsKey(kw))
+                            {
+                                return Token(ToKind.Name, 0);
+                            }
+                        }
+                        break;
+                    }
+                case '$':
+                    {
+                        do
+                        {
+                            Index += 1;
+                        }
+                        while (char.IsDigit(Current));
+
+                        var text = CurrentText();
+                        if (text.Length > 1)
+                        {
+                            return Token(ToKind.Name, 0);
+                        }
+
+                        break;
+                    }
+                default:
+                    if (char.IsLetter(Current) || Current == '_' || Current == '#')
+                    {
+                        do
+                        {
+                            Index += 1;
+                        }
+                        while (char.IsLetterOrDigit(Current) || Current == '_' || Current == '²');
+
+                        var text = CurrentText();
+
+                        if (text == "as")
+                        {
+                            if (Current == '!')
+                            {
+                                return Token(ToKind.KwAsForce, 1);
+                            }
+                            if (Current == '?')
+                            {
+                                return Token(ToKind.KwAsChain, 1);
+                            }
+                        }
+
+                        if (keywordMap.TryGetValue(text, out var kind))
+                        {
+                            return Token(kind, 0);
+                        }
+
+                        if (text[0] == '#')
+                        {
+                            break; // -> error
+                        }
+                        return Token(ToKind.Name, 0);
+                    }
+                    if (char.IsDigit(Current))
+                    {
+                        return LexNumberLiteral();
+                    }
+                    if (DotOperatorHead(Current))
+                    {
+                        Index += 1;
+                        while (DotOperatorCharacter(Current))
+                        {
+                            Index += 1;
+                        }
+                        if (Length == 1)
+                        {
+                            return Token(ToKind.Dot, 0);
+                        }
+                        return Token(ToKind.Operator, 0);
+                    }
+                    if (OperatorHead(Current))
+                    {
+                        var allGreater = Current == '>';
+                        Index += 1;
+                        while (OperatorCharacter(Current))
+                        {
+                            allGreater = allGreater & (Current == '>');
+                            Index += 1;
+                        }
+                        if (Length == 1)
+                        {
+                            if (Text[Start] == '?')
+                            {
+                                return Token(ToKind.Quest, 0);
+                            }
+                            if (Text[Start] == '!')
+                            {
+                                return Token(ToKind.Bang, 0);
+                            }
+                            if (Text[Start] == '=')
+                            {
+                                return Token(ToKind.Assign, 0);
+                            }
+                        }
+                        else if (Length == 2)
+                        {
+                            if (Text[Start] == '-' && Text[Start+1] == '>')
+                            {
+                                return Token(ToKind.Arrow, 0);
+                            }
+                        }
+                        return Token(ToKind.Operator, 0);
+                    }
+                    break;
+            }
+
+            return Token(ToKind.ERROR);
+        }
+
+        private void SkipWhitespace()
+        {
             newlineBefore = false;
             do
             {
@@ -68,234 +260,82 @@ namespace SixComp
                 }
             }
             while (char.IsWhiteSpace(Current));
+        }
 
-            Start = Index;
+        public Token LexStringLiteral()
+        {
+            // Current == '"'
 
-            if (Index == Source.Length)
+            if (Next == '"' && NextNext == '"')
             {
-                Done = true;
-                return Token(ToKind.EOF);
+                // long dong silver
+                Index += 3;
+                while (Current != 0 && (Current != '"' || Next != '"' || NextNext != '"'))
+                {
+                    Index += 1;
+                }
+                return Token(ToKind.String, 3);
             }
-
-
-            switch (Current)
+            else
             {
-                case '.':
-                    if (Next == '.')
+                do
+                {
+                    if (Current == '\\' && Next == '"')
                     {
-                        if (NextNext == '.')
-                        {
-                            return Token(ToKind.DotDotDot, 3);
-                        }
-                        else if (NextNext == '<')
-                        {
-                            return Token(ToKind.DotDotLess, 3);
-                        }
+                        Index += 2;
                     }
-                    return Token(ToKind.Dot);
-                case ';':
-                    return Token(ToKind.Semi);
-                case ':':
-                    return Token(ToKind.Colon);
-                case ',':
-                    return Token(ToKind.Comma);
-                case '@':
-                    return Token(ToKind.At);
-                case '\\':
-                    return Token(ToKind.Backslash);
+                    else
+                    {
+                        Index += 1;
+                    }
+                }
+                while (Current != 0 && Current != '\n' && Current != '\r' && Current != '"');
 
-                case '(':
-                    return Token(ToKind.LParent);
-                case ')':
-                    return Token(ToKind.RParent);
-                case '{':
-                    return Token(ToKind.LBrace);
-                case '}':
-                    return Token(ToKind.RBrace);
-                case '[':
-                    return Token(ToKind.LBracket);
-                case ']':
-                    return Token(ToKind.RBracket);
+                if (Current == '"')
+                {
+                    Index += 1;
+                }
+            }
+            return Token(ToKind.String, 0);
+        }
 
-                case '=':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.EqualEqual, 2);
-                    }
-                    return Token(ToKind.Equal);
-                case '!':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.BangEqual, 2);
-                    }
-                    return Token(ToKind.Bang);
-                case '?':
-                    return Token(ToKind.Quest);
-                case '^':
-                    return Token(ToKind.Caret);
-                case '~':
-                    return Token(ToKind.Tilde);
-                case '&':
-                    switch (Next)
-                    {
-                        case '&':
-                            return Token(ToKind.AmperAmper, 2);
-                        case '+':
-                            return Token(ToKind.AmperPlus, 2);
-                        case '-':
-                            return Token(ToKind.AmperMinus, 2);
-                        case '*':
-                            return Token(ToKind.AmperAsterisk, 2);
-                        case '/':
-                            return Token(ToKind.AmperSlash, 2);
-                        case '%':
-                            return Token(ToKind.AmperPercent, 2);
-                    }
-                    return Token(ToKind.Amper);
-                case '|':
-                    if (Next == '|')
-                    {
-                        return Token(ToKind.VBarVBar, 2);
-                    }
-                    return Token(ToKind.VBar);
-                case '<':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.LessEqual, 2);
-                    }
-                    return Token(ToKind.Less);
-                case '>':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.GreaterEqual, 2);
-                    }
-                    return Token(ToKind.Greater);
-                case '+':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.PlusEqual, 2);
-                    }
-                    return Token(ToKind.Plus);
-                case '-':
-                    if (Next == '>')
-                    {
-                        return Token(ToKind.MinusGreater, 2);
-                    }
-                    else if (Next == '=')
-                    {
-                        return Token(ToKind.MinusEqual, 2);
-                    }
-                    return Token(ToKind.Minus);
-                case '*':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.AsteriskEqual, 2);
-                    }
-                    return Token(ToKind.Asterisk);
+        public bool OperatorHead(char c)
+        {
+            switch(c)
+            {
                 case '/':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.SlashEqual, 2);
-                    }
-                    return Token(ToKind.Slash);
+                case '=':
+                case '-':
+                case '+':
+                case '!':
+                case '*':
                 case '%':
-                    if (Next == '=')
-                    {
-                        return Token(ToKind.PercentEqual, 2);
-                    }
-                    return Token(ToKind.Percent);
-                case '"':
-                    {
-                        do
-                        {
-                            Index += 1;
-                        }
-                        while (Current != 0 && Current != '\n' && Current != '\r' && Current != '"');
-
-                        if (Current == '"')
-                        {
-                            Index += 1;
-                        }
-                        return Token(ToKind.String, 0);
-                    }
-                case '`':
-                    {
-                        do
-                        {
-                            Index += 1;
-                        }
-                        while (char.IsLetter(Current));
-
-                        if (Current == '`')
-                        {
-                            Index += 1;
-
-                            var text = Text();
-                            var kw = text.Substring(1, text.Length - 2);
-
-                            if (keywordMap.ContainsKey(kw))
-                            {
-                                return Token(ToKind.Name, 0);
-                            }
-                        }
-                        break;
-                    }
-                case '$':
-                    {
-                        do
-                        {
-                            Index += 1;
-                        }
-                        while (char.IsDigit(Current));
-
-                        var text = Text();
-                        if (text.Length > 1)
-                        {
-                            return Token(ToKind.Name, 0);
-                        }
-
-                        break;
-                    }
-                default:
-                    if (char.IsLetter(Current) || Current == '_' || Current == '#')
-                    {
-                        do
-                        {
-                            Index += 1;
-                        }
-                        while (char.IsLetterOrDigit(Current) || Current == '_' || Current == '²');
-
-                        var text = Text();
-
-                        if (keywordMap.TryGetValue(text, out var kind))
-                        {
-                            return Token(kind, 0);
-                        }
-
-                        if (text[0] == '#')
-                        {
-                            break; // -> error
-                        }
-                        return Token(ToKind.Name, 0);
-                    }
-                    if (char.IsDigit(Current))
-                    {
-                        return LexNumber();
-                    }
-                    break;
+                case '<':
+                case '>':
+                case '&':
+                case '|':
+                case '^':
+                case '~':
+                case '?':
+                    return true;
             }
 
-            return Token(ToKind.ERROR);
+            return false;
         }
 
-        public bool IsKeyword(ToKind kind)
+        public bool OperatorCharacter(char c)
         {
-            return keywordSet.Contains(kind);
+            return OperatorHead(c);
         }
 
-        public bool IsOperator(ToKind kind)
+        public bool DotOperatorHead(char c)
         {
-            return operatorSet.Contains(kind);
+            return c == '.';
+        }
+
+        public bool DotOperatorCharacter(char c)
+        {
+            return c == '.' || OperatorCharacter(c);
         }
 
         private bool IsHexDigit(char digit)
@@ -313,7 +353,7 @@ namespace SixComp
             return '0' <= digit && digit <= '9';
         }
 
-        private Token LexNumber()
+        private Token LexNumberLiteral()
         {
             if (Current == '0')
             {
@@ -458,14 +498,14 @@ namespace SixComp
             }
         }
 
-        private Token Token(ToKind kind, int consume = 1)
+        private Token Token(ToFlags flags, ToKind kind, int consume = 1)
         {
             Index = Math.Min(Source.Length, Index + consume);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(span, kind, newlineBefore);
+            return new Token(0, flags, span, kind, newlineBefore);
         }
 
-        private string Text()
+        private string CurrentText()
         {
             return Source.Content.Substring(Start, Index - Start);
         }

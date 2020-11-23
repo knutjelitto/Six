@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class CodeBlock : SyntaxNode, IWritable
+    public class CodeBlock : SyntaxNode, AnyStatement
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 

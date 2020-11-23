@@ -1,7 +1,13 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class Name
     {
+        private static TokenSet Contextual = new TokenSet(
+            ToKind.KwGet, ToKind.KwSet, ToKind.KwInit, ToKind.KwOpen, ToKind.KwFor, ToKind.KwStatic, ToKind.KwDynamic,
+            ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix);
+
         public Name(Token token)
         {
             Token = token;
@@ -13,12 +19,12 @@
         {
             if (withOperators)
             {
-                if (parser.IsOperator(parser.Current))
+                if (parser.CurrentToken.IsOperator)
                 {
                     return new Name(parser.ConsumeAny());
                 }
             }
-            if (parser.Current == ToKind.KwSELF)
+            if (parser.Current == ToKind.KwSELF || Contextual.Contains(parser.Current))
             {
                 return new Name(parser.ConsumeAny());
             }

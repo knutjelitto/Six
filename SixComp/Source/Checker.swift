@@ -1,1 +1,1 @@
-﻿Self.acos(0.375)
+﻿private var pkgConfigCache = [SystemLibraryTarget: (cFlags: [String], libs: [String])]()

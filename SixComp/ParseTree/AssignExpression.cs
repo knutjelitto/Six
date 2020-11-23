@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static AssignExpression Parse(Parser parser, AnyExpression left)
         {
-            parser.Consume(ToKind.Equal);
+            parser.Consume(ToKind.Assign);
 
             var right = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
 

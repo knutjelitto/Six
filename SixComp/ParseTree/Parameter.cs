@@ -22,7 +22,7 @@
                 : null;
             var name = Name.Parse(parser);
             var type = TypeAnnotation.Parse(parser);
-            var initializer = parser.Try(ToKind.Equal, Initializer.Parse);
+            var initializer = parser.Try(ToKind.Assign, Initializer.Parse);
 
             return new Parameter(label, name, type, initializer);
         }

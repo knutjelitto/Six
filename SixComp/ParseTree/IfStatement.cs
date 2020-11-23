@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class IfStatement : AnyStatement
     {
-        public IfStatement(ConditionList conditions, CodeBlock thenPart, CodeBlock? elsePart)
+        public IfStatement(ConditionList conditions, CodeBlock thenPart, AnyStatement? elsePart)
         {
             Conditions = conditions;
             ThenPart = thenPart;
@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
         public ConditionList Conditions { get; }
         public CodeBlock ThenPart { get; }
-        public CodeBlock? ElsePart { get; }
+        public AnyStatement? ElsePart { get; }
 
         public static IfStatement Parse(Parser parser)
         {
@@ -28,8 +28,18 @@ namespace SixComp.ParseTree
             {
                 thenPart = CodeBlock.Parse(parser);
             }
-            var elsePart = parser.TryMatch(ToKind.KwElse, CodeBlock.Parse);
-
+            AnyStatement? elsePart = null;
+            if (parser.Match(ToKind.KwElse))
+            {
+                if (parser.Current == ToKind.KwIf)
+                {
+                    elsePart = IfStatement.Parse(parser);
+                }
+                else
+                {
+                    elsePart = CodeBlock.Parse(parser);
+                }
+            }
 
             return new IfStatement(conditions, thenPart, elsePart);
         }

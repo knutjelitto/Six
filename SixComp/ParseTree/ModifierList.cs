@@ -2,28 +2,22 @@
 
 namespace SixComp.ParseTree
 {
-    public class ModifierList : ItemList<Modifier>
+    public class ModifierList : ItemList<DeclarationModifier>
     {
-        private ModifierList(List<Modifier> modifiers) : base(modifiers) { }
+        private ModifierList(List<DeclarationModifier> modifiers) : base(modifiers) { }
         public ModifierList() { }
 
-        public static ModifierList TryParse(Parser parser)
+        public static ModifierList TryParse(Parser parser, bool exclude)
         {
-            if (Modifier.Firsts.Contains(parser.Current))
+            var modifiers = new List<DeclarationModifier>();
+
+            DeclarationModifier? modifier;
+            while ((modifier = DeclarationModifier.TryParse(parser, exclude)) != null)
             {
-                var modifiers = new List<Modifier>();
-
-                do
-                {
-                    var modifier = Modifier.Parse(parser);
-                    modifiers.Add(modifier);
-                }
-                while (Modifier.Firsts.Contains(parser.Current));
-
-                return new ModifierList(modifiers);
+                modifiers.Add(modifier);
             }
 
-            return new ModifierList();
+            return new ModifierList(modifiers);
         }
 
         public override string ToString()

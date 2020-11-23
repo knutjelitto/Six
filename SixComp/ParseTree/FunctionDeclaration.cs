@@ -30,7 +30,7 @@ namespace SixComp.ParseTree
             var parameters = ParameterClause.Parse(parser);
             var throws = parser.Match(ToKind.KwThrows);
             var rethrows = parser.Match(ToKind.KwRethrows);
-            var returns = parser.Try(ToKind.MinusGreater, FunctionResult.Parse);
+            var returns = parser.Try(ToKind.Arrow, FunctionResult.Parse);
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
             var block = parser.Try(ToKind.LBrace, CodeBlock.Parse);
 

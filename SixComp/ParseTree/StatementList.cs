@@ -21,7 +21,7 @@ namespace SixComp.ParseTree
                     break;
                 }
                 statements.Add(statement);
-                while (parser.Match(ToKind.Semi))
+                while (parser.Match(ToKind.SemiColon))
                 {
                     ;
                 }

@@ -11,6 +11,7 @@
                 case ToKind.KwVar:
                     return PatternCondition.Parse(parser);
                 case ToKind.CdAvailable:
+                    return AvailableCondition.Parse(parser);
                 default:
                     return ExpressionCondition.TryParse(parser);
             }

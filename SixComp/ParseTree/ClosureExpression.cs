@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class ClosureExpression : BaseExpression, AnyExpression
+    public class ClosureExpression : BaseExpression, AnyPrimary
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 
@@ -38,7 +38,7 @@ namespace SixComp.ParseTree
             var parameters = parser.TryList(ClosureParameterClause.Firsts, ClosureParameterClause.Parse);
             var throws = parser.Match(ToKind.KwThrows);
             var result = parser.Try(FunctionResult.Firsts, FunctionResult.Parse);
-            var inNeeded = !captures.Missing || parameters.Definite || throws || result != null;
+            var inNeeded = parameters.Definite || throws || result != null;
             if (inNeeded || parser.Current == ToKind.KwIn)
             {
                 parser.Consume(ToKind.KwIn);

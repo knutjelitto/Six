@@ -9,16 +9,19 @@ namespace SixComp.ParseTree
 
         public static LabeledTypeList Parse(Parser parser)
         {
+            parser.Consume(ToKind.LParent);
+
             var items = new List<TupleTypeElement>();
-            while (parser.Current != ToKind.RParent)
+            if (parser.Current != ToKind.RParent)
             {
-                var item = TupleTypeElement.Parse(parser);
-                items.Add(item);
-                if (parser.Current != ToKind.RParent)
+                do
                 {
-                    parser.Consume(ToKind.Comma);
+                    var item = TupleTypeElement.Parse(parser);
+                    items.Add(item);
                 }
+                while (parser.Match(ToKind.Comma));
             }
+            parser.Consume(ToKind.RParent);
 
             return new LabeledTypeList(items);
         }

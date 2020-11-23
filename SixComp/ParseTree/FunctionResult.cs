@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class FunctionResult : AnyType
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.MinusGreater);
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.Arrow);
 
         private FunctionResult(AnyType type)
         {
@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static FunctionResult Parse(Parser parser)
         {
-            parser.Consume(ToKind.MinusGreater);
+            parser.Consume(ToKind.Arrow);
             var type = AnyType.Parse(parser);
 
             return new FunctionResult(type);
