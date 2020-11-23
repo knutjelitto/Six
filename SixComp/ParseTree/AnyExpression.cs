@@ -6,12 +6,12 @@ namespace SixComp.ParseTree
     {
         public static AnyExpression? TryParse(Parser parser)
         {
-            return parser.TryParseExpression(0);
+            return Expression.TryParse(parser);
         }
 
         public static AnyExpression? TryParse(Parser parser, int precedence)
         {
-            return parser.TryParseExpression(precedence);
+            return Expression.TryParse(parser);
         }
 
         AnyExpression? LastExpression { get; }

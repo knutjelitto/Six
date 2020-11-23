@@ -11,9 +11,7 @@ namespace SixComp
         private readonly Tokens tokens;
 
         public int Offset;
-
-        private readonly Dictionary<ToKind, (Func<AnyExpression, int, AnyExpression> parser, int precedence)> infix =
-            new Dictionary<ToKind, (Func<AnyExpression, int, AnyExpression> parser, int precedence)>();
+        public int ClassifiedOffset;
 
         public Parser(Context context)
         {
@@ -21,51 +19,7 @@ namespace SixComp
             lexer = Context.Lexer;
             tokens = Context.Tokens;
             Offset = 0;
-
-            infix.Add(ToKind.PlusEqual, (ParseInfixOp, Precedence.Assignment));
-            infix.Add(ToKind.MinusEqual, (ParseInfixOp, Precedence.Assignment));
-            infix.Add(ToKind.AsteriskEqual, (ParseInfixOp, Precedence.Assignment));
-            infix.Add(ToKind.SlashEqual, (ParseInfixOp, Precedence.Assignment));
-            infix.Add(ToKind.PercentEqual, (ParseInfixOp, Precedence.Assignment));
-
-            infix.Add(ToKind.Quest, ((left, precedence) => TernaryExpression.Parse(this, left, precedence), Precedence.Ternary));
-
-            infix.Add(ToKind.AmperAmper, (ParseInfixOp, Precedence.Conjunction));
-            infix.Add(ToKind.VBarVBar, (ParseInfixOp, Precedence.Conjunction));
-
-            infix.Add(ToKind.EqualEqual, (ParseInfixOp, Precedence.Comparison));
-            infix.Add(ToKind.BangEqual, (ParseInfixOp, Precedence.Comparison));
-
-            infix.Add(ToKind.Less, (ParseInfixOp, Precedence.Comparison));
-            infix.Add(ToKind.LessEqual, (ParseInfixOp, Precedence.Comparison));
-            infix.Add(ToKind.Greater, (ParseInfixOp, Precedence.Comparison));
-            infix.Add(ToKind.GreaterEqual, (ParseInfixOp, Precedence.Comparison));
-
-            infix.Add(ToKind.QuestQuest, (ParseInfixOp, Precedence.NilCoalescing));
-
-            infix.Add(ToKind.KwIs, (ParseInfixCast, Precedence.Casting));
-            infix.Add(ToKind.KwAs, (ParseInfixCast, Precedence.Casting));
-            infix.Add(ToKind.KwAsForce, (ParseInfixCast, Precedence.Casting));
-            infix.Add(ToKind.KwAsChain, (ParseInfixCast, Precedence.Casting));
-
-            infix.Add(ToKind.DotDotDot, (ParseRangeInfix, Precedence.RangeFormation));
-            infix.Add(ToKind.DotDotLess, (ParseRangeInfix, Precedence.RangeFormation));
-
-            infix.Add(ToKind.Minus, (ParseInfixOp, Precedence.Addition));
-            infix.Add(ToKind.AmperMinus, (ParseInfixOp, Precedence.Addition));
-            infix.Add(ToKind.Plus, (ParseInfixOp, Precedence.Addition));
-            infix.Add(ToKind.AmperPlus, (ParseInfixOp, Precedence.Addition));
-            infix.Add(ToKind.VBar, (ParseInfixOp, Precedence.Addition));
-
-            infix.Add(ToKind.Asterisk, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.AmperAsterisk, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.Slash, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.AmperSlash, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.Percent, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.AmperPercent, (ParseInfixOp, Precedence.Multiplication));
-            infix.Add(ToKind.Amper, (ParseInfixOp, Precedence.Multiplication));
-
-            infix.Add(ToKind.LessLessLess, (ParseInfixOp, Precedence.BitwiseShift));
+            ClassifiedOffset = 0;
         }
 
         public Context Context { get; }
@@ -80,6 +34,56 @@ namespace SixComp
         public Unit Parse()
         {
             return Unit.Parse(this);
+        }
+
+        public void ClassifyOperator()
+        {
+            if (ClassifiedOffset < Offset)
+            {
+                ClassifiedOffset = Offset;
+
+                var current = CurrentToken;
+                if ((current.Flags & ToFlags.AnyOperator) == ToFlags.Operator)
+                {
+                    // unclassified
+
+                    var prev = PrevToken;
+                    var spaceBefore = current.Span.Spacing || (prev.Flags & ToFlags.OpSpaceBefore) != 0;
+                    var next = NextToken;
+                    var spaceAfter = next.Span.Spacing || (next.Flags & ToFlags.OpSpaceAfter) != 0;
+
+                    if (!spaceBefore && (spaceAfter || next.IsImmediateDot || current.Kind == ToKind.Quest || current.Kind == ToKind.Bang))
+                    {
+                        current.Flags |= ToFlags.PostfixOperator;
+                    }
+                    else if (spaceBefore && !spaceAfter)
+                    {
+                        current.Flags |= ToFlags.PrefixOperator;
+                    }
+                    else // !spaceBefore && !spaceAfter || spaceBefore && spaceAfter
+                    {
+                        current.Flags |= ToFlags.InfixOperator;
+                    }
+                }
+            }
+        }
+
+        public bool IsPrefix()
+        {
+            ClassifyOperator();
+            return (CurrentToken.Flags & ToFlags.PrefixOperator) != 0;
+        }
+
+        public bool IsPostfix()
+        {
+            ClassifyOperator();
+            return (CurrentToken.Flags & ToFlags.PostfixOperator) != 0;
+        }
+
+        public bool IsInfix()
+        {
+            ClassifyOperator();
+            return (CurrentToken.Flags & ToFlags.InfixOperator) != 0;
         }
 
         public bool IsKeyword(ToKind kind)
@@ -101,18 +105,6 @@ namespace SixComp
             }
             return null;
         }
-
-#if false
-        public T? Try<T>(string opChars, Func<Parser, T> parse)
-            where T : class
-        {
-            if (CurrentToken.Text == opChars)
-            {
-                return parse(this);
-            }
-            return null;
-        }
-#endif
 
         public T? Try<T>(TokenSet start, Func<Parser, T> parse)
             where T : class
@@ -159,6 +151,7 @@ namespace SixComp
         public ToKind Next => Ahead(1).Kind;
         public ToKind NextNext => Ahead(2).Kind;
 
+        public Token PrevToken => Ahead(-1);
         public Token CurrentToken => Ahead(0);
         public Token NextToken => Ahead(1);
 
@@ -227,82 +220,6 @@ namespace SixComp
                 return true;
             }
             return false;
-        }
-
-        public AnyExpression? TryParseExpression(int precedence)
-        {
-            var offset = Offset;
-
-            var tryKind = TryExpression.TryKind.None;
-
-            if (Match(ToKind.KwTry))
-            {
-                if (Match(ToKind.Bang))
-                {
-                    tryKind = TryExpression.TryKind.TryForce;
-                }
-                else if (Match(ToKind.Quest))
-                {
-                    tryKind = TryExpression.TryKind.TryChain;
-                }
-                else
-                {
-                    tryKind = TryExpression.TryKind.Try;
-                }
-            }
-
-            var left = (AnyExpression?)AnyPrefix.TryParse(this);
-
-            if (left == null)
-            {
-                Offset = offset;
-                return null;
-            }
-
-            while (true)
-            {
-                if (!infix.TryGetValue(Current, out var infixFun) || precedence > infixFun.precedence)
-                {
-                    break;
-                }
-                else
-                {
-                    left = infixFun.parser(left, infixFun.precedence);
-                }
-            }
-
-            if (tryKind != TryExpression.TryKind.None)
-            {
-                return TryExpression.From(tryKind, left);
-            }
-
-            return left;
-        }
-
-        private AnyExpression ParseInfixOp(AnyExpression left, int precedence)
-        {
-            var token = ConsumeAny();
-            var right = AnyExpression.TryParse(this, precedence) ?? throw new InvalidOperationException();
-            return new InfixExpression(left, token, right);
-        }
-
-        private AnyExpression ParseInfixCast(AnyExpression left, int precedence)
-        {
-            var token = ConsumeAny();
-            var right = AnyType.Parse(this);
-            return new InfixCastExpression(left, token, right);
-        }
-
-        private AnyExpression ParseRangeInfix(AnyExpression left, int precedence)
-        {
-            var exclusive = Current == ToKind.DotDotLess;
-            Consume(new TokenSet(ToKind.DotDotDot, ToKind.DotDotLess));
-
-            var offset = Offset;
-
-            var right = AnyExpression.TryParse(this, precedence);
-
-            return new RangeExpression(left, right, exclusive);
         }
     }
 }

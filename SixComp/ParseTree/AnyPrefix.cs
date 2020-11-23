@@ -4,19 +4,25 @@
     {
         public static new AnyPrefix? TryParse(Parser parser)
         {
-            switch (parser.Current)
+            if (parser.Current == ToKind.Amper)
             {
-                case ToKind.Minus:
-                case ToKind.Plus:
-                case ToKind.Bang:
-                case ToKind.Tilde:
-                case ToKind.DotDotLess:
-                    return PrefixExpression.Parse(parser);
-                case ToKind.Amper:
-                    return InOutExpression.Parse(parser);
-                default:
-                    return AnyPostfix.TryParse(parser);
+                return InOutExpression.TryParse(parser);
             }
+
+            var offset = parser.Offset;
+
+            if (parser.IsPrefix())
+            {
+                var op = parser.ConsumeAny();
+                var operand = AnyPostfix.TryParse(parser);
+                if (operand != null)
+                {
+                    return new PrefixExpression(op, operand);
+                }
+                parser.Offset = offset;
+                return null;
+            }
+            return AnyPostfix.TryParse(parser);
         }
     }
 }

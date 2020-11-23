@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System.Diagnostics;
+
+namespace SixComp.ParseTree
 {
     public abstract class PostfixExpression : BaseExpression, AnyPostfix
     {
@@ -10,5 +12,6 @@
 
         public AnyExpression Left { get; }
         public Token Op { get; }
+
     }
 }

@@ -26,8 +26,9 @@ namespace SixComp
         [Rep("!", ToClass.Operator)] Bang,
         [Rep("?", ToClass.Operator)] Quest,
         [Rep(">", ToClass.Operator)] Greater,
+        [Rep("<", ToClass.Operator)] Less,
         [Rep("=", ToClass.Operator)] Assign,
-        Operator,
+        [Rep("<op>", ToClass.Operator)] Operator,
 
         [Rep("@")] At,
         [Rep("\\")] Backslash,
@@ -51,7 +52,6 @@ namespace SixComp
         [Rep("|", ToClass.Operator)] VBar,
         [Rep("||", ToClass.Operator)] VBarVBar,
 
-        [Rep("<", ToClass.Operator)] Less,
         [Rep("<<", ToClass.Operator)] LessLess,
         [Rep("<<<", ToClass.Operator)] LessLessLess,
         [Rep("<=", ToClass.Operator)] LessEqual,

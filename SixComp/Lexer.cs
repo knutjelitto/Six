@@ -1,6 +1,7 @@
 ﻿using SixComp.Support;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SixComp
@@ -65,72 +66,52 @@ namespace SixComp
         {
             if (Done)
             {
-                return Token(ToKind.ERROR);
+                return Token(ToKind.ERROR, 0);
             }
 
             Before = Index;
 
-            SkipWhitespace();
+            LexWhitespace();
 
             Start = Index;
 
             if (Index == Source.Length)
             {
                 Done = true;
-                return Token(ToKind.EOF);
+                return Token(ToKind.EOF, 0);
             }
 
             switch (Current)
             {
                 case ';':
-                    return Token(ToKind.SemiColon);
+                    return Token(ToKind.SemiColon, ToFlags.OpSpaceAny);
                 case ':':
-                    return Token(ToKind.Colon);
+                    return Token(ToKind.Colon, ToFlags.OpSpaceAny);
                 case ',':
-                    return Token(ToKind.Comma);
+                    return Token(ToKind.Comma, ToFlags.OpSpaceAny);
 
                 case '@':
-                    return Token(ToKind.At);
+                    return Token(ToKind.At, 1);
                 case '\\':
-                    return Token(ToKind.Backslash);
+                    return Token(ToKind.Backslash, 1);
 
                 case '(':
-                    return Token(ToKind.LParent);
+                    return Token(ToKind.LParent, ToFlags.OpSpaceBefore);
                 case ')':
-                    return Token(ToKind.RParent);
+                    return Token(ToKind.RParent, ToFlags.OpSpaceAfter);
                 case '{':
-                    return Token(ToKind.LBrace);
+                    return Token(ToKind.LBrace, ToFlags.OpSpaceBefore);
                 case '}':
-                    return Token(ToKind.RBrace);
+                    return Token(ToKind.RBrace, ToFlags.OpSpaceAfter);
                 case '[':
-                    return Token(ToKind.LBracket);
+                    return Token(ToKind.LBracket, ToFlags.OpSpaceBefore);
                 case ']':
-                    return Token(ToKind.RBracket);
+                    return Token(ToKind.RBracket, ToFlags.OpSpaceAfter);
 
                 case '"':
                     return LexStringLiteral();
                 case '`':
-                    {
-                        do
-                        {
-                            Index += 1;
-                        }
-                        while (char.IsLetter(Current));
-
-                        if (Current == '`')
-                        {
-                            Index += 1;
-
-                            var text = CurrentText();
-                            var kw = text.Substring(1, text.Length - 2);
-
-                            if (keywordMap.ContainsKey(kw))
-                            {
-                                return Token(ToKind.Name, 0);
-                            }
-                        }
-                        break;
-                    }
+                    return LexQuotedIdentifier();
                 case '$':
                     {
                         do
@@ -194,50 +175,113 @@ namespace SixComp
                         }
                         if (Length == 1)
                         {
-                            return Token(ToKind.Dot, 0);
+                            return AnyOperator(ToKind.Dot);
                         }
-                        return Token(ToKind.Operator, 0);
+                        return AnyOperator();
                     }
                     if (OperatorHead(Current))
                     {
                         var allGreater = Current == '>';
+                        var allLess = Current == '<';
                         Index += 1;
                         while (OperatorCharacter(Current))
                         {
-                            allGreater = allGreater & (Current == '>');
+                            allGreater &= Current == '>';
+                            allLess &= Current == '<';
                             Index += 1;
                         }
                         if (Length == 1)
                         {
                             if (Text[Start] == '?')
                             {
-                                return Token(ToKind.Quest, 0);
+                                return AnyOperator(ToKind.Quest);
                             }
                             if (Text[Start] == '!')
                             {
-                                return Token(ToKind.Bang, 0);
+                                return AnyOperator(ToKind.Bang);
                             }
                             if (Text[Start] == '=')
                             {
-                                return Token(ToKind.Assign, 0);
+                                return AnyOperator(ToKind.Assign);
+                            }
+                            if (Text[Start] == '<')
+                            {
+                                return AnyOperator(ToKind.Less);
+                            }
+                            if (Text[Start] == '>')
+                            {
+                                return AnyOperator(ToKind.Greater);
+                            }
+                            if (Text[Start] == '&')
+                            {
+                                return AnyOperator(ToKind.Amper);
                             }
                         }
                         else if (Length == 2)
                         {
                             if (Text[Start] == '-' && Text[Start+1] == '>')
                             {
-                                return Token(ToKind.Arrow, 0);
+                                return AnyOperator(ToKind.Arrow);
                             }
                         }
-                        return Token(ToKind.Operator, 0);
+                        return AnyOperator();
                     }
                     break;
             }
 
-            return Token(ToKind.ERROR);
+            return Token(ToKind.ERROR, 0);
         }
 
-        private void SkipWhitespace()
+        private void LexIdentifier()
+        {
+            // Current is IdentifierHead
+
+            Index += 1;
+            while (IdentifierCharacter())
+            {
+                Index += 1;
+            }
+        }
+
+        private Token LexQuotedIdentifier()
+        {
+            // Current is '`'
+
+            Index += 1;
+            if (IdentifierHead())
+            {
+                LexIdentifier();
+
+                if (Current == '`')
+                {
+                    Index += 1;
+
+                    var text = CurrentText();
+                    var kw = text[1..^1];
+
+                    if (keywordMap.ContainsKey(kw))
+                    {
+                        return Token(ToKind.Name, 0);
+                    }
+
+                    throw new LexerException(Start, $"quoted keyword isn't really a keyword");
+                }
+            }
+
+            throw new LexerException(Start, $"illformed quoted identifier/keyword");
+        }
+
+        private bool IdentifierHead()
+        {
+            return 'a' <= Current && Current <= 'z' || 'A' <= Current && Current <= 'Z' || Current == '_';
+        }
+
+        private bool IdentifierCharacter()
+        {
+            return IdentifierHead() || '0' <= Current || Current <= '9' || Current == '²';
+        }
+
+        private void LexWhitespace()
         {
             newlineBefore = false;
             do
@@ -498,16 +542,30 @@ namespace SixComp
             }
         }
 
-        private Token Token(ToFlags flags, ToKind kind, int consume = 1)
+        private Token Token(ToKind kind, ToFlags flags)
+        {
+            Index = Math.Min(Source.Length, Index + 1);
+            var span = new Span(Source, Before, Start, Index);
+            return new Token(0, span, kind, newlineBefore, flags);
+        }
+
+        private Token Token(ToKind kind, int consume)
         {
             Index = Math.Min(Source.Length, Index + consume);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(0, flags, span, kind, newlineBefore);
+            return new Token(0, span, kind, newlineBefore, ToFlags.None);
+        }
+
+        private Token AnyOperator(ToKind kind = ToKind.Operator)
+        {
+            Debug.Assert(Index > Start);
+            var span = new Span(Source, Before, Start, Index);
+            return new Token(0, span, kind, newlineBefore, ToFlags.Operator);
         }
 
         private string CurrentText()
         {
-            return Source.Content.Substring(Start, Index - Start);
+            return Source.Content[Start..Index];
         }
     }
 }

@@ -9,13 +9,19 @@
 
         public Name Name { get; }
 
-        public static InOutExpression Parse(Parser parser)
+        public static InOutExpression? TryParse(Parser parser)
         {
-            parser.Consume(ToKind.Amper);
+            var offset = parser.Offset;
 
-            var name = Name.Parse(parser);
+            if (parser.Match(ToKind.Amper) && parser.Current == ToKind.Name)
+            {
+                var name = Name.Parse(parser);
 
-            return new InOutExpression(name);
+                return new InOutExpression(name);
+            }
+
+            parser.Offset = offset;
+            return null;
         }
 
         public override string ToString()

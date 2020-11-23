@@ -19,7 +19,11 @@ namespace SixComp
 
         public int Length => End - Start;
 
+        public bool Spacing => Before < Start;
+
         public bool IsDollar => End > Start && Source.Content[Start] == '$';
+
+        public char First => Source.Content[Start];
 
         public override string ToString()
         {

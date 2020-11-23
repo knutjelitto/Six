@@ -4,24 +4,18 @@
     {
         public static new AnyPostfix? TryParse(Parser parser)
         {
-            var left = (AnyPostfix?)AnyPrimary.TryParse(parser);
+            AnyPostfix? left = AnyPrimary.TryParse(parser);
 
             if (left == null)
             {
                 return null;
-
             }
+
             var done = false;
             do
             {
                 switch (parser.Current)
                 {
-                    case ToKind.Bang:
-                        left = ForceExpression.Parse(parser, left);
-                        break;
-                    case ToKind.Quest when parser.Adjacent:
-                        left = ChainExpression.Parse(parser, left);
-                        break;
                     case ToKind.LBracket:
                         left = SubscriptExpression.Parse(parser, left);
                         break;
@@ -32,23 +26,28 @@
                         left = FunctionCallExpression.Parse(parser, left);
                         break;
                     case ToKind.Dot:
+                        switch (parser.Next)
                         {
-                            switch (parser.Next)
-                            {
-                                case ToKind.KwSelf:
-                                    left = PostfixSelfExpression.Parse(parser, left);
-                                    break;
-                                case ToKind.KwInit:
-                                    left = InitializerExpression.Parse(parser, left);
-                                    break;
-                                default:
-                                    left = ExplicitMemberExpression.Parse(parser, left);
-                                    break;
-                            }
-                            break;
+                            case ToKind.KwSelf:
+                                left = PostfixSelfExpression.Parse(parser, left);
+                                break;
+                            case ToKind.KwInit:
+                                left = InitializerExpression.Parse(parser, left);
+                                break;
+                            default:
+                                left = ExplicitMemberExpression.Parse(parser, left);
+                                break;
                         }
+                        break;
                     default:
-                        done = true;
+                        if (parser.IsPostfix())
+                        {
+                            left = PostfixOpExpression.Parse(parser, left);
+                        }
+                        else
+                        {
+                            done = true;
+                        }
                         break;
                 }
             }

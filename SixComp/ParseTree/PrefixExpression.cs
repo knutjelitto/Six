@@ -22,17 +22,9 @@ namespace SixComp.ParseTree
             }
         }
 
-        public static PrefixExpression Parse(Parser parser)
-        {
-            var op = parser.ConsumeAny();
-            var operand = AnyPostfix.TryParse(parser) ?? throw new InvalidOperationException();
-
-            return new PrefixExpression(op, operand);
-        }
-
         public override string ToString()
         {
-            return $"({Op.Span}_ {Operand})";
+            return $"({Op}_ {Operand})";
         }
     }
 }

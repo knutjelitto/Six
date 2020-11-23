@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -18,6 +19,11 @@ namespace SixComp.ParseTree
         public static AnyDeclaration? TryParse(Parser parser, Context context)
         {
             var prefix = Prefix.Parse(parser, true);
+
+            if (parser.CurrentToken.ToString() == "precedencegroup")
+            {
+                Debug.Assert(true);
+            }
 
             switch (parser.Current)
             {
