@@ -13,7 +13,7 @@ namespace SixComp.ParseTree
 
         public static ImportPathIdentifier Parse(Parser parser)
         {
-            Debug.Assert(parser.Current == ToKind.Name || parser.CurrentToken.IsOperator);
+            Debug.Assert(parser.Current == ToKind.Name || parser.IsOperator);
 
             var token = parser.ConsumeAny();
 

@@ -20,7 +20,7 @@ namespace SixComp.ParseTree
         {
             var prefix = Prefix.Parse(parser, true);
 
-            if (parser.CurrentToken.ToString() == "precedencegroup")
+            if (parser.CurrentToken.ToString() == "postfix")
             {
                 Debug.Assert(true);
             }
@@ -51,6 +51,12 @@ namespace SixComp.ParseTree
                     return TypealiasDeclaration.Parse(parser, prefix);
                 case ToKind.KwProtocol:
                     return ProtocolDeclaration.Parse(parser, prefix);
+                case ToKind.KwPrecedencegroup:
+                    return PrecGroupDeclaration.Parse(parser, prefix);
+                case ToKind.KwPrefix:
+                case ToKind.KwPostfix:
+                case ToKind.KwInfix:
+                    return OperatorDeclaration.Parse(parser, prefix);
 
                 case ToKind.CdIf:
                     return CcBlock.Parse(parser);

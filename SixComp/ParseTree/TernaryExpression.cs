@@ -15,16 +15,8 @@ namespace SixComp.ParseTree
         public AnyExpression WhenTrue { get; }
         public AnyExpression WhenFalse { get; }
 
-        public static TernaryExpression Parse(Parser parser, AnyExpression condition, int precedence)
+        public static TernaryExpression From(AnyExpression condition, AnyExpression whenTrue, AnyExpression whenFalse)
         {
-            parser.Consume(ToKind.Quest);
-
-            var whenTrue = AnyExpression.TryParse(parser, precedence) ?? throw new InvalidOperationException();
-
-            parser.Consume(ToKind.Colon);
-
-            var whenFalse = AnyExpression.TryParse(parser, precedence + 1) ?? throw new InvalidOperationException();
-
             return new TernaryExpression(condition, whenTrue, whenFalse);
         }
 

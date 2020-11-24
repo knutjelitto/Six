@@ -13,18 +13,16 @@ namespace SixComp.ParseTree
             Convenience,
             Dynamic,
             Final,
-            Infix,
             Lazy,
             Optional,
             Override,
-            Postfix,
-            Prefix,
             Required,
             Static,
             Unowned,
             UnownedSafe,
             UnownedUnsafe,
             Weak,
+            __Consuming,
 
             // access level
             Private,
@@ -73,10 +71,6 @@ namespace SixComp.ParseTree
                     parser.ConsumeAny();
                     kind = ModifierKind.Final;
                     break;
-                case ToKind.KwInfix:
-                    parser.ConsumeAny();
-                    kind = ModifierKind.Infix;
-                    break;
                 case ToKind.KwLazy:
                     parser.ConsumeAny();
                     kind = ModifierKind.Lazy;
@@ -88,14 +82,6 @@ namespace SixComp.ParseTree
                 case ToKind.KwOverride:
                     parser.ConsumeAny();
                     kind = ModifierKind.Override;
-                    break;
-                case ToKind.KwPostfix:
-                    parser.ConsumeAny();
-                    kind = ModifierKind.Postfix;
-                    break;
-                case ToKind.KwPrefix:
-                    parser.ConsumeAny();
-                    kind = ModifierKind.Prefix;
                     break;
                 case ToKind.KwRequired:
                     parser.ConsumeAny();
@@ -116,6 +102,15 @@ namespace SixComp.ParseTree
                         kind = ModifierKind.UnownedUnsafe;
                     }
                     break;
+                case ToKind.KwWeak:
+                    parser.ConsumeAny();
+                    kind = ModifierKind.Weak;
+                    break;
+                case ToKind.Kw__Consuming:
+                    parser.ConsumeAny();
+                    kind = ModifierKind.__Consuming;
+                    break;
+
                 case ToKind.KwPrivate:
                     parser.ConsumeAny();
                     kind = ModifierKind.Private;

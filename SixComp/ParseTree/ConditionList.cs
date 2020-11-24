@@ -24,7 +24,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            return "CL:" + string.Join(", ", this);
+            return string.Join(", ", this);
         }
     }
 }

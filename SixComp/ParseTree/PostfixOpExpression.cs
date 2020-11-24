@@ -9,9 +9,9 @@ namespace SixComp.ParseTree
         {
         }
 
-        public static AnyPostfix Parse(Parser parser, AnyExpression left)
+        public static AnyPostfixExpression Parse(Parser parser, AnyExpression left)
         {
-            Debug.Assert(parser.IsPostfix());
+            Debug.Assert(parser.IsPostfixOperator());
             var op = parser.ConsumeAny();
 
             return new PostfixOpExpression(left, op);

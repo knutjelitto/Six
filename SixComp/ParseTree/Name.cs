@@ -6,7 +6,7 @@ namespace SixComp.ParseTree
     {
         private static TokenSet Contextual = new TokenSet(
             ToKind.KwGet, ToKind.KwSet, ToKind.KwInit, ToKind.KwOpen, ToKind.KwFor, ToKind.KwStatic, ToKind.KwDynamic,
-            ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix);
+            ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwANY, ToKind.KwSelf, ToKind.KwSELF);
 
         public Name(Token token)
         {
@@ -19,17 +19,38 @@ namespace SixComp.ParseTree
         {
             if (withOperators)
             {
-                if (parser.CurrentToken.IsOperator)
+                if (parser.IsOperator)
                 {
                     return new Name(parser.ConsumeAny());
                 }
             }
-            if (parser.Current == ToKind.KwSELF || Contextual.Contains(parser.Current))
+            if (Contextual.Contains(parser.Current))
             {
                 return new Name(parser.ConsumeAny());
             }
 
             return new Name(parser.Consume(ToKind.Name));
+        }
+
+        public static Name? TryParse(Parser parser, bool withOperators = false)
+        {
+            if (withOperators)
+            {
+                if (parser.IsOperator)
+                {
+                    return new Name(parser.ConsumeAny());
+                }
+            }
+            if (Contextual.Contains(parser.Current))
+            {
+                return new Name(parser.ConsumeAny());
+            }
+            if (parser.Current == ToKind.Name)
+            {
+                return new Name(parser.ConsumeAny());
+            }
+            
+            return null;
         }
 
         public override string ToString()

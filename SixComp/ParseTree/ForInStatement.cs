@@ -26,7 +26,9 @@ namespace SixComp.ParseTree
             var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
             var where = parser.Try(WhereClause.Firsts, WhereClause.Parse);
             CodeBlock block;
-            var last = where == null ? expression.LastExpression : where.Expression.LastExpression;
+            var last = where == null
+                ? expression.LastExpression
+                : where.Expression.LastExpression;
             if (parser.Current != ToKind.LBrace && last is FunctionCallExpression call && call.Closures.BlockOnly)
             {
                 block = call.Closures.ExtractBlock();

@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class PrefixExpression : BaseExpression, AnyPrefix
+    public class PrefixExpression : BaseExpression, AnyPrefixExpression
     {
         public PrefixExpression(Token op, AnyExpression operand)
         {

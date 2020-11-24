@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class NestedExpression : BaseExpression, AnyPrimary
+    public class NestedExpression : BaseExpression, AnyPrimaryExpression
     {
         private NestedExpression(AnyExpression expression)
         {

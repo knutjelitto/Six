@@ -3,7 +3,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class KeyPathExpression : BaseExpression, AnyPrimary
+    public class KeyPathExpression : BaseExpression, AnyPrimaryExpression
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.Backslash);
 

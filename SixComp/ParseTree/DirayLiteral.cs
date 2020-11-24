@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public sealed class DirayLiteral : BaseExpression, AnyPrimary
+    public sealed class DirayLiteral : BaseExpression, AnyPrimaryExpression
     {
         public DirayLiteral(DirayLiteralItemList items)
         {

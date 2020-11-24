@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public interface AnySelfExpression : AnyPrimary
+    public interface AnySelfExpression : AnyPrimaryExpression
     {
         public static AnySelfExpression Parse(Parser parser)
         {

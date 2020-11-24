@@ -18,7 +18,7 @@ namespace SixComp.ParseTree
             parser.Consume(ToKind.LParent);
 
             var parameters = ParameterList.Parse(parser, new TokenSet(ToKind.RParent, ToKind.DotDotDot));
-            var variadic = parser.Match(ToKind.DotDotDot);
+            var variadic = parser.Match("...");
             parser.Consume(ToKind.RParent);
 
             return new ParameterClause(parameters, variadic);
@@ -26,7 +26,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            var variadic = Variadic ? "..." : string.Empty;
+            var variadic = Variadic ? " ..." : string.Empty;
             return $"({Parameters}{variadic})";
         }
     }

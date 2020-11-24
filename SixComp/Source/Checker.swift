@@ -1,1 +1,4 @@
-﻿private var pkgConfigCache = [SystemLibraryTarget: (cFlags: [String], libs: [String])]()
+﻿  public var _baseAddressIfContiguous: UnsafeMutablePointer<Element>? {
+    @inline(__always) // FIXME(TODO: JIRA): Hack around test failure
+    get { return _buffer.firstElementAddressIfContiguous }
+  }

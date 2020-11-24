@@ -139,18 +139,6 @@ namespace SixComp
 
                         var text = CurrentText();
 
-                        if (text == "as")
-                        {
-                            if (Current == '!')
-                            {
-                                return Token(ToKind.KwAsForce, 1);
-                            }
-                            if (Current == '?')
-                            {
-                                return Token(ToKind.KwAsChain, 1);
-                            }
-                        }
-
                         if (keywordMap.TryGetValue(text, out var kind))
                         {
                             return Token(kind, 0);

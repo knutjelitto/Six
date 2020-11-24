@@ -44,5 +44,17 @@ namespace SixComp.ParseTree
 
             return new TryOperator(tryKind);
         }
+
+        public override string ToString()
+        {
+            return Kind switch
+            {
+                TryKind.None => string.Empty,
+                TryKind.Try => "try ",
+                TryKind.TryForce => "try! ",
+                TryKind.TryChain => "try? ",
+                _ => "<<try???>>",
+            };
+        }
     }
 }

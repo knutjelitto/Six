@@ -1,8 +1,8 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class InOutExpression : BaseExpression, AnyPrefix
+    public class InOutExpression : BaseExpression, AnyPrefixExpression
     {
-        public InOutExpression(Name name)
+        private InOutExpression(Name name)
         {
             Name = name;
         }
@@ -13,11 +13,14 @@
         {
             var offset = parser.Offset;
 
-            if (parser.Match(ToKind.Amper) && parser.Current == ToKind.Name)
+            if (parser.Match(ToKind.Amper) )
             {
-                var name = Name.Parse(parser);
+                var name = Name.TryParse(parser);
 
-                return new InOutExpression(name);
+                if (name != null)
+                {
+                    return new InOutExpression(name);
+                }
             }
 
             parser.Offset = offset;

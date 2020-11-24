@@ -26,5 +26,10 @@ namespace SixComp.ParseTree
 
             return new PatternCondition(pattern, init);
         }
+
+        public override string ToString()
+        {
+            return $"{Pattern}{Initializer}";
+        }
     }
 }

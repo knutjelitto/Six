@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class ClosureExpression : BaseExpression, AnyPrimary
+    public class ClosureExpression : BaseExpression, AnyPrimaryExpression
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 

@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public abstract class PostfixExpression : BaseExpression, AnyPostfix
+    public abstract class PostfixExpression : BaseExpression, AnyPostfixExpression
     {
         public PostfixExpression(AnyExpression left, Token op)
         {

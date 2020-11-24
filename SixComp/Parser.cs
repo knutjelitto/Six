@@ -36,7 +36,7 @@ namespace SixComp
             return Unit.Parse(this);
         }
 
-        public void ClassifyOperator()
+        private void ClassifyOperator()
         {
             if (ClassifiedOffset < Offset)
             {
@@ -68,19 +68,19 @@ namespace SixComp
             }
         }
 
-        public bool IsPrefix()
+        public bool IsPrefixOperator()
         {
             ClassifyOperator();
             return (CurrentToken.Flags & ToFlags.PrefixOperator) != 0;
         }
 
-        public bool IsPostfix()
+        public bool IsPostfixOperator()
         {
             ClassifyOperator();
             return (CurrentToken.Flags & ToFlags.PostfixOperator) != 0;
         }
 
-        public bool IsInfix()
+        public bool IsInfixOperator()
         {
             ClassifyOperator();
             return (CurrentToken.Flags & ToFlags.InfixOperator) != 0;
@@ -155,6 +155,11 @@ namespace SixComp
         public Token CurrentToken => Ahead(0);
         public Token NextToken => Ahead(1);
 
+        /// <summary>
+        /// Check if current token represent an operator
+        /// </summary>
+        public bool IsOperator => CurrentToken.IsOperator;
+
         public bool Adjacent => Ahead(-1).Span.End == Ahead(0).Span.Start;
 
         public Token Ahead(int offset)
@@ -186,20 +191,6 @@ namespace SixComp
             throw new ParserException(token, $"expected `{kind.GetRep()}`, but got `{token}`");
         }
 
-#if false
-        public Token Consume(string opChars)
-        {
-            var token = CurrentToken;
-            if (token.Text == opChars)
-            {
-                Offset += 1;
-                return token;
-            }
-
-            throw new ParserException(token, $"expected `{opChars}`, but got `{token}`");
-        }
-#endif
-
         public Token Consume(TokenSet kinds)
         {
             var token = CurrentToken;
@@ -215,6 +206,16 @@ namespace SixComp
         public bool Match(ToKind kind)
         {
             if (Current == kind)
+            {
+                Offset += 1;
+                return true;
+            }
+            return false;
+        }
+
+        public bool Match(string text)
+        {
+            if (CurrentToken.Text == text)
             {
                 Offset += 1;
                 return true;

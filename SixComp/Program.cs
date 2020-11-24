@@ -19,8 +19,8 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            //new Program().Checker();
-            new Program().Swift();
+            new Program().Checker();
+            //new Program().Swift();
             //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
@@ -84,7 +84,7 @@ namespace SixComp
             var root = SwiftDir.FullName;
             var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories)
                 .Where(n => !n.EndsWith("Template.swift"))
-                .Where(n => n.EndsWith("Policy.swift"))
+                .OrderBy(n => Path.GetFileName(n))
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 
@@ -160,6 +160,12 @@ namespace SixComp
             catch (InvalidOperationException)
             {
                 Error(source, "internal error", parser.CurrentToken.Span.Start, parser.CurrentToken.Span.Length);
+
+                return false;
+            }
+            catch (Exception any)
+            {
+                Console.WriteLine(any.ToString());
 
                 return false;
             }

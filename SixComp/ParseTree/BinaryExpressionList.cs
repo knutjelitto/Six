@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class BinaryExpressionList : ItemList<BinaryExpression>
     {
-        public BinaryExpressionList(List<BinaryExpression> binaries) : base(binaries) { }
+        private BinaryExpressionList(List<BinaryExpression> binaries) : base(binaries) { }
         public BinaryExpressionList() { }
 
         public static BinaryExpressionList Parse(Parser parser)
@@ -18,6 +18,15 @@ namespace SixComp.ParseTree
             }
 
             return new BinaryExpressionList(binaries);
+        }
+
+        public override string ToString()
+        {
+            if (Count > 0)
+            {
+                return " " + string.Join(" ", this);
+            }
+            return string.Empty;
         }
     }
 }

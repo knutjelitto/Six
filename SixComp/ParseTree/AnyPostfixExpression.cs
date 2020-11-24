@@ -1,10 +1,10 @@
 ﻿namespace SixComp.ParseTree
 {
-    public interface AnyPostfix : AnyPrefix
+    public interface AnyPostfixExpression : AnyPrefixExpression
     {
-        public static new AnyPostfix? TryParse(Parser parser)
+        public static new AnyPostfixExpression? TryParse(Parser parser)
         {
-            AnyPostfix? left = AnyPrimary.TryParse(parser);
+            AnyPostfixExpression? left = AnyPrimaryExpression.TryParse(parser);
 
             if (left == null)
             {
@@ -40,7 +40,7 @@
                         }
                         break;
                     default:
-                        if (parser.IsPostfix())
+                        if (parser.IsPostfixOperator())
                         {
                             left = PostfixOpExpression.Parse(parser, left);
                         }

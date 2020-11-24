@@ -1,8 +1,8 @@
 ﻿namespace SixComp.ParseTree
 {
-    public interface AnyPrefix : AnyExpression
+    public interface AnyPrefixExpression : AnyExpression
     {
-        public static new AnyPrefix? TryParse(Parser parser)
+        public static new AnyPrefixExpression? TryParse(Parser parser)
         {
             if (parser.Current == ToKind.Amper)
             {
@@ -11,10 +11,10 @@
 
             var offset = parser.Offset;
 
-            if (parser.IsPrefix())
+            if (parser.IsPrefixOperator())
             {
                 var op = parser.ConsumeAny();
-                var operand = AnyPostfix.TryParse(parser);
+                var operand = AnyPostfixExpression.TryParse(parser);
                 if (operand != null)
                 {
                     return new PrefixExpression(op, operand);
@@ -22,7 +22,7 @@
                 parser.Offset = offset;
                 return null;
             }
-            return AnyPostfix.TryParse(parser);
+            return AnyPostfixExpression.TryParse(parser);
         }
     }
 }

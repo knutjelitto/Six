@@ -1,6 +1,6 @@
 ﻿namespace SixComp.ParseTree
 {
-    public abstract class AnyLiteralExpression : BaseExpression, AnyPrimary
+    public abstract class AnyLiteralExpression : BaseExpression, AnyPrimaryExpression
     {
         public AnyLiteralExpression(Token token)
         {

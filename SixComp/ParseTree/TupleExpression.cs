@@ -1,22 +1,22 @@
 ﻿namespace SixComp.ParseTree
 {
-    public class TupleExpression : BaseExpression, AnyPrimary
+    public class TupleExpression : BaseExpression, AnyPrimaryExpression
     {
-        private TupleExpression(ExpressionList expressions)
+        private TupleExpression(TupleElementList elements)
         {
-            Expressions = expressions;
+            Elements = elements;
         }
 
-        public ExpressionList Expressions { get; }
+        public TupleElementList Elements { get; }
 
-        public static TupleExpression From(ExpressionList expressions)
+        public static TupleExpression From(TupleElementList elements)
         {
-            return new TupleExpression(expressions);
+            return new TupleExpression(elements);
         }
 
         public override string ToString()
         {
-            return $"({Expressions})";
+            return $"({Elements})";
         }
     }
 }

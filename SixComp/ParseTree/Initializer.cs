@@ -11,7 +11,7 @@ namespace SixComp.ParseTree
 
         public AnyExpression Expression { get; }
 
-        public override AnyExpression? LastExpression => Expression;
+        public override AnyExpression? LastExpression => Expression.LastExpression;
 
         public static Initializer Parse(Parser parser)
         {

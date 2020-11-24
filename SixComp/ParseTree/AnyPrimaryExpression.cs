@@ -4,13 +4,13 @@ using SixComp.Support;
 
 namespace SixComp.ParseTree
 {
-    public interface AnyPrimary : AnyPostfix
+    public interface AnyPrimaryExpression : AnyPostfixExpression
     {
         private static TokenSet Firsts = new TokenSet(
             ToKind.Number, ToKind.String, ToKind.Name, ToKind.KwSelf, ToKind.LParent, ToKind.LBracket, ToKind.Dot, ToKind.KwFalse, ToKind.KwTrue,
             ToKind.KwNil, ToKind.Backslash);
 
-        public static new AnyPrimary? TryParse(Parser parser)
+        public static new AnyPrimaryExpression? TryParse(Parser parser)
         {
             switch (parser.Current)
             {
@@ -47,29 +47,24 @@ namespace SixComp.ParseTree
             }
         }
 
-        private static AnyPrimary NestedOrTuple(Parser parser)
+        private static AnyPrimaryExpression NestedOrTuple(Parser parser)
         {
-            parser.Consume(ToKind.LParent);
+            var token = parser.Consume(ToKind.LParent);
 
-            var expressions = new List<AnyExpression>();
-            if (parser.Current != ToKind.RParent)
-            {
-                do
-                {
-                    var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
-                    expressions.Add(expression);
-                }
-                while (parser.Match(ToKind.Comma));
-            }
+            var elements = TupleElementList.Parse(parser);
 
             parser.Consume(ToKind.RParent);
 
-            if (expressions.Count == 1)
+            if (elements.Count == 1)
             {
-                return NestedExpression.From(expressions[0]);
+                if (elements[0].Name == null)
+                {
+                    return NestedExpression.From(elements[0].Value);
+                }
+                throw new ParserException(token, "there is no such thing as an one element tuple");
             }
 
-            return TupleExpression.From(new ExpressionList(expressions));
+            return TupleExpression.From(elements);
         }
     }
 }
