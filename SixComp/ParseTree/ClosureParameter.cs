@@ -13,9 +13,14 @@
 
         public bool NameOnly => Type == null;
 
-        public static ClosureParameter Parse(Parser parser, bool nameOnly)
+        public static ClosureParameter? TryParse(Parser parser, bool nameOnly)
         {
-            var name = Name.Parse(parser);
+            var name = Name.TryParse(parser);
+            if (name == null)
+            {
+                return null;
+            }
+
             var type = nameOnly
                 ? null
                 : parser.Try(ToKind.Colon, TypeAnnotation.Parse);

@@ -16,7 +16,7 @@ namespace SixComp.ParseTree
         public static CaptureListItem Parse(Parser parser)
         {
             var specifier = CaptureSpecifier.Parse(parser);
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(CaptureListItem)}");
 
             return new CaptureListItem(specifier, expression);
         }

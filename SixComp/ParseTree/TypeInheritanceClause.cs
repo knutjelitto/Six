@@ -1,7 +1,11 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class TypeInheritanceClause
     {
+        public static TokenSet Firsts = new TokenSet(ToKind.Colon);
+
         public TypeInheritanceClause(TypeInheritanceList types)
         {
             Types = types;

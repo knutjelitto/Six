@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
         public static SwitchStatement Parse(Parser parser)
         {
             parser.Consume(ToKind.KwSwitch);
-            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
             var cases = SwitchCaseList.Parse(parser);
 
             return new SwitchStatement(value, cases);

@@ -19,8 +19,8 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            new Program().Checker();
-            //new Program().Swift();
+            //new Program().Checker();
+            new Program().Swift();
             //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
@@ -157,9 +157,10 @@ namespace SixComp
 
                 return false;
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException invalid)
             {
-                Error(source, "internal error", parser.CurrentToken.Span.Start, parser.CurrentToken.Span.Length);
+                Console.WriteLine(invalid.ToString());
+                Error(source, $"internal error - {invalid.Message}", parser.CurrentToken.Span.Start, parser.CurrentToken.Span.Length);
 
                 return false;
             }

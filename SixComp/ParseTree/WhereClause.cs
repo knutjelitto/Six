@@ -18,7 +18,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.KwWhere);
 
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(WhereClause)}");
 
             return new WhereClause(expression);
         }

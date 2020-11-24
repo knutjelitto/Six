@@ -23,18 +23,35 @@ namespace SixComp.ParseTree
         public bool NameOnly => !Parents && Parameters.NameOnly;
         public bool Definite => !Missing && !NameOnly;
 
-        public static ClosureParameterClause Parse(Parser parser)
+        public static ClosureParameterClause? TryParse(Parser parser)
         {
+            var offset = parser.Offset;
+
             if (parser.Match(ToKind.LParent))
             {
-                var fullParameters = ClosureParameterList.Parse(parser, false);
+                var fullParameters = ClosureParameterList.TryParse(parser, false);
+                if (fullParameters == null)
+                {
+                    parser.Offset = offset;
+                    return null;
+                }
                 var variadic = parser.Match(ToKind.DotDotDot);
-                parser.Consume(ToKind.RParent);
+                if (!parser.Match(ToKind.RParent))
+                {
+                    parser.Offset = offset;
+                    return null;
+                }
 
                 return new ClosureParameterClause(fullParameters, true, variadic);
             }
 
-            var nameParameters = ClosureParameterList.Parse(parser, true);
+            var nameParameters = ClosureParameterList.TryParse(parser, true);
+
+            if (nameParameters == null)
+            {
+                parser.Offset = offset;
+                return null;
+            }
 
             return new ClosureParameterClause(nameParameters, false, false);
         }

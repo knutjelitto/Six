@@ -6,7 +6,7 @@
         {
             TypeIdentifier name = TypeIdentifier.Parse(parser);
 
-            if (parser.Match(ToKind.EqualEqual))
+            if (parser.Match(ToKind.Equals))
             {
                 var type = AnyType.Parse(parser);
 

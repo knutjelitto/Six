@@ -29,6 +29,7 @@ namespace SixComp
         [Rep("<", ToClass.Operator)] Less,
         [Rep("=", ToClass.Operator)] Assign,
         [Rep("&", ToClass.Operator)] Amper,
+        [Rep("==", ToClass.Operator)] Equals,
         [Rep("<op>", ToClass.Operator)] Operator,
 
         [Rep("@")] At,
@@ -44,7 +45,6 @@ namespace SixComp
         [Rep("...", ToClass.Operator)] DotDotDot,
         [Rep("..<", ToClass.Operator)] DotDotLess,
 
-        [Rep("==", ToClass.Operator)] EqualEqual,
         [Rep("!=", ToClass.Operator)] BangEqual,
         [Rep("^", ToClass.Operator)] Caret,
         [Rep("~", ToClass.Operator)] Tilde,
@@ -87,6 +87,7 @@ namespace SixComp
         [Rep("continue", ToClass.Keyword)] KwContinue,
         [Rep("convenience", ToClass.Keyword)] KwConvenience,
         [Rep("default", ToClass.Keyword)] KwDefault,
+        [Rep("deinit", ToClass.Keyword)] KwDeinit,
         [Rep("didSet", ToClass.Keyword)] KwDidSet,
         [Rep("dynamic", ToClass.Keyword)] KwDynamic,
         [Rep("else", ToClass.Keyword)] KwElse,
@@ -130,6 +131,7 @@ namespace SixComp
         [Rep("some", ToClass.Keyword)] KwSome,
         [Rep("static", ToClass.Keyword)] KwStatic,
         [Rep("struct", ToClass.Keyword)] KwStruct,
+        [Rep("subscript", ToClass.Keyword)] KwSubscript,
         [Rep("super", ToClass.Keyword)] KwSuper,
         [Rep("switch", ToClass.Keyword)] KwSwitch,
         [Rep("throws", ToClass.Keyword)] KwThrows,
@@ -151,7 +153,11 @@ namespace SixComp
         [Rep("right", ToClass.Keyword)] KwRight,
         [Rep("none", ToClass.Keyword)] KwNone,
         [Rep("operator", ToClass.Keyword)] KwOperator,
+        [Rep("associatedtype", ToClass.Keyword)] KwAssociatedType,
+
         [Rep("__consuming", ToClass.Keyword)] Kw__Consuming,
+        [Rep("_modify", ToClass.Keyword)] Kw_Modify,
+        [Rep("__owned", ToClass.Keyword)] Kw__Owned,
 
 
         [Rep("#if", ToClass.Keyword)] CdIf,
@@ -160,7 +166,9 @@ namespace SixComp
         [Rep("#endif", ToClass.Keyword)] CdEndif,
 
         [Rep("#file", ToClass.Keyword)] CdFile,
+        [Rep("#function", ToClass.Keyword)] CdFunction,
         [Rep("#line", ToClass.Keyword)] CdLine,
+        [Rep("#column", ToClass.Keyword)] CdColumn,
         [Rep("#available", ToClass.Keyword)] CdAvailable,
 
         _LAST_,

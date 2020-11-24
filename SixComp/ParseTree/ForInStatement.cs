@@ -23,7 +23,7 @@ namespace SixComp.ParseTree
             parser.Match(ToKind.KwCase);
             var pattern = AnyPattern.Parse(parser);
             parser.Consume(ToKind.KwIn);
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ForInStatement)}");
             var where = parser.Try(WhereClause.Firsts, WhereClause.Parse);
             CodeBlock block;
             var last = where == null

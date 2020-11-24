@@ -19,7 +19,7 @@ namespace SixComp.ParseTree
 
             var parameters = GenericParameterList.Parse(parser);
 
-            parser.Consume(ToKind.Greater);
+            parser.CarefullyConsume(ToKind.Greater);
 
             return new GenericParameterClause(parameters);
         }

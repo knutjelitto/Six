@@ -52,7 +52,7 @@ namespace SixComp.ParseTree
             {
                 parser.Consume(Firsts);
 
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("<NEVER>");
             }
 
             parser.Consume(ToKind.KwOperator);

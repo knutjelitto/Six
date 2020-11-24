@@ -35,7 +35,7 @@ namespace SixComp.ParseTree
             var minimal = false;
 
             var captures = parser.TryList(CaptureList.Firsts, CaptureList.Parse);
-            var parameters = parser.TryList(ClosureParameterClause.Firsts, ClosureParameterClause.Parse);
+            var parameters = ClosureParameterClause.TryParse(parser) ?? new ClosureParameterClause();
             var throws = parser.Match(ToKind.KwThrows);
             var result = parser.Try(FunctionResult.Firsts, FunctionResult.Parse);
             var inNeeded = parameters.Definite || throws || result != null;

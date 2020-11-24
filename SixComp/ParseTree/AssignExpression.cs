@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.Assign);
 
-            var right = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var right = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(AssignExpression)}");
 
             return new AssignExpression(left, right);
         }

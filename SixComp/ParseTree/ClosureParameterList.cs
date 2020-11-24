@@ -9,19 +9,28 @@ namespace SixComp.ParseTree
 
         public bool NameOnly => Count == 1 && this[0].NameOnly;
 
-        public static ClosureParameterList Parse(Parser parser, bool nameOnly)
+        public static ClosureParameterList? TryParse(Parser parser, bool nameOnly)
         {
             var parameters = new List<ClosureParameter>();
 
-            if (parser.Current != ToKind.RParent || nameOnly/*can't be empty*/)
+            if (parser.Current == ToKind.RParent)
             {
-                do
-                {
-                    var parameter = ClosureParameter.Parse(parser, nameOnly);
-                    parameters.Add(parameter);
-                }
-                while (parser.Match(ToKind.Comma));
+                return new ClosureParameterList(parameters);
             }
+
+            var offset = parser.Offset;
+
+            do
+            {
+                var parameter = ClosureParameter.TryParse(parser, nameOnly);
+                if (parameter == null)
+                {
+                    parser.Offset = offset;
+                    return null;
+                }
+                parameters.Add(parameter);
+            }
+            while (parser.Match(ToKind.Comma));
 
             return new ClosureParameterList(parameters);
         }

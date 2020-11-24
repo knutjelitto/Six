@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public class ExtensionDeclaration : AnyDeclaration
     {
-        public ExtensionDeclaration(Prefix prefix, TypeIdentifier name, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationList declarations)
+        public ExtensionDeclaration(Prefix prefix, TypeIdentifier name, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
         {
             Prefix = prefix;
             Name = name;
@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
         public TypeIdentifier Name { get; }
         public TypeInheritanceClause Inheritance { get; }
         public RequirementClause Requirements { get; }
-        public DeclarationList Declarations { get; }
+        public DeclarationClause Declarations { get; }
 
         public static ExtensionDeclaration Parse(Parser parser, Prefix prefix)
         {
@@ -26,9 +26,7 @@ namespace SixComp.ParseTree
             var name = TypeIdentifier.Parse(parser);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-            parser.Consume(ToKind.LBrace);
-            var declarations = DeclarationList.Parse(parser, AnyDeclaration.Context.Extension);
-            parser.Consume(ToKind.RBrace);
+            var declarations = DeclarationClause.Parse(parser, AnyDeclaration.Context.Extension);
 
             return new ExtensionDeclaration(prefix, name, inheritance, requirements, declarations);
         }

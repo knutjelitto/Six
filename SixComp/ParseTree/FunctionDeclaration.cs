@@ -4,8 +4,9 @@ namespace SixComp.ParseTree
 {
     public class FunctionDeclaration : AnyDeclaration
     {
-        public FunctionDeclaration(Name name, GenericParameterClause generics, ParameterClause parameters, FunctionResult? returns, RequirementClause requirements, CodeBlock? block)
+        public FunctionDeclaration(Prefix prefix, Name name, GenericParameterClause generics, ParameterClause parameters, FunctionResult? returns, RequirementClause requirements, CodeBlock? block)
         {
+            Prefix = prefix;
             Name = name;
             GenericParameters = generics;
             Parameters = parameters;
@@ -14,6 +15,7 @@ namespace SixComp.ParseTree
             Block = block;
         }
 
+        public Prefix Prefix { get; }
         public Name Name { get; }
         public GenericParameterClause GenericParameters { get; }
         public ParameterClause Parameters { get; }
@@ -21,7 +23,7 @@ namespace SixComp.ParseTree
         public RequirementClause Requirements { get; }
         public CodeBlock? Block { get; }
 
-        public static FunctionDeclaration Parse(Parser parser)
+        public static FunctionDeclaration Parse(Parser parser, Prefix prefix)
         {
             //TODO: is incomplete
             parser.Consume(ToKind.KwFunc);
@@ -34,7 +36,7 @@ namespace SixComp.ParseTree
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
             var block = parser.Try(ToKind.LBrace, CodeBlock.Parse);
 
-            return new FunctionDeclaration(name, genericParameters, parameters, returns, requirements, block);
+            return new FunctionDeclaration(prefix, name, genericParameters, parameters, returns, requirements, block);
         }
 
         public void Write(IWriter writer)

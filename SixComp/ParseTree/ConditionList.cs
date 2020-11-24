@@ -14,7 +14,7 @@ namespace SixComp.ParseTree
 
             do
             {
-                var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException();
+                var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ConditionList)}");
                 conditions.Add(condition);
             }
             while (parser.Match(ToKind.Comma));

@@ -25,6 +25,8 @@
         public bool IsImmediateDot => !Span.Spacing && Span.First == '.';
 
         public bool IsOperator => (Flags & ToFlags.AnyOperator) != 0;
+        public int Length => Span.Length;
+        public char First => Span.First;
 
         public override bool Equals(object? obj)
         {

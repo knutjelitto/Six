@@ -4,9 +4,10 @@ namespace SixComp.ParseTree
 {
     public class Name
     {
-        private static TokenSet Contextual = new TokenSet(
+        public static TokenSet Contextual = new TokenSet(
             ToKind.KwGet, ToKind.KwSet, ToKind.KwInit, ToKind.KwOpen, ToKind.KwFor, ToKind.KwStatic, ToKind.KwDynamic,
-            ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwANY, ToKind.KwSelf, ToKind.KwSELF);
+            ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwANY, ToKind.KwSelf, ToKind.KwSELF, ToKind.KwIs,
+            ToKind.KwNone, ToKind.KwSome, ToKind.KwLeft, ToKind.KwRight, ToKind.KwIn, ToKind.KwWhile, ToKind.KwWhere);
 
         public Name(Token token)
         {

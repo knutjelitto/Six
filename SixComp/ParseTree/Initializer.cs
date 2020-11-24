@@ -17,7 +17,7 @@ namespace SixComp.ParseTree
         {
             parser.Consume(ToKind.Assign);
 
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Initializer)}");
 
             return new Initializer(expression);
         }

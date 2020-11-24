@@ -2,7 +2,7 @@
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, TypeAnnotation type, Initializer? initializer)
+        public Parameter(Name? label, Name name, AnyType type, Initializer? initializer)
         {
             Label = label;
             Name = name;
@@ -17,9 +17,11 @@
 
         public static Parameter Parse(Parser parser)
         {
-            var label = parser.Next == ToKind.Name
-                ? Name.Parse(parser)
-                : null;
+            Name? label = null;
+            if (parser.NextNext == ToKind.Colon)
+            {
+                label = Name.Parse(parser);
+            }
             var name = Name.Parse(parser);
             var type = TypeAnnotation.Parse(parser);
             var initializer = parser.Try(ToKind.Assign, Initializer.Parse);

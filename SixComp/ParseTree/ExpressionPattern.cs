@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static ExpressionPattern Parse(Parser parser)
         {
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ExpressionPattern)}");
 
             return new ExpressionPattern(expression, null);
         }

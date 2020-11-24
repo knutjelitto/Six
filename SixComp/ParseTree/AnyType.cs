@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System;
 using System.Linq;
 
 namespace SixComp.ParseTree
@@ -20,22 +21,47 @@ namespace SixComp.ParseTree
                 case ToKind.KwSELF:
                     type = SELFType.Parse(parser);
                     break;
+                case ToKind.KwANY:
+                    type = ANIType.Parse(parser);
+                    break;
+                case ToKind.KwSome:
+                    type = SomeType.Parse(parser);
+                    break;
                 default:
                     type = TypeIdentifier.Parse(parser);
                     break;
             }
 
-            switch (parser.Current)
+            while (true)
             {
-                case ToKind.Quest:
-                    parser.ConsumeAny();
+                if (parser.Match(ToKind.Quest))
+                {
                     type = new OptionalType(type);
-                    break;
-            }
+                }
+                else if (parser.Match(ToKind.Bang))
+                {
+                    type = new UnwrapType(type);
+                }
+                else if (parser.Current == ToKind.Dot)
+                {
+                    type = MetatypeType.Parse(parser, type);
+                }
+                else
+                {
+                    var token = parser.CurrentToken;
 
-            if (type == null)
-            {
-                throw new ParserException(parser.CurrentToken, "can't parse type");
+                    if (token.Length >= 2 && token.IsOperator)
+                    {
+                        if (token.First == '?')
+                        {
+                            parser.CarefullyConsume(ToKind.Quest);
+                            type = new OptionalType(type);
+                            continue;
+                        }
+                    }
+
+                    break;
+                }
             }
 
             return type;

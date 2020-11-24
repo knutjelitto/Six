@@ -22,7 +22,7 @@ namespace SixComp.ParseTree
 
             parser.Consume(Firsts);
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("<NEVER>");
         }
 
         public class Relation : PrecGroupAttribute

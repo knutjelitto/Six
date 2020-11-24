@@ -5,7 +5,7 @@ namespace SixComp
     public struct Span
     {
         public readonly Source Source;
-        private readonly int Before;
+        public readonly int Before;
         public readonly int Start;
         public readonly int End;
 

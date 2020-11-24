@@ -1,7 +1,11 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class TypealiasAssignment : AnyType
     {
+        public static TokenSet Firsts = new TokenSet(ToKind.Assign);
+
         private TypealiasAssignment(AnyType type)
         {
             Type = type;

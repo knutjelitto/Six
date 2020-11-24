@@ -8,6 +8,7 @@ namespace SixComp.ParseTree
         public enum Context
         {
             Any,
+            Top,
             Class,
             Enum,
             Extension,
@@ -20,7 +21,7 @@ namespace SixComp.ParseTree
         {
             var prefix = Prefix.Parse(parser, true);
 
-            if (parser.CurrentToken.ToString() == "postfix")
+            if (parser.CurrentToken.ToString() == "prefix")
             {
                 Debug.Assert(true);
             }
@@ -28,11 +29,13 @@ namespace SixComp.ParseTree
             switch (parser.Current)
             {
                 case ToKind.KwLet:
-                    return LetDeclaration.Parse(parser);
+                    return LetDeclaration.Parse(parser, prefix);
                 case ToKind.KwVar:
                     return AnyVarDeclaration.Parse(parser, prefix);
                 case ToKind.KwFunc:
-                    return FunctionDeclaration.Parse(parser);
+                    return FunctionDeclaration.Parse(parser, prefix);
+                case ToKind.KwSubscript:
+                    return SubscriptDeclaration.Parse(parser, prefix);
                 case ToKind.KwClass:
                     return ClassDeclaration.Parse(parser, prefix);
                 case ToKind.KwStruct:
@@ -43,6 +46,8 @@ namespace SixComp.ParseTree
                     return EnumCase.Parse(parser);
                 case ToKind.KwInit:
                     return InitializerDeclaration.Parse(parser);
+                case ToKind.KwDeinit:
+                    return DeinitializerDeclaration.Parse(parser, prefix);
                 case ToKind.KwImport:
                     return ImportDeclaration.Parse(parser);
                 case ToKind.KwExtension:
@@ -53,9 +58,11 @@ namespace SixComp.ParseTree
                     return ProtocolDeclaration.Parse(parser, prefix);
                 case ToKind.KwPrecedencegroup:
                     return PrecGroupDeclaration.Parse(parser, prefix);
-                case ToKind.KwPrefix:
-                case ToKind.KwPostfix:
-                case ToKind.KwInfix:
+                case ToKind.KwAssociatedType:
+                    return AssociatedTypeDeclaration.Parse(parser, prefix);
+                case ToKind.KwPrefix when parser.Next == ToKind.KwOperator:
+                case ToKind.KwPostfix when parser.Next == ToKind.KwOperator:
+                case ToKind.KwInfix when parser.Next == ToKind.KwOperator:
                     return OperatorDeclaration.Parse(parser, prefix);
 
                 case ToKind.CdIf:

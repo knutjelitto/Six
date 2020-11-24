@@ -21,7 +21,6 @@ namespace SixComp.ParseTree
 
             if (parser.IsInfixOperator())
             {
-
                 var op = parser.ConsumeAny();
 
                 if (op.Kind == ToKind.Quest)
@@ -37,6 +36,14 @@ namespace SixComp.ParseTree
                                 return new BinaryExpression(Operator.From(middle), right);
                             }
                         }
+                    }
+                }
+                else if (op.Kind == ToKind.Assign)
+                {
+                    var right = Expression.TryParse(parser, false);
+                    if (right != null)
+                    {
+                        return new BinaryExpression(Operator.From(op), right);
                     }
                 }
                 else

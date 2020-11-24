@@ -16,17 +16,29 @@ namespace SixComp
 
         Identifier = 1 << 4,
         Keyword = 1 << 5,
-
         Special = 1 << 6,
+
+        /// <summary>
+        /// At '<' splitable token
+        /// </summary>
+        OpSplitLess = 1 << 7,
+        /// <summary>
+        /// At '>' splitable token
+        /// </summary>
+        OpSplitGreater = 1 << 8,
+        /// <summary>
+        /// At '?' splitable token
+        /// </summary>
+        OpSplitQuest = 1 << 9,
 
         /// <summary>
         /// Token is considered as whitespace before operator
         /// </summary>
-        OpSpaceBefore = 1 << 7,
+        OpSpaceBefore = 1 << 10,
         /// <summary>
         /// Token is considered as whitespace after operator
         /// </summary>
-        OpSpaceAfter = 1 << 8,
+        OpSpaceAfter = 1 << 11,
         /// <summary>
         /// Token is considered as whitespace before or after operator
         /// </summary>

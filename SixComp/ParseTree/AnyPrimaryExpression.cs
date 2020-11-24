@@ -19,7 +19,6 @@ namespace SixComp.ParseTree
                 case ToKind.String:
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
-                case ToKind.KwSELF:
                     return NameExpression.Parse(parser);
                 case ToKind.KwSelf:
                     return AnySelfExpression.Parse(parser);
@@ -28,7 +27,7 @@ namespace SixComp.ParseTree
                 case ToKind.LBracket:
                     return DirayLiteral.Parse(parser);
                 case ToKind.LBrace:
-                    return ClosureExpression.TryParse(parser) ?? throw new InvalidOperationException();
+                    return ClosureExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(AnyPrimaryExpression)}");
                 case ToKind.Dot:
                     return ImplicitMemberExpression.Parse(parser);
                 case ToKind.KwFalse:
@@ -42,7 +41,15 @@ namespace SixComp.ParseTree
                     return FileLiteralExpression.Parse(parser);
                 case ToKind.CdLine:
                     return LineLiteralExpression.Parse(parser);
+                case ToKind.CdColumn:
+                    return ColumnLiteralExpression.Parse(parser);
+                case ToKind.CdFunction:
+                    return FunctionLiteralExpression.Parse(parser);
                 default:
+                    if (Name.Contextual.Contains(parser.Current))
+                    {
+                        return NameExpression.Parse(parser);
+                    }
                     return null;
             }
         }

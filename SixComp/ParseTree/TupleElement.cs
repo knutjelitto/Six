@@ -23,7 +23,7 @@ namespace SixComp.ParseTree
                 name = Name.Parse(parser);
                 parser.Consume(ToKind.Colon);
             }
-            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException();
+            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(TupleElement)}");
 
             return new TupleElement(name, value);
         }

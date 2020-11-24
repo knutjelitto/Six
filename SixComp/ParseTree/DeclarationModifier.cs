@@ -16,6 +16,8 @@ namespace SixComp.ParseTree
             Lazy,
             Optional,
             Override,
+            Prefix,
+            Postfix,
             Required,
             Static,
             Unowned,
@@ -23,6 +25,7 @@ namespace SixComp.ParseTree
             UnownedUnsafe,
             Weak,
             __Consuming,
+            __Owned,
 
             // access level
             Private,
@@ -83,6 +86,14 @@ namespace SixComp.ParseTree
                     parser.ConsumeAny();
                     kind = ModifierKind.Override;
                     break;
+                case ToKind.KwPrefix:
+                    parser.ConsumeAny();
+                    kind = ModifierKind.Prefix;
+                    break;
+                case ToKind.KwPostfix:
+                    parser.ConsumeAny();
+                    kind = ModifierKind.Postfix;
+                    break;
                 case ToKind.KwRequired:
                     parser.ConsumeAny();
                     kind = ModifierKind.Required;
@@ -109,6 +120,10 @@ namespace SixComp.ParseTree
                 case ToKind.Kw__Consuming:
                     parser.ConsumeAny();
                     kind = ModifierKind.__Consuming;
+                    break;
+                case ToKind.Kw__Owned:
+                    parser.ConsumeAny();
+                    kind = ModifierKind.__Owned;
                     break;
 
                 case ToKind.KwPrivate:

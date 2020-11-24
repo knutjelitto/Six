@@ -2,13 +2,14 @@
 using SixComp.Support;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixComp
 {
     public class Parser
     {
-        private readonly Lexer lexer;
-        private readonly Tokens tokens;
+        private readonly Lexer Lexer;
+        private readonly Tokens Tokens;
 
         public int Offset;
         public int ClassifiedOffset;
@@ -16,8 +17,8 @@ namespace SixComp
         public Parser(Context context)
         {
             Context = context;
-            lexer = Context.Lexer;
-            tokens = Context.Tokens;
+            Lexer = Context.Lexer;
+            Tokens = Context.Tokens;
             Offset = 0;
             ClassifiedOffset = 0;
         }
@@ -34,6 +35,11 @@ namespace SixComp
         public Unit Parse()
         {
             return Unit.Parse(this);
+        }
+
+        public void SplitGreater()
+        {
+
         }
 
         private void ClassifyOperator()
@@ -88,7 +94,7 @@ namespace SixComp
 
         public bool IsKeyword(ToKind kind)
         {
-            return lexer.IsKeyword(kind);
+            return Lexer.IsKeyword(kind);
         }
 
         public bool IsKeyword()
@@ -169,7 +175,7 @@ namespace SixComp
 
         public Token At(int offset)
         {
-            return tokens[offset];
+            return Tokens[offset];
         }
 
         public Token ConsumeAny()
@@ -177,6 +183,47 @@ namespace SixComp
             var token = CurrentToken;
             Offset += 1;
             return token;
+        }
+
+        public Token CarefullyConsume(ToKind kind)
+        {
+            if (Current == kind)
+            {
+                return Consume(kind);
+            }
+
+            var token = CurrentToken;
+
+            Debug.Assert(token.Index == Offset);
+
+            switch (kind)
+            {
+                case ToKind.Less:
+                    if ((token.Flags & ToFlags.OpSplitLess) != 0)
+                    {
+                        Split(token, kind);
+                    }
+                    break;
+                case ToKind.Greater:
+                    if ((token.Flags & ToFlags.OpSplitGreater) != 0)
+                    {
+                        Split(token, kind);
+                    }
+                    break;
+                case ToKind.Quest:
+                    if ((token.Flags & ToFlags.OpSplitQuest) != 0)
+                    {
+                        Split(token, kind);
+                    }
+                    break;
+            }
+
+            return Consume(kind);
+        }
+
+        private void Split(Token token, ToKind kind)
+        {
+            Lexer.BackupForSplit(token, kind);
         }
 
         public Token Consume(ToKind kind)

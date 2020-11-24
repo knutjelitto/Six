@@ -8,9 +8,9 @@ namespace SixComp
 {
     public class Lexer
     {
-        public readonly Source Source;
-        public readonly string Text;
-        public readonly Tokens Tokens;
+        public Source Source => Context.Source;
+        public string Text => Source.Content;
+        public Tokens Tokens => Context.Tokens;
 
         private readonly Dictionary<string, ToKind> keywordMap;
         private readonly HashSet<ToKind> keywordSet;
@@ -20,10 +20,6 @@ namespace SixComp
         public Lexer(Context context)
         {
             Context = context;
-
-            Source = Context.Source;
-            Text = Context.Source.Content;
-            Tokens = Context.Tokens;
 
             Start = 0;
             Before = 0;
@@ -61,6 +57,16 @@ namespace SixComp
         }
 
         private bool newlineBefore;
+
+        public void BackupForSplit(Token token, ToKind kind)
+        {
+            Before = token.Span.Before;
+            Start = token.Span.Start;
+            Index = token.Span.Start + 1;
+
+            var split = AnyOperator(kind, withIndex: token.Index);
+            Tokens.BackupForSplit(split);
+        }
 
         public Token GetNext()
         {
@@ -141,6 +147,10 @@ namespace SixComp
 
                         if (keywordMap.TryGetValue(text, out var kind))
                         {
+                            if (kind == ToKind.KwSelf)
+                            {
+                                Debug.Assert(true);
+                            }
                             return Token(kind, 0);
                         }
 
@@ -169,40 +179,27 @@ namespace SixComp
                     }
                     if (OperatorHead(Current))
                     {
-                        var allGreater = Current == '>';
-                        var allLess = Current == '<';
                         Index += 1;
                         while (OperatorCharacter(Current))
                         {
-                            allGreater &= Current == '>';
-                            allLess &= Current == '<';
                             Index += 1;
                         }
                         if (Length == 1)
                         {
-                            if (Text[Start] == '?')
+                            switch (Text[Start])
                             {
-                                return AnyOperator(ToKind.Quest);
-                            }
-                            if (Text[Start] == '!')
-                            {
-                                return AnyOperator(ToKind.Bang);
-                            }
-                            if (Text[Start] == '=')
-                            {
-                                return AnyOperator(ToKind.Assign);
-                            }
-                            if (Text[Start] == '<')
-                            {
-                                return AnyOperator(ToKind.Less);
-                            }
-                            if (Text[Start] == '>')
-                            {
-                                return AnyOperator(ToKind.Greater);
-                            }
-                            if (Text[Start] == '&')
-                            {
-                                return AnyOperator(ToKind.Amper);
+                                case '?':
+                                    return AnyOperator(ToKind.Quest);
+                                case '!':
+                                    return AnyOperator(ToKind.Bang);
+                                case '=':
+                                    return AnyOperator(ToKind.Assign);
+                                case '<':
+                                    return AnyOperator(ToKind.Less);
+                                case '>':
+                                    return AnyOperator(ToKind.Greater);
+                                case '&':
+                                    return AnyOperator(ToKind.Amper);
                             }
                         }
                         else if (Length == 2)
@@ -211,8 +208,20 @@ namespace SixComp
                             {
                                 return AnyOperator(ToKind.Arrow);
                             }
+                            if (Text[Start] == '=' && Text[Start + 1] == '=')
+                            {
+                                return AnyOperator(ToKind.Equals);
+                            }
                         }
-                        return AnyOperator();
+
+                        var split = (Text[Start]) switch
+                        {
+                            '<' => ToFlags.OpSplitLess,
+                            '>' => ToFlags.OpSplitGreater,
+                            '?' => ToFlags.OpSplitQuest,
+                            _ => ToFlags.None,
+                        };
+                        return AnyOperator(flags: split);
                     }
                     break;
             }
@@ -534,21 +543,21 @@ namespace SixComp
         {
             Index = Math.Min(Source.Length, Index + 1);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(0, span, kind, newlineBefore, flags);
+            return new Token(Tokens.Count, span, kind, newlineBefore, flags);
         }
 
         private Token Token(ToKind kind, int consume)
         {
             Index = Math.Min(Source.Length, Index + consume);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(0, span, kind, newlineBefore, ToFlags.None);
+            return new Token(Tokens.Count, span, kind, newlineBefore, ToFlags.None);
         }
 
-        private Token AnyOperator(ToKind kind = ToKind.Operator)
+        private Token AnyOperator(ToKind kind = ToKind.Operator, ToFlags flags = ToFlags.None, int? withIndex = null)
         {
             Debug.Assert(Index > Start);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(0, span, kind, newlineBefore, ToFlags.Operator);
+            return new Token(withIndex ?? Tokens.Count, span, kind, newlineBefore, ToFlags.Operator | flags);
         }
 
         private string CurrentText()

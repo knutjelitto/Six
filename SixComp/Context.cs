@@ -8,8 +8,8 @@ namespace SixComp
         {
             Source = new Source(filename, content);
             Index = new SourceIndex(Source);
-            Lexer = new Lexer(this);
             Tokens = new Tokens(this);
+            Lexer = new Lexer(this);
             Parser = new Parser(this);
         }
 

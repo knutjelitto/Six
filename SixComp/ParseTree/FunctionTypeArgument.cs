@@ -2,27 +2,37 @@
 {
     public class FunctionTypeArgument
     {
-        public FunctionTypeArgument(Name? label, AnyType type)
+        public FunctionTypeArgument(Name? label, Name? name, AnyType type)
         {
             Label = label;
+            Name = name;
             Type = type;
         }
 
         public Name? Label { get; }
+        public Name? Name { get; }
         public AnyType Type { get; }
 
         public static FunctionTypeArgument Parse(Parser parser)
         {
             if (parser.Next == ToKind.Colon)
             {
-                var label = Name.Parse(parser);
+                var name = Name.Parse(parser);
                 var annotation = TypeAnnotation.Parse(parser);
 
-                return new FunctionTypeArgument(label, annotation);
+                return new FunctionTypeArgument(null, name, annotation);
+            }
+            else if (parser.NextNext == ToKind.Colon)
+            {
+                var label = Name.Parse(parser);
+                var name = Name.Parse(parser);
+                var annotation = TypeAnnotation.Parse(parser);
+
+                return new FunctionTypeArgument(label, name, annotation);
             }
 
-            var type = AnyType.Parse(parser);
-            return new FunctionTypeArgument(null, type);
+            var type = PrefixedType.Parse(parser);
+            return new FunctionTypeArgument(null, null, type);
 
         }
 
