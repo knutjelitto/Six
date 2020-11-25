@@ -21,11 +21,6 @@ namespace SixComp.ParseTree
         {
             var prefix = Prefix.Parse(parser, true);
 
-            if (parser.CurrentToken.ToString() == "prefix")
-            {
-                Debug.Assert(true);
-            }
-
             switch (parser.Current)
             {
                 case ToKind.KwLet:
@@ -45,7 +40,7 @@ namespace SixComp.ParseTree
                 case ToKind.KwCase when context == Context.Enum:
                     return EnumCase.Parse(parser);
                 case ToKind.KwInit:
-                    return InitializerDeclaration.Parse(parser);
+                    return InitializerDeclaration.Parse(parser, prefix);
                 case ToKind.KwDeinit:
                     return DeinitializerDeclaration.Parse(parser, prefix);
                 case ToKind.KwImport:

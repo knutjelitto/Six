@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -41,6 +42,10 @@ namespace SixComp.ParseTree
             var inNeeded = parameters.Definite || throws || result != null;
             if (inNeeded || parser.Current == ToKind.KwIn)
             {
+                if (parser.Current != ToKind.KwIn)
+                {
+                    Debug.Assert(true);
+                }
                 parser.Consume(ToKind.KwIn);
             }
             else

@@ -30,18 +30,24 @@ namespace SixComp
         /// At '?' splitable token
         /// </summary>
         OpSplitQuest = 1 << 9,
+        /// <summary>
+        /// At '!' splitable token
+        /// </summary>
+        OpSplitBang = 1 << 10,
 
         /// <summary>
         /// Token is considered as whitespace before operator
         /// </summary>
-        OpSpaceBefore = 1 << 10,
+        OpSpaceBefore = 1 << 11,
         /// <summary>
         /// Token is considered as whitespace after operator
         /// </summary>
-        OpSpaceAfter = 1 << 11,
+        OpSpaceAfter = 1 << 12,
         /// <summary>
         /// Token is considered as whitespace before or after operator
         /// </summary>
         OpSpaceAny = OpSpaceBefore | OpSpaceAfter,
+
+        Implicit = 1 << 13,
     }
 }

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Strings.h"
-#include <assert.h>>
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -17,6 +17,7 @@ SIXAPI String* RtStringCreate(const BYTE* bytes, int length)
 	String* string = (String*)malloc(sizeof(String));
 	assert(string != NULL);
 	string->memory = (BYTE*)malloc((size_t)length + 1);
+	assert(string->memory != NULL);
 	string->alloced = length + 1;
 	string->used = length;
 

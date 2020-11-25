@@ -10,12 +10,6 @@ namespace SixComp.ParseTree
             {
                 case ToKind.KwIf:
                     return IfStatement.Parse(parser);
-                case ToKind.KwBreak:
-                    return BreakStatement.Parse(parser);
-                case ToKind.KwContinue:
-                    return ContinueStatement.Parse(parser);
-                case ToKind.KwReturn:
-                    return ReturnStatement.Parse(parser);
                 case ToKind.KwSwitch:
                     return SwitchStatement.Parse(parser);
                 case ToKind.KwGuard:
@@ -24,7 +18,19 @@ namespace SixComp.ParseTree
                     return ForInStatement.Parse(parser);
                 case ToKind.KwWhile:
                     return WhileStatement.Parse(parser);
+                case ToKind.KwRepeat:
+                    return RepeatStatement.Parse(parser);
+                case ToKind.KwBreak:
+                    return BreakStatement.Parse(parser);
+                case ToKind.KwContinue:
+                    return ContinueStatement.Parse(parser);
+                case ToKind.KwReturn:
+                    return ReturnStatement.Parse(parser);
                 default:
+                    if (Name.CanParse(parser) && parser.Next == ToKind.Colon)
+                    {
+                        return LabeledStatement.Parse(parser);
+                    }
                     var statement = (AnyStatement?)DeclarationStatement.TryParse(parser);
                     if (statement == null)
                     {

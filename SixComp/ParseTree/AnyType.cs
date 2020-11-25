@@ -1,6 +1,4 @@
-﻿using SixComp.Support;
-using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace SixComp.ParseTree
 {
@@ -17,12 +15,6 @@ namespace SixComp.ParseTree
                     break;
                 case ToKind.LBracket:
                     type = ArrayOrDictionayType(parser);
-                    break;
-                case ToKind.KwSELF:
-                    type = SELFType.Parse(parser);
-                    break;
-                case ToKind.KwANY:
-                    type = ANIType.Parse(parser);
                     break;
                 case ToKind.KwSome:
                     type = SomeType.Parse(parser);
@@ -42,10 +34,6 @@ namespace SixComp.ParseTree
                 {
                     type = new UnwrapType(type);
                 }
-                else if (parser.Current == ToKind.Dot)
-                {
-                    type = MetatypeType.Parse(parser, type);
-                }
                 else
                 {
                     var token = parser.CurrentToken;
@@ -54,7 +42,7 @@ namespace SixComp.ParseTree
                     {
                         if (token.First == '?')
                         {
-                            parser.CarefullyConsume(ToKind.Quest);
+                            parser.ConsumeCarefully(ToKind.Quest);
                             type = new OptionalType(type);
                             continue;
                         }

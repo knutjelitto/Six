@@ -15,6 +15,7 @@ namespace SixComp.ParseTree
 
             while (parser.Current != ToKind.RBrace)
             {
+                CcBlock.Ignore(parser);
                 var @case = SwitchCase.Parse(parser);
                 cases.Add(@case);
             }

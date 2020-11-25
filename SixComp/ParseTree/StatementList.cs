@@ -14,6 +14,7 @@ namespace SixComp.ParseTree
 
             while (!follow.Contains(parser.Current))
             {
+                CcBlock.Ignore(parser);
                 var statement = AnyStatement.TryParse(parser);
 
                 if (statement == null)

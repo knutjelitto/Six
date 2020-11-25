@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace SixComp.ParseTree
 {
@@ -16,7 +17,21 @@ namespace SixComp.ParseTree
         public static Argument Parse(Parser parser)
         {
             var name = ArgumentName.TryParse(parser);
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Argument)}");
+
+            var expression = AnyExpression.TryParse(parser);
+            if (expression == null)
+            {
+                if (parser.CurrentToken.IsOperator)
+                {
+                    expression = OperatorExpression.Parse(parser);
+                }
+                else
+                {
+                    parser.Consume(ToKind.Operator);
+
+                    throw new InvalidOperationException();
+                }
+            }
 
             return new Argument(name, expression);
         }

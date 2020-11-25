@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SixComp.Support;
 
 namespace SixComp.ParseTree
@@ -20,8 +19,8 @@ namespace SixComp.ParseTree
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
                     return NameExpression.Parse(parser);
-                case ToKind.KwSelf:
-                    return AnySelfExpression.Parse(parser);
+                //case ToKind.KwSelf:
+                //    return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
                     return NestedOrTuple(parser);
                 case ToKind.LBracket:

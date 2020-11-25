@@ -15,10 +15,9 @@
         {
             var name = (NameLabel?)null;
 
-            if (parser.Current == ToKind.Name && parser.Next == ToKind.Colon)
+            if (ParseTree.Name.CanParse(parser) && parser.Next == ToKind.Colon)
             {
                 name = NameLabel.Parse(parser);
-                parser.Consume(ToKind.Colon);
             }
 
             var pattern = AnyPattern.Parse(parser);

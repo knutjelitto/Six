@@ -21,6 +21,8 @@ namespace SixComp
         {
             //new Program().Checker();
             new Program().Swift();
+
+
             //SixRT.PlayCheck();
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);

@@ -26,5 +26,14 @@
 
             return new CcBlock();
         }
+
+        public static void Ignore(Parser parser)
+        {
+            //TODO: completely ignored `#if´
+            if (parser.Current == ToKind.CdIf)
+            {
+                Parse(parser);
+            }
+        }
     }
 }

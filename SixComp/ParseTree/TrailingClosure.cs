@@ -25,5 +25,10 @@
 
             return new TrailingClosure(label, closure);
         }
+
+        public override string ToString()
+        {
+            return $"{Label}{Closure}";
+        }
     }
 }

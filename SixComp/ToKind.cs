@@ -30,7 +30,7 @@ namespace SixComp
         [Rep("=", ToClass.Operator)] Assign,
         [Rep("&", ToClass.Operator)] Amper,
         [Rep("==", ToClass.Operator)] Equals,
-        [Rep("<op>", ToClass.Operator)] Operator,
+        [Rep("<-op->", ToClass.Operator)] Operator,
 
         [Rep("@")] At,
         [Rep("\\")] Backslash,
@@ -121,6 +121,7 @@ namespace SixComp
         [Rep("private", ToClass.Keyword)] KwPrivate,
         [Rep("protocol", ToClass.Keyword)] KwProtocol,
         [Rep("public", ToClass.Keyword)] KwPublic,
+        [Rep("repeat", ToClass.Keyword)] KwRepeat,
         [Rep("required", ToClass.Keyword)] KwRequired,
         [Rep("rethrows", ToClass.Keyword)] KwRethrows,
         [Rep("return", ToClass.Keyword)] KwReturn,
@@ -157,6 +158,7 @@ namespace SixComp
 
         [Rep("__consuming", ToClass.Keyword)] Kw__Consuming,
         [Rep("_modify", ToClass.Keyword)] Kw_Modify,
+        [Rep("_read", ToClass.Keyword)] Kw_Read,
         [Rep("__owned", ToClass.Keyword)] Kw__Owned,
 
 

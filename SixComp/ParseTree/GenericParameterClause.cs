@@ -4,6 +4,8 @@ namespace SixComp.ParseTree
 {
     public class GenericParameterClause : IWritable
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.Less);
+
         public GenericParameterClause(GenericParameterList parameters)
         {
             Parameters = parameters;
@@ -19,7 +21,7 @@ namespace SixComp.ParseTree
 
             var parameters = GenericParameterList.Parse(parser);
 
-            parser.CarefullyConsume(ToKind.Greater);
+            parser.ConsumeCarefully(ToKind.Greater);
 
             return new GenericParameterClause(parameters);
         }

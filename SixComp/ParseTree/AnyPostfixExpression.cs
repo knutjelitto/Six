@@ -19,7 +19,7 @@
                     case ToKind.LBracket:
                         left = SubscriptExpression.Parse(parser, left);
                         break;
-                    case ToKind.LParent:
+                    case ToKind.LParent when !parser.CurrentToken.NewlineBefore:
                         left = FunctionCallExpression.Parse(parser, left);
                         break;
                     case ToKind.LBrace when !(left is FunctionCallExpression) && CanAquireBrace(parser):

@@ -15,7 +15,7 @@
 
         public static ClosureParameter? TryParse(Parser parser, bool nameOnly)
         {
-            var name = Name.TryParse(parser);
+            var name = Name.TryParse(parser, withImplicits: false);
             if (name == null)
             {
                 return null;

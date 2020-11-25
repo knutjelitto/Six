@@ -37,6 +37,10 @@ namespace SixComp.ParseTree
                     case ToKind.KwIs:
                         return IsPattern.Parse(parser);
                     default:
+                        if (Name.CanParse(parser))
+                        {
+                            return IdentifierPattern.Parse(parser);
+                        }
                         return ExpressionPattern.Parse(parser);
                 }
             }

@@ -67,7 +67,10 @@ namespace SixComp.ParseTree
                 var setter = (SetBlock?)null;
                 var didSetter = (DidSetBlock?)null;
                 var willSetter = (WillSetBlock?)null;
-                var count = 0;
+                var modify = (CodeBlock?)null;
+                var read = (CodeBlock?)null;
+                var needBrace = true;
+                var mayDefault = true;
                 var done = false;
 
                 while (!done)
@@ -76,36 +79,51 @@ namespace SixComp.ParseTree
 
                     switch (parser.Current)
                     {
-                        case ToKind.KwGet:
+                        case ToKind.KwGet when getter == null:
                             getter = GetBlock.Parse(parser, blockPrefix);
-                            count += 1;
+                            mayDefault = false;
                             break;
-                        case ToKind.KwSet:
+                        case ToKind.KwSet when setter == null:
                             setter = SetBlock.Parse(parser, blockPrefix);
-                            count += 1;
+                            mayDefault = false;
                             break;
                         case ToKind.KwWillSet:
                             willSetter = WillSetBlock.Parse(parser, blockPrefix);
-                            count += 1;
+                            mayDefault = false;
                             break;
                         case ToKind.KwDidSet:
                             didSetter = DidSetBlock.Parse(parser, blockPrefix);
-                            count += 1;
+                            mayDefault = false;
+                            break;
+                        case ToKind.Kw_Modify when modify == null:
+                            parser.Consume(ToKind.Kw_Modify);
+                            modify = CodeBlock.Parse(parser);
+                            mayDefault = false;
+                            break;
+                        case ToKind.Kw_Read when read == null:
+                            parser.Consume(ToKind.Kw_Read);
+                            read = CodeBlock.Parse(parser);
+                            mayDefault = false;
                             break;
                         default:
-                            if (count == 0)
+                            if (mayDefault)
                             {
                                 parser.Offset = braceOffset;  // fallback to simple getter block
                                 var token = parser.CurrentToken;
                                 var block = CodeBlock.Parse(parser);
                                 getter = new GetBlock(Prefix.Empty, token, block);
+                                mayDefault = false;
+                                needBrace = false;
                             }
-                            done = true;
+                            else
+                            {
+                                done = true;
+                            }
                             break;
                     }
                 }
 
-                if (count != 0 || getter == null)
+                if (needBrace)
                 {
                     parser.Consume(ToKind.RBrace);
                 }
@@ -116,7 +134,7 @@ namespace SixComp.ParseTree
                     {
                         throw new ParserException(getter.Keyword, $"computed property must be annotated by a type");
                     }
-                    return new GetSetVarDeclaration(prefix, name, typeAnnotation, getter, setter);
+                    return new GetSetVarDeclaration(prefix, name, typeAnnotation, getter, setter, modify, read);
                 }
                 if (setter != null)
                 {

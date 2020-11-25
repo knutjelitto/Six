@@ -11,7 +11,7 @@
         public AttributeList Attributes { get; }
         public ModifierList Modifiers { get; }
 
-        public static Prefix Parse(Parser parser, bool exclude = false)
+        public static Prefix Parse(Parser parser, bool exclude = true)
         {
             var attributes = AttributeList.TryParse(parser);
             var modifiers = ModifierList.TryParse(parser, exclude);

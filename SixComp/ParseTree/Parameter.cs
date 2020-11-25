@@ -17,6 +17,7 @@
 
         public static Parameter Parse(Parser parser)
         {
+            var attributes = AttributeList.TryParse(parser);
             Name? label = null;
             if (parser.NextNext == ToKind.Colon)
             {

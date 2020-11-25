@@ -90,11 +90,11 @@ namespace SixComp
             switch (Current)
             {
                 case ';':
-                    return Token(ToKind.SemiColon, ToFlags.OpSpaceAny);
+                    return Token(ToKind.SemiColon, 1, ToFlags.OpSpaceAny);
                 case ':':
-                    return Token(ToKind.Colon, ToFlags.OpSpaceAny);
+                    return Token(ToKind.Colon, 1, ToFlags.OpSpaceAny);
                 case ',':
-                    return Token(ToKind.Comma, ToFlags.OpSpaceAny);
+                    return Token(ToKind.Comma, 1, ToFlags.OpSpaceAny);
 
                 case '@':
                     return Token(ToKind.At, 1);
@@ -102,17 +102,17 @@ namespace SixComp
                     return Token(ToKind.Backslash, 1);
 
                 case '(':
-                    return Token(ToKind.LParent, ToFlags.OpSpaceBefore);
+                    return Token(ToKind.LParent, 1, ToFlags.OpSpaceBefore);
                 case ')':
-                    return Token(ToKind.RParent, ToFlags.OpSpaceAfter);
+                    return Token(ToKind.RParent, 1, ToFlags.OpSpaceAfter);
                 case '{':
-                    return Token(ToKind.LBrace, ToFlags.OpSpaceBefore);
+                    return Token(ToKind.LBrace, 1, ToFlags.OpSpaceBefore);
                 case '}':
-                    return Token(ToKind.RBrace, ToFlags.OpSpaceAfter);
+                    return Token(ToKind.RBrace, 1, ToFlags.OpSpaceAfter);
                 case '[':
-                    return Token(ToKind.LBracket, ToFlags.OpSpaceBefore);
+                    return Token(ToKind.LBracket, 1, ToFlags.OpSpaceBefore);
                 case ']':
-                    return Token(ToKind.RBracket, ToFlags.OpSpaceAfter);
+                    return Token(ToKind.RBracket, 1, ToFlags.OpSpaceAfter);
 
                 case '"':
                     return LexStringLiteral();
@@ -120,16 +120,20 @@ namespace SixComp
                     return LexQuotedIdentifier();
                 case '$':
                     {
-                        do
+                        if (char.IsDigit(Next))
                         {
                             Index += 1;
-                        }
-                        while (char.IsDigit(Current));
+                            do
+                            {
+                                Index += 1;
+                            }
+                            while (char.IsDigit(Current));
 
-                        var text = CurrentText();
-                        if (text.Length > 1)
-                        {
-                            return Token(ToKind.Name, 0);
+                            var text = CurrentText();
+                            if (text.Length > 1)
+                            {
+                                return Token(ToKind.Name, 0, ToFlags.Implicit);
+                            }
                         }
 
                         break;
@@ -219,6 +223,7 @@ namespace SixComp
                             '<' => ToFlags.OpSplitLess,
                             '>' => ToFlags.OpSplitGreater,
                             '?' => ToFlags.OpSplitQuest,
+                            '!' => ToFlags.OpSplitBang,
                             _ => ToFlags.None,
                         };
                         return AnyOperator(flags: split);
@@ -275,7 +280,9 @@ namespace SixComp
 
         private bool IdentifierCharacter()
         {
-            return IdentifierHead() || '0' <= Current || Current <= '9' || Current == '²';
+            return IdentifierHead()
+                || IsDecDigit()
+                || Current == '²';
         }
 
         private void LexWhitespace()
@@ -392,6 +399,11 @@ namespace SixComp
         private bool IsDecDigit(char digit)
         {
             return '0' <= digit && digit <= '9';
+        }
+
+        private bool IsDecDigit()
+        {
+            return IsDecDigit(Current);
         }
 
         private Token LexNumberLiteral()
@@ -539,18 +551,11 @@ namespace SixComp
             }
         }
 
-        private Token Token(ToKind kind, ToFlags flags)
-        {
-            Index = Math.Min(Source.Length, Index + 1);
-            var span = new Span(Source, Before, Start, Index);
-            return new Token(Tokens.Count, span, kind, newlineBefore, flags);
-        }
-
-        private Token Token(ToKind kind, int consume)
+        private Token Token(ToKind kind, int consume, ToFlags flags = ToFlags.None)
         {
             Index = Math.Min(Source.Length, Index + consume);
             var span = new Span(Source, Before, Start, Index);
-            return new Token(Tokens.Count, span, kind, newlineBefore, ToFlags.None);
+            return new Token(Tokens.Count, span, kind, newlineBefore, flags);
         }
 
         private Token AnyOperator(ToKind kind = ToKind.Operator, ToFlags flags = ToFlags.None, int? withIndex = null)

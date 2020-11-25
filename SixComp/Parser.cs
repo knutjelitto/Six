@@ -1,7 +1,6 @@
 ﻿using SixComp.ParseTree;
 using SixComp.Support;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixComp
@@ -165,6 +164,7 @@ namespace SixComp
         /// Check if current token represent an operator
         /// </summary>
         public bool IsOperator => CurrentToken.IsOperator;
+        public bool IsImplicit => CurrentToken.IsImplicit;
 
         public bool Adjacent => Ahead(-1).Span.End == Ahead(0).Span.Start;
 
@@ -185,7 +185,7 @@ namespace SixComp
             return token;
         }
 
-        public Token CarefullyConsume(ToKind kind)
+        public Token ConsumeCarefully(ToKind kind)
         {
             if (Current == kind)
             {
@@ -212,6 +212,12 @@ namespace SixComp
                     break;
                 case ToKind.Quest:
                     if ((token.Flags & ToFlags.OpSplitQuest) != 0)
+                    {
+                        Split(token, kind);
+                    }
+                    break;
+                case ToKind.Bang:
+                    if ((token.Flags & ToFlags.OpSplitBang) != 0)
                     {
                         Split(token, kind);
                     }

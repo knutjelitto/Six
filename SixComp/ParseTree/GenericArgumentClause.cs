@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System;
 
 namespace SixComp.ParseTree
 {
@@ -23,7 +22,7 @@ namespace SixComp.ParseTree
 
             var arguments = GenericArgumentList.Parse(parser);
 
-            parser.CarefullyConsume(ToKind.Greater);
+            parser.ConsumeCarefully(ToKind.Greater);
 
             return new GenericArgumentClause(arguments);
         }
