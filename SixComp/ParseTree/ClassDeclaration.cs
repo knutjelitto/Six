@@ -24,7 +24,8 @@ namespace SixComp.ParseTree
 
         public static ClassDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwClass);
+            // already parsed //parser.Consume(ToKind.KwClass);
+
             var name = Name.Parse(parser);
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System.Diagnostics;
+
+namespace SixComp.ParseTree
 {
     public interface AnyPostfixExpression : AnyPrefixExpression
     {
@@ -14,6 +16,10 @@
             var done = false;
             do
             {
+                if (parser.CurrentToken.Text == "?")
+                {
+                    Debug.Assert(true);
+                }
                 switch (parser.Current)
                 {
                     case ToKind.LBracket:
@@ -22,7 +28,7 @@
                     case ToKind.LParent when !parser.CurrentToken.NewlineBefore:
                         left = FunctionCallExpression.Parse(parser, left);
                         break;
-                    case ToKind.LBrace when !(left is FunctionCallExpression) && CanAquireBrace(parser):
+                    case ToKind.LBrace when CanAquireBraceForFunction(parser, left):
                         left = FunctionCallExpression.Parse(parser, left);
                         break;
                     case ToKind.Dot:
@@ -56,13 +62,18 @@
             return left;
         }
 
-        private static bool CanAquireBrace(Parser parser)
+        private static bool CanAquireBraceForFunction(Parser parser, AnyExpression left)
         {
+            if (left is FunctionCallExpression || left is TupleExpression)
+            {
+                return false;
+            }
+
             using (parser.InBacktrack())
             {
                 parser.Consume(ToKind.LBrace);
 
-                return !AnyVarDeclaration.CheckWillDit(parser);
+                return !AnyVarDeclaration.CheckWillSetDitSet(parser);
             }
         }
     }

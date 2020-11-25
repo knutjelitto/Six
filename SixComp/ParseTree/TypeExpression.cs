@@ -19,5 +19,10 @@ namespace SixComp.ParseTree
 
             return new TypeExpression(type);
         }
+
+        public override string ToString()
+        {
+            return $"{Type}";
+        }
     }
 }

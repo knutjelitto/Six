@@ -19,7 +19,8 @@
 
         public static AssociatedTypeDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwAssociatedType);
+            // already parsed //parser.Consume(ToKind.KwAssociatedType);
+
             var name = Name.Parse(parser);
             var inheritance = parser.TryList(TypeInheritanceClause.Firsts, TypeInheritanceClause.Parse);
             var assignment = parser.Try(TypealiasAssignment.Firsts, TypealiasAssignment.Parse);

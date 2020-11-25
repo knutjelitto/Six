@@ -44,7 +44,7 @@ namespace SixComp.ParseTree
 
         private static InitKind Head(Parser parser)
         {
-            parser.Consume(ToKind.KwInit);
+            // already parsed //parser.Consume(ToKind.KwInit);
 
             InitKind kind = InitKind.Init;
 

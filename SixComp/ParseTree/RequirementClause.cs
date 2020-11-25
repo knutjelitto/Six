@@ -17,12 +17,24 @@ namespace SixComp.ParseTree
 
         public RequirementList Requirements { get; }
 
+        public bool Missing => Requirements.Missing;
+
         public static RequirementClause Parse(Parser parser)
         {
             parser.Consume(ToKind.KwWhere);
             var requirements = RequirementList.Parse(parser);
 
             return new RequirementClause(requirements);
+        }
+
+        public override string ToString()
+        {
+            if (Missing)
+            {
+                return string.Empty;
+            }
+
+            return $"where {Requirements}";
         }
     }
 }

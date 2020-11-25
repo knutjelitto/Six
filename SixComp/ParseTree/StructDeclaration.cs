@@ -23,7 +23,7 @@ namespace SixComp.ParseTree
 
         public static StructDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwStruct);
+            // already parsed //parser.Consume(ToKind.KwStruct);
             var name = Name.Parse(parser);
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);

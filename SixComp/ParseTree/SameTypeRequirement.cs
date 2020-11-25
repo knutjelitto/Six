@@ -15,5 +15,10 @@
         {
             return new SameTypeRequirement(name, type);
         }
+
+        public override string ToString()
+        {
+            return $"{Name} == {Type}";
+        }
     }
 }

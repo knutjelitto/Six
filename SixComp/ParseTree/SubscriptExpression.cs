@@ -18,5 +18,10 @@
 
             return new SubscriptExpression(left, op, subscript);
         }
+
+        public override string ToString()
+        {
+            return $"{Left}{Subscript}";
+        }
     }
 }

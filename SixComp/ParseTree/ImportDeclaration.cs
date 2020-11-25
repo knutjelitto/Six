@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static ImportDeclaration Parse(Parser parser)
         {
-            parser.Consume(ToKind.KwImport);
+            // already parsed //parser.Consume(ToKind.KwImport);
 
             var kind = (ImportKind?)null;
             switch (parser.Current)

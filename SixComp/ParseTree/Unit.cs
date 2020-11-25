@@ -4,6 +4,7 @@ namespace SixComp.ParseTree
 {
     public class Unit : IWritable
     {
+        public static TokenSet Follows = new TokenSet(ToKind.EOF);
 
         public Unit(StatementList statements)
         {
@@ -29,7 +30,7 @@ namespace SixComp.ParseTree
 
         public static Unit Parse(Parser parser)
         {
-            var declarations = StatementList.Parse(parser, new TokenSet(ToKind.EOF));
+            var declarations = StatementList.Parse(parser, Follows);
 
             return new Unit(declarations);
         }

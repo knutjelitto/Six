@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
@@ -12,9 +10,9 @@ namespace SixComp.ParseTree
         public static PrecGroupAttributeList Parse(Parser parser)
         {
             var attributes = new List<PrecGroupAttribute>();
-            while (PrecGroupAttribute.Firsts.Contains(parser.Current))
+            PrecGroupAttribute? attribute;
+            while ((attribute = PrecGroupAttribute.TryParse(parser)) != null)
             {
-                var attribute = PrecGroupAttribute.Parse(parser);
                 attributes.Add(attribute);
             }
 

@@ -27,5 +27,10 @@ namespace SixComp.ParseTree
         {
             Declaration.Write(writer);
         }
+
+        public override string ToString()
+        {
+            return $"{Declaration}";
+        }
     }
 }

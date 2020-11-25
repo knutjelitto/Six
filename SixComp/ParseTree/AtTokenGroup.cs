@@ -24,5 +24,10 @@
 
             return new AtTokenGroup(left, list, right);
         }
+
+        public override string ToString()
+        {
+            return $"{Left}{Tokens}{Right}";
+        }
     }
 }

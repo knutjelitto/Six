@@ -26,12 +26,14 @@ namespace SixComp.ParseTree
                     return ContinueStatement.Parse(parser);
                 case ToKind.KwReturn:
                     return ReturnStatement.Parse(parser);
+                case ToKind.KwCase: //TODO: should be protected???
+                    break;
                 default:
                     if (Name.CanParse(parser) && parser.Next == ToKind.Colon)
                     {
                         return LabeledStatement.Parse(parser);
                     }
-                    var statement = (AnyStatement?)DeclarationStatement.TryParse(parser);
+                    AnyStatement? statement = DeclarationStatement.TryParse(parser);
                     if (statement == null)
                     {
                         statement = ExpressionStatement.TryParse(parser);
@@ -39,7 +41,7 @@ namespace SixComp.ParseTree
                     return statement;
             }
 
-            //return null;
+            return null;
         }
     }
 }

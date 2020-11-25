@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -25,8 +26,7 @@ namespace SixComp.ParseTree
 
         public static FunctionDeclaration Parse(Parser parser, Prefix prefix)
         {
-            //TODO: is incomplete
-            parser.Consume(ToKind.KwFunc);
+            // already parsed //parser.Consume(ToKind.KwFunc);
             var name = Name.Parse(parser, withOperators: true);
             var genericParameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var parameters = ParameterClause.Parse(parser);

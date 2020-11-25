@@ -1,6 +1,5 @@
 ﻿using SixComp.Support;
 using System;
-using System.Diagnostics.Contracts;
 
 namespace SixComp.ParseTree
 {
@@ -57,6 +56,18 @@ namespace SixComp.ParseTree
                 parser.Consume(Firsts);
 
                 throw new InvalidOperationException("<NEVER>");
+            }
+
+            public override string ToString()
+            {
+                return Kind switch
+                {
+                    CastKind.Is => " is ",
+                    CastKind.As => " as ",
+                    CastKind.AsForce => " as! ",
+                    CastKind.AsChain => " as? ",
+                    _ => throw new InvalidOperationException(),
+                };
             }
         }
 

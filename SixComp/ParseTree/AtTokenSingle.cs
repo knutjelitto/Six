@@ -19,5 +19,10 @@ namespace SixComp.ParseTree
 
             return new AtTokenSingle(token);
         }
+
+        public override string ToString()
+        {
+            return $"{Token}";
+        }
     }
 }

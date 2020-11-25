@@ -23,7 +23,8 @@ namespace SixComp.ParseTree
 
         public static EnumDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwEnum);
+            // already parsed //parser.Consume(ToKind.KwEnum);
+
             var name = Name.Parse(parser);
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);

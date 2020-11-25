@@ -6,15 +6,18 @@
         {
         }
 
-        public static CcBlock Parse(Parser parser)
+        private static CcBlock Parse(Parser parser, bool consumeIf)
         {
-            parser.Consume(ToKind.CdIf);
+            if (consumeIf)
+            {
+                parser.Consume(ToKind.CdIf);
+            }
 
             while (parser.Current != ToKind.CdEndif)
             {
                 if (parser.Current == ToKind.CdIf)
                 {
-                    CcBlock.Parse(parser);
+                    CcBlock.Parse(parser, true);
                 }
                 else
                 {
@@ -27,12 +30,16 @@
             return new CcBlock();
         }
 
-        public static void Ignore(Parser parser)
+        public static void Ignore(Parser parser, bool force)
         {
             //TODO: completely ignored `#if´
-            if (parser.Current == ToKind.CdIf)
+            if (force)
             {
-                Parse(parser);
+                Parse(parser, false);
+            }
+            else if (parser.Current == ToKind.CdIf)
+            {
+                Parse(parser, true);
             }
         }
     }

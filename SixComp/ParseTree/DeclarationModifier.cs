@@ -1,7 +1,4 @@
-﻿using SixComp.Support;
-using System;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class DeclarationModifier
     {
@@ -52,13 +49,13 @@ namespace SixComp.ParseTree
             Modifier = modifier;
         }
 
-        public static DeclarationModifier? TryParse(Parser parser, bool exclude)
+        public static DeclarationModifier? TryParse(Parser parser)
         {
             var kind = ModifierKind.None;
 
             switch (parser.Current)
             {
-                case ToKind.KwClass when !exclude:
+                case ToKind.KwClass:
                     parser.ConsumeAny();
                     kind = ModifierKind.Class;
                     break;

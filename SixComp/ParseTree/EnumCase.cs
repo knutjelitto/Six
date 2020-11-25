@@ -14,7 +14,7 @@ namespace SixComp.ParseTree
 
         public static EnumCase Parse(Parser parser)
         {
-            parser.Consume(ToKind.KwCase);
+            // already parsed //parser.Consume(ToKind.KwCase);
 
             var caseItems = EnumCaseItemList.Parse(parser);
 

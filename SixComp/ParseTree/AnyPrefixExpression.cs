@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using System.Diagnostics;
+
+namespace SixComp.ParseTree
 {
     public interface AnyPrefixExpression : AnyExpression
     {
@@ -6,7 +8,8 @@
         {
             if (parser.Current == ToKind.Amper)
             {
-                return InOutExpression.TryParse(parser);
+                Debug.Assert(true);
+                //return InOutExpression.TryParse(parser);
             }
 
             var offset = parser.Offset;
@@ -17,6 +20,10 @@
                 var operand = AnyPostfixExpression.TryParse(parser);
                 if (operand != null)
                 {
+                    if (op.Kind == ToKind.Amper)
+                    {
+                        return InOutExpression.From(operand);
+                    }
                     return new PrefixExpression(op, operand);
                 }
                 parser.Offset = offset;

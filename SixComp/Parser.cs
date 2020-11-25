@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace SixComp
 {
+    [DebuggerDisplay("{CurrentToken}-{NextToken}-{NextNextToken}")]
     public class Parser
     {
         private readonly Lexer Lexer;
@@ -91,15 +92,7 @@ namespace SixComp
             return (CurrentToken.Flags & ToFlags.InfixOperator) != 0;
         }
 
-        public bool IsKeyword(ToKind kind)
-        {
-            return Lexer.IsKeyword(kind);
-        }
-
-        public bool IsKeyword()
-        {
-            return IsKeyword(Current);
-        }
+        public bool IsKeyword => CurrentToken.IsKeyword;
 
         public T? Try<T>(ToKind start, Func<Parser, T> parse)
             where T : class
@@ -159,6 +152,7 @@ namespace SixComp
         public Token PrevToken => Ahead(-1);
         public Token CurrentToken => Ahead(0);
         public Token NextToken => Ahead(1);
+        public Token NextNextToken => Ahead(2);
 
         /// <summary>
         /// Check if current token represent an operator
@@ -230,6 +224,18 @@ namespace SixComp
         private void Split(Token token, ToKind kind)
         {
             Lexer.BackupForSplit(token, kind);
+        }
+
+        public Token Consume(string text)
+        {
+            var token = CurrentToken;
+            if (token.Text == text)
+            {
+                Offset += 1;
+                return token;
+            }
+
+            throw new ParserException(token, $"expected `{text}`, but got `{token}`");
         }
 
         public Token Consume(ToKind kind)

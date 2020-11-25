@@ -14,7 +14,7 @@ namespace SixComp.ParseTree
 
             while (!follow.Contains(parser.Current))
             {
-                CcBlock.Ignore(parser);
+                CcBlock.Ignore(parser, force: false);
                 var statement = AnyStatement.TryParse(parser);
 
                 if (statement == null)
@@ -34,6 +34,16 @@ namespace SixComp.ParseTree
             }
 
             return new StatementList(statements);
+        }
+
+        public override string ToString()
+        {
+            var text = string.Join(";", this);
+            if (text.Length > 50)
+            {
+                return text.Substring(0, 50) + "...";
+            }
+            return text;
         }
     }
 }

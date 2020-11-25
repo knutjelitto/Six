@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class GetSetVarDeclaration : AnyVarDeclaration
     {
@@ -20,5 +22,10 @@
         public SetBlock? Setter { get; }
         public CodeBlock? Modify { get; }
         public CodeBlock? Read { get; }
+
+        public override string ToString()
+        {
+            return $"{Prefix}{Name}{Type}{Getter}{Setter.Str()}";
+        }
     }
 }

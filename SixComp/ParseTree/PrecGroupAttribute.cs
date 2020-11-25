@@ -5,24 +5,21 @@ namespace SixComp.ParseTree
 {
     public abstract class PrecGroupAttribute : SyntaxNode
     {
-        public static TokenSet Firsts = new TokenSet(ToKind.KwHigherThan, ToKind.KwLowerThan, ToKind.KwAssignment, ToKind.KwAssociativity);
-
-        public static PrecGroupAttribute Parse(Parser parser)
+        public static PrecGroupAttribute? TryParse(Parser parser)
         {
-            switch (parser.Current)
+            switch (parser.CurrentToken.Text)
             {
-                case ToKind.KwHigherThan:
-                case ToKind.KwLowerThan:
-                    return Relation.Parse(parser);
-                case ToKind.KwAssignment:
+                case Contextual.LowerThan:
+                    return Relation.Parse(parser, Relation.RelationKind.LowerThan);
+                case Contextual.HigherThan:
+                    return Relation.Parse(parser, Relation.RelationKind.HigherThan);
+                case Contextual.Assignment:
                     return Assignment.Parse(parser);
-                case ToKind.KwAssociativity:
+                case Contextual.Associativity:
                     return Associativity.Parse(parser);
             }
 
-            parser.Consume(Firsts);
-
-            throw new InvalidOperationException("<NEVER>");
+            return null;
         }
 
         public class Relation : PrecGroupAttribute
@@ -42,17 +39,9 @@ namespace SixComp.ParseTree
                 Names = names;
             }
 
-            public static new PrecGroupAttribute Parse(Parser parser)
+            public static PrecGroupAttribute Parse(Parser parser, RelationKind kind)
             {
-                var kind = parser.Current == ToKind.KwHigherThan ? RelationKind.HigherThan : RelationKind.LowerThan;
-                if (kind == RelationKind.HigherThan)
-                {
-                    parser.Consume(ToKind.KwHigherThan);
-                }
-                else
-                {
-                    parser.Consume(ToKind.KwLowerThan);
-                }
+                parser.ConsumeAny();
                 parser.Consume(ToKind.Colon);
                 var names = NameList.Parse(parser);
 
@@ -69,9 +58,9 @@ namespace SixComp.ParseTree
 
             public bool IsAssignment { get; }
 
-            public static new PrecGroupAttribute Parse(Parser parser)
+            public static PrecGroupAttribute Parse(Parser parser)
             {
-                parser.Consume(ToKind.KwAssignment);
+                parser.ConsumeAny();
                 parser.Consume(ToKind.Colon);
                 var kind = parser.Current == ToKind.KwTrue;
                 if (kind)
@@ -103,24 +92,24 @@ namespace SixComp.ParseTree
 
             public AssociativityKind Kind { get; }
 
-            public static new PrecGroupAttribute Parse(Parser parser)
+            public static PrecGroupAttribute Parse(Parser parser)
             {
-                parser.Consume(ToKind.KwAssociativity);
+                parser.ConsumeAny();
                 parser.Consume(ToKind.Colon);
 
                 var kind = AssociativityKind.None;
-                switch (parser.Current)
+                switch (parser.CurrentToken.Text)
                 {
-                    case ToKind.KwLeft:
+                    case Contextual.Left:
                         parser.ConsumeAny();
                         kind = AssociativityKind.Left;
                         break;
-                    case ToKind.KwRight:
+                    case Contextual.Right:
                         parser.ConsumeAny();
                         kind = AssociativityKind.Right;
                         break;
-                    default:
-                        parser.Consume(ToKind.KwNone);
+                    case Contextual.None:
+                        parser.ConsumeAny();
                         kind = AssociativityKind.None;
                         break;
                 }

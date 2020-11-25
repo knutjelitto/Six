@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixComp.ParseTree
@@ -19,9 +20,11 @@ namespace SixComp.ParseTree
 
         public static AnyDeclaration? TryParse(Parser parser, Context context)
         {
-            var prefix = Prefix.Parse(parser, true);
+            var offset = parser.Offset;
 
-            switch (parser.Current)
+            var prefix = Prefix.PreParse(parser);
+
+            switch (prefix.Last)
             {
                 case ToKind.KwLet:
                     return LetDeclaration.Parse(parser, prefix);
@@ -51,8 +54,6 @@ namespace SixComp.ParseTree
                     return TypealiasDeclaration.Parse(parser, prefix);
                 case ToKind.KwProtocol:
                     return ProtocolDeclaration.Parse(parser, prefix);
-                case ToKind.KwPrecedencegroup:
-                    return PrecGroupDeclaration.Parse(parser, prefix);
                 case ToKind.KwAssociatedType:
                     return AssociatedTypeDeclaration.Parse(parser, prefix);
                 case ToKind.KwPrefix when parser.Next == ToKind.KwOperator:
@@ -61,9 +62,23 @@ namespace SixComp.ParseTree
                     return OperatorDeclaration.Parse(parser, prefix);
 
                 case ToKind.CdIf:
-                    return CcBlock.Parse(parser);
+                    CcBlock.Ignore(parser, force: true);
+                    return AnyDeclaration.TryParse(parser, context);
+
+                default:
+                    if (Prefix.Fixes.Contains(parser.Current) && parser.Next == ToKind.KwOperator)
+                    {
+                        return OperatorDeclaration.Parse(parser, prefix);
+                    }
+                    switch (parser.CurrentToken.Text)
+                    {
+                        case Contextual.Precedencegroup:
+                            return PrecGroupDeclaration.Parse(parser, prefix);
+                    }
+                    break;
             }
 
+            parser.Offset = offset;
             return null;
         }
     }

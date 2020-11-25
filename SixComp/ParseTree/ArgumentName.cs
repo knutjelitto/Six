@@ -16,7 +16,7 @@ namespace SixComp.ParseTree
 
         public static ArgumentName? TryParse(Parser parser)
         {
-            if (parser.Next == ToKind.Colon && (parser.Current == ToKind.Name || (parser.IsKeyword() && !Deny.Contains(parser.Current))))
+            if (parser.Next == ToKind.Colon && (parser.Current == ToKind.Name || (parser.IsKeyword && !Deny.Contains(parser.Current))))
             {
                 if (parser.Current != ToKind.Name)
                 {

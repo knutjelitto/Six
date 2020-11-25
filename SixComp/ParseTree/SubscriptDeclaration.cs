@@ -30,7 +30,8 @@ namespace SixComp.ParseTree
 
         public static SubscriptDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwSubscript);
+            // already parsed //parser.Consume(ToKind.KwSubscript);
+
             var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var parameters = ParameterClause.Parse(parser);
             var result = FunctionResult.Parse(parser);
@@ -81,10 +82,7 @@ namespace SixComp.ParseTree
                             mayDefault = false;
                             needBrace = false;
                         }
-                        else
-                        {
-                            done = true;
-                        }
+                        done = true;
                         break;
                 }
             }

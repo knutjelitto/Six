@@ -15,8 +15,8 @@ namespace SixComp.ParseTree
 
         public static DeinitializerDeclaration Parse(Parser parser, Prefix prefix)
         {
-            //TODO: is incomplete
-            parser.Consume(ToKind.KwDeinit);
+            // already parsed //parser.Consume(ToKind.KwDeinit);
+
             var block = CodeBlock.Parse(parser);
 
             return new DeinitializerDeclaration(prefix, block);

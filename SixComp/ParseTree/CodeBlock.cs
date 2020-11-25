@@ -36,5 +36,10 @@ namespace SixComp.ParseTree
                 Statements.Write(writer);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{{{Statements}}}";
+        }
     }
 }

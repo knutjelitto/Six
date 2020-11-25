@@ -7,8 +7,9 @@ namespace SixComp.ParseTree
         public static TokenSet Contextual = new TokenSet(
             ToKind.KwGet, ToKind.KwSet, ToKind.KwInit, ToKind.KwOpen, ToKind.KwFor, ToKind.KwStatic, ToKind.KwDynamic,
             ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwANY, ToKind.KwSelf, ToKind.KwSELF, ToKind.KwIs,
-            ToKind.KwNone, ToKind.KwSome, ToKind.KwLeft, ToKind.KwRight, ToKind.KwIn, ToKind.KwWhile, ToKind.KwWhere,
-            ToKind.KwAs, ToKind.KwOptional, ToKind.KwDefault, ToKind.KwLazy, ToKind.KwSuper, ToKind.KwClass);
+            ToKind.KwSome, ToKind.KwIn, ToKind.KwWhile, ToKind.KwWhere, ToKind.KwContinue, ToKind.KwBreak, ToKind.KwMutating,
+            ToKind.KwAs, ToKind.KwOptional, ToKind.KwDefault, ToKind.KwLazy, ToKind.KwSuper, ToKind.KwClass, ToKind.KwStruct,
+            ToKind.KwEnum);
 
         public Name(Token token)
         {

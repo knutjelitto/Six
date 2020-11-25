@@ -21,7 +21,7 @@ namespace SixComp.ParseTree
 
         public static ExtensionDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwExtension);
+            // already parsed //parser.Consume(ToKind.KwExtension);
 
             var name = TypeIdentifier.Parse(parser);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);

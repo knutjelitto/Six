@@ -23,5 +23,10 @@
 
             return new Attribute(name, arguments);
         }
+
+        public override string ToString()
+        {
+            return $"@{Name}{Arguments}";
+        }
     }
 }

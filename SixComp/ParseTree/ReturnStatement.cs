@@ -32,5 +32,11 @@ namespace SixComp.ParseTree
 
             writer.WriteLine($"return{value}");
         }
+
+        public override string ToString()
+        {
+            var value = Value == null ? string.Empty : $" {Value}";
+            return $"return{value}";
+        }
     }
 }

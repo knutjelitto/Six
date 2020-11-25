@@ -19,7 +19,7 @@
 
         public static TypealiasDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwTypealias);
+            // already parsed //parser.Consume(ToKind.KwTypealias);
 
             var name = Name.Parse(parser);
             var parameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);

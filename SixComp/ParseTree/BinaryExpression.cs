@@ -19,6 +19,11 @@ namespace SixComp.ParseTree
         {
             var offset = parser.Offset;
 
+            if (parser.CurrentToken.Text == "?")
+            {
+                Debug.Assert(true);
+            }
+
             if (parser.IsInfixOperator())
             {
                 var op = parser.ConsumeAny();

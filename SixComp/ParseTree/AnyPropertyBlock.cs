@@ -14,5 +14,14 @@
         public Token Keyword { get; }
         public SetterName? SetterName { get; }
         public CodeBlock? Block { get; }
+
+        public override string ToString()
+        {
+            if (Keyword.Kind == ToKind.LBrace)
+            {
+                return $" {Block}";
+            }
+            return $" {Keyword} {Block}";
+        }
     }
 }

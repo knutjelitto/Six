@@ -21,10 +21,10 @@
         public string Text => Span.ToString();
 
         public bool IsDollar => Kind == ToKind.Name && Span.IsDollar;
-
         public bool IsImmediateDot => !Span.Spacing && Span.First == '.';
 
         public bool IsOperator => (Flags & ToFlags.AnyOperator) != 0;
+        public bool IsKeyword => (Flags & ToFlags.Keyword) != 0;
         public bool IsImplicit => (Flags & ToFlags.Implicit) != 0;
         public int Length => Span.Length;
         public char First => Span.First;

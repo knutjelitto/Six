@@ -20,5 +20,10 @@ namespace SixComp.ParseTree
 
             return new RequirementList(requirements);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

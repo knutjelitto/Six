@@ -149,13 +149,14 @@ namespace SixComp
 
                         var text = CurrentText();
 
+                        if (text == "self")
+                        {
+                            Debug.Assert(true);
+                        }
+
                         if (keywordMap.TryGetValue(text, out var kind))
                         {
-                            if (kind == ToKind.KwSelf)
-                            {
-                                Debug.Assert(true);
-                            }
-                            return Token(kind, 0);
+                            return Token(kind, 0, ToFlags.Keyword);
                         }
 
                         if (text[0] == '#')

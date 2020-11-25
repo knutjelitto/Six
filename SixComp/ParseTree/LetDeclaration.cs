@@ -15,7 +15,7 @@ namespace SixComp.ParseTree
 
         public static LetDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwLet);
+            // already parsed //parser.Consume(ToKind.KwLet);
 
             var initializers = PatternInitializerList.Parse(parser);
 

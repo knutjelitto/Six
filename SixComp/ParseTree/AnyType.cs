@@ -6,7 +6,7 @@ namespace SixComp.ParseTree
     {
         public static AnyType Parse(Parser parser)
         {
-            var prefix = Prefix.Parse(parser);
+            var prefix = Prefix.Parse(parser, onlyAttributes: true);
             AnyType? type;
             switch (parser.Current)
             {
@@ -26,28 +26,39 @@ namespace SixComp.ParseTree
 
             while (true)
             {
-                if (parser.Match(ToKind.Quest))
+                if (parser.IsPostfixOperator())
                 {
-                    type = new OptionalType(type);
+                    if (parser.Match(ToKind.Quest))
+                    {
+                        type = new OptionalType(type);
+                    }
+                    else if (parser.Match(ToKind.Bang))
+                    {
+                        type = new UnwrapType(type);
+                    }
+                    else
+                    {
+                        var token = parser.CurrentToken;
+
+                        if (token.Length >= 2 && token.IsOperator)
+                        {
+                            if (token.First == '?')
+                            {
+                                parser.ConsumeCarefully(ToKind.Quest);
+                                type = new OptionalType(type);
+                                continue;
+                            }
+                        }
+
+                        break;
+                    }
                 }
-                else if (parser.Match(ToKind.Bang))
+                else if (parser.IsInfixOperator() && parser.Current == ToKind.Amper)
                 {
-                    type = new UnwrapType(type);
+                    return ProtocolCompositionType.Parse(parser, type);
                 }
                 else
                 {
-                    var token = parser.CurrentToken;
-
-                    if (token.Length >= 2 && token.IsOperator)
-                    {
-                        if (token.First == '?')
-                        {
-                            parser.ConsumeCarefully(ToKind.Quest);
-                            type = new OptionalType(type);
-                            continue;
-                        }
-                    }
-
                     break;
                 }
             }

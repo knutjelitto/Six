@@ -19,8 +19,10 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            //new Program().Checker();
-            new Program().Swift();
+            if (new Program().Checker())
+            {
+                new Program().Swift();
+            }
 
 
             //SixRT.PlayCheck();
@@ -110,7 +112,7 @@ namespace SixComp
             }
         }
 
-        public void Checker()
+        public bool Checker()
         {
 #if false
             var file = @"./Source/Package.swift";
@@ -118,7 +120,7 @@ namespace SixComp
             var file = @"./Source/Checker.swift";
             var text = File.ReadAllText(file);
             Console.WriteLine($"FILE: {file}");
-            Test(new Context(file, text));
+            return Test(new Context(file, text));
         }
 
         public bool Test(Context context)

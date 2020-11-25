@@ -23,7 +23,8 @@ namespace SixComp.ParseTree
 
         public static ProtocolDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwProtocol);
+            // already parsed //parser.Consume(ToKind.KwProtocol);
+
             var name = Name.Parse(parser);
             var parameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);

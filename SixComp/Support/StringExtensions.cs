@@ -18,5 +18,10 @@
         {
             return strip.ToString()!.StripParents();
         }
+
+        public static string Str(this object? any)
+        {
+            return any?.ToString() ?? string.Empty;
+        }
     }
 }

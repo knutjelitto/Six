@@ -7,12 +7,12 @@ namespace SixComp.ParseTree
         private ModifierList(List<DeclarationModifier> modifiers) : base(modifiers) { }
         public ModifierList() { }
 
-        public static ModifierList TryParse(Parser parser, bool exclude)
+        public static ModifierList TryParse(Parser parser)
         {
             var modifiers = new List<DeclarationModifier>();
 
             DeclarationModifier? modifier;
-            while ((modifier = DeclarationModifier.TryParse(parser, exclude)) != null)
+            while ((modifier = DeclarationModifier.TryParse(parser)) != null)
             {
                 modifiers.Add(modifier);
             }

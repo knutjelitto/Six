@@ -2,34 +2,21 @@
 {
     public class InOutExpression : BaseExpression, AnyPrefixExpression
     {
-        private InOutExpression(Name name)
+        private InOutExpression(AnyExpression expression)
         {
-            Name = name;
+            Expression = expression;
         }
 
-        public Name Name { get; }
+        public AnyExpression Expression { get; }
 
-        public static InOutExpression? TryParse(Parser parser)
+        public static InOutExpression From(AnyExpression expression)
         {
-            var offset = parser.Offset;
-
-            if (parser.Match(ToKind.Amper) )
-            {
-                var name = Name.TryParse(parser);
-
-                if (name != null)
-                {
-                    return new InOutExpression(name);
-                }
-            }
-
-            parser.Offset = offset;
-            return null;
+            return new InOutExpression(expression);
         }
 
         public override string ToString()
         {
-            return $"&{Name}";
+            return $"&{Expression}";
         }
     }
 }

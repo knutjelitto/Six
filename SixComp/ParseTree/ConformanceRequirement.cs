@@ -15,5 +15,10 @@
         {
             return new ConformanceRequirement(name, composition);
         }
+
+        public override string ToString()
+        {
+            return $"{Name}: {Composition}";
+        }
     }
 }

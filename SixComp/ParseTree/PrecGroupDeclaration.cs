@@ -15,7 +15,7 @@
 
         public static PrecGroupDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwPrecedencegroup);
+            parser.Consume(Contextual.Precedencegroup);
             var name = Name.Parse(parser);
             parser.Consume(ToKind.LBrace);
             var attributes = PrecGroupAttributeList.Parse(parser);

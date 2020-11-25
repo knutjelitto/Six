@@ -5,7 +5,7 @@ namespace SixComp.ParseTree
 {
     public interface AnyVarDeclaration : AnyDeclaration
     {
-        public static bool CheckWillDit(Parser parser)
+        public static bool CheckWillSetDitSet(Parser parser)
         {
             if (parser.Current == ToKind.KwWillSet || parser.Current == ToKind.KwDidSet)
             {
@@ -28,7 +28,7 @@ namespace SixComp.ParseTree
 
         public static AnyVarDeclaration Parse(Parser parser, Prefix prefix)
         {
-            parser.Consume(ToKind.KwVar);
+            // already parsed //parser.Consume(ToKind.KwVar);
 
             var patternOffset = parser.Offset;
 
@@ -115,10 +115,7 @@ namespace SixComp.ParseTree
                                 mayDefault = false;
                                 needBrace = false;
                             }
-                            else
-                            {
-                                done = true;
-                            }
+                            done = true;
                             break;
                     }
                 }
