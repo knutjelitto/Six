@@ -13,5 +13,9 @@ namespace SixComp.ParseTree
         public AnyExpression Left { get; }
         public Token Op { get; }
 
+        public override string ToString()
+        {
+            return $"{Left}{Op}";
+        }
     }
 }

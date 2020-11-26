@@ -53,7 +53,7 @@ namespace SixComp.ParseTree
                 }
                 else
                 {
-                    var right = AnyPrefixExpression.TryParse(parser);
+                    var right = Expression.TryParse(parser, withBinaries: false);
 
                     if (right != null)
                     {

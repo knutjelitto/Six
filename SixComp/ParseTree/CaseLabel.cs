@@ -7,26 +7,29 @@ namespace SixComp.ParseTree
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwDefault);
 
-        public CaseLabel(CaseItemList caseItems)
+        public CaseLabel(Prefix prefix, CaseItemList caseItems)
         {
+            Prefix = prefix;
             CaseItems = caseItems;
         }
 
+        public Prefix Prefix { get; }
         public CaseItemList CaseItems { get; }
 
         public static CaseLabel Parse(Parser parser)
         {
+            var prefix = Prefix.PreParse(parser, onlyAttributes: true);
             switch (parser.Current)
             {
                 case ToKind.KwCase:
                     parser.ConsumeAny();
                     var items = CaseItemList.Parse(parser);
                     parser.Consume(ToKind.Colon);
-                    return new CaseLabel(items);
+                    return new CaseLabel(prefix, items);
                 case ToKind.KwDefault:
                     parser.ConsumeAny();
                     parser.Consume(ToKind.Colon);
-                    return new CaseLabel(new CaseItemList());
+                    return new CaseLabel(prefix, new CaseItemList());
             }
 
             parser.Consume(Firsts);

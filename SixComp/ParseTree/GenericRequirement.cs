@@ -17,5 +17,10 @@
 
             return new GenericRequirement(composition);
         }
+
+        public override string ToString()
+        {
+            return $": {Composition}";
+        }
     }
 }

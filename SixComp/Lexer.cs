@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace SixComp
 {
+    [DebuggerDisplay("{Status()}")]
     public class Lexer
     {
         public Source Source => Context.Source;
@@ -41,9 +42,9 @@ namespace SixComp
 
         public bool Done { get; private set; } = false;
 
-        public char Current => Index < Source.Length ? Source[Index] : '\0';
-        public char Next => Index + 1 < Source.Length ? Source[Index + 1] : '\0';
-        public char NextNext => Index + 2 < Source.Length ? Source[Index + 2] : '\0';
+        public char Current => Source[Index];
+        public char Next => Source[Index + 1];
+        public char NextNext => Source[Index + 2];
         public bool More => Index < Source.Length;
 
         public bool IsKeyword(ToKind kind)
@@ -66,6 +67,14 @@ namespace SixComp
 
             var split = AnyOperator(kind, withIndex: token.Index);
             Tokens.BackupForSplit(split);
+        }
+
+        public string Status()
+        {
+            var lb = Math.Min(Index, 15);
+            var la = Math.Max(Index - Source.Length, 15);
+
+            return Source.Content.Substring(Index - lb, lb) + "•" + Source.Content.Substring(Index, la);
         }
 
         public Token GetNext()
@@ -115,7 +124,7 @@ namespace SixComp
                     return Token(ToKind.RBracket, 1, ToFlags.OpSpaceAfter);
 
                 case '"':
-                    return LexStringLiteral();
+                    return LexStringLiteral(0);
                 case '`':
                     return LexQuotedIdentifier();
                 case '$':
@@ -139,6 +148,19 @@ namespace SixComp
                         break;
                     }
                 default:
+                    var hash = 0;
+                    if (Current == '#')
+                    {
+                        Debug.Assert(true);
+                    }
+                    while (Index + hash < Source.Length && Source[Index + hash] == '#')
+                    {
+                        hash += 1;
+                    }
+                    if (hash > 0 && Source[Index + hash] == '"' )
+                    {
+                        return LexStringLiteral(hash);
+                    }
                     if (char.IsLetter(Current) || Current == '_' || Current == '#')
                     {
                         do
@@ -179,6 +201,10 @@ namespace SixComp
                         if (Length == 1)
                         {
                             return AnyOperator(ToKind.Dot);
+                        }
+                        if (Length == 3 && Text[Start + 1] == '.' && Text[Start + 2] == '.')
+                        {
+                            return AnyOperator(ToKind.DotDotDot);
                         }
                         return AnyOperator();
                     }
@@ -282,7 +308,7 @@ namespace SixComp
         private bool IdentifierCharacter()
         {
             return IdentifierHead()
-                || IsDecDigit()
+                || IsDecDigit(Current)
                 || Current == '²';
         }
 
@@ -311,8 +337,12 @@ namespace SixComp
             while (char.IsWhiteSpace(Current));
         }
 
-        public Token LexStringLiteral()
+        public Token LexStringLiteral(int hash)
         {
+            Index += hash;
+
+            Debug.Assert(Current == '"');
+
             // Current == '"'
 
             if (Next == '"' && NextNext == '"')
@@ -327,9 +357,18 @@ namespace SixComp
             }
             else
             {
+                if (hash > 0)
+                {
+                    return LexHashString(hash);
+                }
+
                 do
                 {
                     if (Current == '\\' && Next == '"')
+                    {
+                        Index += 2;
+                    }
+                    else if (Current == '\\' && Next == '\\')
                     {
                         Index += 2;
                     }
@@ -346,6 +385,44 @@ namespace SixComp
                 }
             }
             return Token(ToKind.String, 0);
+        }
+
+        private Token LexHashString(int hash)
+        {
+            Debug.Assert(Current == '"');
+            Debug.Assert(hash > 0);
+
+            while (true)
+            {
+                Index += 1;
+                if (Current == '\\' && Next == '#')
+                {
+                    do
+                    {
+                        Index += 1;
+                    }
+                    while (Current == '#');
+                }
+                if (Current == '"' && Next == '#')
+                {
+                    Index += 1;
+                    var count = 0;
+                    while (count < hash && Current == '#')
+                    {
+                        Index += 1;
+                        count += 1;
+                    }
+                    if (count == hash)
+                    {
+                        return Token(ToKind.String, 0);
+                    }
+                }
+
+                if (Index - Start > 100)
+                {
+                    return Token(ToKind.ERROR, 0);
+                }
+            }
         }
 
         public bool OperatorHead(char c)
@@ -387,14 +464,14 @@ namespace SixComp
             return c == '.' || OperatorCharacter(c);
         }
 
-        private bool IsHexDigit(char digit)
-        {
-            return char.IsDigit(digit) || (digit >= 'a' && digit <= 'f') || (digit >= 'A' && digit <= 'F');
-        }
-
         private bool IsBinDigit(char digit)
         {
             return digit == '0' || digit == '1';
+        }
+
+        private bool IsOctDigit(char digit)
+        {
+            return '0' <= digit && digit <= '7';
         }
 
         private bool IsDecDigit(char digit)
@@ -402,9 +479,9 @@ namespace SixComp
             return '0' <= digit && digit <= '9';
         }
 
-        private bool IsDecDigit()
+        private bool IsHexDigit(char digit)
         {
-            return IsDecDigit(Current);
+            return char.IsDigit(digit) || (digit >= 'a' && digit <= 'f') || (digit >= 'A' && digit <= 'F');
         }
 
         private Token LexNumberLiteral()
@@ -435,6 +512,14 @@ namespace SixComp
 
                         LexDec();
                     }
+
+                    return Token(ToKind.Number, 0);
+                }
+                else if (Next == 'o')
+                {
+                    Index += 2;
+
+                    LexOct();
 
                     return Token(ToKind.Number, 0);
                 }
@@ -471,23 +556,6 @@ namespace SixComp
 
             return Token(ToKind.Number, 0);
 
-            void LexHex()
-            {
-                if (IsHexDigit(Current))
-                {
-                    do
-                    {
-                        Index += 1;
-                    }
-                    while (IsHexDigit(Current) || Current == '_');
-
-                }
-                else
-                {
-                    throw new LexerException(Start, $"illformed hexadecimal literal");
-                }
-            }
-
             void LexBin()
             {
                 if (IsBinDigit(Current))
@@ -501,6 +569,22 @@ namespace SixComp
                 else
                 {
                     throw new LexerException(Start, $"illformed binary literal");
+                }
+            }
+
+            void LexOct()
+            {
+                if (IsOctDigit(Current))
+                {
+                    do
+                    {
+                        Index += 1;
+                    }
+                    while (IsOctDigit(Current) || Current == '_');
+                }
+                else
+                {
+                    throw new LexerException(Start, $"illformed octal literal");
                 }
             }
 
@@ -520,6 +604,22 @@ namespace SixComp
                 }
             }
 
+            void LexHex()
+            {
+                if (IsHexDigit(Current))
+                {
+                    do
+                    {
+                        Index += 1;
+                    }
+                    while (IsHexDigit(Current) || Current == '_');
+
+                }
+                else
+                {
+                    throw new LexerException(Start, $"illformed hexadecimal literal");
+                }
+            }
         }
 
         private void SkipLineComment()

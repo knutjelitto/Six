@@ -81,6 +81,8 @@ namespace SixComp
         [Rep("as?", ToClass.Operator | ToClass.Keyword)] KwAsChain,
 
         [Rep("Any", ToClass.Keyword)] KwANY,
+        [Rep("associatedtype", ToClass.Keyword)] KwAssociatedType,
+        [Rep("async", ToClass.Keyword)] KwAsync,
         [Rep("break", ToClass.Keyword)] KwBreak,
         [Rep("case", ToClass.Keyword)] KwCase,
         [Rep("class", ToClass.Keyword)] KwClass,
@@ -146,12 +148,10 @@ namespace SixComp
         [Rep("while", ToClass.Keyword)] KwWhile,
         [Rep("willSet", ToClass.Keyword)] KwWillSet,
         [Rep("operator", ToClass.Keyword)] KwOperator,
-        [Rep("associatedtype", ToClass.Keyword)] KwAssociatedType,
 
         [Rep("__consuming", ToClass.Keyword)] Kw__Consuming,
-        [Rep("_modify", ToClass.Keyword)] Kw_Modify,
-        [Rep("_read", ToClass.Keyword)] Kw_Read,
         [Rep("__owned", ToClass.Keyword)] Kw__Owned,
+        [Rep("__shared", ToClass.Keyword)] Kw__Shared,
 
 
         [Rep("#if", ToClass.Keyword)] CdIf,

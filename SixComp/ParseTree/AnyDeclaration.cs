@@ -66,6 +66,10 @@ namespace SixComp.ParseTree
                     return AnyDeclaration.TryParse(parser, context);
 
                 default:
+                    if (context == Context.Enum && parser.Match(ToKind.KwCase))
+                    {
+                        return EnumCase.Parse(parser);
+                    }
                     if (Prefix.Fixes.Contains(parser.Current) && parser.Next == ToKind.KwOperator)
                     {
                         return OperatorDeclaration.Parse(parser, prefix);

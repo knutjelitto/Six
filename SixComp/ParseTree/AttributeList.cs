@@ -26,6 +26,11 @@ namespace SixComp.ParseTree
             return new AttributeList();
         }
 
+        public void Backdoor(Token anyToken)
+        {
+            Backdoor(Attribute.From(anyToken));
+        }
+
         public override string ToString()
         {
             if (Count > 0)

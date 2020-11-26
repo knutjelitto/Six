@@ -20,5 +20,10 @@ namespace SixComp.ParseTree
 
             return new FunctionResult(type);
         }
+
+        public override string ToString()
+        {
+            return $" -> {Type}";
+        }
     }
 }

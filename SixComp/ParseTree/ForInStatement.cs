@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
-    public class ForInStatement : AnyStatement
+    public class ForInStatement : SyntaxNode, IWritable, AnyStatement
     {
         public ForInStatement(AnyPattern pattern, AnyExpression expression, WhereClause? where, CodeBlock block)
         {
@@ -22,6 +23,7 @@ namespace SixComp.ParseTree
             parser.Consume(ToKind.KwFor);
             parser.Match(ToKind.KwCase);
             var pattern = AnyPattern.Parse(parser);
+            var type = parser.Try(TypeAnnotation.Firsts, TypeAnnotation.Parse);
             parser.Consume(ToKind.KwIn);
             var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ForInStatement)}");
             var where = parser.Try(WhereClause.Firsts, WhereClause.Parse);
@@ -40,5 +42,12 @@ namespace SixComp.ParseTree
 
             return new ForInStatement(pattern, expression, where, block);
         }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"for {Pattern} in {Expression}{Where}");
+            Block.Write(writer);
+        }
+
     }
 }

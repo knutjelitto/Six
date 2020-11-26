@@ -43,6 +43,11 @@ namespace SixComp.ParseTree
                 ;
         }
 
+        public static Name From(Token anyToken)
+        {
+            return new Name(anyToken);
+        }
+
         public static Name? TryParse(Parser parser, bool withOperators = false, bool withImplicits = true)
         {
             if (withOperators)

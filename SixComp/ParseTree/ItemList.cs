@@ -30,6 +30,12 @@ namespace SixComp.ParseTree
             Missing = true;
         }
 
+        protected void Backdoor(T item)
+        {
+            items.Add(item);
+            Missing = false;
+        }
+
         public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 

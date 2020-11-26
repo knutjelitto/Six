@@ -23,5 +23,10 @@ namespace SixComp.ParseTree
 
             return new TupleTypeElementList(elements);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

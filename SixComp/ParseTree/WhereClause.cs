@@ -25,7 +25,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            return $"where {Expression}";
+            return $" where {Expression}";
         }
     }
 }

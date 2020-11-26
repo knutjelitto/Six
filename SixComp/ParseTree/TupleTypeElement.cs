@@ -32,8 +32,7 @@
 
         public override string ToString()
         {
-            var label = Label == null ? string.Empty : $"{Label} ";
-            return $"{label}{Type}";
+            return $"{Label}{Type}";
         }
     }
 }

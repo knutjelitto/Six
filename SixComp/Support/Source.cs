@@ -19,7 +19,7 @@ namespace SixComp.Support
         public SourceIndex Index => index.Value;
 
 
-        public char this[int index] => Content[index];
+        public char this[int index] => index < Content.Length ? Content[index] : '\0';
 
         public string Chars(Span span)
         {

@@ -15,5 +15,10 @@
 
             return new GenericArgument(type);
         }
+
+        public override string ToString()
+        {
+            return $"{Type}";
+        }
     }
 }

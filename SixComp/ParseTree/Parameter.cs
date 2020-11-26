@@ -2,17 +2,19 @@
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, AnyType type, Initializer? initializer)
+        public Parameter(Name? label, Name name, TypeAnnotation type, bool variadic, Initializer? initializer)
         {
             Label = label;
             Name = name;
             Type = type;
+            Variadic = variadic;
             Initializer = initializer;
         }
 
         public Name? Label { get; }
         public Name Name { get; }
-        public AnyType Type { get; }
+        public TypeAnnotation Type { get; }
+        public bool Variadic { get; }
         public Initializer? Initializer { get; }
 
         public static Parameter Parse(Parser parser)
@@ -25,15 +27,17 @@
             }
             var name = Name.Parse(parser);
             var type = TypeAnnotation.Parse(parser);
+            var variadic = parser.Match(ToKind.DotDotDot);
             var initializer = parser.Try(ToKind.Assign, Initializer.Parse);
 
-            return new Parameter(label, name, type, initializer);
+            return new Parameter(label, name, type, variadic, initializer);
         }
 
         public override string ToString()
         {
-            var label = Label == null ? string.Empty : $"{Label} ";
-            return $"{label}{Name}: {Type}";
+            var space = Label == null ? string.Empty : " ";
+            var variadic = Variadic ? "..." : string.Empty;
+            return $"{Label}{space}{Name}{Type}{variadic}";
         }
     }
 }

@@ -5,6 +5,14 @@ namespace SixComp.ParseTree
 {
     public interface AnyVarDeclaration : AnyDeclaration
     {
+        public static HashSet<string> Specials = new HashSet<string>
+        {
+            "_modify",
+            "_read",
+            "unsafeAddress",
+            "unsafeMutableAddress",
+        };
+
         public static bool CheckWillSetDitSet(Parser parser)
         {
             if (parser.Current == ToKind.KwWillSet || parser.Current == ToKind.KwDidSet)
@@ -15,9 +23,9 @@ namespace SixComp.ParseTree
             using (parser.InBacktrack())
             {
                 // skip over attributes
-                Prefix.Parse(parser);
+                var prefix = Prefix.PreParse(parser);
 
-                if (parser.Current == ToKind.KwWillSet || parser.Current == ToKind.KwDidSet)
+                if (prefix.Last == ToKind.KwWillSet || prefix.Last == ToKind.KwDidSet)
                 {
                     return true;
                 }
@@ -57,7 +65,7 @@ namespace SixComp.ParseTree
                 // destruct pattern initializer
 
                 var name = ip.Name;
-                var typeAnnotation = ip.Type;
+                var typeAnnotation = pattInit.Type;
                 var initializer = pattInit.Initializer;
 
                 var braceOffset = parser.Offset;
@@ -67,8 +75,8 @@ namespace SixComp.ParseTree
                 var setter = (SetBlock?)null;
                 var didSetter = (DidSetBlock?)null;
                 var willSetter = (WillSetBlock?)null;
-                var modify = (CodeBlock?)null;
-                var read = (CodeBlock?)null;
+                var specials = new Dictionary<string, (int index, CodeBlock block)>();
+                var specialsIndex = 0;
                 var needBrace = true;
                 var mayDefault = true;
                 var done = false;
@@ -95,15 +103,15 @@ namespace SixComp.ParseTree
                             didSetter = DidSetBlock.Parse(parser, blockPrefix);
                             mayDefault = false;
                             break;
-                        case ToKind.Kw_Modify when modify == null:
-                            parser.Consume(ToKind.Kw_Modify);
-                            modify = CodeBlock.Parse(parser);
-                            mayDefault = false;
-                            break;
-                        case ToKind.Kw_Read when read == null:
-                            parser.Consume(ToKind.Kw_Read);
-                            read = CodeBlock.Parse(parser);
-                            mayDefault = false;
+                        case ToKind.Name when Specials.Contains(parser.CurrentToken.Text):
+                            {
+                                var key = parser.Consume(ToKind.Name).Text;
+                                var index = specialsIndex;
+                                specialsIndex += 1;
+                                var block = CodeBlock.Parse(parser);
+                                specials.Add(key, (index, block));
+                                mayDefault = false;
+                            }
                             break;
                         default:
                             if (mayDefault)
@@ -131,7 +139,7 @@ namespace SixComp.ParseTree
                     {
                         throw new ParserException(getter.Keyword, $"computed property must be annotated by a type");
                     }
-                    return new GetSetVarDeclaration(prefix, name, typeAnnotation, getter, setter, modify, read);
+                    return new GetSetVarDeclaration(prefix, name, typeAnnotation, getter, setter, specials);
                 }
                 if (setter != null)
                 {

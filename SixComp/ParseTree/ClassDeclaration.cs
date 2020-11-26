@@ -37,7 +37,7 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}class {Name}{Generics}{Inheritance}{Requirements}");
+            writer.WriteLine($"{Prefix}{Name}{Generics}{Inheritance}{Requirements}");
             Declarations.Write(writer);
         }
     }

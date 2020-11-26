@@ -34,11 +34,8 @@ namespace SixComp.ParseTree
         public void Write(IWriter writer)
         {
             writer.WriteLine($"extension {Name}{Inheritance}");
-            using (writer.Block())
-            {
-                Declarations.Write(writer);
-            }
+            Requirements.Write(writer);
+            Declarations.Write(writer);
         }
-
     }
 }

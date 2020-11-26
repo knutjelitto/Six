@@ -13,5 +13,10 @@
         {
             return new NestedExpression(expression);
         }
+
+        public override string ToString()
+        {
+            return $"({Expression})";
+        }
     }
 }

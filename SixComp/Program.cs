@@ -33,8 +33,9 @@ namespace SixComp
         private void Swift()
         {
             //EnumSwifts("swift-numerics");
-            EnumSwifts("swift/stdlib/public/core");
-            //EnumSwifts("swift-package-manager\\Sources");
+            //EnumSwifts("swift/stdlib/public/core");
+            EnumSwifts("swift/stdlib/public");
+            //EnumSwifts("swift-package-manager/Sources");
         }
 
         public Program()
@@ -86,9 +87,10 @@ namespace SixComp
         private void EnumSwifts(string swift)
         {
             var root = SwiftDir.FullName;
-            var files = Directory.EnumerateFiles(Path.Combine(root, swift), "*.swift", SearchOption.AllDirectories)
+            var swiftRoot = Path.Combine(root, swift);
+            var files = Directory.EnumerateFiles(swiftRoot, "*.swift", SearchOption.AllDirectories)
                 .Where(n => !n.EndsWith("Template.swift"))
-                .OrderBy(n => Path.GetFileName(n))
+                .OrderBy(n => n.Substring(swiftRoot.Length))
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 

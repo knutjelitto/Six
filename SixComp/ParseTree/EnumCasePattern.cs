@@ -31,7 +31,7 @@
                 var caseName = Name.Parse(parser);
                 var pattern = parser.Try(ToKind.LParent, TuplePattern.Parse);
 
-                if (!parser.IsOperator)
+                if (parser.Current != ToKind.Dot)
                 {
                     return new EnumCasePattern(enumName, caseName, pattern);
                 }

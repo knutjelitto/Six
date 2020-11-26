@@ -1,7 +1,11 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class TypeAnnotation : AnyType
     {
+        public static readonly TokenSet Firsts = new TokenSet(ToKind.Colon);
+
         private TypeAnnotation(PrefixedType type)
         {
             Type = type;

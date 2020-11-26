@@ -39,7 +39,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            return $"{{{Statements}}}";
+            return $"{{ {Statements} }}";
         }
     }
 }

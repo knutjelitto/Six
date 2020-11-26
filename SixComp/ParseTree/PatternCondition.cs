@@ -22,6 +22,7 @@ namespace SixComp.ParseTree
             parser.Consume(Firsts);
 
             var pattern = AnyPattern.Parse(parser);
+            var type = parser.Try(TypeAnnotation.Firsts, TypeAnnotation.Parse);
             var init = Initializer.Parse(parser);
 
             return new PatternCondition(pattern, init);

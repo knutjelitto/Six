@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class TypealiasDeclaration : AnyDeclaration
     {
@@ -27,6 +29,12 @@
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
 
             return new TypealiasDeclaration(prefix, name, parameters, assignment, requirements);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"typealias {Name}{Parameters}{Assignment}");
+            Requirements.Write(writer);
         }
     }
 }

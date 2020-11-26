@@ -21,5 +21,10 @@ namespace SixComp.ParseTree
 
             return new TypealiasAssignment(type);
         }
+
+        public override string ToString()
+        {
+            return $" = {Type}";
+        }
     }
 }

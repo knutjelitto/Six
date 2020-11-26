@@ -29,7 +29,7 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"var {Prefix}{Initializers}");
+            writer.WriteLine($"{Prefix}{Initializers}");
         }
     }
 }

@@ -21,5 +21,10 @@ namespace SixComp.ParseTree
 
             return new TypeInheritanceList(types);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

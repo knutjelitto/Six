@@ -30,6 +30,7 @@ namespace SixComp.ParseTree
             var name = Name.Parse(parser, withOperators: true);
             var genericParameters = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
             var parameters = ParameterClause.Parse(parser);
+            var async = parser.Match(ToKind.KwAsync);
             var throws = parser.Match(ToKind.KwThrows);
             var rethrows = parser.Match(ToKind.KwRethrows);
             var returns = parser.Try(ToKind.Arrow, FunctionResult.Parse);
@@ -41,8 +42,7 @@ namespace SixComp.ParseTree
 
         public void Write(IWriter writer)
         {
-            var returns = Returns == null ? string.Empty : $" -> {Returns}";
-            writer.WriteLine($"func {Name}{GenericParameters}{Parameters}{returns}");
+            writer.WriteLine($"{Prefix}{Name}{GenericParameters}{Parameters}{Returns}");
             Block?.Write(writer);
         }
     }

@@ -1,18 +1,18 @@
 ﻿using SixComp.Support;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
     public class GetSetVarDeclaration : AnyVarDeclaration
     {
-        public GetSetVarDeclaration(Prefix prefix, Name name, TypeAnnotation type, GetBlock getter, SetBlock? setter, CodeBlock? modify, CodeBlock? read)
+        public GetSetVarDeclaration(Prefix prefix, Name name, TypeAnnotation type, GetBlock getter, SetBlock? setter, Dictionary<string, (int index, CodeBlock block)> specials)
         {
             Prefix = prefix;
             Name = name;
             Type = type;
             Getter = getter;
             Setter = setter;
-            Modify = modify;
-            Read = read;
+            Specials = specials;
         }
 
         public Prefix Prefix { get; }
@@ -20,8 +20,7 @@ namespace SixComp.ParseTree
         public TypeAnnotation Type { get; }
         public GetBlock Getter { get; }
         public SetBlock? Setter { get; }
-        public CodeBlock? Modify { get; }
-        public CodeBlock? Read { get; }
+        public Dictionary<string, (int index, CodeBlock block)> Specials { get; }
 
         public override string ToString()
         {

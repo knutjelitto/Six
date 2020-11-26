@@ -1,6 +1,8 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
-    public abstract class AnyPropertyBlock
+    public abstract class AnyPropertyBlock : IWritable
     {
         protected AnyPropertyBlock(Prefix prefix, Token keyword, SetterName? setterName, CodeBlock? block)
         {
@@ -22,6 +24,14 @@
                 return $" {Block}";
             }
             return $" {Keyword} {Block}";
+        }
+
+        public void Write(IWriter writer)
+        {
+            if (Keyword.Kind == ToKind.LBrace)
+            {
+                Block?.Write(writer);
+            }
         }
     }
 }

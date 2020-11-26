@@ -38,12 +38,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            var text = string.Join(";", this);
-            if (text.Length > 50)
-            {
-                return text.Substring(0, 50) + "...";
-            }
-            return text;
+            return string.Join("; ", this);
         }
     }
 }

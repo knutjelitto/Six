@@ -1,32 +1,31 @@
 ﻿using SixComp.Support;
 using System;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
     public class SubscriptDeclaration : AnyDeclaration
     {
-        public SubscriptDeclaration(Prefix prefx, GenericParameterClause generics, ParameterClause parameters, FunctionResult result, RequirementClause requirements, GetBlock? getter, SetBlock? setter, CodeBlock? modify, CodeBlock? read)
+        public SubscriptDeclaration(Prefix prefx, GenericParameterClause generics, ParameterClause parameters, FunctionResult result, RequirementClause requirements, GetBlock? getter, SetBlock? setter, Dictionary<string, (int index, CodeBlock block)> specials)
         {
-            Prefx = prefx;
+            Prefix = prefx;
             Generics = generics;
             Parameters = parameters;
             Result = result;
             Requirements = requirements;
             Getter = getter;
             Setter = setter;
-            Modify = modify;
-            Read = read;
+            Specials = specials;
         }
 
-        public Prefix Prefx { get; }
+        public Prefix Prefix { get; }
         public GenericParameterClause Generics { get; }
         public ParameterClause Parameters { get; }
         public FunctionResult Result { get; }
         public RequirementClause Requirements { get; }
         public GetBlock? Getter { get; }
         public SetBlock? Setter { get; }
-        public CodeBlock? Modify { get; }
-        public CodeBlock? Read { get; }
+        public Dictionary<string, (int index, CodeBlock block)> Specials { get; }
 
         public static SubscriptDeclaration Parse(Parser parser, Prefix prefix)
         {
@@ -42,8 +41,8 @@ namespace SixComp.ParseTree
 
             var getter = (GetBlock?)null;
             var setter = (SetBlock?)null;
-            var modify = (CodeBlock?)null;
-            var read = (CodeBlock?)null;
+            var specials = new Dictionary<string, (int index, CodeBlock block)>();
+            var specialsIndex = 0;
             var needBrace = true;
             var mayDefault = true;
             var done = false;
@@ -62,15 +61,15 @@ namespace SixComp.ParseTree
                         setter = SetBlock.Parse(parser, blockPrefix);
                         mayDefault = false;
                         break;
-                    case ToKind.Kw_Modify when modify == null:
-                        parser.Consume(ToKind.Kw_Modify);
-                        modify = CodeBlock.Parse(parser);
-                        mayDefault = false;
-                        break;
-                    case ToKind.Kw_Read when read == null:
-                        parser.Consume(ToKind.Kw_Read);
-                        read = CodeBlock.Parse(parser);
-                        mayDefault = false;
+                    case ToKind.Name when AnyVarDeclaration.Specials.Contains(parser.CurrentToken.Text):
+                        {
+                            var key = parser.Consume(ToKind.Name).Text;
+                            var index = specialsIndex;
+                            specialsIndex += 1;
+                            var block = CodeBlock.Parse(parser);
+                            specials.Add(key, (index, block));
+                            mayDefault = false;
+                        }
                         break;
                     default:
                         if (mayDefault)
@@ -92,7 +91,7 @@ namespace SixComp.ParseTree
                 parser.Consume(ToKind.RBrace);
             }
 
-            if (getter == null && setter == null && modify == null && read == null)
+            if (getter == null && setter == null && specials.Count == 0)
             {
                 throw new InvalidOperationException($"{typeof(SubscriptDeclaration)}");
             }
@@ -102,7 +101,13 @@ namespace SixComp.ParseTree
                 throw new ParserException(setter.Keyword, $"subscript setter must be accompanied by a getter");
             }
 
-            return new SubscriptDeclaration(prefix, generics, parameters, result, requirements, getter, setter, modify, read);
+            return new SubscriptDeclaration(prefix, generics, parameters, result, requirements, getter, setter, specials);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"{Prefix}{Generics}{Parameters}{Result}");
+            writer.WriteLine("//TODO");
         }
     }
 }

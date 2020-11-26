@@ -1,11 +1,43 @@
-﻿  public func index(after i: Index) -> Index {
-    _precondition(i != endIndex, "Can't advance past endIndex")
-    guard case .index(let i) = i._value else {
-      _preconditionFailure("Invalid index passed to index(after:)")
+﻿private final class JSONDumper: DependenciesDumper {
+    func dump(dependenciesOf rootpkg: ResolvedPackage, on stream: OutputByteStream) {
+        func convert(_ package: ResolvedPackage) -> JSON {
+            return .orderedDictionary([
+                "name": .string(package.name),
+                "url": .string(package.manifest.url),
+                "version": .string(package.manifest.version?.description ?? "unspecified"),
+                "path": .string(package.path.pathString),
+                "dependencies": .array(package.dependencies.map(convert)),
+            ])
+        }
+
+        stream <<< convert(rootpkg).toString(prettyPrint: true) <<< "\n"
     }
-    let nextIndex = _base.index(after: i)
-    guard nextIndex != _base.endIndex && _predicate(_base[nextIndex]) else {
-      return Index(endOf: _base)
+}
+
+public enum ShowDependenciesMode: String, RawRepresentable, CustomStringConvertible {
+    case text, dot, json, flatlist
+
+    public init?(rawValue: String) {
+        switch rawValue.lowercased() {
+        case "text":
+           self = .text
+        case "dot":
+           self = .dot
+        case "json":
+           self = .json
+        case "flatlist":
+            self = .flatlist
+        default:
+            return nil
+        }
     }
-    return Index(nextIndex)
-  }
+
+    public var description: String {
+        switch self {
+        case .text: return "text"
+        case .dot: return "dot"
+        case .json: return "json"
+        case .flatlist: return "flatlist"
+        }
+    }
+}

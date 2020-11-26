@@ -15,5 +15,10 @@
         {
             return new TupleType(prefix, elements);
         }
+
+        public override string ToString()
+        {
+            return $"{Prefix}({Elements})";
+        }
     }
 }

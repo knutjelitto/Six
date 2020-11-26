@@ -92,7 +92,7 @@ namespace SixComp.ParseTree
             }
 
             var elements = funArgs.Arguments
-                .Select(a => TupleTypeElement.From(a.Label, a.Type))
+                .Select(a => TupleTypeElement.From(a.Label ?? a.Name, a.Type))
                 .ToList();
 
             return TupleType.From(prefix, new TupleTypeElementList(elements));

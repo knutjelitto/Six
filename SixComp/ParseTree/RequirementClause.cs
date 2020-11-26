@@ -2,7 +2,7 @@
 
 namespace SixComp.ParseTree
 {
-    public class RequirementClause
+    public class RequirementClause : SyntaxNode, IWritable
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
 
@@ -35,6 +35,17 @@ namespace SixComp.ParseTree
             }
 
             return $"where {Requirements}";
+        }
+
+        public void Write(IWriter writer)
+        {
+            if (!Missing)
+            {
+                using (writer.Indent())
+                {
+                    writer.Write($"{Requirements}");
+                }
+            }
         }
     }
 }
