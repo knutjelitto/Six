@@ -1,6 +1,4 @@
 ﻿using SixComp.Support;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -41,7 +39,7 @@ namespace SixComp.ParseTree
                 case ToKind.KwEnum:
                     return EnumDeclaration.Parse(parser, prefix);
                 case ToKind.KwCase when context == Context.Enum:
-                    return EnumCase.Parse(parser);
+                    return EnumCase.Parse(parser, prefix);
                 case ToKind.KwInit:
                     return InitializerDeclaration.Parse(parser, prefix);
                 case ToKind.KwDeinit:
@@ -68,7 +66,7 @@ namespace SixComp.ParseTree
                 default:
                     if (context == Context.Enum && parser.Match(ToKind.KwCase))
                     {
-                        return EnumCase.Parse(parser);
+                        return EnumCase.Parse(parser, prefix);
                     }
                     if (Prefix.Fixes.Contains(parser.Current) && parser.Next == ToKind.KwOperator)
                     {

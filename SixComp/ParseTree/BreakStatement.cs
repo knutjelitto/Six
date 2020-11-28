@@ -22,5 +22,11 @@
 
             return new BreakStatement(label);
         }
+
+        public override string ToString()
+        {
+            var label = Label == null ? string.Empty : $" {Label}";
+            return $"{Kw.Break}{label}";
+        }
     }
 }

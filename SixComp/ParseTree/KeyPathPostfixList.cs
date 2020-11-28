@@ -25,5 +25,10 @@ namespace SixComp.ParseTree
 
             return new KeyPathPostfixList();
         }
+
+        public override string ToString()
+        {
+            return string.Join(string.Empty, this);
+        }
     }
 }

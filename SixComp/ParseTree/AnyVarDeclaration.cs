@@ -1,5 +1,6 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -145,7 +146,11 @@ namespace SixComp.ParseTree
                 {
                     throw new ParserException(setter.Keyword, $"property setter must be accompanied by a getter");
                 }
-                return new WillDidVarDeclaration(prefix, name, typeAnnotation, initializer, willSetter, didSetter);
+                if (willSetter == null && didSetter == null && specials.Count == 0)
+                {
+                    Debug.Assert(true);
+                }
+                return new WillDidVarDeclaration(prefix, name, typeAnnotation, initializer, willSetter, didSetter, specials);
             }
         }
     }

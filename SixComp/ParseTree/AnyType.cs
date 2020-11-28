@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 
 namespace SixComp.ParseTree
 {
@@ -20,6 +21,10 @@ namespace SixComp.ParseTree
                     type = SomeType.Parse(parser);
                     break;
                 default:
+                    if (parser.Current == ToKind.Dot)
+                    {
+                        Debug.Assert(true);
+                    }
                     type = TypeIdentifier.Parse(parser);
                     break;
             }
@@ -86,7 +91,7 @@ namespace SixComp.ParseTree
         {
             var funArgs = FunctionTypeArgumentClause.Parse(parser);
 
-            if (parser.Current == ToKind.Arrow || parser.Current == ToKind.KwThrows)
+            if (parser.Current == ToKind.Arrow || parser.Current == ToKind.KwThrows || parser.Current == ToKind.KwAsync)
             {
                 return FunctionType.Parse(parser, prefix, funArgs);
             }

@@ -16,15 +16,23 @@ namespace SixComp.ParseTree
 
         public GenericArgumentList Arguments { get; }
 
-        public static GenericArgumentClause Parse(Parser parser)
+        public static GenericArgumentClause? TryParse(Parser parser)
         {
-            parser.Consume(ToKind.Less);
+            var offset = parser.Offset;
 
-            var arguments = GenericArgumentList.Parse(parser);
+            if (parser.Match(ToKind.Less))
+            {
+                var arguments = GenericArgumentList.Parse(parser);
 
-            parser.ConsumeCarefully(ToKind.Greater);
+                if (parser.ConsumeCarefully(ToKind.Greater) != null)
+                {
+                    return new GenericArgumentClause(arguments);
 
-            return new GenericArgumentClause(arguments);
+                }
+            }
+
+            parser.Offset = offset;
+            return null;
         }
 
         public override string ToString()

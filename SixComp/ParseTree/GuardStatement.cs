@@ -37,5 +37,10 @@ namespace SixComp.ParseTree
                 Block.Write(writer);
             }
         }
+
+        public override string ToString()
+        {
+            return $"guard {Conditions} else {Block}";
+        }
     }
 }

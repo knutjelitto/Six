@@ -15,9 +15,13 @@
         public static TypeName Parse(Parser parser)
         {
             var name = Name.Parse(parser);
-            var arguments = parser.TryList(ToKind.Less, GenericArgumentClause.Parse);
+            GenericArgumentClause? arguments = null;
+            if (parser.Current == ToKind.Less && parser.Adjacent)
+            {
+                arguments = GenericArgumentClause.TryParse(parser);
+            }
 
-            return new TypeName(name, arguments);
+            return new TypeName(name, arguments ?? new GenericArgumentClause());
         }
 
         public override string ToString()

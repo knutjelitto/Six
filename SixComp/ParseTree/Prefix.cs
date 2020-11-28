@@ -1,5 +1,6 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SixComp.ParseTree
@@ -14,7 +15,7 @@ namespace SixComp.ParseTree
             ToKind.KwFunc, ToKind.KwInit, ToKind.KwDeinit, ToKind.KwSubscript, ToKind.KwOperator, ToKind.KwTypealias, ToKind.KwAssociatedType,
 
             ToKind.KwClass, ToKind.KwConvenience, ToKind.KwDynamic, ToKind.KwFinal, ToKind.KwInfix, ToKind.KwLazy, ToKind.KwOptional, ToKind.KwOverride,
-            ToKind.KwPostfix, ToKind.KwPrefix, ToKind.KwRequired, ToKind.KwStatic, ToKind.KwUnowned, ToKind.KwWeak,
+            ToKind.KwPostfix, ToKind.KwPrefix, ToKind.KwRequired, ToKind.KwStatic, ToKind.KwUnowned, ToKind.KwWeak, ToKind.KwIndirect,
             ToKind.CdIf,
             ToKind.Kw__Consuming, ToKind.Kw__Shared, ToKind.Kw__Owned,
 
@@ -81,7 +82,11 @@ namespace SixComp.ParseTree
                     }
                     else if (Access.Contains(token.Kind))
                     {
-                        if (parser.Current == ToKind.LParent)
+                        if (token.Kind == ToKind.KwFileprivate)
+                        {
+                            Debug.Assert(true);
+                        }
+                        if (parser.Current == ToKind.LParent && parser.Next == ToKind.KwSet && parser.NextNext == ToKind.RParent)
                         {
                             Add();
                             token = parser.Consume(ToKind.KwSet);
@@ -136,7 +141,22 @@ namespace SixComp.ParseTree
                         preparsed.RemoveAt(preparsed.Count - 1);
                         parser.Offset = second.Index;
                     }
+                    else if (first.Kind == ToKind.KwLet && second.Kind == ToKind.KwPrefix)
+                    {
+                        preparsed.RemoveAt(preparsed.Count - 1);
+                        parser.Offset = second.Index;
+                    }
+                    else if (first.Kind == ToKind.KwLet && second.Kind == ToKind.KwDynamic)
+                    {
+                        preparsed.RemoveAt(preparsed.Count - 1);
+                        parser.Offset = second.Index;
+                    }
                     else if (first.Kind == ToKind.KwVar && second.Kind == ToKind.KwLazy)
+                    {
+                        preparsed.RemoveAt(preparsed.Count - 1);
+                        parser.Offset = second.Index;
+                    }
+                    else if (first.Kind == ToKind.KwVar && second.Kind == ToKind.KwOpen)
                     {
                         preparsed.RemoveAt(preparsed.Count - 1);
                         parser.Offset = second.Index;

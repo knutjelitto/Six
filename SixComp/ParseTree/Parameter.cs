@@ -2,7 +2,7 @@
 {
     public class Parameter
     {
-        public Parameter(Name? label, Name name, TypeAnnotation type, bool variadic, Initializer? initializer)
+        public Parameter(Prefix prefix, Name? label, Name name, TypeAnnotation type, bool variadic, Initializer? initializer)
         {
             Label = label;
             Name = name;
@@ -19,7 +19,7 @@
 
         public static Parameter Parse(Parser parser)
         {
-            var attributes = AttributeList.TryParse(parser);
+            var prefix = Prefix.PreParse(parser, onlyAttributes: true);
             Name? label = null;
             if (parser.NextNext == ToKind.Colon)
             {
@@ -30,14 +30,14 @@
             var variadic = parser.Match(ToKind.DotDotDot);
             var initializer = parser.Try(ToKind.Assign, Initializer.Parse);
 
-            return new Parameter(label, name, type, variadic, initializer);
+            return new Parameter(prefix, label, name, type, variadic, initializer);
         }
 
         public override string ToString()
         {
             var space = Label == null ? string.Empty : " ";
             var variadic = Variadic ? "..." : string.Empty;
-            return $"{Label}{space}{Name}{Type}{variadic}";
+            return $"{Label}{space}{Name}{Type}{variadic}{Initializer}";
         }
     }
 }

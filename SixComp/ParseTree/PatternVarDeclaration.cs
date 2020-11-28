@@ -31,5 +31,10 @@ namespace SixComp.ParseTree
         {
             writer.WriteLine($"{Prefix}{Initializers}");
         }
+
+        public override string ToString()
+        {
+            return $"{Prefix}{Initializers}";
+        }
     }
 }

@@ -15,5 +15,10 @@
         {
             return new DictionaryType(keyType, valueType);
         }
+
+        public override string ToString()
+        {
+            return $"[{KeyType}:{ValueType}]";
+        }
     }
 }

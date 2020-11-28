@@ -14,6 +14,11 @@ namespace SixComp.ParseTree
             while (AnyDeclaration.TryParse(parser, context) is AnyDeclaration declaration)
             {
                 declarations.Add(declaration);
+
+                while (parser.Match(ToKind.SemiColon))
+                {
+                    ;
+                }
             }
 
             return new DeclarationList(declarations);

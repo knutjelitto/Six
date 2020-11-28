@@ -55,12 +55,14 @@
             {
                 var name = Name.Parse(parser);
 
-                var generics = parser.Adjacent
-                    ? parser.TryList(ToKind.Less, GenericArgumentClause.Parse)
-                    : new GenericArgumentClause();
+                GenericArgumentClause? generics = null;
+                if (parser.Current == ToKind.Less && parser.Adjacent)
+                {
+                    generics = GenericArgumentClause.TryParse(parser);
+                }
                 var names = ArgumentNameClause.TryParse(parser) ?? new ArgumentNameClause();
 
-                return new NamedMemberSelector(left, op, name, generics, names);
+                return new NamedMemberSelector(left, op, name, generics ?? new GenericArgumentClause(), names);
             }
 
             public override string ToString()

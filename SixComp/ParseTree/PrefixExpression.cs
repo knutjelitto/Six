@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class PrefixExpression : BaseExpression, AnyPrefixExpression
     {
@@ -24,7 +22,7 @@ namespace SixComp.ParseTree
 
         public override string ToString()
         {
-            return $"({Op}_ {Operand})";
+            return $"{Op}{Operand}";
         }
     }
 }

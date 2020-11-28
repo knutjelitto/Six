@@ -22,5 +22,10 @@ namespace SixComp.ParseTree
 
             return new RepeatStatement(block, condition);
         }
+
+        public override string ToString()
+        {
+            return $"{Kw.Repeat} {Block} {Kw.While} {Condition}";
+        }
     }
 }

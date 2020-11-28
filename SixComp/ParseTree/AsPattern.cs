@@ -18,5 +18,9 @@
 
             return new AsPattern(pattern, type);
         }
+        public override string ToString()
+        {
+            return $"{Pattern} as {Type}";
+        }
     }
 }

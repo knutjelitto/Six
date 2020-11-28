@@ -5,20 +5,20 @@ namespace SixComp.ParseTree
 {
     public class SwitchStatement : AnyStatement
     {
-        public SwitchStatement(AnyExpression value, SwitchCaseList cases)
+        public SwitchStatement(AnyExpression value, SwitchCaseClause cases)
         {
             Value = value;
             Cases = cases;
         }
 
         public AnyExpression Value { get; }
-        public SwitchCaseList Cases { get; }
+        public SwitchCaseClause Cases { get; }
 
         public static SwitchStatement Parse(Parser parser)
         {
             parser.Consume(ToKind.KwSwitch);
             var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
-            var cases = SwitchCaseList.Parse(parser);
+            var cases = SwitchCaseClause.Parse(parser);
 
             return new SwitchStatement(value, cases);
         }
@@ -26,10 +26,12 @@ namespace SixComp.ParseTree
         public void Write(IWriter writer)
         {
             writer.WriteLine($"switch {Value}");
-            using (writer.Block())
-            {
-                Cases.Write(writer);
-            }
+            Cases.Write(writer);
+        }
+
+        public override string ToString()
+        {
+            return $"switch {Value} {Cases}";
         }
     }
 }

@@ -9,7 +9,7 @@ namespace SixComp.ParseTree
             ToKind.KwExtension, ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwANY, ToKind.KwSelf, ToKind.KwSELF, ToKind.KwIs,
             ToKind.KwSome, ToKind.KwIn, ToKind.KwWhile, ToKind.KwWhere, ToKind.KwContinue, ToKind.KwBreak, ToKind.KwMutating,
             ToKind.KwAs, ToKind.KwOptional, ToKind.KwDefault, ToKind.KwLazy, ToKind.KwSuper, ToKind.KwClass, ToKind.KwStruct,
-            ToKind.KwEnum);
+            ToKind.KwEnum, ToKind.KwAsync, ToKind.KwPublic, ToKind.KwPrivate, ToKind.KwInternal);
 
         public Name(Token token)
         {

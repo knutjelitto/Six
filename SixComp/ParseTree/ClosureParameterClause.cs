@@ -20,8 +20,8 @@ namespace SixComp.ParseTree
         public bool Variadic { get; }
 
         public bool Missing => Parameters.Missing;
-        public bool NameOnly => !Parents && Parameters.NameOnly;
-        public bool Definite => !Missing && !NameOnly;
+        public bool OneNameOnly => !Parents && Parameters.OneNameOnly;
+        public bool Definite => !Missing && !OneNameOnly;
 
         public static ClosureParameterClause? TryParse(Parser parser)
         {
@@ -54,6 +54,20 @@ namespace SixComp.ParseTree
             }
 
             return new ClosureParameterClause(nameParameters, false, false);
+        }
+
+        public override string ToString()
+        {
+            if (Missing)
+            {
+                return string.Empty;
+            }
+            var variadic = Variadic ? "..." : string.Empty;
+            if (Parents)
+            {
+                return $"({Parameters}{variadic})";
+            }
+            return $"{Parameters}{variadic}";
         }
     }
 }

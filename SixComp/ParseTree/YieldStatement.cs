@@ -2,18 +2,18 @@
 
 namespace SixComp.ParseTree
 {
-    public class ReturnStatement : AnyStatement
+    public class YieldStatement : AnyStatement
     {
-        public ReturnStatement(AnyExpression? value)
+        public YieldStatement(AnyExpression? value)
         {
             Value = value;
         }
 
         public AnyExpression? Value { get; }
 
-        public static ReturnStatement Parse(Parser parser)
+        public static YieldStatement Parse(Parser parser)
         {
-            parser.Consume(ToKind.KwReturn);
+            parser.Consume(ToKind.KwYield);
 
             AnyExpression? value = null;
 
@@ -22,20 +22,20 @@ namespace SixComp.ParseTree
                 value = AnyExpression.TryParse(parser);
             }
 
-            return new ReturnStatement(value);
+            return new YieldStatement(value);
         }
 
         public void Write(IWriter writer)
         {
             var value = Value == null ? string.Empty : $" {Value.StripParents()}";
 
-            writer.WriteLine($"return{value}");
+            writer.WriteLine($"{ToKind.KwYield.GetRep()}{value}");
         }
 
         public override string ToString()
         {
             var value = Value == null ? string.Empty : $" {Value}";
-            return $"return{value}";
+            return $"{ToKind.KwYield.GetRep()}{value}";
         }
     }
 }

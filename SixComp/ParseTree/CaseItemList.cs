@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using SixComp.Support;
+using System.Collections.Generic;
 
 namespace SixComp.ParseTree
 {
     public class CaseItemList : ItemList<CaseItem>
     {
+        private static readonly TokenSet itemFollows = new TokenSet(ToKind.Comma, ToKind.Colon);
+
         public CaseItemList(List<CaseItem> items) : base(items) { }
         public CaseItemList() { }
 
@@ -15,7 +18,7 @@ namespace SixComp.ParseTree
 
             do
             {
-                var item = CaseItem.Parse(parser);
+                var item = CaseItem.Parse(parser, itemFollows);
                 items.Add(item);
             }
             while (parser.Match(ToKind.Comma));

@@ -179,7 +179,7 @@ namespace SixComp
             return token;
         }
 
-        public Token ConsumeCarefully(ToKind kind)
+        public Token? ConsumeCarefully(ToKind kind)
         {
             if (Current == kind)
             {
@@ -192,30 +192,20 @@ namespace SixComp
 
             switch (kind)
             {
-                case ToKind.Less:
-                    if ((token.Flags & ToFlags.OpSplitLess) != 0)
-                    {
-                        Split(token, kind);
-                    }
+                case ToKind.Less when (token.Flags & ToFlags.OpSplitLess) != 0:
+                    Split(token, kind);
                     break;
-                case ToKind.Greater:
-                    if ((token.Flags & ToFlags.OpSplitGreater) != 0)
-                    {
-                        Split(token, kind);
-                    }
+                case ToKind.Greater when (token.Flags & ToFlags.OpSplitGreater) != 0:
+                    Split(token, kind);
                     break;
-                case ToKind.Quest:
-                    if ((token.Flags & ToFlags.OpSplitQuest) != 0)
-                    {
-                        Split(token, kind);
-                    }
+                case ToKind.Quest when (token.Flags & ToFlags.OpSplitQuest) != 0:
+                    Split(token, kind);
                     break;
-                case ToKind.Bang:
-                    if ((token.Flags & ToFlags.OpSplitBang) != 0)
-                    {
-                        Split(token, kind);
-                    }
+                case ToKind.Bang when (token.Flags & ToFlags.OpSplitBang) != 0:
+                    Split(token, kind);
                     break;
+                default:
+                    return null;
             }
 
             return Consume(kind);

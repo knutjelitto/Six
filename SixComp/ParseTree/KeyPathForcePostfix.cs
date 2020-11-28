@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class KeyPathForcePostfix : AnyKeyPathPostfix
     {
@@ -8,6 +10,11 @@
         {
             parser.Consume(ToKind.Bang);
             return new KeyPathForcePostfix();
+        }
+
+        public override string ToString()
+        {
+            return $"{ToKind.Bang.GetRep()}";
         }
     }
 }

@@ -27,5 +27,10 @@
 
             return new ClosureParameter(name, type);
         }
+
+        public override string ToString()
+        {
+            return $"{Name}{Type}";
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace SixComp.ParseTree
 {
     public interface AnyPattern : AnySyntaxNode, IWritable
     {
-        public static AnyPattern Parse(Parser parser)
+        public static AnyPattern Parse(Parser parser, TokenSet? follows = null)
         {
             var pattern = Pattern(parser);
 
@@ -21,6 +21,8 @@ namespace SixComp.ParseTree
 
             AnyPattern Pattern(Parser parser)
             {
+                var offset = parser.Offset;
+
                 switch (parser.Current)
                 {
                     case ToKind.LParent:
@@ -31,18 +33,26 @@ namespace SixComp.ParseTree
                         return VarPattern.Parse(parser);
                     case ToKind.Dot:
                     case ToKind.Name when parser.Next == ToKind.Dot:
-                        return EnumCasePattern.Parse(parser);
-                    case ToKind.Name:
+                        var enumCasePattern = EnumCasePattern.Parse(parser);
+                        if (follows == null || follows.Value.Contains(parser.Current))
+                        {
+                            return enumCasePattern;
+                        }
+                        else
+                        {
+                            parser.Offset = offset;
+                            break;
+                        }
+                    case ToKind.Name when follows == null || follows.Value.Contains(parser.Next):
                         return IdentifierPattern.Parse(parser);
                     case ToKind.KwIs:
                         return IsPattern.Parse(parser);
-                    default:
-                        if (Name.CanParse(parser))
-                        {
-                            return IdentifierPattern.Parse(parser);
-                        }
-                        return ExpressionPattern.Parse(parser);
                 }
+                if (Name.CanParse(parser) && (follows == null || follows.Value.Contains(parser.Next)))
+                {
+                    return IdentifierPattern.Parse(parser);
+                }
+                return ExpressionPattern.Parse(parser);
             }
         }
 

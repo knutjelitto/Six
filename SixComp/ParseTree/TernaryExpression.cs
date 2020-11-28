@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public class TernaryExpression : BaseExpression, AnyExpression
     {

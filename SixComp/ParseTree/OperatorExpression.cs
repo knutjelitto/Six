@@ -15,5 +15,10 @@
 
             return new OperatorExpression(@operator);
         }
+
+        public override string ToString()
+        {
+            return $"{Operator}";
+        }
     }
 }

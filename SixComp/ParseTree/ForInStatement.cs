@@ -49,5 +49,9 @@ namespace SixComp.ParseTree
             Block.Write(writer);
         }
 
+        public override string ToString()
+        {
+            return $"for {Pattern} in {Expression}{Where} {Block}";
+        }
     }
 }

@@ -20,5 +20,10 @@ namespace SixComp.ParseTree
 
             return new KeyPathComponentList(components);
         }
+
+        public override string ToString()
+        {
+            return string.Join(".", this);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class PrecGroupDeclaration : AnyDeclaration
     {
@@ -22,6 +24,15 @@
             parser.Consume(ToKind.RBrace);
 
             return new PrecGroupDeclaration(prefix, name, attributes);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"{Prefix}{Contextual.Precedencegroup} {Name}");
+            using (writer.Block())
+            {
+                Attributes.Write(writer);
+            }
         }
     }
 }

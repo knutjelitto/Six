@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace SixComp.ParseTree
+﻿namespace SixComp.ParseTree
 {
     public abstract class PostfixExpression : BaseExpression, AnyPostfixExpression
     {

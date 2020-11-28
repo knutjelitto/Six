@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System;
 
 namespace SixComp.ParseTree
 {
@@ -7,20 +6,17 @@ namespace SixComp.ParseTree
     {
         public static PrecGroupAttribute? TryParse(Parser parser)
         {
-            switch (parser.CurrentToken.Text)
+            return parser.CurrentToken.Text switch
             {
-                case Contextual.LowerThan:
-                    return Relation.Parse(parser, Relation.RelationKind.LowerThan);
-                case Contextual.HigherThan:
-                    return Relation.Parse(parser, Relation.RelationKind.HigherThan);
-                case Contextual.Assignment:
-                    return Assignment.Parse(parser);
-                case Contextual.Associativity:
-                    return Associativity.Parse(parser);
-            }
-
-            return null;
+                Contextual.LowerThan => Relation.Parse(parser, Relation.RelationKind.LowerThan),
+                Contextual.HigherThan => Relation.Parse(parser, Relation.RelationKind.HigherThan),
+                Contextual.Assignment => Assignment.Parse(parser),
+                Contextual.Associativity => Associativity.Parse(parser),
+                _ => null,
+            };
         }
+
+        public abstract void Write(IWriter writer);
 
         public class Relation : PrecGroupAttribute
         {
@@ -46,6 +42,17 @@ namespace SixComp.ParseTree
                 var names = NameList.Parse(parser);
 
                 return new Relation(kind, names);
+            }
+
+            public override void Write(IWriter writer)
+            {
+                var hilo = Kind switch
+                {
+                    RelationKind.LowerThan => Contextual.HigherThan,
+                    RelationKind.HigherThan => Contextual.LowerThan,
+                    _ => string.Empty,
+                };
+                writer.WriteLine($"{hilo}: {Names}");
             }
         }
 
@@ -73,6 +80,12 @@ namespace SixComp.ParseTree
                 }
 
                 return new Assignment(kind);
+            }
+
+            public override void Write(IWriter writer)
+            {
+                var @is = IsAssignment ? Kw.True : Kw.False;
+                writer.WriteLine($"{Contextual.Assignment}: {@is}");
             }
         }
 
@@ -115,6 +128,18 @@ namespace SixComp.ParseTree
                 }
 
                 return new Associativity(kind);
+            }
+
+            public override void Write(IWriter writer)
+            {
+                var kind = Kind switch
+                {
+                    AssociativityKind.Left => Contextual.Left,
+                    AssociativityKind.Right => Contextual.Right,
+                    AssociativityKind.None => Contextual.None,
+                    _ => Contextual.None,
+                };
+                writer.WriteLine($"{Contextual.Associativity}: {kind}");
             }
         }
     }

@@ -15,5 +15,10 @@
 
             return new KeyPathSubscriptPostfix(subscript);
         }
+
+        public override string ToString()
+        {
+            return $"{Subscript}";
+        }
     }
 }

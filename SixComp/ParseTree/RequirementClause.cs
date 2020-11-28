@@ -43,7 +43,7 @@ namespace SixComp.ParseTree
             {
                 using (writer.Indent())
                 {
-                    writer.Write($"{Requirements}");
+                    writer.WriteLine($"{Kw.Where} {Requirements}");
                 }
             }
         }

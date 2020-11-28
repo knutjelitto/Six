@@ -22,5 +22,10 @@
 
             return new KeyPathComponent(name, postfixes);
         }
+
+        public override string ToString()
+        {
+            return $"{Name}{Postfixes}";
+        }
     }
 }

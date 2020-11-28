@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class WhileStatement : AnyStatement
     {
@@ -26,6 +28,17 @@
             }
 
             return new WhileStatement(condition, block);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"while {Condition}");
+            Block.Write(writer);
+        }
+
+        public override string ToString()
+        {
+            return $"while {Condition} {Block}";
         }
     }
 }

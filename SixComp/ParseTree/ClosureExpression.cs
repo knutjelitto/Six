@@ -7,7 +7,7 @@ namespace SixComp.ParseTree
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 
-        public ClosureExpression(bool minimal, CaptureList captures, ClosureParameterClause? parameters, bool throws, FunctionResult? result, StatementList statements)
+        public ClosureExpression(bool minimal, CaptureClause captures, ClosureParameterClause parameters, bool throws, FunctionResult? result, StatementList statements)
         {
             Minimal = minimal;
             Captures = captures;
@@ -17,9 +17,15 @@ namespace SixComp.ParseTree
             Statements = statements;
         }
 
+        public override string ToString()
+        {
+            var throws = Throws ? " throws" : string.Empty;
+            return $"{{ {Captures}{Parameters}{throws}{Result} {Statements} }}";
+        }
+
         public bool Minimal { get; }
-        public CaptureList Captures { get; }
-        public ClosureParameterClause? Parameters { get; }
+        public CaptureClause Captures { get; }
+        public ClosureParameterClause Parameters { get; }
         public bool Throws { get; }
         public FunctionResult? Result { get; }
         public StatementList Statements { get; }
@@ -35,7 +41,7 @@ namespace SixComp.ParseTree
             var innerOffset = parser.Offset;
             var minimal = false;
 
-            var captures = parser.TryList(CaptureList.Firsts, CaptureList.Parse);
+            var captures = parser.TryList(CaptureClause.Firsts, CaptureClause.Parse);
             var parameters = ClosureParameterClause.TryParse(parser) ?? new ClosureParameterClause();
             var throws = parser.Match(ToKind.KwThrows);
             var result = parser.Try(FunctionResult.Firsts, FunctionResult.Parse);

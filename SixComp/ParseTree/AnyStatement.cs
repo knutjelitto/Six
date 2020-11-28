@@ -26,6 +26,8 @@ namespace SixComp.ParseTree
                     return ContinueStatement.Parse(parser);
                 case ToKind.KwReturn:
                     return ReturnStatement.Parse(parser);
+                case ToKind.KwYield:
+                    return YieldStatement.Parse(parser);
                 case ToKind.KwCase: //TODO: should be protected???
                     break;
                 default:

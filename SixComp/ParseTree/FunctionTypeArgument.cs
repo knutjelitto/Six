@@ -39,7 +39,8 @@
         public override string ToString()
         {
             var label = Label == null ? string.Empty : $"{Label} ";
-            return $"{label}{Type}";
+            var name = Name == null ? string.Empty : $"{Name}";
+            return $"{label}{name}{Type}";
         }
     }
 }

@@ -243,6 +243,11 @@ namespace SixComp
                             {
                                 return AnyOperator(ToKind.Equals);
                             }
+                            if (Text[Start] == '?' && Text[Start + 1] == '>')
+                            {
+                                Index -= 1; // backup one char
+                                return AnyOperator(ToKind.Quest);
+                            }
                         }
 
                         var split = (Text[Start]) switch

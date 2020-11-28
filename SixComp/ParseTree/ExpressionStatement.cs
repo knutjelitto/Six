@@ -27,5 +27,10 @@ namespace SixComp.ParseTree
         {
             writer.WriteLine($"{Expression.StripParents()}");
         }
+
+        public override string ToString()
+        {
+            return $"{Expression}";
+        }
     }
 }

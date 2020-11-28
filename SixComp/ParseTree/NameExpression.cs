@@ -14,12 +14,13 @@
         public static NameExpression Parse(Parser parser)
         {
             var name = Name.Parse(parser);
-            var arguments = parser.Current == ToKind.Less && parser.Adjacent
-                ? GenericArgumentClause.Parse(parser)
-                : new GenericArgumentClause()
-                ;
+            GenericArgumentClause? arguments = null;
+            if (parser.Current == ToKind.Less && parser.Adjacent)
+            {
+                arguments = GenericArgumentClause.TryParse(parser);
+            }
 
-            return new NameExpression(name, arguments);
+            return new NameExpression(name, arguments ?? new GenericArgumentClause());
         }
 
         public override string ToString()

@@ -28,6 +28,21 @@ namespace SixComp.ParseTree
             Names = names;
         }
 
+        public override string ToString()
+        {
+            var kind = Kind switch
+            {
+                OperatorKind.Prefix => ToKind.KwPrefix.GetRep(),
+                OperatorKind.Postfix => ToKind.KwPostfix.GetRep(),
+                OperatorKind.Infix => ToKind.KwInfix.GetRep(),
+                _ => string.Empty,
+            };
+
+            var names = Names.Missing ? string.Empty : $" : {Names}";
+
+            return $"{kind} {ToKind.KwOperator.GetRep()} {Operator}{names}";
+        }
+
         public static OperatorDeclaration Parse(Parser parser, Prefix prefix)
         {
             OperatorKind? kind = null;

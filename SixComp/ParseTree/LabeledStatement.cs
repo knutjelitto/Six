@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SixComp.Support;
+using System;
 
 namespace SixComp.ParseTree
 {
@@ -19,6 +20,20 @@ namespace SixComp.ParseTree
             parser.Consume(ToKind.Colon);
             var statement = AnyStatement.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(LabeledStatement)}");
             return new LabeledStatement(label, statement);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"{Label}:");
+            using (writer.Indent())
+            {
+                Statement.Write(writer);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{Label}: {Statement}";
         }
     }
 }

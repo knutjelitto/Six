@@ -23,5 +23,10 @@ namespace SixComp.ParseTree
 
             return new FunctionTypeArgumentList(arguments);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

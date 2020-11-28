@@ -2,16 +2,16 @@
 
 namespace SixComp.ParseTree
 {
-    public class CaptureList
+    public class CaptureClause
     {
         public static readonly TokenSet Firsts = new TokenSet(ToKind.LBracket);
 
-        public CaptureList(CaptureListItemList captures)
+        public CaptureClause(CaptureListItemList captures)
         {
             Captures = captures;
         }
 
-        public CaptureList()
+        public CaptureClause()
             : this(new CaptureListItemList())
         {
         }
@@ -20,13 +20,22 @@ namespace SixComp.ParseTree
 
         public CaptureListItemList Captures { get; }
 
-        public static CaptureList Parse(Parser parser)
+        public static CaptureClause Parse(Parser parser)
         {
             parser.Consume(ToKind.LBracket);
             var captures = CaptureListItemList.Parse(parser);
             parser.Consume(ToKind.RBracket);
 
-            return new CaptureList(captures);
+            return new CaptureClause(captures);
+        }
+
+        public override string ToString()
+        {
+            if (Missing)
+            {
+                return string.Empty;
+            }
+            return $"[{Captures}]";
         }
     }
 }

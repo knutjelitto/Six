@@ -7,7 +7,7 @@ namespace SixComp.ParseTree
         public ClosureParameterList(List<ClosureParameter> parameters) : base(parameters) { }
         public ClosureParameterList() { }
 
-        public bool NameOnly => Count == 1 && this[0].NameOnly;
+        public bool OneNameOnly => Count == 1 && this[0].NameOnly;
 
         public static ClosureParameterList? TryParse(Parser parser, bool nameOnly)
         {
@@ -33,6 +33,11 @@ namespace SixComp.ParseTree
             while (parser.Match(ToKind.Comma));
 
             return new ClosureParameterList(parameters);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
         }
     }
 }

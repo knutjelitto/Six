@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class AssociatedTypeDeclaration : AnyDeclaration
     {
@@ -27,6 +29,12 @@
             var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
 
             return new AssociatedTypeDeclaration(prefix, name, inheritance, assignment, requirements);
+        }
+
+        public void Write(IWriter writer)
+        {
+            writer.WriteLine($"{Prefix}{Name}{Inheritance}{Assignment}");
+            Requirements.Write(writer);
         }
     }
 }

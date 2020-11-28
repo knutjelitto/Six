@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Diagnostics;
 
 namespace SixComp.ParseTree
 {
@@ -44,6 +43,11 @@ namespace SixComp.ParseTree
         {
             writer.WriteLine($"{Prefix}{Name}{GenericParameters}{Parameters}{Returns}");
             Block?.Write(writer);
+        }
+
+        public override string ToString()
+        {
+            return $"{Prefix}{Name}{GenericParameters}{Parameters}{Returns}{Block}";
         }
     }
 }

@@ -13,5 +13,10 @@
         {
             return new ArrayType(elementType);
         }
+
+        public override string ToString()
+        {
+            return $"[{ElementType}]";
+        }
     }
 }

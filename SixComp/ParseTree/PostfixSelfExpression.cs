@@ -2,14 +2,24 @@
 {
     public class PostfixSelfExpression : PostfixExpression
     {
-        private PostfixSelfExpression(AnyExpression left, Token op) : base(left, op) { }
+        private PostfixSelfExpression(AnyExpression left, Token op, Token self) : base(left, op)
+        {
+            Self = self;
+        }
+
+        public Token Self { get; }
 
         public static PostfixSelfExpression Parse(Parser parser, AnyExpression left)
         {
             var op = parser.Consume(ToKind.Dot);
-            parser.Consume(ToKind.KwSelf);
+            var self = parser.Consume(ToKind.KwSelf);
 
-            return new PostfixSelfExpression(left, op);
+            return new PostfixSelfExpression(left, op, self);
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}{Self}";
         }
     }
 }

@@ -28,5 +28,10 @@ namespace SixComp.ParseTree
 
             return new KeyPathExpression(type, components);
         }
+
+        public override string ToString()
+        {
+            return $"\\.{Type}{Components}";
+        }
     }
 }

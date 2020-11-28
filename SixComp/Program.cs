@@ -19,10 +19,9 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            if (new Program().Checker())
-            {
-                new Program().Swift();
-            }
+            new BootCore();
+
+            //if (new Program().Checker()) { new Program().Swift(); }
 
 
             //SixRT.PlayCheck();
@@ -34,8 +33,23 @@ namespace SixComp
         {
             //EnumSwifts("swift-numerics");
             //EnumSwifts("swift/stdlib/public/core");
-            EnumSwifts("swift/stdlib/public");
+            //EnumSwifts("swift/stdlib/public");
+            //EnumSwifts("swift/stdlib");
             //EnumSwifts("swift-package-manager/Sources");
+            //EnumSwifts("others/RxSwift");
+            EnumSwifts("others/swift-algorithm-club");
+        }
+
+        private bool FilterOut(string name)
+        {
+            return name.EndsWith("Template.swift")
+                || name.Contains("/private/StdlibUnittestFoundationExtras/")
+                || name.Contains("/public/Concurrency/")
+                || name.Contains("/public/Darwin/")
+                || name.Contains("/VisualizedDijkstra.playground/")
+                || name.EndsWith("StdlibUnittest.swift")
+                || name.EndsWith("/private/SwiftPrivate/SwiftPrivate.swift")
+                ;
         }
 
         public Program()
@@ -45,8 +59,8 @@ namespace SixComp
             TempDir.Create();
             SwiftDir = new DirectoryInfo(Path.Combine(WorkSpace.FullName, "../Swift"));
 
-            //Console.WriteLine($"workspace: {WorkSpace.FullName}");
-            //Console.WriteLine($"temp     : {TempDir.FullName}");
+            Console.WriteLine($"workspace: {WorkSpace.FullName}");
+            Console.WriteLine($"temp     : {TempDir.FullName}");
         }
 
         private void Error(Source source, string error, int start, int length)
@@ -89,8 +103,9 @@ namespace SixComp
             var root = SwiftDir.FullName;
             var swiftRoot = Path.Combine(root, swift);
             var files = Directory.EnumerateFiles(swiftRoot, "*.swift", SearchOption.AllDirectories)
-                .Where(n => !n.EndsWith("Template.swift"))
                 .OrderBy(n => n.Substring(swiftRoot.Length))
+                .Select(n => n.Replace('\\', '/'))
+                .Where(n => !FilterOut(n))
                 .ToList();
             Console.WriteLine($"hunting in {swift} ({files.Count} to go)");
 

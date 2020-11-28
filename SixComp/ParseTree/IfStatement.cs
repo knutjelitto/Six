@@ -54,5 +54,11 @@ namespace SixComp.ParseTree
                 ElsePart.Write(writer);
             }
         }
+
+        public override string ToString()
+        {
+            var elsePart = ElsePart == null ? string.Empty : $" {ElsePart}";
+            return $"if {Conditions} {ThenPart}{elsePart}";
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SixComp.ParseTree
+﻿using SixComp.Support;
+
+namespace SixComp.ParseTree
 {
     public class KeyPathSelfPostfix : AnyKeyPathPostfix
     {
@@ -8,6 +10,11 @@
         {
             parser.Consume(ToKind.KwSelf);
             return new KeyPathSelfPostfix();
+        }
+
+        public override string ToString()
+        {
+            return $"{ToKind.KwSelf.GetRep()}";
         }
     }
 }

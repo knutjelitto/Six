@@ -15,5 +15,10 @@
 
             return new OptionalPattern(pattern);
         }
+
+        public override string ToString()
+        {
+            return $"{Pattern}?";
+        }
     }
 }
