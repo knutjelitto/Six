@@ -21,10 +21,6 @@ namespace SixComp.Sema
                     writer.Indent(() => reportable.Report(writer));
                 }
             }
-            else
-            {
-                Strings.NIL.Report(writer, label);
-            }
         }
 
         public static void ReportList<T>(this IReadOnlyList<T> items, IWriter writer, string label)

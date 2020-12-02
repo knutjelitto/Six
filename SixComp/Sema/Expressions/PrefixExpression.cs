@@ -16,9 +16,11 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine("prefix {Name}");
-            writer.Indent(() => Right.Report(writer));
-            
+            using (writer.Indent(Strings.Head.Prefix))
+            {
+                Name.Report(writer, Strings.Head.Operator);
+                Right.Report(writer, Strings.Head.Right);
+            }            
         }
     }
 }

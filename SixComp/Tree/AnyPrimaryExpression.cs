@@ -19,8 +19,6 @@ namespace SixComp.Tree
                     return StringLiteralExpression.Parse(parser);
                 case ToKind.Name:
                     return NameExpression.Parse(parser);
-                //case ToKind.KwSelf:
-                //    return AnySelfExpression.Parse(parser);
                 case ToKind.LParent:
                     return NestedOrTuple(parser);
                 case ToKind.LBracket:

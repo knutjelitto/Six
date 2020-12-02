@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SixComp.Tree
 {
-    public class DictionaryLiteral : ItemList<(AnyExpression, AnyExpression)>, AnyPrimaryExpression
+    public class DictionaryLiteral : ItemList<(AnyExpression key, AnyExpression value)>, AnyPrimaryExpression
     {
         public DictionaryLiteral(List<(AnyExpression, AnyExpression)> items)
             : base(items)

@@ -80,8 +80,13 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"init{GenericParameters}{Parameters}");
+            writer.WriteLine($"init{GenericParameters}{Parameters}{Requirements}");
             Block?.Write(writer);
+        }
+
+        public override string ToString()
+        {
+            return $"init{GenericParameters}{Parameters}{Requirements}{Block}";
         }
     }
 }

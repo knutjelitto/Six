@@ -1,5 +1,4 @@
-﻿using SixComp.Sema.Types;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace SixComp.Sema
 {
@@ -96,6 +95,11 @@ namespace SixComp.Sema
         private static IType Visit(IScoped outer, Tree.TypealiasAssignment type)
         {
             return Build(outer, type.Type);
+        }
+
+        private static IType Visit(IScoped outer, Tree.UnwrapType type)
+        {
+            return new UnwrapType(outer, type);
         }
 
         private static IType Visit(IScoped outer, Tree.ProtocolCompositionType type)

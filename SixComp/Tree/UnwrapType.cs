@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.Tree
+﻿namespace SixComp.Tree
 {
     public class UnwrapType : AnyType
     {

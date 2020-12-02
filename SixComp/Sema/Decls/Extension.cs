@@ -24,7 +24,7 @@ namespace SixComp.Sema
         {
             using (writer.Indent(Strings.Head.Extension))
             {
-                Extendee.Report(writer, Strings.Head.Extendee);
+                Extendee.Report(writer, Strings.Head.Extended);
                 Inheritance.Report(writer);
                 Where.Report(writer);
                 Declarations.Report(writer);

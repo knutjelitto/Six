@@ -17,14 +17,17 @@ namespace SixComp
 
         static void Main(string[] args)
         {
-            new BootCore(new Navi()).Boot();
+            var navi = new Navi();
+            new BootCore(navi, navi.SixCore).Boot();
 
             //if (new Program().Checker()) { new Program().Swift(); }
 
 
-            //SixRT.PlayCheck();
+//SixRT.PlayCheck();
+#if false
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
+#endif
         }
 
         private void Swift()

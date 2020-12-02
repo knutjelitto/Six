@@ -21,5 +21,14 @@ namespace SixComp.Sema
                 Arguments.Report(writer);
             }
         }
+
+        public override string ToString()
+        {
+            if (Arguments.Count == 0)
+            {
+                return Name.Text;
+            }
+            return base.ToString()!;
+        }
     }
 }

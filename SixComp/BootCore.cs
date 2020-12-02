@@ -9,29 +9,25 @@ namespace SixComp
 {
     public class BootCore
     {
-        public BootCore(Navi navi)
+        public BootCore(Navi navi, DirectoryInfo sources)
         {
             Navi = navi;
-
+            Sources = sources;
+            Temp = Navi.TempFor(Sources);
             Temp.Create();
         }
 
         public Navi Navi { get; }
-        public DirectoryInfo Core => Navi.SixCore;
-        public DirectoryInfo Temp => Navi.TempFor(Navi.SixCore);
+        public DirectoryInfo Sources { get; }
+        public DirectoryInfo Temp { get; }
 
         public void Boot()
         {
-            Console.WriteLine("Boot Core");
+            Console.WriteLine($"Boot {Sources.Name}");
 
             var compiler = new Compiler(Navi);
 
-            var names = new List<string>
-            {
-                "Policy.swift",
-            };
-
-            names = Navi.SixCore.GetFiles("*.swift").Select(f => f.Name).ToList();
+            var names = Sources.GetFiles("*.swift").Select(f => f.Name).ToList();
 
             var loaded = new List<(string name, Context context)>();
 
@@ -39,7 +35,7 @@ namespace SixComp
             foreach (var name in names)
             {
                 Console.Write(".");
-                var file = Navi.FileIn(Navi.SixCore, name);
+                var file = Navi.FileIn(Sources, name);
                 var context = new Context(file, Temp, File.ReadAllText(file.FullName));
                 loaded.Add((name, context));
             }

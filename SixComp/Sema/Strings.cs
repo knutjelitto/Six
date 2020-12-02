@@ -34,7 +34,6 @@
 
         public static readonly string Subscript = "subscript-expression";
         public static readonly string InOut = "inout-expression";
-        public static readonly string ExpressionList = "pre-infix-expressions";
         public static readonly string Postfix = "postfix-expression";
 
         public static readonly string Break = "BREAK-statement";
@@ -89,6 +88,7 @@
 
         public static class Head
         {
+            public static readonly string Argument = "argument:";
             public static readonly string Arguments = "arguments:";
             public static readonly string ArrayLit = "array-literal:";
             public static readonly string Assign = "assign:";
@@ -96,6 +96,7 @@
             public static readonly string Block = "code-block:";
             public static readonly string Blocks = "blocks:";
             public static readonly string Call = "call:";
+            public static readonly string Called = "called:";
             public static readonly string Case = "case:";
             public static readonly string Cases = "cases:";
             public static readonly string Closure = "closure:";
@@ -103,30 +104,43 @@
             public static readonly string Conformance = "conformance:";
             public static readonly string Declatations = "declarations:";
             public static readonly string Default = "default:";
-            public static readonly string Extendee = "extendee:";
+            public static readonly string DictionaryLit = "dictionary-literal:";
+            public static readonly string ExpressionList = "expression-list:";
+            public static readonly string Extended = "extended:";
             public static readonly string Extension = "extension:";
             public static readonly string Extern = "extern:";
             public static readonly string ForIn = "for-in:";
             public static readonly string Func = "func:";
             public static readonly string GenericArguments = "generics:";
             public static readonly string GenericParameters = "generics:";
+            public static readonly string Infix = "infix:";
             public static readonly string Inherits = "inherits:";
-            public static readonly string Initializer = "init:";
+            public static readonly string Init = "init:";
+            public static readonly string Initializer = "initialize:";
             public static readonly string InOut = "inout:";
             public static readonly string Intern = "intern:";
             public static readonly string Item = "item:";
             public static readonly string Items = "items:";
+            public static readonly string KeyValue = "kv:";
+            public static readonly string Key = "key:";
+            public static readonly string Kind = "kind:";
+            public static readonly string Label = "label:";
+            public static readonly string Left = "left:";
             public static readonly string Let = "let:";
             public static readonly string Name = "name:";
             public static readonly string Names = "names:";
+            public static readonly string Operator = "operator:";
             public static readonly string Optional = "optional:";
             public static readonly string Parameter = "parameter:";
             public static readonly string Parameters = "parameters:";
             public static readonly string Path = "path:";
             public static readonly string Pattern = "pattern:";
+            public static readonly string Prefix = "prefix:";
             public static readonly string Protocol = "protocol:";
             public static readonly string Result = "returns:";
+            public static readonly string Right = "right:";
             public static readonly string SameType = "same-type:";
+            public static readonly string Select = "select:";
             public static readonly string Statements = "statements:";
             public static readonly string Struct = "struct:";
             public static readonly string Subscript = "subscript:";
@@ -136,6 +150,8 @@
             public static readonly string TuplePattern = "tuple-pattern:";
             public static readonly string Type = "type:";
             public static readonly string Union = "union:";
+            public static readonly string Unwrap = "unwrap:";
+            public static readonly string Value = "value:";
             public static readonly string Values = "values:";
             public static readonly string Var = "var:";
             public static readonly string Variadic = "variadic:";

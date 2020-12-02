@@ -1,7 +1,8 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Sema.Stmts
+namespace SixComp.Sema
+
 {
     public class PropertyBlock : Base<Tree.PropertyBlock>
     {

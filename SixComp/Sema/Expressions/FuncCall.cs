@@ -18,7 +18,7 @@ namespace SixComp.Sema
         {
             using (writer.Indent(Strings.Head.Call))
             {
-                Left.Report(writer);
+                Left.Report(writer, Strings.Head.Called);
                 Arguments.Report(writer);
             }
         }

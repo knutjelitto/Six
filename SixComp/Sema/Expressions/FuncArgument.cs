@@ -18,11 +18,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Argument);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Argument))
             {
-                Label?.Report(writer);
-                Value.Report(writer);
+                Label?.Report(writer, Strings.Head.Label);
+                Value.Report(writer, Strings.Head.Value);
             }
         }
     }

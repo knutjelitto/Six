@@ -1,6 +1,4 @@
-﻿using SixComp.Sema.Expressions;
-
-namespace SixComp.Sema
+﻿namespace SixComp.Sema
 {
     public interface IExpression: IScoped, IReportable, IStatement
     {
@@ -27,7 +25,7 @@ namespace SixComp.Sema
         {
             if (tree.Binaries.Count > 0)
             {
-                var list = new ExpressionList(outer, tree);
+                var list = new Infix(outer, tree);
                 outer.Scope.Package.InfixesTodo.Enqueue(list);
                 return list;
             }
@@ -87,6 +85,11 @@ namespace SixComp.Sema
         private static IExpression Visit(IScoped outer, Tree.ArrayLiteral tree)
         {
             return new ArrayLiteral(outer, tree);
+        }
+
+        private static IExpression Visit(IScoped outer, Tree.DictionaryLiteral tree)
+        {
+            return new DictionaryLiteral(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.PostfixSelfExpression tree)

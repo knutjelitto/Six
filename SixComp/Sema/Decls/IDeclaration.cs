@@ -1,6 +1,4 @@
-﻿using SixComp.Sema.Decls;
-
-namespace SixComp.Sema
+﻿namespace SixComp.Sema
 {
     public interface IDeclaration : IScoped, IReportable, IStatement
     {
@@ -32,6 +30,11 @@ namespace SixComp.Sema
         private static IDeclaration Visit(IScoped outer, Tree.FunctionDeclaration tree)
         {
             return new Func(outer, tree);
+        }
+
+        private static IDeclaration Visit(IScoped outer, Tree.InitializerDeclaration tree)
+        {
+            return new Init(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.OperatorDeclaration tree)

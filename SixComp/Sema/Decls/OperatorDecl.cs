@@ -1,7 +1,7 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Sema.Decls
+namespace SixComp.Sema
 {
     public class OperatorDecl : Base<Tree.OperatorDeclaration>, IDeclaration
     {

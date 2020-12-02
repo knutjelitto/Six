@@ -1,5 +1,4 @@
-﻿using SixComp.Sema.Decls;
-using SixComp.Support;
+﻿using SixComp.Support;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +12,7 @@ namespace SixComp.Sema
 
             PrecedencesTodo = new Queue<PrecedenceGroup>();
             OperatorsTodo = new Queue<OperatorDecl>();
-            InfixesTodo = new Queue<ExpressionList>();
+            InfixesTodo = new Queue<Infix>();
 
             Precedences = new Dictionary<BaseName, PrecedenceGroup>();
         }
@@ -25,7 +24,7 @@ namespace SixComp.Sema
 
         public Queue<PrecedenceGroup> PrecedencesTodo { get; }
         public Queue<OperatorDecl> OperatorsTodo { get; }
-        public Queue<ExpressionList> InfixesTodo { get; }
+        public Queue<Infix> InfixesTodo { get; }
 
         public static SortedSet<string> MissingTreeImplementations = new SortedSet<string>();
 

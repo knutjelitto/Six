@@ -1,6 +1,6 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Sema.Decls
+namespace SixComp.Sema
 {
     public class BlockVar : Base<Tree.VarDeclaration>, IDeclaration, INamed
     {

@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class InoutType : Base<Tree.PrefixedType>, IType
+    public class UnwrapType : Base<Tree.UnwrapType>, IType
     {
-        public InoutType(IScoped outer, Tree.PrefixedType tree)
+        public UnwrapType(IScoped outer, Tree.UnwrapType tree)
             : base(outer, tree)
         {
             Type = IType.Build(outer, tree.Type);
@@ -14,7 +14,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            Type.Report(writer, Strings.Head.InOut);
+            Type.Report(writer, Strings.Head.Unwrap);
         }
 
         public override string ToString()

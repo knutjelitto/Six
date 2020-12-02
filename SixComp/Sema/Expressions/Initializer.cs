@@ -1,7 +1,7 @@
 ﻿using SixComp.Support;
 using SixComp.Tree;
 
-namespace SixComp.Sema.Expressions
+namespace SixComp.Sema
 {
     public class Initializer : Base<Tree.InitializerExpression>, IExpression
     {
