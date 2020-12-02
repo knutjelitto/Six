@@ -1,0 +1,44 @@
+﻿using SixComp.Support;
+
+namespace SixComp.Sema
+{
+    public sealed class BaseName: Base<Tree.BaseName>, INamed, IType, IExpression
+    {
+        public BaseName(IScoped outer, Tree.BaseName tree)
+            : base(outer, tree)
+        {
+            Text = Tree.ToString();
+        }
+        public BaseName Name => this;
+        public string Text { get; }
+
+        public static BaseName? Maybe(IScoped outer, Tree.BaseName? tree)
+        {
+            if (tree == null)
+            {
+                return null;
+            }
+            return new BaseName(outer, tree);
+        }
+
+        public override void Report(IWriter writer)
+        {
+            writer.WriteLine(Text);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is BaseName other && other.Text == Text;
+        }
+
+        public override int GetHashCode()
+        {
+            return Text.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Text;
+        }
+    }
+}

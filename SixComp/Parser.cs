@@ -1,4 +1,4 @@
-﻿using SixComp.ParseTree;
+﻿using SixComp.Tree;
 using SixComp.Support;
 using System;
 using System.Diagnostics;
@@ -32,9 +32,9 @@ namespace SixComp
             return new Disposable(() => Offset = offset);
         }
 
-        public Unit Parse()
+        public CompilationUnit Parse()
         {
-            return Unit.Parse(this);
+            return CompilationUnit.Parse(this);
         }
 
         public void SplitGreater()

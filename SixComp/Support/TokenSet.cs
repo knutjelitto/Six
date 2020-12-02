@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SixComp.Support
 {
-    public struct TokenSet
+    public class TokenSet
     {
         private readonly BitArray bits;
 
@@ -29,6 +29,11 @@ namespace SixComp.Support
         public bool Contains(ToKind kind)
         {
             return bits.Get((int)kind);
+        }
+
+        public void Add(ToKind kind)
+        {
+            bits.Set((int)kind, true);
         }
 
         private IEnumerable<ToKind> GetKinds()

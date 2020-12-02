@@ -9,5 +9,7 @@ namespace SixComp.Support
         void WriteLine();
 
         IDisposable Indent(Action? before = null, Action? after = null);
+        void Indent(Action action);
+        IDisposable Space();
     }
 }

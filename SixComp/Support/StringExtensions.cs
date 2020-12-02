@@ -23,5 +23,15 @@
         {
             return any?.ToString() ?? string.Empty;
         }
+
+        public static string SpEnd(this object? any)
+        {
+            return any == null ? string.Empty : $"{any} ";
+        }
+
+        public static string Iff(this bool iff, string then)
+        {
+            return iff ? $"{then} " : string.Empty;
+        }
     }
 }

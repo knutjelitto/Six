@@ -8,6 +8,7 @@ namespace SixComp.Support
         const string prefix = "    ";
         string currentPrefix = string.Empty;
         bool pending = false;
+        string lineend = Environment.NewLine;
 
         public IndentWriter(TextWriter writer)
         {
@@ -28,6 +29,26 @@ namespace SixComp.Support
             });
         }
 
+        public void Indent(Action action)
+        {
+            using (Indent())
+            {
+                action();
+            }
+        }
+
+        public IDisposable Space()
+        {
+            Prefix();
+            var oldLineend = lineend;
+            lineend = " ";
+            return new Disposable(() =>
+            {
+                lineend = oldLineend;
+                WriteLine();
+            });
+        }
+
         public void Write(string text)
         {
             Prefix();
@@ -37,13 +58,14 @@ namespace SixComp.Support
         public void WriteLine(string text)
         {
             Prefix();
-            Writer.WriteLine(text);
+            Writer.Write(text);
+            Writer.Write(lineend);
             pending = true;
         }
 
         public void WriteLine()
         {
-            Writer.WriteLine();
+            Writer.Write(lineend);
             pending = true;
         }
 
@@ -51,7 +73,10 @@ namespace SixComp.Support
         {
             if (pending)
             {
-                Writer.Write(currentPrefix);
+                if (lineend != " ")
+                {
+                    Writer.Write(currentPrefix);
+                }
                 pending = false;
             }
         }

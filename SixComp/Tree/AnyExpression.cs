@@ -1,0 +1,14 @@
+﻿using SixComp.Support;
+
+namespace SixComp.Tree
+{
+    public interface AnyExpression : IWritable
+    {
+        public static AnyExpression? TryParse(Parser parser)
+        {
+            return Expression.TryParse(parser);
+        }
+
+        AnyExpression? LastExpression { get; }
+    }
+}
