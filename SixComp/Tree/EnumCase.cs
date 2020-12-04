@@ -27,5 +27,10 @@ namespace SixComp.Tree
                 items.Write(writer);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{CaseItems}";
+        }
     }
 }

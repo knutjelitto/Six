@@ -10,13 +10,13 @@ namespace SixComp.Sema
             Pattern = IPattern.Build(Outer, tree.Pattern);
             Values = IExpression.Build(Outer, tree.Expression);
             Where = IExpression.MaybeBuild(Outer, tree.Where?.Expression);
-            Block = new Block(Outer, tree.Block);
+            Block = new CodeBlock(Outer, tree.Block);
         }
 
         public IPattern Pattern { get; }
         public IExpression Values { get; }
         public IExpression? Where { get; }
-        public Block Block { get; }
+        public CodeBlock Block { get; }
 
         public override void Report(IWriter writer)
         {

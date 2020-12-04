@@ -1,6 +1,6 @@
 ﻿namespace SixComp.Sema
 {
-    public interface IWhere
+    public interface IWhere : IScoped
     {
         GenericRestrictions Where { get; }
     }

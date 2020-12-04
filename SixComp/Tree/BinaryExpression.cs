@@ -43,16 +43,15 @@ namespace SixComp.Tree
                 }
                 else if (op.Kind == ToKind.Assign)
                 {
-                    var right = Expression.TryParse(parser, false);
+                    var right = Expression.TryParse(parser, withBinaries: false);
                     if (right != null)
                     {
-                        return new BinaryExpression(Operator.From(op), right);
+                        return new BinaryExpression(Operator.Assignment(op), right);
                     }
                 }
                 else
                 {
                     var right = Expression.TryParse(parser, withBinaries: false);
-
                     if (right != null)
                     {
                         return new BinaryExpression(Operator.From(op), right);

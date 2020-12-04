@@ -7,6 +7,11 @@
             return Visit(outer, (dynamic)tree);
         }
 
+        private static IDeclaration Visit(IScoped outer, Tree.ImportDeclaration tree)
+        {
+            return new ImportDeclaration(outer, tree);
+        }
+
         private static IDeclaration Visit(IScoped outer, Tree.ClassDeclaration tree)
         {
             return new Class(outer, tree);
@@ -14,12 +19,17 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.StructDeclaration tree)
         {
-            return new Struct(outer, tree);
+            return new StructDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.ProtocolDeclaration tree)
         {
-            return new Protocol(outer, tree);
+            return new ProtocolDeclaration(outer, tree);
+        }
+
+        private static IDeclaration Visit(IScoped outer, Tree.EnumDeclaration tree)
+        {
+            return new EnumDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.ExtensionDeclaration tree)
@@ -29,25 +39,30 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.FunctionDeclaration tree)
         {
-            return new Func(outer, tree);
+            return new FuncDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.InitializerDeclaration tree)
         {
-            return new Init(outer, tree);
+            return new InitDeclaration(outer, tree);
+        }
+
+        private static IDeclaration Visit(IScoped outer, Tree.DeinitializerDeclaration tree)
+        {
+            return new DeinitDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.OperatorDeclaration tree)
         {
-            var op = new OperatorDecl(outer, tree);
-            outer.Scope.Package.OperatorsTodo.Enqueue(op);
+            var op = new OperatorDeclaration(outer, tree);
+            outer.Scope.Package.Global.OperatorsTodo.Add(op);
             return op;
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.PrecGroupDeclaration tree)
         {
-            var group = new PrecedenceGroup(outer, tree);
-            outer.Scope.Package.PrecedencesTodo.Enqueue(group);
+            var group = new PrecedenceGroupDeclaration(outer, tree);
+            outer.Scope.Package.Global.PrecedencesTodo.Add(group);
             return group;
         }
 
@@ -73,7 +88,7 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.SubscriptDeclaration tree)
         {
-            return new SubscriptDecl(outer, tree);
+            return new SubscriptDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.VarDeclaration tree)

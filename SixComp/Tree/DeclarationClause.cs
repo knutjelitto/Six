@@ -29,5 +29,10 @@ namespace SixComp.Tree
                 Declarations.Write(writer);
             }
         }
+
+        public override string ToString()
+        {
+            return $" {{ {Declarations} }}";
+        }
     }
 }

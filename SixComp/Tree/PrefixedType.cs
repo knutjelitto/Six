@@ -15,7 +15,7 @@
 
         public static PrefixedType Parse(Parser parser)
         {
-            var prefix = Prefix.PreParse(parser, onlyAttributes: true);
+            var prefix = Prefix.Parse(parser, onlyAttributes: true);
             var inout = parser.Match(ToKind.KwInout);
             var type = AnyType.Parse(parser);
 

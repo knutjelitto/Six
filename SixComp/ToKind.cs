@@ -89,6 +89,7 @@ namespace SixComp
         [Rep("continue", ToClass.Keyword)] KwContinue,
         [Rep("convenience", ToClass.Keyword)] KwConvenience,
         [Rep("default", ToClass.Keyword)] KwDefault,
+        [Rep("defer", ToClass.Keyword)] KwDefer,
         [Rep("deinit", ToClass.Keyword)] KwDeinit,
         [Rep("didSet", ToClass.Keyword)] KwDidSet,
         [Rep("dynamic", ToClass.Keyword)] KwDynamic,

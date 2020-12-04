@@ -41,7 +41,8 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Name}{GenericParameters}{Parameters}{Requirements}{Result}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Name}{GenericParameters}{Parameters}{Requirements}{Result}");
             Block?.Write(writer);
         }
 

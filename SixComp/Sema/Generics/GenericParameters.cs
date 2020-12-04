@@ -6,25 +6,19 @@ namespace SixComp.Sema
 {
     public class GenericParameters : Items<GenericParameter>
     {
-        public GenericParameters(IOwner owner, Tree.GenericParameterClause parameters)
-            : base(owner, Enum(owner, parameters))
+        public GenericParameters(IWhere where, Tree.GenericParameterClause parameters)
+            : base(where, Enum(where, parameters))
         {
-            Owner = owner;
         }
 
-        public IOwner Owner { get; }
-
-        private static IEnumerable<GenericParameter> Enum(IOwner owner, Tree.GenericParameterClause tree)
+        private static IEnumerable<GenericParameter> Enum(IWhere where, Tree.GenericParameterClause tree)
         {
-            return tree.Parameters.Select(p => new GenericParameter(owner, p));
+            return tree.Parameters.Select(p => new GenericParameter(where, p));
         }
 
         public override void Report(IWriter writer)
         {
-            if (Count > 0)
-            {
-                this.ReportList(writer, Strings.Head.GenericParameters);
-            }
+            this.ReportList(writer, Strings.Head.GenericParameters);
         }
     }
 }

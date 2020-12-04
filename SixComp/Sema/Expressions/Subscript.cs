@@ -17,10 +17,9 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Subscript);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Subscript))
             {
-                Left.Report(writer);
+                Left.Report(writer, Strings.Head.Left);
                 Arguments.Report(writer);
             }
         }

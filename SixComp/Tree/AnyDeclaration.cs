@@ -22,7 +22,7 @@ namespace SixComp.Tree
         {
             var offset = parser.Offset;
 
-            var prefix = Prefix.PreParse(parser);
+            var prefix = Prefix.Parse(parser);
 
             switch (prefix.Last)
             {

@@ -6,27 +6,27 @@ namespace SixComp.Sema
 {
     public class Package : IScoped
     {
-        public Package(IReadOnlyList<Unit> units)
+        private readonly List<Unit> units = new List<Unit>();
+
+        public Package()
         {
-            Units = units;
 
-            PrecedencesTodo = new Queue<PrecedenceGroup>();
-            OperatorsTodo = new Queue<OperatorDecl>();
-            InfixesTodo = new Queue<Infix>();
-
-            Precedences = new Dictionary<BaseName, PrecedenceGroup>();
+            Global = new Global();
         }
 
-        public IReadOnlyList<Unit> Units { get; }
+        public IReadOnlyList<Unit> Units => this.units;
         public IScope Scope => new Scope(this, this);
 
-        public Dictionary<BaseName, PrecedenceGroup> Precedences { get; }
+        public Global Global { get; }
 
-        public Queue<PrecedenceGroup> PrecedencesTodo { get; }
-        public Queue<OperatorDecl> OperatorsTodo { get; }
-        public Queue<Infix> InfixesTodo { get; }
+        public Dictionary<BaseName, PrecedenceGroupDeclaration> Precedences => Global.Precedences;
 
         public static SortedSet<string> MissingTreeImplementations = new SortedSet<string>();
+
+        public void Add(Unit unit)
+        {
+            units.Add(unit);
+        }
 
         public void Analyze(IWriter writer)
         {
@@ -38,21 +38,22 @@ namespace SixComp.Sema
             }
             Console.WriteLine();
 
+
+            Global.CreatePrecedences(this);
+            Global.CreateOperators();
+            Global.CreateInfixes();
+
             Console.Write("REPORT      ");
             foreach (var unit in Units)
             {
                 Console.Write($".");
-                writer.WriteLine($"{unit.Short}:");
-                using (writer.Indent())
-                {
-                    unit.Report(writer);
-                }
+                unit.Report(writer);
             }
             Console.WriteLine();
 
-            writer.WriteLine($"infixes-todo: #{InfixesTodo.Count}");
-            writer.WriteLine($"precedence-groups-todo: #{PrecedencesTodo.Count}");
-            writer.WriteLine($"operators-todo: #{OperatorsTodo.Count}");
+            writer.WriteLine($"infixes-todo: #{Global.InfixesTodo.Count}");
+            writer.WriteLine($"precedence-groups-todo: #{Global.PrecedencesTodo.Count}");
+            writer.WriteLine($"operators-todo: #{Global.OperatorsTodo.Count}");
             writer.WriteLine();
 
             writer.WriteLine($"{Strings.Missing}s");

@@ -11,6 +11,8 @@
         public ArgumentClause Arguments { get; }
         public TrailingClosureList Closures { get; }
 
+        public bool IsDrained => Arguments.Arguments.Count == 0 && Closures.Count == 0;
+
         public static FunctionCallExpression Parse(Parser parser, AnyExpression left)
         {
             var op = parser.CurrentToken;

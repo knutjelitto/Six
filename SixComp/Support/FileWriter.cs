@@ -5,13 +5,16 @@ namespace SixComp.Support
 {
     public class FileWriter : IndentWriter, IDisposable
     {
-        public FileWriter(string filename) : base(new StreamWriter(filename))
+        public FileWriter(string filename)
+            : base(new BaseTextWriter(new StreamWriter(filename)))
         {
         }
 
         public void Dispose()
         {
-            var stream = (StreamWriter)Writer;
+            var @base = (BaseTextWriter)Writer;
+
+            var stream = (StreamWriter)@base.Writer;
             stream.Flush();
             stream.Close();
         }

@@ -2,12 +2,12 @@
 
 namespace SixComp.Sema
 {
-    public class Class : Base<Tree.ClassDeclaration>, IDeclaration, IOwner
+    public class Class : Base<Tree.ClassDeclaration>, IDeclaration, IWhere, INamed
     {
         public Class(IScoped outer, Tree.ClassDeclaration tree)
             : base(outer, tree)
         {
-            Name = Tree.Name.ToString();
+            Name = new BaseName(Outer, Tree.Name);
             Where = new GenericRestrictions(this);
             GenericParameters = new GenericParameters(this, Tree.Generics);
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
@@ -16,7 +16,7 @@ namespace SixComp.Sema
         }
 
         public Tree.Prefix Prefix => Tree.Prefix;
-        public string Name { get; }
+        public BaseName Name { get; }
 
         public GenericParameters GenericParameters { get; }
         public Inheritance Inheritance { get; }
@@ -25,11 +25,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine($";; {Tree}");
-            writer.WriteLine($"{Strings.Class}");
-            using (writer.Indent())
+            Tree.Tree(writer);
+            using (writer.Indent(Strings.Head.Class))
             {
-                writer.WriteLine($"name: {Name}");
+                Name.Report(writer, Strings.Head.Name);
                 GenericParameters.Report(writer);
                 Inheritance.Report(writer);
                 Where.Report(writer);

@@ -1,16 +1,10 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 
 namespace SixComp.Tree
 {
     public class InitializerDeclaration : AnyDeclaration
     {
-        public enum InitKind
-        {
-            Init,
-            InitChain,
-            InitForce,
-        }
-
         public InitializerDeclaration(Prefix prefix, InitKind kind, GenericParameterClause genericParameters, ParameterClause parameters, RequirementClause requirements, CodeBlock? block)
         {
             Prefix = prefix;

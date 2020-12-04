@@ -1,15 +1,20 @@
 ﻿using SixComp.Support;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixComp.Sema
 {
     public static class ReportExtensions
     {
-        public static void Report(this IReportable? reportable, IWriter writer, string label)
+        public static void Report(this IReportable? reportable, IWriter writer, string label, bool maybeEmpty = false)
         {
             if (reportable != null)
             {
+                if (label == Strings.Head.TupleType)
+                {
+                    Debug.Assert(true);
+                }
                 var check = reportable.ToString()!;
                 if (!check.StartsWith("SixComp."))
                 {
@@ -20,6 +25,10 @@ namespace SixComp.Sema
                     writer.WriteLine(label);
                     writer.Indent(() => reportable.Report(writer));
                 }
+            }
+            else if (maybeEmpty)
+            {
+                string.Empty.Report(writer, label);
             }
         }
 
@@ -47,7 +56,19 @@ namespace SixComp.Sema
 
         public static void Tree(this object any, IWriter writer)
         {
-            writer.WriteLine($";; {any}");
+            if (any is IWritable writable)
+            {
+                var lines = new LinesWriter(";; ");
+                writable.Write(lines);
+                foreach (var line in lines)
+                {
+                    writer.WriteLine(line);
+                }
+            }
+            else
+            {
+                writer.WriteLine($";; {any}");
+            }
         }
 
         public static void Report(this string reportable, IWriter writer, string label)
@@ -61,10 +82,18 @@ namespace SixComp.Sema
             value.Report(writer, label);
         }
 
-        public static void Report(this BaseName reportable, IWriter writer, string label)
+        public static void Report(this BaseName? reportable, IWriter writer, string label, bool maybeEmpty = false)
         {
-            var value = reportable.Text;
-            value.Report(writer, label);
+            if (reportable != null)
+            {
+                var value = reportable.Text;
+                value.Report(writer, label);
+            }
+            else if (maybeEmpty)
+            {
+                string.Empty.Report(writer, label);
+            }
+
         }
 
         public static void Report(this Enum reportable, IWriter writer, string label)

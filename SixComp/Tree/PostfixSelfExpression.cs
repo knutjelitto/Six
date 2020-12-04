@@ -2,12 +2,13 @@
 {
     public class PostfixSelfExpression : PostfixExpression
     {
-        private PostfixSelfExpression(AnyExpression left, Token op, Token self) : base(left, op)
+        private PostfixSelfExpression(AnyExpression left, Token op, Token self)
+            : base(left, op)
         {
-            Self = self;
+            Self = BaseName.From(self);
         }
 
-        public Token Self { get; }
+        public BaseName Self { get; }
 
         public static PostfixSelfExpression Parse(Parser parser, AnyExpression left)
         {

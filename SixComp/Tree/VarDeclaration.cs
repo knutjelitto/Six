@@ -1,4 +1,6 @@
-﻿namespace SixComp.Tree
+﻿using SixComp.Support;
+
+namespace SixComp.Tree
 {
     public class VarDeclaration : AnyVarDeclaration
     {
@@ -14,6 +16,12 @@
         public BaseName Name { get; }
         public TypeAnnotation? Type { get; }
         public PropertyBlocks Blocks { get; }
+
+        public void Write(IWriter writer)
+        {
+            Prefix.Write(writer);
+            writer.WriteLine($"{Name}{Type}{Blocks}");
+        }
 
         public override string ToString()
         {

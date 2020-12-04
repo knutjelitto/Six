@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 
 namespace SixComp.Tree
 {
@@ -45,19 +46,19 @@ namespace SixComp.Tree
                 switch (parser.Current)
                 {
                     case ToKind.KwGet when !blocks.Have(parser.Current):
-                        blocks.Add(PropertyBlock.Parse(parser, prefix, PropertyBlock.BlockKind.Get));
+                        blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.Get));
                         break;
                     case ToKind.KwSet when !blocks.Have(parser.Current):
-                        blocks.Add(PropertyBlock.Parse(parser, prefix, PropertyBlock.BlockKind.Set));
+                        blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.Set));
                         break;
                     case ToKind.Name when AnyVarDeclaration.Specials.Contains(parser.CurrentToken.Text):
-                        blocks.Add(PropertyBlock.Parse(parser, prefix, PropertyBlock.BlockKind.Special));
+                        blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.Special));
                         break;
                     default:
                         if (blocks.Count == 0)
                         {
                             parser.Offset = braceOffset;  // fallback to simple getter block
-                            blocks.Add(PropertyBlock.Parse(parser, prefix, PropertyBlock.BlockKind.GetDefault));
+                            blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.GetDefault));
                             needBrace = false;
                         }
                         done = true;
@@ -75,7 +76,8 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Generics}{Parameters}{Result}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Generics}{Parameters}{Result}");
             writer.WriteLine("//TODO");
         }
     }

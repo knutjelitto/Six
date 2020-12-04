@@ -2,17 +2,17 @@
 
 namespace SixComp.Sema
 {
-    public sealed class BaseName: Base<Tree.BaseName>, INamed, IType, IExpression
+    public sealed class BaseName: Base<object>, INamed, IType, IExpression
     {
-        public BaseName(IScoped outer, Tree.BaseName tree)
+        public BaseName(IScoped outer, object tree)
             : base(outer, tree)
         {
-            Text = Tree.ToString();
+            Text = Tree.ToString()!;
         }
         public BaseName Name => this;
         public string Text { get; }
 
-        public static BaseName? Maybe(IScoped outer, Tree.BaseName? tree)
+        public static BaseName? Maybe(IScoped outer, object? tree)
         {
             if (tree == null)
             {

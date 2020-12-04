@@ -4,6 +4,6 @@ namespace SixComp.Support
 {
     public class ConsoleWriter : IndentWriter
     {
-        public ConsoleWriter() : base(Console.Out) { }
+        public ConsoleWriter() : base(new BaseTextWriter(Console.Out)) { }
     }
 }

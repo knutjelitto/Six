@@ -25,8 +25,8 @@
         {
             if (tree.Binaries.Count > 0)
             {
-                var list = new Infix(outer, tree);
-                outer.Scope.Package.InfixesTodo.Enqueue(list);
+                var list = new InfixList(outer, tree);
+                outer.Scope.Package.Global.InfixesTodo.Add(list);
                 return list;
             }
             return Build(outer, tree.Left);
@@ -34,12 +34,16 @@
 
         private static IExpression Visit(IScoped outer, Tree.FunctionCallExpression tree)
         {
+            if (tree.IsDrained)
+            {
+                return Build(outer, tree.Left);
+            }
             return new FuncCall(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.OperatorExpression tree)
         {
-            return new Operator(outer, tree);
+            return new OperatorName(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.InitializerExpression tree)
@@ -107,9 +111,19 @@
             return new Subscript(outer, tree);
         }
 
+        private static IExpression Visit(IScoped outer, Tree.TypeExpression tree)
+        {
+            return new TypeExpression(outer, tree);
+        }
+
+        private static IExpression Visit(IScoped outer, Tree.ImplicitMemberExpression tree)
+        {
+            return new ImplicitSelector(outer, tree);
+        }
+
         private static IExpression Visit(IScoped outer, Tree.ExplicitMemberExpression.NamedMemberSelector tree)
         {
-            return new NamedSelector(outer, tree);
+            return new ExplicitSelector(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.ExplicitMemberExpression.TupleMemberSelector tree)

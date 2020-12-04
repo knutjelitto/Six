@@ -1,21 +1,19 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 using System;
 
 namespace SixComp.Tree
 {
     public abstract class Operator : SyntaxNode
     {
-        public enum CastKind
-        {
-            Is,
-            As,
-            AsForce,
-            AsChain,
-        }
-
         public static Operator From(Token op)
         {
-            return new TokenOperator(op);
+            return new NamedOperator(op);
+        }
+
+        public static Operator Assignment(Token op)
+        {
+            return new AssignmentOperator(op);
         }
 
         public static Operator From(AnyExpression middle)
@@ -62,23 +60,42 @@ namespace SixComp.Tree
             {
                 return Kind switch
                 {
-                    CastKind.Is => " is ",
-                    CastKind.As => " as ",
-                    CastKind.AsForce => " as! ",
-                    CastKind.AsChain => " as? ",
+                    CastKind.Is => "is",
+                    CastKind.As => "as",
+                    CastKind.AsForce => "as!",
+                    CastKind.AsChain => "as?",
                     _ => throw new InvalidOperationException(),
                 };
             }
         }
 
-        public class TokenOperator : Operator
+        public class AssignmentOperator : Operator
         {
-            public TokenOperator(Token @operator)
+            public AssignmentOperator(Token @operator)
             {
                 Operator = @operator;
+                Name = BaseName.From(Operator);
             }
 
             public Token Operator { get; }
+            public BaseName Name { get; }
+
+            public override string ToString()
+            {
+                return $"{Operator}";
+            }
+        }
+
+        public class NamedOperator : Operator
+        {
+            public NamedOperator(Token @operator)
+            {
+                Operator = @operator;
+                Name = BaseName.From(Operator);
+            }
+
+            public Token Operator { get; }
+            public BaseName Name { get; }
 
             public override string ToString()
             {

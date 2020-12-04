@@ -1,29 +1,22 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 
 namespace SixComp.Tree
 {
-    public enum CaptureSpectifierKind
-    {
-        Weak,
-        Unowned,
-        UnownedSafe,
-        UnownedUnsafe,
-    }
-
     public class CaptureSpecifier
     {
-        private CaptureSpecifier(CaptureSpectifierKind kind)
+        private CaptureSpecifier(CaptureKind kind)
         {
             Kind = kind;
         }
 
-        public CaptureSpectifierKind Kind { get; }
+        public CaptureKind Kind { get; }
 
         public static CaptureSpecifier? Parse(Parser parser)
         {
                 if (parser.Match(ToKind.KwWeak))
                 {
-                    return new CaptureSpecifier(CaptureSpectifierKind.Weak);
+                    return new CaptureSpecifier(CaptureKind.Weak);
                 }
                 if (parser.Match(ToKind.KwUnowned))
                 {
@@ -32,16 +25,16 @@ namespace SixComp.Tree
                         if (parser.Match(ToKind.KwSafe))
                         {
                             parser.Consume(ToKind.RParent);
-                            return new CaptureSpecifier(CaptureSpectifierKind.UnownedSafe);
+                            return new CaptureSpecifier(CaptureKind.UnownedSafe);
                         }
                         else if (parser.Match(ToKind.KwUnsafe))
                         {
                             parser.Consume(ToKind.RParent);
-                            return new CaptureSpecifier(CaptureSpectifierKind.UnownedUnsafe);
+                            return new CaptureSpecifier(CaptureKind.UnownedUnsafe);
                         }
                         parser.Consume(new TokenSet(ToKind.KwSafe, ToKind.KwUnsafe));
                     }
-                    return new CaptureSpecifier(CaptureSpectifierKind.Unowned);
+                    return new CaptureSpecifier(CaptureKind.Unowned);
                 }
 
                 return null;

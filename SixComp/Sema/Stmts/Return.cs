@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class Return : Statement<Tree.ReturnStatement>
+    public class Return : Base<Tree.ReturnStatement>, IStatement
     {
         public Return(IScoped outer, Tree.ReturnStatement tree)
             : base(outer, tree)
@@ -14,8 +14,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine("return");
-            writer.Indent(() => Value?.Report(writer));
+            Value.Report(writer, Strings.Head.Return, true);
         }
     }
 }

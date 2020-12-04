@@ -19,11 +19,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.DictionaryType);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.DictionaryType))
             {
-                Key.Report(writer);
-                Value.Report(writer);
+                Key.Report(writer, Strings.Head.Key);
+                Value.Report(writer, Strings.Head.Value);
             }
         }
     }

@@ -2,25 +2,27 @@
 {
     public class ImplicitMemberExpression : BaseExpression, AnyPrimaryExpression
     {
-        public ImplicitMemberExpression(BaseName name)
+        public ImplicitMemberExpression(Token op, BaseName name)
         {
             Name = name;
+            Operator = BaseName.From(op);
         }
 
         public BaseName Name { get; }
+        public BaseName Operator { get; }
 
         public static ImplicitMemberExpression Parse(Parser parser)
         {
-            parser.Consume(ToKind.Dot);
+            var op = parser.Consume(ToKind.Dot);
 
             var name = BaseName.Parse(parser);
 
-            return new ImplicitMemberExpression(name);
+            return new ImplicitMemberExpression(op, name);
         }
 
         public override string ToString()
         {
-            return $".{Name}";
+            return $"{Operator}{Name}";
         }
     }
 }

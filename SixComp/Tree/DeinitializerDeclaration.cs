@@ -27,5 +27,10 @@ namespace SixComp.Tree
             writer.WriteLine($"deinit");
             Block.Write(writer);
         }
+
+        public override string ToString()
+        {
+            return $"deinit{Block}";
+        }
     }
 }

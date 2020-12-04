@@ -18,12 +18,11 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.PatternInitializer);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Pattern))
             {
                 Pattern.Report(writer);
-                Type?.Report(writer, Strings.Head.Type);
-                Initializer?.Report(writer, Strings.Head.Initializer);
+                Type.Report(writer, Strings.Head.Type);
+                Initializer.Report(writer, Strings.Head.Initializer);
             }
         }
     }

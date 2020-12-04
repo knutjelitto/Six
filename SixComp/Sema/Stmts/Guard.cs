@@ -8,16 +8,15 @@ namespace SixComp.Sema
             : base(outer, tree)
         {
             Conditions = new Conditions(Outer, Tree.Conditions);
-            Block = new Block(Outer, Tree.Block);
+            Block = new CodeBlock(Outer, Tree.Block);
         }
 
         public Conditions Conditions { get; }
-        public Block Block { get; }
+        public CodeBlock Block { get; }
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Guard);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Guard))
             {
                 Conditions.Report(writer);
                 Block.Report(writer);

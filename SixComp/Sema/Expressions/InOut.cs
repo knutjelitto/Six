@@ -14,8 +14,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.InOut);
-            writer.Indent(() => Expression.Report(writer));
+            Expression.Report(writer, Strings.Head.InOut);
         }
     }
 }

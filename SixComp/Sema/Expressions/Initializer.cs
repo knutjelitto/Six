@@ -1,5 +1,6 @@
 ﻿using SixComp.Support;
 using SixComp.Tree;
+using System.Linq;
 
 namespace SixComp.Sema
 {
@@ -8,7 +9,7 @@ namespace SixComp.Sema
         public Initializer(IScoped outer, InitializerExpression tree) : base(outer, tree)
         {
             Left = IExpression.Build(outer, tree.Left);
-            ArgumentNames = new BaseNames(outer, tree.Names);
+            ArgumentNames = new BaseNames(outer, tree.Names.Names.Select(n => n.Name));
         }
 
         public IExpression Left { get; }
@@ -16,9 +17,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            using (writer.Indent(Strings.InitializerExpression))
+            Tree.Tree(writer);
+            using (writer.Indent(Strings.Head.Initializer))
             {
-                Left.Report(writer);
+                Left.Report(writer, Strings.Head.Left);
                 ArgumentNames.Report(writer);
             }
         }

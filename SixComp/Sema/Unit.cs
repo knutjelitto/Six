@@ -3,17 +3,16 @@ using System.Collections.Generic;
 
 namespace SixComp.Sema
 {
-    public class Unit : IReportable
+    public class Unit : Base<Tree.CompilationUnit>
     {
-        public Unit(Context context, Tree.CompilationUnit tree)
+        public Unit(Context context, IScoped outer, Tree.CompilationUnit tree)
+            : base(outer, tree)
         {
             Context = context;
-            Tree = tree;
             Statements = new List<IStatement>();
         }
 
         public Context Context { get; }
-        public Tree.CompilationUnit Tree { get; }
         public List<IStatement> Statements { get; }
 
         public void BuildTree(Package package)
@@ -25,12 +24,15 @@ namespace SixComp.Sema
             }
         }
 
-        public void Report(IWriter writer)
+        public override void Report(IWriter writer)
         {
-            foreach (var statement in Statements)
+            using (writer.Indent($"unit {Short}:"))
             {
-                statement.Report(writer);
-                writer.WriteLine();
+                foreach (var statement in Statements)
+                {
+                    statement.Report(writer);
+                    writer.WriteLine();
+                }
             }
         }
 

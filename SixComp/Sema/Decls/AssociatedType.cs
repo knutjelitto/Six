@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class AssociatedType : Base<Tree.AssociatedTypeDeclaration>, IDeclaration, IOwner
+    public class AssociatedType : Base<Tree.AssociatedTypeDeclaration>, IDeclaration, IWhere
     {
         public AssociatedType(IScoped outer, Tree.AssociatedTypeDeclaration tree)
             : base(outer, tree)
@@ -21,8 +21,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Typealias);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.AssociatedType))
             {
                 Name.Report(writer, Strings.Head.Name);
                 Inheritance.Report(writer);

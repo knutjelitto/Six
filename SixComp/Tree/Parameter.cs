@@ -21,7 +21,7 @@
 
         public static Parameter Parse(Parser parser)
         {
-            var prefix = Prefix.PreParse(parser, onlyAttributes: true);
+            var prefix = Prefix.Parse(parser, onlyAttributes: true);
             BaseName? @extern = null;
             if (parser.NextNext == ToKind.Colon)
             {

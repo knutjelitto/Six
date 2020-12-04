@@ -11,3 +11,6 @@ dotnet_diagnostic.IDE0051.severity = warning
 
 # IDE0005: Using directive is unnecessary.
 dotnet_diagnostic.IDE0005.severity = warning
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = silent

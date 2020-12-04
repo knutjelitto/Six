@@ -6,10 +6,11 @@ namespace SixComp.Tree
     {
         public ImportPathIdentifier(Token token)
         {
-            Token = token;
+            Name = BaseName.From(token);
         }
 
-        public Token Token { get; }
+        public BaseName Name { get; }
+        public Token Token => Name.Token;
 
         public static ImportPathIdentifier Parse(Parser parser)
         {
@@ -22,7 +23,7 @@ namespace SixComp.Tree
 
         public override string ToString()
         {
-            return $"{Token}";
+            return $"{Name}";
         }
     }
 }

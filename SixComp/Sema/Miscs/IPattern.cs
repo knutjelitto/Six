@@ -95,8 +95,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.IdentifierPattern);
-                writer.Indent(() => Name.Report(writer));
+                Name.Report(writer, Strings.Head.Identifier);
             }
         }
 
@@ -112,7 +111,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                Pattern.Report(writer, Strings.LetPattern);
+                Pattern.Report(writer, Strings.Head.Let);
             }
         }
 
@@ -128,7 +127,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                Pattern.Report(writer, Strings.VarPattern);
+                Pattern.Report(writer, Strings.Head.Var);
             }
         }
 
@@ -146,10 +145,10 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                using (writer.Indent(Strings.AsPattern))
+                using (writer.Indent(Strings.Head.As))
                 {
                     Pattern.Report(writer);
-                    Type.Report(writer);
+                    Type.Report(writer, Strings.Head.Type);
                 }
             }
         }
@@ -170,8 +169,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.CasePattern);
-                using (writer.Indent())
+                using (writer.Indent(Strings.Head.Case))
                 {
                     EnumName?.Report(writer);
                     CaseName.Report(writer);
@@ -191,11 +189,7 @@ namespace SixComp.Sema
             public IExpression Expression { get; }
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.ExpressionPattern);
-                using (writer.Indent())
-                {
-                    Expression.Report(writer);
-                }
+                Expression.Report(writer, Strings.Head.Expression);
             }
         }
 
@@ -210,11 +204,7 @@ namespace SixComp.Sema
             public IPattern Pattern { get; }
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.OptionalPattern);
-                using (writer.Indent())
-                {
-                    Pattern.Report(writer);
-                }
+                Pattern.Report(writer, Strings.Head.Optional);
             }
         }
     }

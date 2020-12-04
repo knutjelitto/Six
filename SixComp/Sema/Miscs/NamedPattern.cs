@@ -16,13 +16,9 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.NamedPattern);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Named))
             {
-                if (Name != null)
-                {
-                    Name.Report(writer);
-                }
+                Name.Report(writer, Strings.Head.Name);
                 Pattern.Report(writer);
             }
         }

@@ -29,7 +29,8 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Initializers}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Initializers}");
         }
 
         public override string ToString()

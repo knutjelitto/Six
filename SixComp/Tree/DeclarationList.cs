@@ -23,5 +23,10 @@ namespace SixComp.Tree
 
             return new DeclarationList(declarations);
         }
+
+        public override string ToString()
+        {
+            return string.Join(" ", this);
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace SixComp
         public DirectoryInfo Sources { get; }
         public DirectoryInfo Temp { get; }
 
-        public void Boot()
+        public void Compile()
         {
             Console.WriteLine($"Boot {Sources.Name}");
 
@@ -41,7 +41,7 @@ namespace SixComp
             }
             Console.WriteLine();
 
-            var units = new List<Unit>();
+            var package = new Package();
 
             Console.Write("PARSE       ");
             foreach (var (name, context) in loaded)
@@ -55,11 +55,9 @@ namespace SixComp
                     return;
                 }
 
-                units.Add(new Unit(context, unit));
+                package.Add(new Unit(context, package, unit));
             }
             Console.WriteLine();
-
-            var package = new Package(units);
 
             var filename = Path.Combine(Temp.FullName, "_Analyze.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(filename));

@@ -15,8 +15,11 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine($"{Strings.Postfix} `{Operator}`");
-            writer.Indent(() => Left.Report(writer));
+            using (writer.Indent(Strings.Head.Postfix))
+            {
+                Left.Report(writer, Strings.Head.Left);
+                Operator.Report(writer, Strings.Head.Operator);
+            }
         }
     }
 }

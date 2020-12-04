@@ -2,7 +2,8 @@
 {
     public class ExplicitMemberExpression : PostfixExpression
     {
-        public ExplicitMemberExpression(AnyExpression left, Token op) : base(left, op)
+        public ExplicitMemberExpression(AnyExpression left, Token op)
+            : base(left, op)
         {
         }
 

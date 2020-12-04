@@ -1,20 +1,11 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 using System.Diagnostics;
 
 namespace SixComp.Tree
 {
     public sealed class PropertyBlock : IWritable
     {
-        public enum BlockKind
-        {
-            Get,
-            GetDefault,
-            Set,
-            WillSet,
-            DidSet,
-            Special,
-        }
-        
         private PropertyBlock(Prefix prefix, BlockKind kind, Token keyword, SetterName? setterName, CodeBlock? block)
         {
             Prefix = prefix;

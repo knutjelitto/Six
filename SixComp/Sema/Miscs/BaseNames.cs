@@ -4,16 +4,11 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class BaseNames : Items<BaseName, Tree.ArgumentNameClause>
+    public class BaseNames : Items<BaseName>
     {
-        public BaseNames(IScoped outer, Tree.ArgumentNameClause tree)
-            : base(outer, tree, Enum(outer, tree))
+        public BaseNames(IScoped outer, IEnumerable<Tree.BaseName> names)
+            : base(outer, names.Select(n => new BaseName(outer, n)))
         {
-        }
-
-        private static IEnumerable<BaseName> Enum(IScoped outer, Tree.ArgumentNameClause tree)
-        {
-            return tree.Names.Select(n => new BaseName(outer, n.Name));
         }
 
         public override void Report(IWriter writer)

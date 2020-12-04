@@ -15,6 +15,7 @@ namespace SixComp.Sema
 
         public Package Package { get; }
         public IScoped Parent { get; }
+        public Global Global => Package.Global;
 
         public void Add(INamed named)
         {

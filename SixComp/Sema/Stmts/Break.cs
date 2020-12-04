@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class Break : Statement<Tree.BreakStatement>
+    public class Break : Base<Tree.BreakStatement>, IStatement
     {
         public Break(IScoped outer, Tree.BreakStatement tree)
             : base(outer, tree)
@@ -14,8 +14,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.Write(Strings.Break);
-            writer.Indent(() => Label?.Report(writer));
+            Label.Report(writer, Strings.Head.Break, true);
         }
     }
 }

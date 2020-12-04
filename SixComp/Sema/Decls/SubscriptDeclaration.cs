@@ -1,11 +1,13 @@
 ﻿using SixComp.Support;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class SubscriptDecl : Base<Tree.SubscriptDeclaration>, IDeclaration, IOwner
+    public class SubscriptDeclaration : Items<PropertyBlock, Tree.SubscriptDeclaration>, IDeclaration, IWhere
     {
-        public SubscriptDecl(IScoped outer, Tree.SubscriptDeclaration declaration)
-            : base(outer, declaration)
+        public SubscriptDeclaration(IScoped outer, Tree.SubscriptDeclaration tree)
+            : base(outer, tree, Enum(outer, tree))
         {
             Where = new GenericRestrictions(this);
             GenericParameters = new GenericParameters(this, Tree.Generics);
@@ -27,8 +29,13 @@ namespace SixComp.Sema
                 Parameters.Report(writer);
                 Result.Report(writer, Strings.Head.Result);
                 Where.Report(writer);
-                writer.WriteLine(Strings.Incomplete);
+                this.ReportList(writer, Strings.Head.Blocks);
             }
+        }
+
+        private static IEnumerable<PropertyBlock> Enum(IScoped outer, Tree.SubscriptDeclaration tree)
+        {
+            return tree.Blocks.OrderBy(b => b.Value.index).Select(block => new PropertyBlock(outer, block.Value.block));
         }
     }
 }

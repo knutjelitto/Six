@@ -4,38 +4,38 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public abstract class Items<T> : Base, IReadOnlyList<T>
-        where T : IReportable
+    public abstract class Items<TItem> : Base, IReadOnlyList<TItem>
+        where TItem : IReportable
     {
-        private List<T> items;
+        private List<TItem> items;
 
-        private Items(IScoped outer, List<T> items)
+        private Items(IScoped outer, List<TItem> items)
             : base(outer)
         {
             this.items = items;
         }
 
-        public Items(IScoped outer, IEnumerable<T> items)
+        public Items(IScoped outer, IEnumerable<TItem> items)
             : this(outer, items.ToList())
         {
         }
 
         public Items(IScoped outer)
-            : this(outer, new List<T>())
+            : this(outer, new List<TItem>())
         {
         }
 
-        protected void Add(T item)
+        protected void Add(TItem item)
         {
             this.items.Add(item);
         }
 
 
-        public T this[int index] => items[index];
+        public TItem this[int index] => items[index];
         public int Count => items.Count;
 
 
-        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+        public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
     }
 }

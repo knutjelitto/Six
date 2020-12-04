@@ -18,7 +18,7 @@ namespace SixComp.Tree
 
         public static CaseLabel Parse(Parser parser)
         {
-            var prefix = Prefix.PreParse(parser, onlyAttributes: true);
+            var prefix = Prefix.Parse(parser, onlyAttributes: true);
             switch (parser.Current)
             {
                 case ToKind.KwCase:

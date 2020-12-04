@@ -15,7 +15,6 @@ namespace SixComp
         public Tree.CompilationUnit? Parse(Context context)
         {
             var parser = context.Parser;
-            var source = context.Source;
 
             try
             {
@@ -24,30 +23,41 @@ namespace SixComp
             }
             catch (ParserException parserError)
             {
-                Error(source, parserError.Message, parserError.Token.Span.Start, parserError.Token.Span.Length);
+                Error(context, parserError.Message, parserError.Token);
 
                 return null;
 
             }
             catch (LexerException lexerError)
             {
-                Error(source, lexerError.Message, lexerError.Offset, 1);
+                Error(context, lexerError.Message, lexerError.Offset);
 
                 return null;
             }
             catch (InvalidOperationException invalid)
             {
                 Console.WriteLine(invalid.ToString());
-                Error(source, $"internal error - {invalid.Message}", parser.CurrentToken.Span.Start, parser.CurrentToken.Span.Length);
+                Error(context, $"internal error - {invalid.Message}", parser.CurrentToken);
 
                 return null;
             }
             catch (Exception any)
             {
+                Console.WriteLine("FATAL ERROR");
                 Console.WriteLine(any.ToString());
 
                 return null;
             }
+        }
+
+        private void Error(Context context, string error, Token atToken)
+        {
+            Error(context.Source, error, atToken.Span.Start, atToken.Span.Length);
+        }
+
+        private void Error(Context context, string error, int start, int length = 1)
+        {
+            Error(context.Source, error, start, length);
         }
 
         private void Error(Source source, string error, int start, int length)

@@ -1,5 +1,5 @@
-﻿using SixComp.Support;
-using System;
+﻿using SixComp.Common;
+using SixComp.Support;
 
 namespace SixComp.Sema
 
@@ -9,23 +9,23 @@ namespace SixComp.Sema
         public PropertyBlock(IScoped outer, Tree.PropertyBlock tree)
             : base(outer, tree)
         {
-            Kind = tree.Kind switch
-            {
-                SixComp.Tree.PropertyBlock.BlockKind.Get => BlockKind.Get,
-                SixComp.Tree.PropertyBlock.BlockKind.GetDefault => BlockKind.GetDefault,
-                SixComp.Tree.PropertyBlock.BlockKind.Set => BlockKind.Set,
-                SixComp.Tree.PropertyBlock.BlockKind.WillSet => BlockKind.WillSet,
-                SixComp.Tree.PropertyBlock.BlockKind.DidSet => BlockKind.DidSet,
-                SixComp.Tree.PropertyBlock.BlockKind.Special => BlockKind.Special,
-                _ => throw new ArgumentOutOfRangeException(),
-            };
+            Kind = tree.Kind;
+            BlockName = new BaseName(Outer, tree.BlockName);
+            SetterName = BaseName.Maybe(Outer, tree.SetterName?.Name);
+            Block = (CodeBlock?)IStatement.MaybeBuild(Outer, tree.Block);
         }
 
         public BlockKind Kind { get; }
+        public BaseName BlockName { get; }
+        public BaseName? SetterName { get; }
+        public CodeBlock? Block { get; }
 
         public override void Report(IWriter writer)
         {
-            throw new NotImplementedException();
+            Tree.Tree(writer);
+            Kind.Report(writer, Strings.Head.Kind);
+            SetterName.Report(writer, Strings.Head.SetterName);
+            Block?.Statements.ReportList(writer, BlockName.Text + ":");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 namespace SixComp.Sema
 {
@@ -21,7 +21,22 @@ namespace SixComp.Sema
 
         private static IEnumerable<IDeclaration> Enum(IScoped outer, Tree.DeclarationClause tree)
         {
-            return tree.Declarations.Select(declaration => IDeclaration.Build(outer, declaration));
+            foreach (var declaration in tree.Declarations)
+            {
+                if (declaration is Tree.EnumCase enumCase)
+                {
+                    var prefix = enumCase.Prefix;
+                    Debug.Assert(prefix.IsEmpty);
+                    foreach (var caseItem in enumCase.CaseItems)
+                    {
+                        yield return new EnumCase(outer, prefix, caseItem);
+                    }
+                }
+                else
+                {
+                    yield return IDeclaration.Build(outer, declaration);
+                }
+            }
         }
     }
 }

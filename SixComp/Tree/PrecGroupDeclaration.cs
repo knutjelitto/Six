@@ -28,7 +28,8 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Contextual.Precedencegroup} {Name}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Contextual.Precedencegroup} {Name}");
             using (writer.Block())
             {
                 Attributes.Write(writer);

@@ -34,9 +34,9 @@ namespace SixComp.Sema
             return new Dummy(outer, tree);
         }
 
-        public class PatternCondition : Base<Tree.PatternCondition>, ICondition
+        public abstract class PatternCondition : Base<Tree.PatternCondition>, ICondition
         {
-            public PatternCondition(IScoped outer, Tree.PatternCondition tree)
+            protected PatternCondition(IScoped outer, Tree.PatternCondition tree)
                 : base(outer, tree)
             {
                 Pattern = IPattern.Build(outer, tree.Pattern);
@@ -48,13 +48,13 @@ namespace SixComp.Sema
             public IType? Type { get; }
             public IExpression Initializer { get; }
 
-            public override void Report(IWriter writer)
+            protected void Report(IWriter writer, string label)
             {
-                using (writer.Indent())
+                using (writer.Indent(label))
                 {
                     Pattern.Report(writer);
                     Type?.Report(writer);
-                    Initializer.Report(writer);
+                    Initializer.Report(writer, Strings.Head.Initializer);
                 }
             }
         }
@@ -68,8 +68,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.LetPatternCondition);
-                base.Report(writer);
+                Report(writer, Strings.Head.Let);
             }
         }
 
@@ -82,8 +81,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.VarPatternCondition);
-                base.Report(writer);
+                Report(writer, Strings.Head.Var);
             }
         }
 
@@ -96,9 +94,7 @@ namespace SixComp.Sema
 
             public override void Report(IWriter writer)
             {
-                writer.WriteLine(Strings.CasePatternCondition);
-                writer.WriteLine($";; {Tree}");
-                base.Report(writer);
+                Report(writer, Strings.Head.Case);
             }
         }
     }

@@ -1,30 +1,27 @@
 ﻿using System;
-using System.IO;
 
 namespace SixComp.Support
 {
     public class IndentWriter : IWriter
     {
-        const string prefix = "    ";
-        string currentPrefix = string.Empty;
+        const string indent = "    ";
+        string currentIndent = string.Empty;
         bool pending = false;
-        string lineend = Environment.NewLine;
 
-        public IndentWriter(TextWriter writer)
+        public IndentWriter(IBaseWriter writer)
         {
             Writer = writer;
         }
 
-        public TextWriter Writer { get; }
-        public int Level { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IBaseWriter Writer { get; }
 
         public IDisposable Indent(Action? before = null, Action? after = null)
         {
             before?.Invoke();
-            currentPrefix += prefix;
+            currentIndent += indent;
             return new Disposable(() =>
             {
-                currentPrefix = currentPrefix.Substring(0, currentPrefix.Length - prefix.Length);
+                currentIndent = currentIndent.Substring(0, currentIndent.Length - indent.Length);
                 after?.Invoke();
             });
         }
@@ -37,18 +34,6 @@ namespace SixComp.Support
             }
         }
 
-        public IDisposable Space()
-        {
-            Prefix();
-            var oldLineend = lineend;
-            lineend = " ";
-            return new Disposable(() =>
-            {
-                lineend = oldLineend;
-                WriteLine();
-            });
-        }
-
         public void Write(string text)
         {
             Prefix();
@@ -59,13 +44,13 @@ namespace SixComp.Support
         {
             Prefix();
             Writer.Write(text);
-            Writer.Write(lineend);
+            Writer.WriteLine();
             pending = true;
         }
 
         public void WriteLine()
         {
-            Writer.Write(lineend);
+            Writer.WriteLine();
             pending = true;
         }
 
@@ -73,10 +58,7 @@ namespace SixComp.Support
         {
             if (pending)
             {
-                if (lineend != " ")
-                {
-                    Writer.Write(currentPrefix);
-                }
+                Writer.Write(currentIndent);
                 pending = false;
             }
         }

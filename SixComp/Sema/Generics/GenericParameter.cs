@@ -4,14 +4,14 @@ namespace SixComp.Sema
 {
     public class GenericParameter : Base<Tree.GenericParameter>, INamed
     {
-        public GenericParameter(IOwner owner, Tree.GenericParameter tree)
-            : base(owner, tree)
+        public GenericParameter(IWhere where, Tree.GenericParameter tree)
+            : base(where, tree)
         {
             Name = new BaseName(Outer, Tree.Name);
 
             if (Tree.Requirement != null)
             {
-                owner.Where.Add(Outer, Tree);
+                where.Where.Add(Outer, Tree);
             }
         }
 

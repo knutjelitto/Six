@@ -16,6 +16,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
+            Tree.Tree(writer);
             using (writer.Indent(Strings.Head.Call))
             {
                 Left.Report(writer, Strings.Head.Called);

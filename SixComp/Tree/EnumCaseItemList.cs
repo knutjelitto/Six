@@ -20,5 +20,10 @@ namespace SixComp.Tree
 
             return new EnumCaseItemList(caseItems);
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this);
+        }
     }
 }

@@ -28,11 +28,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Head.Closure);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Closure))
             {
                 Parameters.Report(writer);
-                Throws.Report(writer, Strings.Throws);
+                Throws.Report(writer, Strings.Head.Throws);
                 Result.Report(writer, Strings.Head.Result);
                 Statements.Report(writer);
             }

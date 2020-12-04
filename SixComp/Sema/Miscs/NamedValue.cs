@@ -16,14 +16,10 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.NamedValue);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.NamedValue))
             {
-                if (Name != null)
-                {
-                    Name.Report(writer);
-                }
-                Value.Report(writer);
+                Name.Report(writer, Strings.Head.Name);
+                Value.Report(writer, Strings.Head.Value);
             }
         }
     }

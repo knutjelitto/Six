@@ -2,12 +2,12 @@
 
 namespace SixComp.Sema
 {
-    public class Protocol : Base<Tree.ProtocolDeclaration>, IDeclaration, IOwner, INamed
+    public class EnumDeclaration : Base<Tree.EnumDeclaration>, IDeclaration, IWhere, INamed
     {
-        public Protocol(IScoped outer, Tree.ProtocolDeclaration tree)
+        public EnumDeclaration(IScoped outer, Tree.EnumDeclaration tree)
             : base(outer, tree)
         {
-            Name = new BaseName(Outer, Tree.Name);
+            Name = new BaseName(outer, Tree.Name);
             Where = new GenericRestrictions(this);
             GenericParameters = new GenericParameters(this, Tree.Generics);
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
@@ -17,6 +17,7 @@ namespace SixComp.Sema
 
         public Tree.Prefix Prefix => Tree.Prefix;
         public BaseName Name { get; }
+
         public GenericParameters GenericParameters { get; }
         public Inheritance Inheritance { get; }
         public GenericRestrictions Where { get; }
@@ -24,8 +25,8 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine($";; {Tree}");
-            using (writer.Indent(Strings.Head.Protocol))
+            Tree.Tree(writer);
+            using (writer.Indent(Strings.Head.Enum))
             {
                 Name.Report(writer, Strings.Head.Name);
                 GenericParameters.Report(writer);
@@ -34,6 +35,5 @@ namespace SixComp.Sema
                 Declarations.Report(writer);
             }
         }
-
     }
 }

@@ -7,11 +7,19 @@ namespace SixComp.Sema
         public LiteralExpression(IScoped outer, Tree.AnyLiteralExpression tree)
             : base(outer, tree)
         {
+            Text = tree.ToString();
         }
+
+        public string Text { get; }
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine($"{Tree}");
+            this.Report(writer, Strings.Head.Literal);
+        }
+
+        public override string ToString()
+        {
+            return Text;
         }
     }
 }

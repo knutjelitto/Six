@@ -36,8 +36,14 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Name}{Generics}{Inheritance}{Requirements}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Name}{Generics}{Inheritance}{Requirements}");
             Declarations.Write(writer);
+        }
+
+        public override string ToString()
+        {
+            return $"{Prefix}{Name}{Generics}{Inheritance}{Requirements}{Declarations}";
         }
     }
 }

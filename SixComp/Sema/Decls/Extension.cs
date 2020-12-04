@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class Extension : Base<Tree.ExtensionDeclaration>, IDeclaration, IOwner
+    public class Extension : Base<Tree.ExtensionDeclaration>, IDeclaration, IWhere
     {
         public Extension(IScoped outer, Tree.ExtensionDeclaration tree)
             : base(outer, tree)

@@ -4,6 +4,7 @@
     {
         IScoped Parent { get; }
         Package Package { get; }
+        Global Global { get; }
 
         void AddUnique(INamed named);
     }

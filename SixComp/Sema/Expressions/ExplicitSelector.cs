@@ -1,16 +1,17 @@
 ﻿using SixComp.Support;
+using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class NamedSelector: Expression<Tree.ExplicitMemberExpression.NamedMemberSelector>
+    public class ExplicitSelector: Expression<Tree.ExplicitMemberExpression.NamedMemberSelector>
     {
-        public NamedSelector(IScoped outer, Tree.ExplicitMemberExpression.NamedMemberSelector tree)
+        public ExplicitSelector(IScoped outer, Tree.ExplicitMemberExpression.NamedMemberSelector tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);
             Name = new FullName(Outer, Tree.Name);
             Operator = new BaseName(Outer, tree.Operator);
-            ArgumentNames = new BaseNames(Outer, tree.Names);
+            ArgumentNames = new BaseNames(Outer, tree.Names.Names.Select(n => n.Name));
         }
 
         public IExpression Left { get; }

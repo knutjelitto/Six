@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SixComp.Tree
 {
-    public class Prefix
+    public class Prefix : IWritable
     {
         private static readonly TokenSet SafeUnsafe = new TokenSet(ToKind.KwSafe, ToKind.KwUnsafe);
         private static readonly TokenSet Access = new TokenSet(ToKind.KwPrivate, ToKind.KwFileprivate, ToKind.KwInternal, ToKind.KwPublic, ToKind.KwOpen);
@@ -28,30 +28,20 @@ namespace SixComp.Tree
             ToKind.Kw__Consuming, ToKind.Kw__Shared, ToKind.Kw__Owned
             );
 
-        private Prefix(AttributeList attributes, ModifierList? modifiers, List<Token>? preparsed)
+        private Prefix(AttributeList attributes, List<Token>? preparsed)
         {
             Attributes = attributes;
-            Modifiers = modifiers;
-            Preparsed = preparsed;
+            Preparsed = preparsed ?? new List<Token>();
         }
 
         public AttributeList Attributes { get; }
-        public ModifierList? Modifiers { get; }
-        public List<Token>? Preparsed { get; }
+        public List<Token> Preparsed { get; }
 
-        public ToKind? Last => Preparsed?.LastOrDefault()?.Kind;
+        public ToKind? Last => Preparsed.LastOrDefault()?.Kind;
 
-        public bool IsEmpty => Attributes.Count == 0 && (Modifiers?.Count ?? 0) == 0 && (Preparsed?.Count ?? 0) == 0;
+        public bool IsEmpty => Attributes.Count == 0 && Preparsed.Count == 0;
 
         public static Prefix Parse(Parser parser, bool onlyAttributes = false)
-        {
-            var attributes = AttributeList.TryParse(parser);
-            var modifiers = onlyAttributes ? null : ModifierList.TryParse(parser);
-
-            return new Prefix(attributes, modifiers, null);
-        }
-
-        public static Prefix PreParse(Parser parser, bool onlyAttributes = false)
         {
             var attributes = AttributeList.TryParse(parser);
 
@@ -179,7 +169,7 @@ namespace SixComp.Tree
                 }
             }
 
-            return new Prefix(attributes, null, preparsed);
+            return new Prefix(attributes, preparsed);
 
             Token Add()
             {
@@ -189,26 +179,30 @@ namespace SixComp.Tree
             }
         }
 
-        public static readonly Prefix Empty = new Prefix(new AttributeList(), null, null);
-
-        public bool Missing => Attributes.Missing && (Modifiers?.Missing ?? false);
+        public static readonly Prefix Empty = new Prefix(new AttributeList(), null);
 
         public override string ToString()
         {
-            string what = string.Empty;
-            if (Modifiers != null)
-            {
-                what = Modifiers.ToString();
-            }
-            else if (Preparsed != null)
-            {
-                what = string.Join(" ", Preparsed);
-            }
+            var what = string.Join(" ", Preparsed);
             if (!string.IsNullOrWhiteSpace(what))
             {
                 what += " ";
             }
             return $"{Attributes}{what}";
+        }
+
+        public void Write(IWriter writer)
+        {
+            foreach (var attribute in Attributes)
+            {
+                writer.WriteLine($"{attribute}");
+            }
+            var what = string.Join(" ", Preparsed);
+            if (!string.IsNullOrWhiteSpace(what))
+            {
+                what += " ";
+            }
+            writer.Write(what);
         }
     }
 }

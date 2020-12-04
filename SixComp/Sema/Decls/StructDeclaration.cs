@@ -2,12 +2,12 @@
 
 namespace SixComp.Sema
 {
-    public class Struct : Base<Tree.StructDeclaration>, IDeclaration, IOwner
+    public class StructDeclaration : Base<Tree.StructDeclaration>, IDeclaration, IWhere, INamed
     {
-        public Struct(IScoped outer, Tree.StructDeclaration tree)
+        public StructDeclaration(IScoped outer, Tree.StructDeclaration tree)
             : base(outer, tree)
         {
-            Name = Tree.Name.ToString();
+            Name = new BaseName(Outer, Tree.Name);
             Where = new GenericRestrictions(this);
             GenericParameters = new GenericParameters(this, Tree.Generics);
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
@@ -15,8 +15,7 @@ namespace SixComp.Sema
             Declarations = new Declarations(this, Tree.Declarations);
         }
 
-        public Tree.Prefix Prefix => Tree.Prefix;
-        public string Name { get; }
+        public BaseName Name { get; }
         public GenericParameters GenericParameters { get; }
         public Inheritance Inheritance { get; }
         public GenericRestrictions Where { get; }
@@ -24,7 +23,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine($";; {Tree}");
+            Tree.Tree(writer);
             using (writer.Indent(Strings.Head.Struct))
             {
                 Name.Report(writer, Strings.Head.Name);
@@ -34,6 +33,5 @@ namespace SixComp.Sema
                 Declarations.Report(writer);
             }
         }
-
     }
 }

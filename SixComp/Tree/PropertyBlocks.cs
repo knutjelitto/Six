@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SixComp.Tree
 {
-    public sealed class PropertyBlocks : Dictionary<BaseName, (int index, PropertyBlock)>
+    public sealed class PropertyBlocks : Dictionary<BaseName, (int index, PropertyBlock block)>
     {
         private int index = 0;
         private TokenSet have = new TokenSet();

@@ -16,6 +16,15 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.TupleType);
         }
 
+        public override string ToString()
+        {
+            if (Count == 1)
+            {
+                return this[0].ToString()!;
+            }
+            return base.ToString()!;
+        }
+
         private static IEnumerable<TupleTypeElement> Enum(IScoped outer, Tree.TupleType tree)
         {
             return tree.Elements.Select(element => new TupleTypeElement(outer, element));

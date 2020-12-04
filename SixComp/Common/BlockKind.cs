@@ -1,4 +1,4 @@
-﻿namespace SixComp.Sema
+﻿namespace SixComp.Common
 {
     public enum BlockKind
     {

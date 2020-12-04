@@ -18,13 +18,12 @@ namespace SixComp
         static void Main(string[] args)
         {
             var navi = new Navi();
-            new BootCore(navi, navi.SixCore).Boot();
+            new BootCore(navi, navi.SixCore).Compile();
 
             //if (new Program().Checker()) { new Program().Swift(); }
+            //SixRT.PlayCheck();
 
-
-//SixRT.PlayCheck();
-#if false
+#if true
             Console.Write("(almost) any key ... ");
             Console.ReadKey(true);
 #endif

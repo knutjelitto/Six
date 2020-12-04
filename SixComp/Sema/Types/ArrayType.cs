@@ -2,23 +2,19 @@
 
 namespace SixComp.Sema
 {
-    public class ArrayType : Base, IType
+    public class ArrayType : Base<Tree.ArrayType>, IType
     {
         public ArrayType(IScoped outer, Tree.ArrayType tree)
-            : base(outer)
+            : base(outer, tree)
         {
-            Tree = tree;
             Element = IType.Build(Outer, Tree.ElementType);
         }
-
-        public Tree.ArrayType Tree { get; }
 
         public IType Element { get; }
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.ArrayType);
-            writer.Indent(() => Element.Report(writer));
+            Element.Report(writer, Strings.Head.ArrayType);
         }
     }
 }

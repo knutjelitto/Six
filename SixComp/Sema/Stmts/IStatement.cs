@@ -18,12 +18,22 @@
 
         private static IStatement Visit(IScoped outer, Tree.CodeBlock tree)
         {
-            return new Block(outer, tree);
+            return new CodeBlock(outer, tree);
         }
 
         private static IStatement Visit(IScoped outer, Tree.ReturnStatement tree)
         {
             return new Return(outer, tree);
+        }
+
+        private static IStatement Visit(IScoped outer, Tree.DeferStatement tree)
+        {
+            return new Defer(outer, tree);
+        }
+
+        private static IStatement Visit(IScoped outer, Tree.YieldStatement tree)
+        {
+            return new YieldStatement(outer, tree);
         }
 
         private static IStatement Visit(IScoped outer, Tree.BreakStatement tree)

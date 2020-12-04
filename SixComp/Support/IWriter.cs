@@ -10,6 +10,5 @@ namespace SixComp.Support
 
         IDisposable Indent(Action? before = null, Action? after = null);
         void Indent(Action action);
-        IDisposable Space();
     }
 }

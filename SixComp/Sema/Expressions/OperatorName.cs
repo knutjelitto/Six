@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Operator : Base<Tree.OperatorExpression>, IExpression, INamed
+    public class OperatorName : Base<Tree.OperatorExpression>, IExpression, INamed
     {
-        public Operator(IScoped outer, Tree.OperatorExpression tree)
+        public OperatorName(IScoped outer, Tree.OperatorExpression tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Operator);
@@ -14,7 +14,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            Name.Report(writer, Strings.OperatorExpression);
+            Name.Report(writer, Strings.Head.Operator);
         }
     }
 }

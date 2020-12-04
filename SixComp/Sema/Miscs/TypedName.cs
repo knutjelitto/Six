@@ -18,7 +18,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            using (writer.Indent(Strings.TypedName))
+            using (writer.Indent(Strings.Head.TypedName))
             {
                 Name.Report(writer, Strings.Head.Name);
                 Type.Report(writer, Strings.Head.Type);

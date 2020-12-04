@@ -33,7 +33,8 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"{Prefix}{Name}{Inheritance}{Assignment}");
+            Prefix.Write(writer);
+            writer.WriteLine($"{Name}{Inheritance}{Assignment}");
             Requirements.Write(writer);
         }
     }

@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class Typealias : Base<Tree.TypealiasDeclaration>, IDeclaration, IOwner
+    public class Typealias : Base<Tree.TypealiasDeclaration>, IDeclaration, IWhere, INamed
     {
         public Typealias(IScoped outer, Tree.TypealiasDeclaration tree)
             : base(outer, tree)
@@ -21,8 +21,7 @@ namespace SixComp.Sema
 
         public override void Report(IWriter writer)
         {
-            writer.WriteLine(Strings.Typealias);
-            using (writer.Indent())
+            using (writer.Indent(Strings.Head.Typealias))
             {
                 Name.Report(writer, Strings.Head.Name);
                 GenericParameters.Report(writer);
