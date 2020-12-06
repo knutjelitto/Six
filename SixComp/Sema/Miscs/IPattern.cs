@@ -83,12 +83,14 @@ namespace SixComp.Sema
             }
         }
 
-        public class IdentifierPattern : Base<Tree.IdentifierPattern>, IPattern
+        public class IdentifierPattern : Base<Tree.IdentifierPattern>, IPattern, INamedDeclaration
         {
             public IdentifierPattern(IScoped outer, Tree.IdentifierPattern tree)
                 : base(outer, tree)
             {
                 Name = new BaseName(outer, tree.Name);
+
+                Declare(this);
             }
 
             public BaseName Name { get; }
@@ -137,11 +139,11 @@ namespace SixComp.Sema
                 : base(outer, tree)
             {
                 Pattern = Build(outer, tree.Pattern);
-                Type = IType.Build(outer, tree.Type);
+                Type = ITypeDefinition.Build(outer, tree.Type);
             }
 
             public IPattern Pattern { get; }
-            public IType Type { get; }
+            public ITypeDefinition Type { get; }
 
             public override void Report(IWriter writer)
             {
@@ -205,6 +207,28 @@ namespace SixComp.Sema
             public override void Report(IWriter writer)
             {
                 Pattern.Report(writer, Strings.Head.Optional);
+            }
+        }
+
+        public class NamedPattern : Base<Tree.TuplePatternElement>
+        {
+            public NamedPattern(IScoped outer, Tree.TuplePatternElement tree)
+                : base(outer, tree)
+            {
+                Name = BaseName.Maybe(outer, tree.Name?.Name);
+                Pattern = IPattern.Build(Outer, Tree.Pattern);
+            }
+
+            public BaseName? Name { get; }
+            public IPattern Pattern { get; }
+
+            public override void Report(IWriter writer)
+            {
+                using (writer.Indent(Strings.Head.Named))
+                {
+                    Name.Report(writer, Strings.Head.Name);
+                    Pattern.Report(writer);
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using SixComp.Common;
+using SixComp.Support;
 
 namespace SixComp.Tree
 {
@@ -8,8 +9,8 @@ namespace SixComp.Tree
         {
             return parser.CurrentToken.Text switch
             {
-                Contextual.LowerThan => Relation.Parse(parser, Relation.RelationKind.LowerThan),
-                Contextual.HigherThan => Relation.Parse(parser, Relation.RelationKind.HigherThan),
+                Contextual.LowerThan => Relation.Parse(parser, RelationKind.LowerThan),
+                Contextual.HigherThan => Relation.Parse(parser, RelationKind.HigherThan),
                 Contextual.Assignment => Assignment.Parse(parser),
                 Contextual.Associativity => Associativity.Parse(parser),
                 _ => null,
@@ -22,12 +23,6 @@ namespace SixComp.Tree
         {
             public RelationKind Kind { get; }
             public NameList Names { get; }
-
-            public enum RelationKind
-            {
-                HigherThan,
-                LowerThan,
-            }
 
             public Relation(RelationKind kind, NameList names)
             {
@@ -91,13 +86,6 @@ namespace SixComp.Tree
 
         public class Associativity : PrecGroupAttribute
         {
-            public enum AssociativityKind
-            {
-                Left,
-                Right,
-                None,
-            }
-
             private Associativity(AssociativityKind kind)
             {
                 Kind = kind;

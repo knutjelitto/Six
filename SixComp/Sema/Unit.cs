@@ -15,11 +15,11 @@ namespace SixComp.Sema
         public Context Context { get; }
         public List<IStatement> Statements { get; }
 
-        public void BuildTree(Package package)
+        public void BuildTree(Module module)
         {
             foreach (var declaration in Tree.Statements)
             {
-                var statement = IStatement.Build(package, declaration);
+                var statement = IStatement.Build(module, declaration);
                 Statements.Add(statement);
             }
         }

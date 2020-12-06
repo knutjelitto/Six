@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class OperatorDeclaration : Base<Tree.OperatorDeclaration>, IDeclaration
+    public class OperatorDeclaration : Base<Tree.OperatorDeclaration>, INamedDeclaration
     {
         public OperatorDeclaration(IScoped outer, Tree.OperatorDeclaration tree)
             : base(outer, tree)
         {
-            Operator = new BaseName(Outer, tree.Operator);
+            Name = new BaseName(Outer, tree.Operator);
 
             Fixitivity = tree.Fixitivity;
 
@@ -26,7 +26,7 @@ namespace SixComp.Sema
             Precedence = null;
         }
 
-        public BaseName Operator { get; }
+        public BaseName Name { get; }
         public Fixitivity Fixitivity { get; }
         public BaseName? PrecedenceName { get; }
         public BaseNames TypeNames { get; }
@@ -41,7 +41,7 @@ namespace SixComp.Sema
         {
             using (writer.Indent(Strings.Head.Operator))
             {
-                Operator.Report(writer, Strings.Head.Name);
+                Name.Report(writer, Strings.Head.Name);
                 Fixitivity.Report(writer, Strings.Head.Fixitivity);
                 PrecedenceName.Report(writer, Strings.Head.Precedence);
                 TypeNames.ReportList(writer, Strings.Head.Types);

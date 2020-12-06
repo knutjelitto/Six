@@ -18,7 +18,8 @@ namespace SixComp
         static void Main(string[] args)
         {
             var navi = new Navi();
-            new BootCore(navi, navi.SixCore).Compile();
+            new BootCore(navi, navi.SixCore).Compile("Swift");
+            //new BootCore(navi, navi.SixTests).Compile("Tests");
 
             //if (new Program().Checker()) { new Program().Swift(); }
             //SixRT.PlayCheck();

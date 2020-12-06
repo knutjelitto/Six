@@ -1,16 +1,9 @@
-﻿namespace SixComp.Tree
+﻿using SixComp.Common;
+
+namespace SixComp.Tree
 {
     public class TryOperator : SyntaxNode
     {
-        public enum TryKind
-        {
-            None,
-
-            Try,
-            TryForce,
-            TryChain,
-        }
-
         public TryOperator(TryKind kind)
         {
             Kind = kind;

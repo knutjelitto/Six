@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class FullName : Base<Tree.FullName>, IType, IExpression
+    public class FullName : Base<Tree.FullName>, ITypeDefinition, IExpression
     {
         public FullName(IScoped outer, Tree.FullName tree)
             : base(outer, tree)

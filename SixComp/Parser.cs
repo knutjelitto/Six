@@ -54,9 +54,9 @@ namespace SixComp
                     // unclassified
 
                     var prev = PrevToken;
-                    var spaceBefore = current.Span.Spacing || (prev.Flags & ToFlags.OpSpaceBefore) != 0;
+                    var spaceBefore = current.Span.HasSpacing || (prev.Flags & ToFlags.OpSpaceBefore) != 0;
                     var next = NextToken;
-                    var spaceAfter = next.Span.Spacing || (next.Flags & ToFlags.OpSpaceAfter) != 0;
+                    var spaceAfter = next.Span.HasSpacing || (next.Flags & ToFlags.OpSpaceAfter) != 0;
 
                     if (!spaceBefore && (spaceAfter || next.IsImmediateDot || current.Kind == ToKind.Quest || current.Kind == ToKind.Bang))
                     {

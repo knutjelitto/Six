@@ -21,7 +21,7 @@ namespace SixComp
         public DirectoryInfo Sources { get; }
         public DirectoryInfo Temp { get; }
 
-        public void Compile()
+        public void Compile(string moduleName)
         {
             Console.WriteLine($"Boot {Sources.Name}");
 
@@ -41,7 +41,7 @@ namespace SixComp
             }
             Console.WriteLine();
 
-            var package = new Package();
+            var module = new Module(moduleName);
 
             Console.Write("PARSE       ");
             foreach (var (name, context) in loaded)
@@ -55,7 +55,7 @@ namespace SixComp
                     return;
                 }
 
-                package.Add(new Unit(context, package, unit));
+                module.Add(new Unit(context, module, unit));
             }
             Console.WriteLine();
 
@@ -63,12 +63,12 @@ namespace SixComp
             Directory.CreateDirectory(Path.GetDirectoryName(filename));
             using (var writer = new FileWriter(filename))
             {
-                package.Analyze(writer);
+                module.Analyze(writer);
             }
 
 
             Console.Write("DONE        ");
-            foreach (var unit in package.Units)
+            foreach (var unit in module.Units)
             {
                 Console.Write($".");
             }

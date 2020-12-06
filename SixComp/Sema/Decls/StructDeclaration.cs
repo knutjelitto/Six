@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class StructDeclaration : Base<Tree.StructDeclaration>, IDeclaration, IWhere, INamed
+    public class StructDeclaration : BaseScoped<Tree.StructDeclaration>, INamedDeclaration, IWhere
     {
         public StructDeclaration(IScoped outer, Tree.StructDeclaration tree)
             : base(outer, tree)
@@ -10,9 +10,11 @@ namespace SixComp.Sema
             Name = new BaseName(Outer, Tree.Name);
             Where = new GenericRestrictions(this);
             GenericParameters = new GenericParameters(this, Tree.Generics);
-            Inheritance = new Inheritance(Outer, Tree.Inheritance);
+            Inheritance = new Inheritance(this, Tree.Inheritance);
             Where.Add(this, Tree.Requirements);
             Declarations = new Declarations(this, Tree.Declarations);
+
+            Declare(this);
         }
 
         public BaseName Name { get; }

@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class LiteralExpression : Expression<Tree.AnyLiteralExpression>
+    public class LiteralExpression : Base<Tree.AnyLiteralExpression>, IExpression
     {
         public LiteralExpression(IScoped outer, Tree.AnyLiteralExpression tree)
             : base(outer, tree)

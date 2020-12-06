@@ -14,7 +14,7 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.ClassDeclaration tree)
         {
-            return new Class(outer, tree);
+            return new ClassDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.StructDeclaration tree)
@@ -34,12 +34,12 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.ExtensionDeclaration tree)
         {
-            return new Extension(outer, tree);
+            return new ExtensionDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.FunctionDeclaration tree)
         {
-            return new FuncDeclaration(outer, tree);
+            return new FunctionDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.InitializerDeclaration tree)
@@ -55,14 +55,14 @@
         private static IDeclaration Visit(IScoped outer, Tree.OperatorDeclaration tree)
         {
             var op = new OperatorDeclaration(outer, tree);
-            outer.Scope.Package.Global.OperatorsTodo.Add(op);
+            outer.Scope.Module.Global.OperatorsTodo.Add(op);
             return op;
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.PrecGroupDeclaration tree)
         {
             var group = new PrecedenceGroupDeclaration(outer, tree);
-            outer.Scope.Package.Global.PrecedencesTodo.Add(group);
+            outer.Scope.Module.Global.PrecedencesTodo.Add(group);
             return group;
         }
 
@@ -78,12 +78,12 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.TypealiasDeclaration tree)
         {
-            return new Typealias(outer, tree);
+            return new TypealiasDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.AssociatedTypeDeclaration tree)
         {
-            return new AssociatedType(outer, tree);
+            return new AssociatedTypeDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.SubscriptDeclaration tree)
@@ -93,7 +93,7 @@
 
         private static IDeclaration Visit(IScoped outer, Tree.VarDeclaration tree)
         {
-            return new BlockVar(outer, tree);
+            return new BlockVarDeclaration(outer, tree);
         }
 
         private static IDeclaration Visit(IScoped outer, Tree.AnyDeclaration tree)

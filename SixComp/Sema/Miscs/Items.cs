@@ -30,11 +30,8 @@ namespace SixComp.Sema
             this.items.Add(item);
         }
 
-
         public TItem this[int index] => items[index];
         public int Count => items.Count;
-
-
         public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
     }

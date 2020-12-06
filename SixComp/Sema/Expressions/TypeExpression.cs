@@ -7,10 +7,10 @@ namespace SixComp.Sema
         public TypeExpression(IScoped outer, Tree.TypeExpression tree)
             : base(outer, tree)
         {
-            Type = IType.Build(outer, tree.Type);
+            Type = ITypeDefinition.Build(outer, tree.Type);
         }
 
-        public IType Type { get; }
+        public ITypeDefinition Type { get; }
 
         public override void Report(IWriter writer)
         {

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SixComp.Common;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using RelationKind = SixComp.Tree.PrecGroupAttribute.Relation.RelationKind;
-using AssociativityKind = SixComp.Tree.PrecGroupAttribute.Associativity.AssociativityKind;
-using SixComp.Common;
 
 namespace SixComp.Sema
 {
@@ -72,13 +71,13 @@ namespace SixComp.Sema
                             group.SetAssign(assignment.IsAssignment);
                             break;
                         case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.None:
-                            group.SetAssoc(Associativity.None);
+                            group.SetAssoc(Common.AssociativityKind.None);
                             break;
                         case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Left:
-                            group.SetAssoc(Associativity.Left);
+                            group.SetAssoc(Common.AssociativityKind.Left);
                             break;
                         case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Right:
-                            group.SetAssoc(Associativity.Right);
+                            group.SetAssoc(Common.AssociativityKind.Right);
                             break;
                     }
                 }
@@ -126,13 +125,13 @@ namespace SixComp.Sema
                 switch (op.Fixitivity)
                 {
                     case Fixitivity.Prefix:
-                        PrefixOperators.Add(op.Operator, op);
+                        PrefixOperators.Add(op.Name, op);
                         break;
                     case Fixitivity.Postfix:
-                        PostfixOperators.Add(op.Operator, op);
+                        PostfixOperators.Add(op.Name, op);
                         break;
                     case Fixitivity.Infix:
-                        InfixOperators.Add(op.Operator, op);
+                        InfixOperators.Add(op.Name, op);
                         if (op.PrecedenceName != null)
                         {
                             op.SetPrecedence(Precedences[op.PrecedenceName]);

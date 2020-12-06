@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class ProtocolDeclaration : Base<Tree.ProtocolDeclaration>, IDeclaration, IWhere, INamed
+    public class ProtocolDeclaration : BaseScoped<Tree.ProtocolDeclaration>, INamedDeclaration, IWhere
     {
         public ProtocolDeclaration(IScoped outer, Tree.ProtocolDeclaration tree)
             : base(outer, tree)
@@ -13,6 +13,8 @@ namespace SixComp.Sema
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
             Where.Add(this, Tree.Requirements);
             Declarations = new Declarations(this, Tree.Declarations);
+
+            Declare(this);
         }
 
         public BaseName Name { get; }
@@ -24,9 +26,8 @@ namespace SixComp.Sema
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);
-            using (writer.Indent(Strings.Head.Protocol))
+            using (writer.Indent($"{Strings.Head.Protocol} {Name.Text}"))
             {
-                Name.Report(writer, Strings.Head.Name);
                 GenericParameters.Report(writer);
                 Inheritance.Report(writer);
                 Where.Report(writer);

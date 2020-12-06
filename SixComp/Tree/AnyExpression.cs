@@ -6,7 +6,7 @@ namespace SixComp.Tree
     {
         public static AnyExpression? TryParse(Parser parser)
         {
-            return Expression.TryParse(parser);
+            return InfixList.TryParse(parser);
         }
 
         AnyExpression? LastExpression { get; }

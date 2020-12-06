@@ -36,6 +36,11 @@
 
                 return new TupleMemberSelector(left, op, number);
             }
+
+            public override string ToString()
+            {
+                return $"{Left}{Operator}{Number}";
+            }
         }
 
         public class NamedMemberSelector : ExplicitMemberExpression

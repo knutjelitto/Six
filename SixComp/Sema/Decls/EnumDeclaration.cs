@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class EnumDeclaration : Base<Tree.EnumDeclaration>, IDeclaration, IWhere, INamed
+    public class EnumDeclaration : BaseScoped<Tree.EnumDeclaration>, INamedDeclaration, IWhere
     {
         public EnumDeclaration(IScoped outer, Tree.EnumDeclaration tree)
             : base(outer, tree)
@@ -13,6 +13,8 @@ namespace SixComp.Sema
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
             Where.Add(this, Tree.Requirements);
             Declarations = new Declarations(this, Tree.Declarations);
+
+            Declare(this);
         }
 
         public Tree.Prefix Prefix => Tree.Prefix;

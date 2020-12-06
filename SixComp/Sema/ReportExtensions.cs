@@ -7,6 +7,8 @@ namespace SixComp.Sema
 {
     public static class ReportExtensions
     {
+        private const int width = 16;
+        
         public static void Report(this IReportable? reportable, IWriter writer, string label, bool maybeEmpty = false)
         {
             if (reportable != null)
@@ -73,7 +75,7 @@ namespace SixComp.Sema
 
         public static void Report(this string reportable, IWriter writer, string label)
         {
-            writer.WriteLine($"{label,-12}{reportable}");
+            writer.WriteLine($"{label,-width}{reportable}");
         }
 
         public static void Report(this bool reportable, IWriter writer, string label)

@@ -12,14 +12,14 @@ namespace SixComp.Sema
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);
-            Assoc = Associativity.None;
+            Assoc = AssociativityKind.None;
             Assign = false;
             HigherThan = new HashSet<BaseName>();
             LowerThan = new HashSet<BaseName>();
         }
 
         public BaseName Name { get; }
-        public Associativity Assoc { get; private set; }
+        public AssociativityKind Assoc { get; private set; }
         public bool Assign { get; private set; }
         public HashSet<BaseName> HigherThan { get; }
         public HashSet<BaseName> LowerThan { get; }
@@ -41,7 +41,7 @@ namespace SixComp.Sema
         {
             foreach (var otherName in otherGroups)
             {
-                if (Scope.Package.Global.Precedences.TryGetValue(otherName, out var other))
+                if (Scope.Module.Global.Precedences.TryGetValue(otherName, out var other))
                 {
                     HigherThan.Add(other.Name);
                     other.LowerThan.Add(Name);
@@ -57,7 +57,7 @@ namespace SixComp.Sema
         {
             foreach (var otherName in otherGroups)
             {
-                if (Scope.Package.Global.Precedences.TryGetValue(otherName, out var other))
+                if (Scope.Module.Global.Precedences.TryGetValue(otherName, out var other))
                 {
                     LowerThan.Add(other.Name);
                     other.HigherThan.Add(Name);
@@ -74,7 +74,7 @@ namespace SixComp.Sema
             Assign = assign;
         }
 
-        public void SetAssoc(Associativity assoc)
+        public void SetAssoc(AssociativityKind assoc)
         {
             Assoc = assoc;
         }

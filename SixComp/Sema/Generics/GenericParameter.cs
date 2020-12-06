@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class GenericParameter : Base<Tree.GenericParameter>, INamed
+    public class GenericParameter : Base<Tree.GenericParameter>, INamedDeclaration
     {
         public GenericParameter(IWhere where, Tree.GenericParameter tree)
             : base(where, tree)
@@ -13,6 +13,8 @@ namespace SixComp.Sema
             {
                 where.Where.Add(Outer, Tree);
             }
+
+            Declare(this);
         }
 
         public BaseName Name { get; }

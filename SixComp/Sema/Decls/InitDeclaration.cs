@@ -3,7 +3,7 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class InitDeclaration : Base<Tree.InitializerDeclaration>, IDeclaration, IWhere
+    public class InitDeclaration : BaseScoped<Tree.InitializerDeclaration>, IDeclaration, IWhere
     {
         public InitDeclaration(IScoped outer, Tree.InitializerDeclaration tree)
             : base(outer, tree)

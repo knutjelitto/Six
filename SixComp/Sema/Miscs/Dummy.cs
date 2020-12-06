@@ -2,14 +2,14 @@
 
 namespace SixComp.Sema
 {
-    public class Dummy : Base, IDeclaration, IExpression, IType, IStatement, IPattern
+    public class Dummy : Base, IDeclaration, IExpression, ITypeDefinition, IStatement, IPattern
     {
         public Dummy(IScoped outer, object tree)
             : base(outer)
         {
             Tree = tree;
 
-            Package.MissingTreeImplementations.Add(Tree.GetType().FullName!);
+            Module.Missings.Add(Tree.GetType().FullName!);
         }
 
         public object Tree { get; }

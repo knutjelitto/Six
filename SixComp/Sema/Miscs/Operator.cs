@@ -57,7 +57,7 @@ namespace SixComp.Sema
                 }
 
                 return Precedence.HigherThan.Contains(otherPrecedence.Name)
-                    || (Precedence.Name == otherPrecedence.Name && Precedence.Assoc == Associativity.Right);
+                    || (Precedence.Name == otherPrecedence.Name && Precedence.Assoc == AssociativityKind.Right);
             }
 
             public override void Report(IWriter writer)

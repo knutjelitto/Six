@@ -21,6 +21,7 @@
             public static readonly string Assign = "assign:";
             public static readonly string Assoc = "assoc:";
             public static readonly string AssociatedType = "associatedtype:";
+            public static readonly string Async = "async:";
             public static readonly string Block = "code-block:";
             public static readonly string Blocks = "blocks:";
             public static readonly string Break = "break:";
@@ -77,10 +78,12 @@
             public static readonly string Let = "let:";
             public static readonly string Literal = "literal:";
             public static readonly string LowerThan = "lower-than:";
+            public static readonly string Module = "module:";
             public static readonly string Name = "name:";
             public static readonly string Named = "named:";
             public static readonly string NamedValue = "named-value:";
             public static readonly string Names = "names:";
+            public static readonly string Number = "number:";
             public static readonly string Omittable = "may-omit:";
             public static readonly string Operator = "operator:";
             public static readonly string Optional = "optional:";
@@ -107,8 +110,11 @@
             public static readonly string Switch = "switch:";
             public static readonly string Then = "then:";
             public static readonly string Throws = "throws:";
+            public static readonly string Trailing = "trailing:";
+            public static readonly string Trailings = "trailings:";
+            public static readonly string Try = "try:";
             public static readonly string TupleType = "tuple-type:";
-            public static readonly string TupleExpression = "tuple:";
+            public static readonly string TupleExpression = "tuple-expr:";
             public static readonly string TuplePattern = "tuple-pattern:";
             public static readonly string Type = "type:";
             public static readonly string Typealias = "typealias:";

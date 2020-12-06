@@ -1,0 +1,35 @@
+﻿using SixComp.Support;
+
+namespace SixComp.Sema
+{
+    public class AssociatedTypeDeclaration : Base<Tree.AssociatedTypeDeclaration>, INamedDeclaration, IWhere
+    {
+        public AssociatedTypeDeclaration(IScoped outer, Tree.AssociatedTypeDeclaration tree)
+            : base(outer, tree)
+        {
+            Name = new BaseName(outer, tree.Name);
+            Inheritance = new Inheritance(outer, tree.Inheritance);
+            Where = new GenericRestrictions(this);
+            Where.Add(this, Tree.Requirements);
+            Type = ITypeDefinition.MaybeBuild(Outer, tree.Assignment);
+
+            Declare(this);
+        }
+
+        public BaseName Name { get; }
+        public Inheritance Inheritance { get; }
+        public GenericRestrictions Where { get; }
+        public ITypeDefinition? Type { get; }
+
+        public override void Report(IWriter writer)
+        {
+            using (writer.Indent(Strings.Head.AssociatedType))
+            {
+                Name.Report(writer, Strings.Head.Name);
+                Inheritance.Report(writer);
+                Where.Report(writer);
+                Type.Report(writer, Strings.Head.Type);
+            }
+        }
+    }
+}

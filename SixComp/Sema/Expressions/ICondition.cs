@@ -40,12 +40,12 @@ namespace SixComp.Sema
                 : base(outer, tree)
             {
                 Pattern = IPattern.Build(outer, tree.Pattern);
-                Type = IType.MaybeBuild(outer, tree.Type);
+                Type = ITypeDefinition.MaybeBuild(outer, tree.Type);
                 Initializer = IExpression.Build(outer, tree.Initializer);
             }
 
             public IPattern Pattern { get; }
-            public IType? Type { get; }
+            public ITypeDefinition? Type { get; }
             public IExpression Initializer { get; }
 
             protected void Report(IWriter writer, string label)

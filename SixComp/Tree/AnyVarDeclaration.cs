@@ -1,5 +1,6 @@
 ﻿using SixComp.Common;
 using SixComp.Support;
+using System;
 using System.Collections.Generic;
 
 namespace SixComp.Tree
@@ -68,6 +69,10 @@ namespace SixComp.Tree
                 var name = ip.Name;
                 var typeAnnotation = pattInit.Type;
                 var initializer = pattInit.Initializer;
+                if (initializer != null)
+                {
+                    throw new NotImplementedException();
+                }
 
                 var braceOffset = parser.Offset;
                 parser.Consume(ToKind.LBrace);

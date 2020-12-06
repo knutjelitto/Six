@@ -4,15 +4,15 @@ namespace SixComp.Sema
 {
     public class GenericConformance : GenericRestriction
     {
-        public GenericConformance(IScoped outer, IType left, IType right)
+        public GenericConformance(IScoped outer, ITypeDefinition left, ITypeDefinition right)
             : base(outer)
         {
             Left = left;
             Right = right;
         }
 
-        public IType Left { get; }
-        public IType Right { get; }
+        public ITypeDefinition Left { get; }
+        public ITypeDefinition Right { get; }
 
         public override void Report(IWriter writer)
         {

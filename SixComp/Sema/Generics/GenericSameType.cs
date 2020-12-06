@@ -4,15 +4,15 @@ namespace SixComp.Sema
 {
     public class GenericSameType : GenericRestriction
     {
-        public GenericSameType(IScoped outer, IType left, IType right)
+        public GenericSameType(IScoped outer, ITypeDefinition left, ITypeDefinition right)
             : base(outer)
         {
             Left = left;
             Right = right;
         }
 
-        public IType Left { get; }
-        public IType Right { get; }
+        public ITypeDefinition Left { get; }
+        public ITypeDefinition Right { get; }
 
         public override void Report(IWriter writer)
         {

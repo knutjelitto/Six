@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class NameExpression : Expression<Tree.NameExpression>, INamed
+    public class NameExpression : Base<Tree.NameExpression>, IExpression, INamed
     {
         public NameExpression(IScoped outer, Tree.NameExpression tree)
             : base(outer, tree)

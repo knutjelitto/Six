@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public sealed class BaseName: Base<object>, INamed, IType, IExpression
+    public sealed class BaseName: Base<object>, INamed, ITypeDefinition, IExpression
     {
         public BaseName(IScoped outer, object tree)
             : base(outer, tree)

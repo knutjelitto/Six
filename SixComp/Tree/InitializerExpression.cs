@@ -2,7 +2,8 @@
 {
     public class InitializerExpression : PostfixExpression
     {
-        public InitializerExpression(AnyExpression left, Token op, ArgumentNameClause names) : base(left, op)
+        public InitializerExpression(AnyExpression left, Token op, ArgumentNameClause names)
+            : base(left, op)
         {
             Names = names;
         }

@@ -1,4 +1,6 @@
-﻿namespace SixComp.Sema
+﻿using System.Diagnostics;
+
+namespace SixComp.Sema
 {
     public interface IExpression: IScoped, IReportable, IStatement
     {
@@ -21,15 +23,17 @@
             return Build(outer, tree.Expression);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.Expression tree)
+        private static IExpression Visit(IScoped outer, Tree.TryExpression tree)
         {
-            if (tree.Binaries.Count > 0)
-            {
-                var list = new InfixList(outer, tree);
-                outer.Scope.Package.Global.InfixesTodo.Add(list);
-                return list;
-            }
-            return Build(outer, tree.Left);
+            return new TryExpression(outer, tree);
+        }
+
+        private static IExpression Visit(IScoped outer, Tree.InfixList tree)
+        {
+            Debug.Assert(tree.Binaries.Count > 0);
+            var list = new InfixList(outer, tree);
+            outer.Scope.Module.Global.InfixesTodo.Add(list);
+            return list;
         }
 
         private static IExpression Visit(IScoped outer, Tree.FunctionCallExpression tree)
@@ -38,7 +42,7 @@
             {
                 return Build(outer, tree.Left);
             }
-            return new FuncCall(outer, tree);
+            return new FunctionCallExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.OperatorExpression tree)
@@ -48,7 +52,7 @@
 
         private static IExpression Visit(IScoped outer, Tree.InitializerExpression tree)
         {
-            return new Initializer(outer, tree);
+            return new InitializerExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.NestedExpression tree)
@@ -58,12 +62,12 @@
 
         private static IExpression Visit(IScoped outer, Tree.InOutExpression tree)
         {
-            return new InOut(outer, tree);
+            return new InOutExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.ClosureExpression tree)
         {
-            return new Closure(outer, tree);
+            return new ClosureExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.PostfixOpExpression tree)
@@ -88,12 +92,12 @@
 
         private static IExpression Visit(IScoped outer, Tree.ArrayLiteral tree)
         {
-            return new ArrayLiteral(outer, tree);
+            return new ArrayLiteralExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.DictionaryLiteral tree)
         {
-            return new DictionaryLiteral(outer, tree);
+            return new DictionaryLiteralExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.PostfixSelfExpression tree)
@@ -103,12 +107,12 @@
 
         private static IExpression Visit(IScoped outer, Tree.TupleExpression tree)
         {
-            return new Tuple(outer, tree);
+            return new TupleExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.SubscriptExpression tree)
         {
-            return new Subscript(outer, tree);
+            return new SubscriptExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.TypeExpression tree)
@@ -118,17 +122,17 @@
 
         private static IExpression Visit(IScoped outer, Tree.ImplicitMemberExpression tree)
         {
-            return new ImplicitSelector(outer, tree);
+            return new ImplicitSelectorExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.ExplicitMemberExpression.NamedMemberSelector tree)
         {
-            return new ExplicitSelector(outer, tree);
+            return new ExplicitSelectorExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.ExplicitMemberExpression.TupleMemberSelector tree)
         {
-            return new TupleSelector(outer, tree);
+            return new TupleSelectorExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.AnyExpression tree)

@@ -14,7 +14,7 @@ namespace SixComp.Sema
             if (tree.Requirement != null)
             {
                 var left = new BaseName(outer, tree.Name);
-                var right = IType.Build(outer, tree.Requirement.Composition);
+                var right = ITypeDefinition.Build(outer, tree.Requirement.Composition);
                 Add(new GenericConformance(outer, left, right));
             }
         }
@@ -34,15 +34,15 @@ namespace SixComp.Sema
 
         private GenericRestriction Visit(IScoped outer, Tree.SameTypeRequirement tree)
         {
-            var left = IType.Build(outer, tree.Name);
-            var right = IType.Build(outer, tree.Type);
+            var left = ITypeDefinition.Build(outer, tree.Name);
+            var right = ITypeDefinition.Build(outer, tree.Type);
             return new GenericSameType(outer, left, right);
         }
 
         private GenericRestriction Visit(IScoped outer, Tree.ConformanceRequirement tree)
         {
-            var left = IType.Build(outer, tree.Name);
-            var right = IType.Build(outer, tree.Composition);
+            var left = ITypeDefinition.Build(outer, tree.Name);
+            var right = ITypeDefinition.Build(outer, tree.Composition);
             return new GenericConformance(outer, left, right);
         }
 

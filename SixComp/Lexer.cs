@@ -9,10 +9,6 @@ namespace SixComp
     [DebuggerDisplay("{Status()}")]
     public class Lexer
     {
-        public Source Source => Context.Source;
-        public string Text => Source.Content;
-        public Tokens Tokens => Context.Tokens;
-
         private readonly Dictionary<string, ToKind> keywordMap;
         private readonly HashSet<ToKind> keywordSet;
         private readonly HashSet<ToKind> operatorSet;
@@ -39,6 +35,9 @@ namespace SixComp
         private int Length => Index - Start;
 
         public Context Context { get; }
+        public Source Source => Context.Source;
+        public string Text => Source.Content;
+        public Tokens Tokens => Context.Tokens;
 
         public bool Done { get; private set; } = false;
 
@@ -660,15 +659,15 @@ namespace SixComp
         private Token Token(ToKind kind, int consume, ToFlags flags = ToFlags.None)
         {
             Index = Math.Min(Source.Length, Index + consume);
-            var span = new Span(Source, Before, Start, Index);
-            return new Token(Tokens.Count, span, kind, newlineBefore, flags);
+            var span = new Span(Context, Before, Start, Index);
+            return new Token(span, Tokens.Count, kind, newlineBefore, flags);
         }
 
         private Token AnyOperator(ToKind kind = ToKind.Operator, ToFlags flags = ToFlags.None, int? withIndex = null)
         {
             Debug.Assert(Index > Start);
-            var span = new Span(Source, Before, Start, Index);
-            return new Token(withIndex ?? Tokens.Count, span, kind, newlineBefore, ToFlags.Operator | flags);
+            var span = new Span(Context, Before, Start, Index);
+            return new Token(span, withIndex ?? Tokens.Count, kind, newlineBefore, ToFlags.Operator | flags);
         }
 
         private string CurrentText()

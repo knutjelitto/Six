@@ -1,11 +1,11 @@
 ﻿namespace SixComp.Sema
 {
-    public interface IScope
+    public interface IScope: IReportable
     {
         IScoped Parent { get; }
-        Package Package { get; }
+        Module Module { get; }
         Global Global { get; }
 
-        void AddUnique(INamed named);
+        void Declare(INamedDeclaration named);
     }
 }
