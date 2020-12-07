@@ -17,6 +17,11 @@ namespace SixComp.Support
             strings[str] += 1;
         }
 
+        public void Clear()
+        {
+            strings.Clear();
+        }
+
         public void Report(IWriter writer, string label)
         {
             writer.WriteLine(label);

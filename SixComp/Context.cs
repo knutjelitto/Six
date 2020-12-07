@@ -14,6 +14,7 @@ namespace SixComp
             Tokens = new Tokens(this);
             Lexer = new Lexer(this);
             Parser = new Parser(this);
+            Error = new Error(this);
         }
 
         public FileInfo File { get; }
@@ -24,6 +25,7 @@ namespace SixComp
         public Lexer Lexer { get; }
         public Tokens Tokens { get; }
         public Parser Parser { get; }
+        public Error Error { get; }
 
         public string Short => Path.GetFileNameWithoutExtension(File.Name);
     }

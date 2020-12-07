@@ -1,7 +1,6 @@
 ﻿using SixComp.Support;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SixComp.Sema
 {
@@ -30,20 +29,24 @@ namespace SixComp.Sema
             units.Add(unit);
         }
 
-        public void Analyze(IWriter writer)
+        public void Build(IWriter writer)
         {
             BuildTrees(writer);
-            Operators(writer);
+            BuildOperators(writer);
             Report(writer);
+        }
 
+        public void Analyze(IWriter writer)
+        {
             Resolve(writer);
-            Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
         }
 
         private void Resolve(IWriter writer)
         {
             Console.Write("RESOLVE     ");
 
+#if false
+            Global.UnresolvedNames.Clear();
             using (writer.Indent("EXTENSIONS:"))
             {
                 foreach (var extension in Global.Extensions)
@@ -51,6 +54,9 @@ namespace SixComp.Sema
                     extension.ResolveExtended(writer);
                 }
             }
+            Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
+            writer.WriteLine();
+#endif
 
             using (writer.Indent("UNITS:"))
             {
@@ -59,6 +65,7 @@ namespace SixComp.Sema
                     unit.Resolve(writer);
                     Console.Write($".");
                 }
+                Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
             }
             writer.WriteLine();
             Console.WriteLine();
@@ -75,7 +82,7 @@ namespace SixComp.Sema
             Console.WriteLine();
         }
 
-        private void Operators(IWriter writer)
+        private void BuildOperators(IWriter writer)
         {
             Console.Write("OPERATORS   ");
             Global.CreatePrecedences(this);
@@ -84,7 +91,7 @@ namespace SixComp.Sema
             Console.WriteLine();
         }
 
-        private void Report(IWriter writer)
+        public void Report(IWriter writer)
         {
             Console.Write("REPORT      ");
             foreach (var unit in Units)

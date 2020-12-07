@@ -12,7 +12,7 @@ namespace SixComp
 
         public Navi Navi { get; }
 
-        public Tree.CompilationUnit? Parse(Context context)
+        public Tree.CompilationUnit? Parse(IWriter writer, Context context)
         {
             var parser = context.Parser;
 
@@ -23,21 +23,21 @@ namespace SixComp
             }
             catch (ParserException parserError)
             {
-                Error(context, parserError.Message, parserError.Token);
+                context.Error.Report(writer, parserError.Message, parserError.Token);
 
                 return null;
 
             }
             catch (LexerException lexerError)
             {
-                Error(context, lexerError.Message, lexerError.Offset);
+                context.Error.Report(writer, lexerError.Message, lexerError.Offset);
 
                 return null;
             }
             catch (InvalidOperationException invalid)
             {
                 Console.WriteLine(invalid.ToString());
-                Error(context, $"internal error - {invalid.Message}", parser.CurrentToken);
+                context.Error.Report(writer, $"internal error - {invalid.Message}", parser.CurrentToken);
 
                 return null;
             }

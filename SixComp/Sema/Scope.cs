@@ -2,12 +2,14 @@
 using SixComp.Support;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace SixComp.Sema
 {
     public class Scope : IScope, IReportable
     {
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
+        private readonly List<ExtensionDeclaration> Extensions = new List<ExtensionDeclaration>();
 
         public Scope(IScoped parent, Module? module = null)
         {
@@ -30,11 +32,25 @@ namespace SixComp.Sema
             list.list.Add(named);
         }
 
+        public void Extend(ExtensionDeclaration extension)
+        {
+            Extensions.Add(extension);
+        }
+
         public IReadOnlyList<IEntity> Look(INamed named)
         {
             if (lookup.TryGetValue(named.Name, out var decls))
             {
                 return decls.list;
+            }
+            var found = new List<IEntity>();
+            foreach (var extension in Extensions)
+            {
+                found.AddRange(extension.Scope.Look(named));
+            }
+            if (found.Count > 0)
+            {
+                return found;
             }
             return IScope.NoEntity;
         }

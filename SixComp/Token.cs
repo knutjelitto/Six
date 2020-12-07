@@ -1,4 +1,6 @@
-﻿namespace SixComp
+﻿using SixComp.Support;
+
+namespace SixComp
 {
     public class Token
     {
@@ -30,6 +32,11 @@
         public bool IsImplicit => (Flags & ToFlags.Implicit) != 0;
         public int Length => Span.Length;
         public char First => Span.FirstChar;
+
+        public void Error(IWriter writer, string error)
+        {
+            Span.Context.Error.Report(writer, error, this);
+        }
 
         public override bool Equals(object? obj)
         {

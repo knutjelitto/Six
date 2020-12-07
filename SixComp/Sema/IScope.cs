@@ -12,6 +12,7 @@ namespace SixComp.Sema
         Global Global { get; }
 
         void Declare(IEntity named);
+        void Extend(ExtensionDeclaration extension);
 
         IReadOnlyList<IEntity> Look(INamed named);
         IReadOnlyList<IEntity> LookUp(INamed named);

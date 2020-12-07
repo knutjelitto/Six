@@ -1,6 +1,5 @@
 ﻿using SixComp.Entities;
 using SixComp.Support;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -25,11 +24,20 @@ namespace SixComp.Sema
             return new BaseName(outer, tree);
         }
 
+        public static BaseName Self(IScoped outer)
+        {
+            return new BaseName(outer, "self");
+        }
+
         public override void Resolve(IWriter writer)
         {
             if (Text.StartsWith('$'))
             {
                 Scope.FindParent<ClosureExpression>(Outer).Parameters.AddImplicit(this);
+            }
+            if (Text == "self")
+            {
+                Debug.Assert(true);
             }
             var decls = Scope.LookUp(this);
 

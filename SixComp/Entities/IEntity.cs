@@ -13,13 +13,20 @@ namespace SixComp.Entities
             where TDecl : INamedDeclaration
         {
             protected Entity(TDecl declaration)
+                : this(declaration, declaration.Name)
             {
                 Declaration = declaration;
             }
 
+            protected Entity(TDecl declaration, BaseName name)
+            {
+                Declaration = declaration;
+                Name = name;
+            }
+
             public TDecl Declaration { get; }
             public IScope Scope => Declaration.Scope;
-            public BaseName Name => Declaration.Name;
+            public BaseName Name { get; }
             public IScoped Outer => Declaration.Outer;
             public Global Global => Declaration.Global;
 
@@ -99,6 +106,12 @@ namespace SixComp.Entities
         public class Label : Entity<Labeled>
         {
             public Label(Labeled declaration) : base(declaration) { }
+        }
+
+        public class SelfInstanceReference<T> : Entity<T>
+            where T : INamedDeclaration, IScoped
+        {
+            public SelfInstanceReference(T declaration) : base(declaration, BaseName.Self(declaration)) { }
         }
     }
 }

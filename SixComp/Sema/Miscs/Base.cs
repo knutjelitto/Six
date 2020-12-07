@@ -39,12 +39,21 @@ namespace SixComp.Sema
 
         public virtual void Resolve(IWriter writer)
         {
-            UnResolve(writer);
+            throw new NotImplementedException();
         }
 
-        protected void UnResolve(IWriter writer, string name = "")
+        protected void UnResolve(IWriter writer, BaseName name)
         {
-            writer.WriteLine($"RESOLVE: {GetType().FullName} {name}");
+            if (Global.IgnoredNamesForNow.Contains(name.Text))
+            {
+                return;
+            }
+            Global.UnresolvedNames.Add(name.Text);
+
+            if (name.Tree is Tree.BaseName treeName)
+            {
+                treeName.Token.Error(writer, $"can't resolve `{name.Text}`");
+            }
         }
 
         protected void Declare(FunctionDeclaration declaration)
@@ -55,16 +64,19 @@ namespace SixComp.Sema
         protected void Declare(ProtocolDeclaration declaration)
         {
             Outer.Scope.Declare(new IEntity.Protocol(declaration));
+            declaration.Scope.Declare(new IEntity.SelfInstanceReference<ProtocolDeclaration>(declaration));
         }
 
         protected void Declare(ClassDeclaration declaration)
         {
             Outer.Scope.Declare(new IEntity.Class(declaration));
+            declaration.Scope.Declare(new IEntity.SelfInstanceReference<ClassDeclaration>(declaration));
         }
 
         protected void Declare(EnumDeclaration declaration)
         {
             Outer.Scope.Declare(new IEntity.Enum(declaration));
+            declaration.Scope.Declare(new IEntity.SelfInstanceReference<EnumDeclaration>(declaration));
         }
 
         protected void Declare(AssociatedTypeDeclaration declaration)
@@ -80,6 +92,7 @@ namespace SixComp.Sema
         protected void Declare(StructDeclaration declaration)
         {
             Outer.Scope.Declare(new IEntity.Struct(declaration));
+            declaration.Scope.Declare(new IEntity.SelfInstanceReference<StructDeclaration>(declaration));
         }
 
         protected void Declare(BlockVarDeclaration declaration)

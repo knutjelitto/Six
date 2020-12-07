@@ -1,6 +1,4 @@
-﻿using SixComp.Entities;
-using SixComp.Support;
-using System.Collections.Generic;
+﻿using SixComp.Support;
 
 namespace SixComp.Sema
 {
@@ -36,7 +34,7 @@ namespace SixComp.Sema
                 }
 
             }
-            UnResolve(writer, Name.Text);
+            UnResolve(writer, Name);
         }
 
         public void ResolveChained(IWriter writer, IScoped scoped)
@@ -57,7 +55,7 @@ namespace SixComp.Sema
                 }
 
             }
-            UnResolve(writer, Name.Text);
+            UnResolve(writer, Name);
         }
 
         public override void Report(IWriter writer)
@@ -68,6 +66,10 @@ namespace SixComp.Sema
 
         public override string ToString()
         {
+            if (Arguments.Count == 0)
+            {
+                return $"{Name.Text}";
+            }
             return $"{Name.Text}<{string.Join(",", Arguments)}>";
         }
     }

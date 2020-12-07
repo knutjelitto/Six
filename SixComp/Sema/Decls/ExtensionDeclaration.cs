@@ -25,6 +25,14 @@ namespace SixComp.Sema
 
         public override void Resolve(IWriter writer)
         {
+            Extended.Resolve(writer);
+            if (Extended.Entity != null)
+            {
+                Debug.Assert(true);
+
+                Extended.Entity.Scope.Extend(this);
+            }
+
             Resolve(writer, Extended, Inheritance, Where, Declarations);
         }
 

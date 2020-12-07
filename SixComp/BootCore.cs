@@ -48,7 +48,7 @@ namespace SixComp
             {
                 Console.Write($".");
 
-                var unit = compiler.Parse(context);
+                var unit = compiler.Parse(new ConsoleWriter(), context);
 
                 if (unit == null)
                 {
@@ -59,9 +59,12 @@ namespace SixComp
             }
             Console.WriteLine();
 
-            var filename = Path.Combine(Temp.FullName, "_Analyze.txt");
-            Directory.CreateDirectory(Path.GetDirectoryName(filename));
-            using (var writer = new FileWriter(filename))
+            using (var writer = new FileWriter(EnsureTemp("_Build.txt")))
+            {
+                module.Build(writer);
+            }
+
+            using (var writer = new FileWriter(EnsureTemp("_Analyze.txt")))
             {
                 module.Analyze(writer);
             }
@@ -73,6 +76,13 @@ namespace SixComp
                 Console.Write($".");
             }
             Console.WriteLine();
+        }
+
+        private string EnsureTemp(string file)
+        {
+            var filename = Path.Combine(Temp.FullName, file);
+            Directory.CreateDirectory(Path.GetDirectoryName(filename));
+            return filename;
         }
     }
 }

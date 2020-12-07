@@ -38,6 +38,22 @@ namespace SixComp.Sema
         public List<ExtensionDeclaration> Extensions { get; }
         public CountedStrings UnresolvedNames { get; }
 
+        public HashSet<string> IgnoredNamesForNow = new HashSet<string>
+        {
+            "Equatable",
+            "Comparable",
+            "Hashable",
+            "IteratorProtocol",
+            "Sequence",
+            "AnyObject",
+            "Error",
+            "Bool",
+            "Int",
+            "Float",
+            "Double",
+            "String",
+        };
+
         public void CreatePrecedences(IScoped outer)
         {
             foreach (var group in PrecedencesTodo)
