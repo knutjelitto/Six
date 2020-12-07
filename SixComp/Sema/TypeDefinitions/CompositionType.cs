@@ -13,6 +13,11 @@ namespace SixComp.Sema
             Debug.Assert(tree.Count >= 2);
         }
 
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
+        }
+
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.Union);

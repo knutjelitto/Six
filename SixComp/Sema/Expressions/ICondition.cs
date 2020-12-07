@@ -29,9 +29,32 @@ namespace SixComp.Sema
             return Build(outer, tree.Expression);
         }
 
+        private static IExpression Visit(IScoped outer, Tree.AvailableCondition tree)
+        {
+            return new AvailableCondition(outer, tree);
+        }
+
         private static IExpression Visit(IScoped outer, Tree.AnyCondition tree)
         {
             return new Dummy(outer, tree);
+        }
+
+        public class AvailableCondition : Base<Tree.AvailableCondition>, ICondition
+        {
+            public AvailableCondition(IScoped outer, Tree.AvailableCondition tree)
+                : base(outer, tree)
+            {
+            }
+
+            public override void Resolve(IWriter writer)
+            {
+                // TODO: ?
+            }
+
+            public override void Report(IWriter writer)
+            {
+                Tree.Tokens.ToString().Report(writer, Strings.Head.Available);
+            }
         }
 
         public abstract class PatternCondition : Base<Tree.PatternCondition>, ICondition
@@ -47,6 +70,12 @@ namespace SixComp.Sema
             public IPattern Pattern { get; }
             public ITypeDefinition? Type { get; }
             public IExpression Initializer { get; }
+
+            public override void Resolve(IWriter writer)
+            {
+                // TODO: Pattern??
+                Resolve(writer, Type, Initializer);
+            }
 
             protected void Report(IWriter writer, string label)
             {

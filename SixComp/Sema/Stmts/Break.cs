@@ -12,6 +12,12 @@ namespace SixComp.Sema
 
         public BaseName? Label { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: labels??
+            Resolve(writer, Label);
+        }
+
         public override void Report(IWriter writer)
         {
             Label.Report(writer, Strings.Head.Break, true);

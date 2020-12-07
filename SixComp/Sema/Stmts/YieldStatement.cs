@@ -12,6 +12,11 @@ namespace SixComp.Sema
 
         public IExpression? Value { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Value);
+        }
+
         public override void Report(IWriter writer)
         {
             Value.Report(writer, Strings.Head.Yield, true);

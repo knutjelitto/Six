@@ -14,6 +14,12 @@ namespace SixComp.Sema
         public IExpression Left { get; }
         public BaseNames ArgumentNames { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: argument-names??
+            Resolve(writer, Left);
+        }
+
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

@@ -14,11 +14,15 @@ namespace SixComp.Sema
             Declarations = new Declarations(this, Tree.Declarations);
         }
 
-        public Tree.Prefix Prefix => Tree.Prefix;
         public TypeIdentifier Extended { get; }
         public Inheritance Inheritance { get; }
         public GenericRestrictions Where { get; }
         public Declarations Declarations { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Extended, Inheritance, Where, Declarations);
+        }
 
         public override void Report(IWriter writer)
         {

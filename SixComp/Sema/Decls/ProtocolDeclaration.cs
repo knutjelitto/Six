@@ -23,6 +23,11 @@ namespace SixComp.Sema
         public GenericRestrictions Where { get; }
         public Declarations Declarations { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, GenericParameters, Inheritance, Where, Declarations);
+        }
+
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

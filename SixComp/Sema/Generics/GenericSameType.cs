@@ -14,6 +14,11 @@ namespace SixComp.Sema
         public ITypeDefinition Left { get; }
         public ITypeDefinition Right { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Left, Right);
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.SameType))

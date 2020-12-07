@@ -14,6 +14,11 @@ namespace SixComp.Sema
         public IExpression Key { get; }
         public IExpression Value { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Key, Value);
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.KeyValue))

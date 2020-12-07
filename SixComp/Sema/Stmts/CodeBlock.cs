@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public class CodeBlock : Base<Tree.CodeBlock>, IStatement
+    public class CodeBlock : BaseScoped<Tree.CodeBlock>, IStatement
     {
         public CodeBlock(IScoped outer, Tree.CodeBlock tree)
             : base(outer, tree)
@@ -12,6 +12,16 @@ namespace SixComp.Sema
 
         public Statements Statements { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Statements.Resolve(writer);
+        }
+
+        public override void Report(IWriter writer)
+        {
+            Statements.ReportList(writer, Strings.Head.Block);
+        }
+
         public static CodeBlock? Maybe(IScoped outer, Tree.CodeBlock? tree)
         {
             if (tree == null)
@@ -19,11 +29,6 @@ namespace SixComp.Sema
                 return null;
             }
             return new CodeBlock(outer, tree);
-        }
-
-        public override void Report(IWriter writer)
-        {
-            Statements.ReportList(writer, Strings.Head.Block);
         }
     }
 }

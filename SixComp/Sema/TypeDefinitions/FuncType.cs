@@ -18,6 +18,12 @@ namespace SixComp.Sema
         public bool Throws { get; }
         public ITypeDefinition Result { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
+            Resolve(writer, Result);
+        }
+
         public override void Report(IWriter writer)
         {
             writer.WriteLine("function-type");
@@ -46,6 +52,11 @@ namespace SixComp.Sema
 
             public BaseName? Extern { get; }
             public ITypeDefinition Type { get; }
+
+            public override void Resolve(IWriter writer)
+            {
+                Resolve(writer, Type);
+            }
 
             public override void Report(IWriter writer)
             {

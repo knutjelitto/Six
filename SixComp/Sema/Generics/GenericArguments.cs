@@ -14,6 +14,10 @@ namespace SixComp.Sema
 
         public Tree.GenericArgumentClause Tree { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
+        }
 
         public override void Report(IWriter writer)
         {

@@ -17,13 +17,16 @@ namespace SixComp.Sema
             Declare(this);
         }
 
-        public Tree.Prefix Prefix => Tree.Prefix;
         public BaseName Name { get; }
-
         public GenericParameters GenericParameters { get; }
         public Inheritance Inheritance { get; }
         public GenericRestrictions Where { get; }
         public Declarations Declarations { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, GenericParameters, Inheritance, Where, Declarations);
+        }
 
         public override void Report(IWriter writer)
         {

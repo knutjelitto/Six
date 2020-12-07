@@ -1,6 +1,7 @@
 ﻿using SixComp.Support;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SixComp.Sema
 {
@@ -17,8 +18,10 @@ namespace SixComp.Sema
 
         public IReadOnlyList<Unit> Units => this.units;
         public IScope Scope { get; }
+        public IScoped Outer => this;
         public Global Global { get; }
         public string ModuleName { get; }
+
 
         public static SortedSet<string> Missings = new SortedSet<string>();
 
@@ -29,19 +32,59 @@ namespace SixComp.Sema
 
         public void Analyze(IWriter writer)
         {
-            Console.Write("BUILD-TREE  ");
+            BuildTrees(writer);
+            Operators(writer);
+            Report(writer);
+
+            Resolve(writer);
+            ReportUnresolved(writer);
+        }
+
+        private void Resolve(IWriter writer)
+        {
+            Console.Write("RESOLVE     ");
             foreach (var unit in Units)
             {
-                unit.BuildTree(this);
+                unit.Resolve(writer);
+                Console.Write($".");
+            }
+            writer.WriteLine();
+            Console.WriteLine();
+        }
+
+        private void ReportUnresolved(IWriter writer)
+        {
+            using (writer.Indent("UNRESOLVED:"))
+            {
+                foreach (var unresolved in Global.UnresolvedNames.OrderBy(s => s))
+                {
+                    writer.WriteLine($"{unresolved}");
+                }
+            }
+        }
+
+        private void BuildTrees(IWriter writer)
+        {
+            Console.Write("BUILD       ");
+            foreach (var unit in Units)
+            {
+                unit.Build();
                 Console.Write($".");
             }
             Console.WriteLine();
+        }
 
-
+        private void Operators(IWriter writer)
+        {
+            Console.Write("OPERATORS   ");
             Global.CreatePrecedences(this);
             Global.CreateOperators();
             Global.CreateInfixes();
+            Console.WriteLine();
+        }
 
+        private void Report(IWriter writer)
+        {
             Console.Write("REPORT      ");
             foreach (var unit in Units)
             {
@@ -50,7 +93,7 @@ namespace SixComp.Sema
             }
             Console.WriteLine();
 
-            Scope.Report(writer);
+            ReportScoping(writer);
             writer.WriteLine();
 
             writer.WriteLine($"infixes-todo: #{Global.InfixesTodo.Count}");
@@ -68,16 +111,20 @@ namespace SixComp.Sema
                     no += 1;
                 }
             }
+            writer.WriteLine();
+        }
+
+        private void ReportScoping(IWriter writer)
+        {
+            using (writer.Indent($"scoping:"))
+            {
+                Scope.Report(writer);
+            }
         }
 
         public override string ToString()
         {
             return $"{Strings.Head.Module} {ModuleName}";
-        }
-
-        public void AddUnique(INamed named)
-        {
-            throw new NotImplementedException();
         }
     }
 }

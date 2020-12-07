@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Collections.Generic;
 
 namespace SixComp.Sema
 {
@@ -9,26 +8,26 @@ namespace SixComp.Sema
             : base(outer, tree)
         {
             Context = context;
-            Statements = new List<IStatement>();
         }
 
         public Context Context { get; }
-        public List<IStatement> Statements { get; }
+        public Statements? Statements { get; private set; }
 
-        public void BuildTree(Module module)
+        public void Build()
         {
-            foreach (var declaration in Tree.Statements)
-            {
-                var statement = IStatement.Build(module, declaration);
-                Statements.Add(statement);
-            }
+            Statements = new Statements(Outer, Tree.Statements);
+        }
+
+        public override void Resolve(IWriter writer)
+        {
+            Statements!.Resolve(writer);
         }
 
         public override void Report(IWriter writer)
         {
             using (writer.Indent($"unit {Short}:"))
             {
-                foreach (var statement in Statements)
+                foreach (var statement in Statements!)
                 {
                     statement.Report(writer);
                     writer.WriteLine();

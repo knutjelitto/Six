@@ -1,4 +1,7 @@
-﻿namespace SixComp.Sema
+﻿using SixComp.Entities;
+using System.Collections.Generic;
+
+namespace SixComp.Sema
 {
     public interface IScope: IReportable
     {
@@ -6,6 +9,11 @@
         Module Module { get; }
         Global Global { get; }
 
-        void Declare(INamedDeclaration named);
+        void Declare(IEntity named);
+
+        IReadOnlyList<IEntity> Look(INamed named);
+        IReadOnlyList<IEntity> LookUp(INamed named);
+
+        T FindParent<T>(IScoped scoped) where T : notnull, IScoped;
     }
 }

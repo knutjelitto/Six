@@ -32,9 +32,10 @@ namespace SixComp.Sema
         public BaseNames TypeNames { get; }
         public PrecedenceGroupDeclaration? Precedence { get; private set; }
 
-        public void SetPrecedence(PrecedenceGroupDeclaration precedence)
+        public override void Resolve(IWriter writer)
         {
-            Precedence = precedence;
+            // TODO: ??
+            //base.Resolve(writer);
         }
 
         public override void Report(IWriter writer)
@@ -46,6 +47,11 @@ namespace SixComp.Sema
                 PrecedenceName.Report(writer, Strings.Head.Precedence);
                 TypeNames.ReportList(writer, Strings.Head.Types);
             }
+        }
+
+        public void SetPrecedence(PrecedenceGroupDeclaration precedence)
+        {
+            Precedence = precedence;
         }
     }
 }

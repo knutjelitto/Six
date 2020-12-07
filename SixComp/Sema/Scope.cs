@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,8 @@ namespace SixComp.Sema
 {
     public class Scope : IScope, IReportable
     {
-        private readonly Dictionary<BaseName, (int order, List<INamedDeclaration> list)> lookup = new Dictionary<BaseName, (int order, List<INamedDeclaration> list)>();
+        private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
+        private static readonly List<IEntity> NoEntity = new List<IEntity>();
 
         public Scope(IScoped parent, Module? module = null)
         {
@@ -17,45 +19,71 @@ namespace SixComp.Sema
         public Module Module { get; }
         public IScoped Parent { get; }
         public Global Global => Module.Global;
-
-        public string Name
-        {
-            get
-            {
-                if (Parent.Scope == this)
-                {
-                    return Module.ModuleName;
-                }
-                else
-                {
-                    return $"{((Scope)Parent.Scope).Name}.<?>";
-                }
-            }
-        }
-
-        public void Declare(INamedDeclaration named)
+            
+        public void Declare(IEntity named)
         {
             if (!lookup.TryGetValue(named.Name, out var list))
             {
-                list = (lookup.Count, new List<INamedDeclaration>());
+                list = (lookup.Count, new List<IEntity>());
                 lookup.Add(named.Name, list);
             }
 
             list.list.Add(named);
         }
 
+        public IReadOnlyList<IEntity> Look(INamed named)
+        {
+            if (lookup.TryGetValue(named.Name, out var decls))
+            {
+                return decls.list;
+            }
+            return NoEntity;
+        }
+
+        public IReadOnlyList<IEntity> LookUp(INamed named)
+        {
+            Scope scope = this;
+            while (true)
+            {
+                if (scope.lookup.TryGetValue(named.Name, out var decls))
+                {
+                    return decls.list;
+                }
+                if (scope == Module.Scope)
+                {
+                    break;
+                }
+                scope = (Scope)scope.Parent.Scope;
+            }
+            return NoEntity;
+        }
+
+        public T FindParent<T>(IScoped scoped) where T : notnull, IScoped
+        {
+            while (!(scoped is T))
+            {
+                if (scoped is Module)
+                {
+                    throw new System.NotImplementedException();
+                }
+                scoped = scoped.Outer;
+            }
+
+            return (T)scoped;
+        }
+
         public void Report(IWriter writer)
         {
-            using (writer.Indent($"scope {Name}"))
+            foreach (var decls in lookup.Values.OrderBy(l => l.order).Select(l => l.list))
             {
-                foreach (var decls in lookup.Values.OrderBy(l => l.order).Select(l => l.list))
+                foreach (var decl in decls)
                 {
-                    writer.WriteLine($"{decls.First().Name}");
-                    using (writer.Indent())
+                    writer.WriteLine($"{decl.Name}");
+                    if (decl.IsParentScope)
                     {
-                        foreach (var decl in decls)
+                        using (writer.Indent())
                         {
-                            writer.WriteLine($"{decl}");
+                            decl.Scope.Report(writer);
                         }
                     }
                 }

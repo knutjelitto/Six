@@ -19,40 +19,44 @@ namespace SixComp.Entities
 
             public BaseName Name => Declaration.Name;
 
+            public IScoped Outer => Declaration.Outer;
+
             public void Report(IWriter writer) => Declaration.Report(writer);
+
+            public void Resolve(IWriter writer) { }
         }
 
-        public class Function : Entity<FunctionDeclaration>
+        public class Function : Entity<FunctionDeclaration>, IParentScope
         {
             public Function(FunctionDeclaration declaration) : base(declaration) { }
         }
 
-        public class Protocol : Entity<ProtocolDeclaration>
+        public class Protocol : Entity<ProtocolDeclaration>, IParentScope
         {
             public Protocol(ProtocolDeclaration declaration) : base(declaration) { }
         }
 
-        public class Struct : Entity<StructDeclaration>
+        public class Struct : Entity<StructDeclaration>, IParentScope
         {
             public Struct(StructDeclaration declaration) : base(declaration) { }
         }
 
-        public class Class : Entity<ClassDeclaration>
+        public class Class : Entity<ClassDeclaration>, IParentScope
         {
             public Class(ClassDeclaration declaration) : base(declaration) { }
         }
 
-        public class Enum : Entity<EnumDeclaration>
+        public class Enum : Entity<EnumDeclaration>, IParentScope
         {
             public Enum(EnumDeclaration declaration) : base(declaration) { }
         }
 
-        public class Var : Entity<BlockVarDeclaration>
+        public class Var : Entity<BlockVarDeclaration>, IParentScope
         {
             public Var(BlockVarDeclaration declaration) : base(declaration) { }
         }
 
-        public class Alias : Entity<TypealiasDeclaration>
+        public class Alias : Entity<TypealiasDeclaration>, IParentScope
         {
             public Alias(TypealiasDeclaration declaration) : base(declaration) { }
         }
@@ -72,9 +76,24 @@ namespace SixComp.Entities
             public FParameter(FuncParameter declaration) : base(declaration) { }
         }
 
+        public class CParameter : Entity<ClosureExpression.ClosureParameter>
+        {
+            public CParameter(ClosureExpression.ClosureParameter declaration) : base(declaration) { }
+        }
+
         public class NamePattern : Entity<IPattern.IdentifierPattern>
         {
             public NamePattern(IPattern.IdentifierPattern declaration) : base(declaration) { }
+        }
+
+        public class EnumCase : Entity<EnumCaseDeclaration>
+        {
+            public EnumCase(EnumCaseDeclaration declaration) : base(declaration) { }
+        }
+
+        public class Label : Entity<Labeled>
+        {
+            public Label(Labeled declaration) : base(declaration) { }
         }
     }
 }

@@ -16,6 +16,12 @@ namespace SixComp.Sema
         public IExpression Left { get; }
         public IExpression Right { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: find operator function
+            Resolve(writer, Left, Right);
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Infix))

@@ -20,6 +20,12 @@ namespace SixComp.Sema
         public BaseName? SetterName { get; }
         public CodeBlock? Block { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: Setter??
+            Resolve(writer, Block);
+        }
+
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

@@ -1,4 +1,8 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixComp.Sema
 {
@@ -19,6 +23,25 @@ namespace SixComp.Sema
                 return null;
             }
             return new BaseName(outer, tree);
+        }
+
+        public override void Resolve(IWriter writer)
+        {
+            if (Text.StartsWith('$'))
+            {
+                Scope.FindParent<ClosureExpression>(Outer).Parameters.AddImplicit(this);
+            }
+            var decls = Scope.LookUp(this);
+
+            if (decls.Count == 0)
+            {
+                Scope.Global.UnresolvedNames.Add(Text);
+            }
+        }
+
+        public IReadOnlyList<IEntity> ResolveIn(IWriter writer, IScoped scoped)
+        {
+            return scoped.Scope.Look(this);
         }
 
         public override void Report(IWriter writer)

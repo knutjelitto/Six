@@ -1,8 +1,6 @@
 ﻿using SixComp.Support;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SixComp.Sema.Stmts
 {
@@ -16,6 +14,11 @@ namespace SixComp.Sema.Stmts
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.Blocks);
+        }
+
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
         }
 
         private static IEnumerable<PropertyBlock> Enum(IScoped outer, Tree.PropertyBlocks tree)

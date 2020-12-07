@@ -12,6 +12,8 @@ namespace SixComp.Sema
             Name = new BaseName(Outer, tree.Name);
             Tuple = (TupleType?)ITypeDefinition.MaybeBuild(Outer, tree.Tuple);
             Initializer = IExpression.MaybeBuild(outer, tree.Initializer);
+
+            Declare(this);
         }
 
         public Tree.Prefix Prefix { get; }
@@ -19,6 +21,11 @@ namespace SixComp.Sema
         public BaseName Name { get; }
         public TupleType? Tuple { get; }
         public IExpression? Initializer { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Tuple, Initializer);
+        }
 
         public override void Report(IWriter writer)
         {

@@ -1,4 +1,5 @@
 ﻿using SixComp.Support;
+using System.Diagnostics;
 
 namespace SixComp.Sema
 {
@@ -14,6 +15,11 @@ namespace SixComp.Sema
             Variadic = Tree.Variadic;
             Init = IExpression.MaybeBuild(Outer, Tree.Initializer);
 
+            if (Intern.Text == "_")
+            {
+                Debug.Assert(true);
+            }
+
             Declare(this);
         }
 
@@ -26,6 +32,11 @@ namespace SixComp.Sema
         public IExpression? Init { get; }
 
         public BaseName Name => Intern;
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Type, Init);
+        }
 
         public override void Report(IWriter writer)
         {

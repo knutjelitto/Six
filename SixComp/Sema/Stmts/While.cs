@@ -14,6 +14,11 @@ namespace SixComp.Sema
         public Conditions Conditions { get; }
         public CodeBlock Block { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Conditions, Block   );
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.While))

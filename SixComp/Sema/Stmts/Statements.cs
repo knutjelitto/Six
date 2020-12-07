@@ -11,14 +11,19 @@ namespace SixComp.Sema
         {
         }
 
-        private static IEnumerable<IStatement> Enum(IScoped outer, Tree.StatementList tree)
+        public override void Resolve(IWriter writer)
         {
-            return tree.Select(statement => IStatement.Build(outer, statement));
+            ResolveItems(writer);
         }
 
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.Statements);
+        }
+
+        private static IEnumerable<IStatement> Enum(IScoped outer, Tree.StatementList tree)
+        {
+            return tree.Select(statement => IStatement.Build(outer, statement));
         }
     }
 }

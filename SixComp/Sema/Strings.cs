@@ -22,6 +22,7 @@
             public static readonly string Assoc = "assoc:";
             public static readonly string AssociatedType = "associatedtype:";
             public static readonly string Async = "async:";
+            public static readonly string Available = "available:";
             public static readonly string Block = "code-block:";
             public static readonly string Blocks = "blocks:";
             public static readonly string Break = "break:";

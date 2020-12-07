@@ -2,16 +2,23 @@
 
 namespace SixComp.Sema
 {
-    public class Postfix : Base<Tree.PostfixOpExpression>, IExpression
+    public class PostfixExpression : Base<Tree.PostfixOpExpression>, IExpression
     {
-        public Postfix(IScoped outer, Tree.PostfixOpExpression tree)
+        public PostfixExpression(IScoped outer, Tree.PostfixOpExpression tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);
             Operator = new BaseName(Outer, Tree.Operator);
         }
+        
         public IExpression Left { get; }
         public BaseName Operator { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: resolve operator
+            Resolve(writer, Left);
+        }
 
         public override void Report(IWriter writer)
         {

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ClosureExpression : Base<Tree.ClosureExpression>, IExpression
+    public class ClosureExpression : BaseScoped<Tree.ClosureExpression>, IExpression
     {
         public ClosureExpression(IScoped outer, Tree.ClosureExpression tree)
             : base(outer, tree)
@@ -14,10 +14,10 @@ namespace SixComp.Sema
             {
                 throw new NotImplementedException();
             }
-            Parameters = new ClosureParameters(outer, tree.Parameters);
+            Parameters = new ClosureParameters(this, tree.Parameters);
             Throws = tree.Throws;
-            Result = ITypeDefinition.MaybeBuild(outer, tree.Result);
-            Statements = new Statements(outer, tree.Statements);
+            Result = ITypeDefinition.MaybeBuild(this, tree.Result);
+            Statements = new Statements(this, tree.Statements);
 
         }
 
@@ -25,6 +25,11 @@ namespace SixComp.Sema
         public bool Throws { get; }
         public ITypeDefinition? Result { get; }
         public Statements Statements { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Parameters, Result, Statements);
+        }
 
         public override void Report(IWriter writer)
         {
@@ -37,11 +42,16 @@ namespace SixComp.Sema
             }
         }
 
-        public class ClosureParameters : Items<TypedName, Tree.ClosureParameterClause>
+        public class ClosureParameters : Items<ClosureParameter, Tree.ClosureParameterClause>
         {
             public ClosureParameters(IScoped outer, Tree.ClosureParameterClause tree)
                 : base(outer, tree, Enum(outer, tree))
             {
+            }
+
+            public override void Resolve(IWriter writer)
+            {
+                ResolveItems(writer);
             }
 
             public override void Report(IWriter writer)
@@ -49,25 +59,37 @@ namespace SixComp.Sema
                 this.ReportList(writer, Strings.Head.Parameters);
             }
 
-            private static IEnumerable<TypedName> Enum(IScoped outer, Tree.ClosureParameterClause tree)
+            public void AddImplicit(BaseName name)
             {
-                return tree.Parameters.Select(parameter => new TypedName(outer, parameter.Name, parameter.Type));
+                Add(new ClosureParameter(Outer, (Tree.BaseName)name.Tree, null));
+            }
+
+            private static IEnumerable<ClosureParameter> Enum(IScoped outer, Tree.ClosureParameterClause tree)
+            {
+                return tree.Parameters.Select(parameter => new ClosureParameter(outer, parameter.Name, parameter.Type));
             }
         }
 
-        public class TypedName : Base<Tree.BaseName>
+        public class ClosureParameter : Base<Tree.BaseName>, INamedDeclaration
         {
-            public TypedName(IScoped outer, Tree.BaseName tree, Tree.AnyType? treeType)
+            public ClosureParameter(IScoped outer, Tree.BaseName tree, Tree.AnyType? treeType)
                 : base(outer, tree)
             {
                 Name = new BaseName(outer, tree);
                 Type = ITypeDefinition.MaybeBuild(outer, treeType);
                 TreeType = treeType;
+
+                Declare(this);
             }
 
             public BaseName Name { get; }
             public ITypeDefinition? Type { get; }
             public Tree.AnyType? TreeType { get; }
+
+            public override void Resolve(IWriter writer)
+            {
+                Resolve(writer, Type);
+            }
 
             public override void Report(IWriter writer)
             {

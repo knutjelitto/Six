@@ -18,9 +18,9 @@ namespace SixComp.Sema
                 Tree.Operator.AssignmentOperator named => new Assignment(outer, named),
                 Tree.Operator.ConditionalOperator conditional => new Conditional(outer, conditional),
                 Tree.Operator.CastOperator cast when cast.Kind == CastKind.Is => new CastIs(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.As => new CastAs(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsChain => new CastAsSoft(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsForce => new CastAsHard(outer, cast),
+                Tree.Operator.CastOperator cast when cast.Kind == CastKind.As => new CastAsStatic(outer, cast),
+                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsChain => new CastAsDynamicSoft(outer, cast),
+                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsForce => new CastAsDynamicHard(outer, cast),
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
@@ -104,25 +104,25 @@ namespace SixComp.Sema
             }
         }
 
-        public class CastAs : Operator<Tree.Operator.CastOperator>
+        public class CastAsStatic : Operator<Tree.Operator.CastOperator>
         {
-            public CastAs(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsStatic(IScoped outer, Tree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as"), outer.Scope.Global.CastingPrecedence)
             {
             }
         }
 
-        public class CastAsSoft : Operator<Tree.Operator.CastOperator>
+        public class CastAsDynamicSoft : Operator<Tree.Operator.CastOperator>
         {
-            public CastAsSoft(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsDynamicSoft(IScoped outer, Tree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as?"), outer.Scope.Global.CastingPrecedence)
             {
             }
         }
 
-        public class CastAsHard : Operator<Tree.Operator.CastOperator>
+        public class CastAsDynamicHard : Operator<Tree.Operator.CastOperator>
         {
-            public CastAsHard(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsDynamicHard(IScoped outer, Tree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as!"), outer.Scope.Global.CastingPrecedence)
             {
             }

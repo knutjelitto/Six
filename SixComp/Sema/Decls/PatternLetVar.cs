@@ -15,6 +15,11 @@ namespace SixComp.Sema
 
         public string ReportLabel { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
+        }
+
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

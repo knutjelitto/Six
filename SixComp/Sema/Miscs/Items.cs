@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using SixComp.Support;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SixComp.Sema
 {
     public abstract class Items<TItem> : Base, IReadOnlyList<TItem>
-        where TItem : IReportable
+        where TItem : IReportable, IResolveable
     {
         private List<TItem> items;
 
@@ -23,6 +24,14 @@ namespace SixComp.Sema
         public Items(IScoped outer)
             : this(outer, new List<TItem>())
         {
+        }
+
+        public void ResolveItems(IWriter writer)
+        {
+            foreach (var resolveable in this)
+            {
+                resolveable.Resolve(writer);
+            }
         }
 
         protected void Add(TItem item)

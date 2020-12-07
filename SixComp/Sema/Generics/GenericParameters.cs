@@ -11,14 +11,19 @@ namespace SixComp.Sema
         {
         }
 
-        private static IEnumerable<GenericParameter> Enum(IWhere where, Tree.GenericParameterClause tree)
+        public override void Resolve(IWriter writer)
         {
-            return tree.Parameters.Select(p => new GenericParameter(where, p));
+            // TODO: nothing to resolve here?
         }
 
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.GenericParameters);
+        }
+
+        private static IEnumerable<GenericParameter> Enum(IWhere where, Tree.GenericParameterClause tree)
+        {
+            return tree.Parameters.Select(p => new GenericParameter(where, p));
         }
     }
 }

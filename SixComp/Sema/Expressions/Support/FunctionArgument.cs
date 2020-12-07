@@ -2,19 +2,22 @@
 
 namespace SixComp.Sema
 {
-    public class FunctionArgument : Base
+    public class FunctionArgument : Base<Tree.Argument>
     {
         public FunctionArgument(IScoped outer, Tree.Argument tree)
-            : base(outer)
+            : base(outer, tree)
         {
-            Tree = tree;
             Label = tree.Label == null ? null : new BaseName(Outer, tree.Label.Name);
             Value = IExpression.Build(Outer, tree.Value);
         }
 
-        public Tree.Argument Tree { get; }
         public BaseName? Label { get; }
         public IExpression Value { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Value);
+        }
 
         public override void Report(IWriter writer)
         {

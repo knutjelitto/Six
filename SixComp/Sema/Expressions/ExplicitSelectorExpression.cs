@@ -19,6 +19,12 @@ namespace SixComp.Sema
         public BaseName Operator { get; }
         public BaseNames ArgumentNames { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: argument-names should select overload
+            Resolve(writer, Left);
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Select))

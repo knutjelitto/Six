@@ -2,20 +2,20 @@
 
 namespace SixComp.Sema
 {
-    public class GenericArgument : Base, ITypeDefinition
+    public class GenericArgument : Base<Tree.GenericArgument>, ITypeDefinition
     {
         public GenericArgument(IScoped outer, Tree.GenericArgument tree)
-            : base(outer)
+            : base(outer, tree)
         {
-            Tree = tree;
-
             Type = ITypeDefinition.Build(Outer, Tree.Type);
         }
 
-        public Tree.GenericArgument Tree { get; }
-
         public ITypeDefinition Type { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Type);
+        }
         public override void Report(IWriter writer)
         {
             Type.Report(writer);

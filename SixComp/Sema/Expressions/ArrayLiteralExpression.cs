@@ -4,24 +4,26 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ArrayLiteralExpression : Items<IExpression>, IExpression
+    public class ArrayLiteralExpression : Items<IExpression, Tree.ArrayLiteral>, IExpression
     {
         public ArrayLiteralExpression(IScoped outer, Tree.ArrayLiteral tree)
-            : base(outer, Enum(outer, tree))
+            : base(outer, tree, Enum(outer, tree))
         {
-            Tree = tree;
         }
 
-        public Tree.ArrayLiteral Tree { get; }
-
-        private static IEnumerable<IExpression> Enum(IScoped outer, Tree.ArrayLiteral tree)
+        public override void Resolve(IWriter writer)
         {
-            return tree.Select(expression => IExpression.Build(outer, expression));
+            ResolveItems(writer);
         }
 
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.ArrayLit);
+        }
+
+        private static IEnumerable<IExpression> Enum(IScoped outer, Tree.ArrayLiteral tree)
+        {
+            return tree.Select(expression => IExpression.Build(outer, expression));
         }
     }
 }

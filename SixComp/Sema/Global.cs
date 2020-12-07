@@ -18,7 +18,8 @@ namespace SixComp.Sema
             PostfixOperators = new Dictionary<BaseName, OperatorDeclaration>();
             InfixOperators = new Dictionary<BaseName, OperatorDeclaration>();
             OperatorsTodo = new List<OperatorDeclaration>();
-            InfixesTodo = new List<InfixList>();
+            InfixesTodo = new List<InfixListExpression>();
+            UnresolvedNames = new HashSet<string>();
         }
 
         public Dictionary<BaseName, PrecedenceGroupDeclaration> Precedences { get; }
@@ -32,7 +33,8 @@ namespace SixComp.Sema
 
         public List<PrecedenceGroupDeclaration> PrecedencesTodo { get; }
         public List<OperatorDeclaration> OperatorsTodo { get; }
-        public List<InfixList> InfixesTodo { get; }
+        public List<InfixListExpression> InfixesTodo { get; }
+        public HashSet<string> UnresolvedNames { get; }
 
 
         public void CreatePrecedences(IScoped outer)

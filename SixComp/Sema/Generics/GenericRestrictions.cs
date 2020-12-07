@@ -9,6 +9,16 @@ namespace SixComp.Sema
         {
         }
 
+        public override void Resolve(IWriter writer)
+        {
+            ResolveItems(writer);
+        }
+
+        public override void Report(IWriter writer)
+        {
+            this.ReportList(writer, Strings.Head.Where);
+        }
+
         public void Add(IScoped outer, Tree.GenericParameter tree)
         {
             if (tree.Requirement != null)
@@ -49,11 +59,6 @@ namespace SixComp.Sema
         private GenericRestriction Visit(IScoped outer, Tree.AnyRequirement tree)
         {
             throw new NotImplementedException();
-        }
-
-        public override void Report(IWriter writer)
-        {
-            this.ReportList(writer, Strings.Head.Where);
         }
     }
 }

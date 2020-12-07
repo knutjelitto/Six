@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public interface IExpression: IScoped, IReportable, IStatement
+    public interface IExpression: IScoped, IReportable, IResolveable, IStatement
     {
         public static IExpression? MaybeBuild(IScoped outer, Tree.AnyExpression? tree)
         {
@@ -31,7 +31,7 @@ namespace SixComp.Sema
         private static IExpression Visit(IScoped outer, Tree.InfixList tree)
         {
             Debug.Assert(tree.Binaries.Count > 0);
-            var list = new InfixList(outer, tree);
+            var list = new InfixListExpression(outer, tree);
             outer.Scope.Module.Global.InfixesTodo.Add(list);
             return list;
         }
@@ -72,7 +72,7 @@ namespace SixComp.Sema
 
         private static IExpression Visit(IScoped outer, Tree.PostfixOpExpression tree)
         {
-            return new Postfix(outer, tree);
+            return new PostfixExpression(outer, tree);
         }
 
         private static IExpression Visit(IScoped outer, Tree.NameExpression tree)

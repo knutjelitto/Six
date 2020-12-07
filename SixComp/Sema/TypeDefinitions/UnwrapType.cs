@@ -12,6 +12,11 @@ namespace SixComp.Sema
 
         public ITypeDefinition Type { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Type);
+        }
+
         public override void Report(IWriter writer)
         {
             Type.Report(writer, Strings.Head.Unwrap);

@@ -15,6 +15,11 @@ namespace SixComp.Sema
 
         public ImportKind Kind { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: TODO
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Import))

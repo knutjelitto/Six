@@ -11,14 +11,19 @@ namespace SixComp.Sema
         {
         }
 
-        private static IEnumerable<KeyValue> Enum(IScoped outer, Tree.DictionaryLiteral tree)
+        public override void Resolve(IWriter writer)
         {
-            return tree.Select(expression => new KeyValue(outer, IExpression.Build(outer, expression.key), IExpression.Build(outer, expression.value)));
+            ResolveItems(writer);
         }
 
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.DictionaryLit);
+        }
+
+        private static IEnumerable<KeyValue> Enum(IScoped outer, Tree.DictionaryLiteral tree)
+        {
+            return tree.Select(expression => new KeyValue(outer, IExpression.Build(outer, expression.key), IExpression.Build(outer, expression.value)));
         }
     }
 }

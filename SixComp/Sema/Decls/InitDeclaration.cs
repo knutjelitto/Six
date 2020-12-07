@@ -22,6 +22,11 @@ namespace SixComp.Sema
         public GenericRestrictions Where { get; }
         public CodeBlock? Block { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, GenericParameters, Parameters, Where, Block);
+        }
+
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

@@ -24,6 +24,12 @@ namespace SixComp.Sema
         public HashSet<BaseName> HigherThan { get; }
         public HashSet<BaseName> LowerThan { get; }
 
+        public override void Resolve(IWriter writer)
+        {
+            // TODO: ??
+            //base.Resolve(writer);
+        }
+
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Precedence))

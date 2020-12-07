@@ -1,21 +1,49 @@
 ﻿using SixComp.Entities;
 using SixComp.Support;
 using System;
-using System.Diagnostics;
 
 namespace SixComp.Sema
 {
-    public abstract class Base : IScoped, IReportable
+    public abstract class Base : IScoped, IReportable, IResolveable
     {
         public Base(IScoped outer, IScope? scope = null)
         {
             Outer = outer;
             Scope = scope ?? outer.Scope;
+            Entity = null;
         }
 
         public IScoped Outer { get; }
         public IScope Scope { get; }
+        public IEntity? Entity { get; protected set; }
+       
         public abstract void Report(IWriter writer);
+
+        public void Apply(Action applyPhase)
+        {
+            applyPhase();
+        }
+
+        protected void Resolve(IWriter writer, params IResolveable?[] resolveables)
+        {
+            foreach (var resolveable in resolveables)
+            {
+                if (resolveable != null)
+                {
+                    resolveable.Resolve(writer);
+                }
+            }
+        }
+
+        public virtual void Resolve(IWriter writer)
+        {
+            UnResolve(writer);
+        }
+
+        protected void UnResolve(IWriter writer)
+        {
+            writer.WriteLine($"RESOLVE: {GetType().FullName}");
+        }
 
         protected void Declare(FunctionDeclaration declaration)
         {
@@ -67,9 +95,24 @@ namespace SixComp.Sema
             Outer.Scope.Declare(new IEntity.FParameter(declaration));
         }
 
+        protected void Declare(ClosureExpression.ClosureParameter declaration)
+        {
+            Outer.Scope.Declare(new IEntity.CParameter(declaration));
+        }
+
         protected void Declare(IPattern.IdentifierPattern declaration)
         {
             Outer.Scope.Declare(new IEntity.NamePattern(declaration));
+        }
+
+        protected void Declare(EnumCaseDeclaration declaration)
+        {
+            Outer.Scope.Declare(new IEntity.EnumCase(declaration));
+        }
+
+        protected void Declare(Labeled declaration)
+        {
+            Outer.Scope.Declare(new IEntity.Label(declaration));
         }
 
         protected void Declare(INamedDeclaration declaration)

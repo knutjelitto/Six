@@ -1,7 +1,5 @@
 ﻿using SixComp.Sema.Stmts;
 using SixComp.Support;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SixComp.Sema
 {
@@ -23,6 +21,11 @@ namespace SixComp.Sema
         public ITypeDefinition Result { get; }
         public GenericRestrictions Where { get; }
         public PropertyBlocks Blocks { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, GenericParameters, Parameters, Result, Where, Blocks);
+        }
 
         public override void Report(IWriter writer)
         {

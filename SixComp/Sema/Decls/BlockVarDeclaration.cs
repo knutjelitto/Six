@@ -17,8 +17,12 @@ namespace SixComp.Sema
 
         public BaseName Name { get; }
         public ITypeDefinition? Type { get; }
-
         public PropertyBlocks Blocks { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Type, Blocks);
+        }
 
         public override void Report(IWriter writer)
         {

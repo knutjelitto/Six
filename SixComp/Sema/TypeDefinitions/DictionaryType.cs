@@ -2,20 +2,22 @@
 
 namespace SixComp.Sema
 {
-    public class DictionaryType : Base, ITypeDefinition
+    public class DictionaryType : Base<Tree.DictionaryType>, ITypeDefinition
     {
         public DictionaryType(IScoped outer, Tree.DictionaryType tree)
-            : base(outer)
+            : base(outer, tree)
         {
-            Tree = tree;
-
             Key = ITypeDefinition.Build(Outer, Tree.KeyType);
             Value = ITypeDefinition.Build(Outer, Tree.ValueType);
         }
 
-        public Tree.DictionaryType Tree { get; }
         public ITypeDefinition Key { get; }
         public ITypeDefinition Value { get; }
+
+        public override void Resolve(IWriter writer)
+        {
+            Resolve(writer, Key, Value);
+        }
 
         public override void Report(IWriter writer)
         {
