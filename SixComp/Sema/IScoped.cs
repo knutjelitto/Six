@@ -4,5 +4,6 @@
     {
         IScope Scope { get; }
         IScoped Outer { get; }
+        Global Global { get; }
     }
 }

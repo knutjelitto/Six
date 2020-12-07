@@ -1,15 +1,16 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class FunctionDeclaration : BaseScoped<Tree.FunctionDeclaration>, INamedDeclaration, IWhere
+    public class FunctionDeclaration : BaseScoped<Tree.FunctionDeclaration>, INamedDeclaration, IWithGenerics
     {
         public FunctionDeclaration(IScoped outer, Tree.FunctionDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);
             Where = new GenericRestrictions(this);
-            GenericParameters = new GenericParameters(this, Tree.GenericParameters);
+            Generics = new GenericParameters(this, Tree.GenericParameters);
             Parameters = new FuncParameters(this, Tree.Parameters);
             Result = ITypeDefinition.Build(this, Tree.Result);
             Where.Add(this, Tree.Requirements);
@@ -19,7 +20,7 @@ namespace SixComp.Sema
         }
 
         public BaseName Name { get; }
-        public GenericParameters GenericParameters { get; }
+        public GenericParameters Generics { get; }
         public FuncParameters Parameters { get; }
         public ITypeDefinition Result { get; }
         public GenericRestrictions Where { get; }
@@ -27,7 +28,7 @@ namespace SixComp.Sema
 
         public override void Resolve(IWriter writer)
         {
-            Resolve(writer, GenericParameters, Parameters, Result, Where, Block);
+            Resolve(writer, Generics, Parameters, Result, Where, Block);
         }
 
         public override void Report(IWriter writer)
@@ -35,7 +36,7 @@ namespace SixComp.Sema
             Tree.Tree(writer);
             using (writer.Indent($"{Strings.Head.Func} {Name.Text}"))
             {
-                GenericParameters.Report(writer);
+                Generics.Report(writer);
                 Parameters.Report(writer);
                 Result.Report(writer, Strings.Head.Result);
                 Where.Report(writer);

@@ -1,10 +1,11 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 
 namespace SixComp.Sema
 {
     public class GenericParameter : Base<Tree.GenericParameter>, INamedDeclaration
     {
-        public GenericParameter(IWhere where, Tree.GenericParameter tree)
+        public GenericParameter(IWithRestrictions where, Tree.GenericParameter tree)
             : base(where, tree)
         {
             Name = new BaseName(Outer, Tree.Name);

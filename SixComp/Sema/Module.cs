@@ -37,30 +37,31 @@ namespace SixComp.Sema
             Report(writer);
 
             Resolve(writer);
-            ReportUnresolved(writer);
+            Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
         }
 
         private void Resolve(IWriter writer)
         {
             Console.Write("RESOLVE     ");
-            foreach (var unit in Units)
+
+            using (writer.Indent("EXTENSIONS:"))
             {
-                unit.Resolve(writer);
-                Console.Write($".");
+                foreach (var extension in Global.Extensions)
+                {
+                    extension.ResolveExtended(writer);
+                }
+            }
+
+            using (writer.Indent("UNITS:"))
+            {
+                foreach (var unit in Units)
+                {
+                    unit.Resolve(writer);
+                    Console.Write($".");
+                }
             }
             writer.WriteLine();
             Console.WriteLine();
-        }
-
-        private void ReportUnresolved(IWriter writer)
-        {
-            using (writer.Indent("UNRESOLVED:"))
-            {
-                foreach (var unresolved in Global.UnresolvedNames.OrderBy(s => s))
-                {
-                    writer.WriteLine($"{unresolved}");
-                }
-            }
         }
 
         private void BuildTrees(IWriter writer)

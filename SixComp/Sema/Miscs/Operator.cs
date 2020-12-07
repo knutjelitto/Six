@@ -32,7 +32,7 @@ namespace SixComp.Sema
                 : base(outer, tree)
             {
                 Name = name;
-                Precedence = precedence ?? Outer.Scope.Global.InfixOperators[Name].Precedence!;
+                Precedence = precedence ?? Outer.Global.InfixOperators[Name].Precedence!;
             }
 
             public BaseName Name { get; }
@@ -75,7 +75,7 @@ namespace SixComp.Sema
         public class Assignment : Operator<Tree.Operator.AssignmentOperator>
         {
             public Assignment(IScoped outer, Tree.Operator.AssignmentOperator tree)
-                : base(outer, tree, new BaseName(outer, tree.Name), outer.Scope.Global.AssignmentPrecedence)
+                : base(outer, tree, new BaseName(outer, tree.Name), outer.Global.AssignmentPrecedence)
             {
             }
         }
@@ -91,7 +91,7 @@ namespace SixComp.Sema
         public class Conditional : Operator<Tree.Operator.ConditionalOperator>
         {
             public Conditional(IScoped outer, Tree.Operator.ConditionalOperator tree)
-                : base(outer, tree, new BaseName(outer, "?:"), outer.Scope.Global.TernaryPrecedence)
+                : base(outer, tree, new BaseName(outer, "?:"), outer.Global.TernaryPrecedence)
             {
             }
         }
@@ -99,7 +99,7 @@ namespace SixComp.Sema
         public class CastIs : Operator<Tree.Operator.CastOperator>
         {
             public CastIs(IScoped outer, Tree.Operator.CastOperator tree)
-                : base(outer, tree, new BaseName(outer, "is"), outer.Scope.Global.CastingPrecedence)
+                : base(outer, tree, new BaseName(outer, "is"), outer.Global.CastingPrecedence)
             {
             }
         }
@@ -107,7 +107,7 @@ namespace SixComp.Sema
         public class CastAsStatic : Operator<Tree.Operator.CastOperator>
         {
             public CastAsStatic(IScoped outer, Tree.Operator.CastOperator tree)
-                : base(outer, tree, new BaseName(outer, "as"), outer.Scope.Global.CastingPrecedence)
+                : base(outer, tree, new BaseName(outer, "as"), outer.Global.CastingPrecedence)
             {
             }
         }
@@ -115,7 +115,7 @@ namespace SixComp.Sema
         public class CastAsDynamicSoft : Operator<Tree.Operator.CastOperator>
         {
             public CastAsDynamicSoft(IScoped outer, Tree.Operator.CastOperator tree)
-                : base(outer, tree, new BaseName(outer, "as?"), outer.Scope.Global.CastingPrecedence)
+                : base(outer, tree, new BaseName(outer, "as?"), outer.Global.CastingPrecedence)
             {
             }
         }
@@ -123,7 +123,7 @@ namespace SixComp.Sema
         public class CastAsDynamicHard : Operator<Tree.Operator.CastOperator>
         {
             public CastAsDynamicHard(IScoped outer, Tree.Operator.CastOperator tree)
-                : base(outer, tree, new BaseName(outer, "as!"), outer.Scope.Global.CastingPrecedence)
+                : base(outer, tree, new BaseName(outer, "as!"), outer.Global.CastingPrecedence)
             {
             }
         }

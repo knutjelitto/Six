@@ -1,17 +1,18 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class AssociatedTypeDeclaration : Base<Tree.AssociatedTypeDeclaration>, INamedDeclaration, IWhere
+    public class AssociatedTypeDeclaration : Base<Tree.AssociatedTypeDeclaration>, INamedDeclaration, IWithRestrictions
     {
         public AssociatedTypeDeclaration(IScoped outer, Tree.AssociatedTypeDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);
             Inheritance = new Inheritance(outer, tree.Inheritance);
+            Type = ITypeDefinition.MaybeBuild(Outer, tree.Assignment);
             Where = new GenericRestrictions(this);
             Where.Add(this, Tree.Requirements);
-            Type = ITypeDefinition.MaybeBuild(Outer, tree.Assignment);
 
             Declare(this);
         }

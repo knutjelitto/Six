@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace SixComp.Sema
 {
     public class GenericParameters : Items<GenericParameter>
     {
-        public GenericParameters(IWhere where, Tree.GenericParameterClause parameters)
+        public GenericParameters(IWithRestrictions where, Tree.GenericParameterClause parameters)
             : base(where, Enum(where, parameters))
         {
         }
@@ -21,7 +22,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.GenericParameters);
         }
 
-        private static IEnumerable<GenericParameter> Enum(IWhere where, Tree.GenericParameterClause tree)
+        private static IEnumerable<GenericParameter> Enum(IWithRestrictions where, Tree.GenericParameterClause tree)
         {
             return tree.Parameters.Select(p => new GenericParameter(where, p));
         }

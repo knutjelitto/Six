@@ -8,7 +8,6 @@ namespace SixComp.Sema
     public class Scope : IScope, IReportable
     {
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
-        private static readonly List<IEntity> NoEntity = new List<IEntity>();
 
         public Scope(IScoped parent, Module? module = null)
         {
@@ -37,7 +36,7 @@ namespace SixComp.Sema
             {
                 return decls.list;
             }
-            return NoEntity;
+            return IScope.NoEntity;
         }
 
         public IReadOnlyList<IEntity> LookUp(INamed named)
@@ -55,7 +54,7 @@ namespace SixComp.Sema
                 }
                 scope = (Scope)scope.Parent.Scope;
             }
-            return NoEntity;
+            return IScope.NoEntity;
         }
 
         public T FindParent<T>(IScoped scoped) where T : notnull, IScoped

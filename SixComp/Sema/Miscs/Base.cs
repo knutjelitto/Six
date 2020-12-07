@@ -15,6 +15,8 @@ namespace SixComp.Sema
 
         public IScoped Outer { get; }
         public IScope Scope { get; }
+        public Global Global => Scope.Global;
+
         public IEntity? Entity { get; protected set; }
        
         public abstract void Report(IWriter writer);
@@ -40,9 +42,9 @@ namespace SixComp.Sema
             UnResolve(writer);
         }
 
-        protected void UnResolve(IWriter writer)
+        protected void UnResolve(IWriter writer, string name = "")
         {
-            writer.WriteLine($"RESOLVE: {GetType().FullName}");
+            writer.WriteLine($"RESOLVE: {GetType().FullName} {name}");
         }
 
         protected void Declare(FunctionDeclaration declaration)

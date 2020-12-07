@@ -1,8 +1,10 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
+using System.Diagnostics;
 
 namespace SixComp.Sema
 {
-    public class ExtensionDeclaration : BaseScoped<Tree.ExtensionDeclaration>, IDeclaration, IWhere
+    public class ExtensionDeclaration : BaseScoped<Tree.ExtensionDeclaration>, IDeclaration, IWithRestrictions
     {
         public ExtensionDeclaration(IScoped outer, Tree.ExtensionDeclaration tree)
             : base(outer, tree)
@@ -12,6 +14,8 @@ namespace SixComp.Sema
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
             Where.Add(this, Tree.Requirements);
             Declarations = new Declarations(this, Tree.Declarations);
+
+            Global.Extensions.Add(this);
         }
 
         public TypeIdentifier Extended { get; }
@@ -35,5 +39,24 @@ namespace SixComp.Sema
             }
         }
 
+        public void ResolveExtended(IWriter writer)
+        {
+            Extended.Resolve(writer);
+            var entity = Extended.Entity;
+            var check = entity != null ? "X" : " ";
+            writer.WriteLine($"[{check}] {Extended}");
+
+            if (entity != null)
+            {
+                if (entity.Extend(this))
+                {
+                    Debug.Assert(true);
+                }
+                else
+                {
+                    Debug.Assert(true);
+                }
+            }
+        }
     }
 }

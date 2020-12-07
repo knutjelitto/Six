@@ -4,10 +4,15 @@ using System.Diagnostics;
 
 namespace SixComp.Sema
 {
-    public class Declarations : Items<IDeclaration, Tree.DeclarationClause>
+    public class Declarations : Items<IDeclaration>
     {
         public Declarations(IScoped outer, Tree.DeclarationClause tree)
-            : base(outer, tree, Enum(outer, tree))
+            : base(outer, Enum(outer, tree))
+        {
+        }
+
+        public Declarations(IScoped outer)
+            : base(outer)
         {
         }
 

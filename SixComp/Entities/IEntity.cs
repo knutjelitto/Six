@@ -5,6 +5,10 @@ namespace SixComp.Entities
 {
     public interface IEntity : INamedDeclaration
     {
+        GenericParameters? Generics { get; }
+        Declarations? Declarations { get; }
+        bool Extend(ExtensionDeclaration extension);
+
         public abstract class Entity<TDecl> : IEntity
             where TDecl : INamedDeclaration
         {
@@ -14,15 +18,16 @@ namespace SixComp.Entities
             }
 
             public TDecl Declaration { get; }
-
             public IScope Scope => Declaration.Scope;
-
             public BaseName Name => Declaration.Name;
-
             public IScoped Outer => Declaration.Outer;
+            public Global Global => Declaration.Global;
+
+            public GenericParameters? Generics => (Declaration as IWithGenerics)?.Generics;
+            public Declarations? Declarations => (Declaration as IExtendable)?.Declarations;
+            public bool Extend(ExtensionDeclaration extension) => (Declaration as IExtendable)?.Extend(extension) ?? false;
 
             public void Report(IWriter writer) => Declaration.Report(writer);
-
             public void Resolve(IWriter writer) { }
         }
 

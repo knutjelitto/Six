@@ -20,5 +20,10 @@ namespace SixComp.Sema
         {
             Type.Report(writer);
         }
+
+        public override string ToString()
+        {
+            return $"{Type}";
+        }
     }
 }

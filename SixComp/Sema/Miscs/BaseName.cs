@@ -35,7 +35,7 @@ namespace SixComp.Sema
 
             if (decls.Count == 0)
             {
-                Scope.Global.UnresolvedNames.Add(Text);
+                Global.UnresolvedNames.Add(Text);
             }
         }
 

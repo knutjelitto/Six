@@ -2,14 +2,12 @@
 
 namespace SixComp.Sema
 {
-    public class ClassDeclaration : BaseScoped<Tree.ClassDeclaration>, INamedDeclaration, IWhere
+    public class ClassDeclaration : Nominal<Tree.ClassDeclaration>
     {
         public ClassDeclaration(IScoped outer, Tree.ClassDeclaration tree)
-            : base(outer, tree)
+            : base(outer, tree, tree.Name)
         {
-            Name = new BaseName(Outer, Tree.Name);
-            Where = new GenericRestrictions(this);
-            GenericParameters = new GenericParameters(this, Tree.Generics);
+            Generics = new GenericParameters(this, Tree.Generics);
             Inheritance = new Inheritance(Outer, Tree.Inheritance);
             Where.Add(this, Tree.Requirements);
             Declarations = new Declarations(this, Tree.Declarations);
@@ -17,16 +15,13 @@ namespace SixComp.Sema
             Declare(this);
         }
 
-        public BaseName Name { get; }
-
-        public GenericParameters GenericParameters { get; }
+        public override GenericParameters Generics { get; }
         public Inheritance Inheritance { get; }
-        public GenericRestrictions Where { get; }
-        public Declarations Declarations { get; }
+        public override Declarations Declarations { get; }
 
         public override void Resolve(IWriter writer)
         {
-            Resolve(writer, GenericParameters, Inheritance, Where, Declarations);
+            Resolve(writer, Generics, Inheritance, Where, Declarations);
         }
 
         public override void Report(IWriter writer)
@@ -35,7 +30,7 @@ namespace SixComp.Sema
             using (writer.Indent(Strings.Head.Class))
             {
                 Name.Report(writer, Strings.Head.Name);
-                GenericParameters.Report(writer);
+                Generics.Report(writer);
                 Inheritance.Report(writer);
                 Where.Report(writer);
                 Declarations.Report(writer);

@@ -20,24 +20,44 @@ namespace SixComp.Sema
 
         public override void Resolve(IWriter writer)
         {
-            var canditates = Scope.LookUp(Name);
+            var candidates = Scope.LookUp(Name);
             Arguments.Resolve(writer);
-            if (canditates.Count == 1)
+            if (candidates.Count == 1)
             {
-                Entity = canditates[0];
+                Entity = candidates[0];
                 return;
             }
-            if (canditates.Count == 0)
+            foreach (var candidate in candidates)
             {
-                UnResolve(writer);
+                if (candidate.Generics?.Count == Arguments.Count)
+                {
+                    Entity = candidate;
+                    return;
+                }
+
             }
+            UnResolve(writer, Name.Text);
         }
 
-        public IReadOnlyList<IEntity> ResolveChained(IWriter writer, IScoped scoped)
+        public void ResolveChained(IWriter writer, IScoped scoped)
         {
             var candidates = scoped.Scope.Look(Name);
             Arguments.Resolve(writer);
-            return candidates;
+            if (candidates.Count == 1)
+            {
+                Entity = candidates[0];
+                return;
+            }
+            foreach (var candidate in candidates)
+            {
+                if (candidate.Generics?.Count == Arguments.Count)
+                {
+                    Entity = candidate;
+                    return;
+                }
+
+            }
+            UnResolve(writer, Name.Text);
         }
 
         public override void Report(IWriter writer)
@@ -48,11 +68,7 @@ namespace SixComp.Sema
 
         public override string ToString()
         {
-            if (IsSimplest)
-            {
-                return Name.Text;
-            }
-            return base.ToString()!;
+            return $"{Name.Text}<{string.Join(",", Arguments)}>";
         }
     }
 }

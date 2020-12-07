@@ -2,28 +2,26 @@
 
 namespace SixComp.Sema
 {
-    public class TypealiasDeclaration : BaseScoped<Tree.TypealiasDeclaration>, INamedDeclaration, IWhere
+    public class TypealiasDeclaration : Nominal<Tree.TypealiasDeclaration>
     {
         public TypealiasDeclaration(IScoped outer, Tree.TypealiasDeclaration tree)
-            : base(outer, tree)
+            : base(outer, tree, tree.Name)
         {
-            Name = new BaseName(outer, tree.Name);
-            Where = new GenericRestrictions(this);
-            GenericParameters = new GenericParameters(this, Tree.Parameters);
+            Generics = new GenericParameters(this, Tree.Parameters);
             Where.Add(this, Tree.Requirements);
             Type = ITypeDefinition.Build(Outer, tree.Assignment);
+            Declarations = new Declarations(this);
 
             Declare(this);
         }
 
-        public BaseName Name { get; }
-        public GenericParameters GenericParameters { get; }
-        public GenericRestrictions Where { get; }
+        public override GenericParameters Generics { get; }
         public ITypeDefinition Type { get; }
+        public override Declarations Declarations { get; }
 
         public override void Resolve(IWriter writer)
         {
-            Resolve(writer, GenericParameters, Where, Type);
+            Resolve(writer, Generics, Where, Type);
         }
 
         public override void Report(IWriter writer)
@@ -31,7 +29,7 @@ namespace SixComp.Sema
             using (writer.Indent(Strings.Head.Typealias))
             {
                 Name.Report(writer, Strings.Head.Name);
-                GenericParameters.Report(writer);
+                Generics.Report(writer);
                 Where.Report(writer);
                 Type.Report(writer, Strings.Head.Type);
             }

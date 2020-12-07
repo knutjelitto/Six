@@ -12,7 +12,6 @@ namespace SixComp.Sema
         {
         }
 
-        private bool IsSimplest => Count == 1 && this[0].IsSimplest;
 
         public override void Resolve(IWriter writer)
         {
@@ -20,17 +19,22 @@ namespace SixComp.Sema
             {
                 Debug.Assert(true);
             }
-            this.First().Resolve(writer);
-            var entity = this.First().Entity;
+            var anchor = this.First();
+            anchor.Resolve(writer);
+            var entity = anchor.Entity;
             if (entity != null)
             {
                 foreach (var fullName in this.Skip(1))
                 {
                     fullName.ResolveChained(writer, entity);
+                    entity = fullName.Entity;
+                    if (entity == null)
+                    {
+                        break;
+                    }
                 }
             }
-            // TODO: TODO
-            //UnResolve(writer);
+            Entity = entity;
         }
 
         public override void Report(IWriter writer)
@@ -40,11 +44,7 @@ namespace SixComp.Sema
 
         public override string ToString()
         {
-            if (IsSimplest)
-            {
-                return this[0].Name.Text;
-            }
-            return base.ToString()!;
+            return string.Join(".", this);
         }
 
         private static IEnumerable<FullName> Enum(IScoped outer, Tree.TypeIdentifier identifier)

@@ -1,5 +1,5 @@
 ﻿using SixComp.Common;
-
+using SixComp.Support;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,8 @@ namespace SixComp.Sema
             InfixOperators = new Dictionary<BaseName, OperatorDeclaration>();
             OperatorsTodo = new List<OperatorDeclaration>();
             InfixesTodo = new List<InfixListExpression>();
-            UnresolvedNames = new HashSet<string>();
+            Extensions = new List<ExtensionDeclaration>();
+            UnresolvedNames = new CountedStrings();
         }
 
         public Dictionary<BaseName, PrecedenceGroupDeclaration> Precedences { get; }
@@ -34,8 +35,8 @@ namespace SixComp.Sema
         public List<PrecedenceGroupDeclaration> PrecedencesTodo { get; }
         public List<OperatorDeclaration> OperatorsTodo { get; }
         public List<InfixListExpression> InfixesTodo { get; }
-        public HashSet<string> UnresolvedNames { get; }
-
+        public List<ExtensionDeclaration> Extensions { get; }
+        public CountedStrings UnresolvedNames { get; }
 
         public void CreatePrecedences(IScoped outer)
         {
