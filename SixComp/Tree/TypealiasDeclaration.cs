@@ -2,20 +2,20 @@
 
 namespace SixComp.Tree
 {
-    public class TypealiasDeclaration : AnyDeclaration
+    public class TypealiasDeclaration : AnyDeclaration, INominal
     {
-        public TypealiasDeclaration(Prefix prefix, BaseName name, GenericParameterClause parameters, TypealiasAssignment assignment, RequirementClause requirements)
+        public TypealiasDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypealiasAssignment assignment, RequirementClause requirements)
         {
             Prefix = prefix;
             Name = name;
-            Parameters = parameters;
+            Generics = generics;
             Assignment = assignment;
             Requirements = requirements;
         }
 
         public Prefix Prefix { get; }
         public BaseName Name { get; }
-        public GenericParameterClause Parameters { get; }
+        public GenericParameterClause Generics { get; }
         public TypealiasAssignment Assignment { get; }
         public RequirementClause Requirements { get; }
 
@@ -33,7 +33,7 @@ namespace SixComp.Tree
 
         public void Write(IWriter writer)
         {
-            writer.WriteLine($"typealias {Name}{Parameters}{Assignment}");
+            writer.WriteLine($"typealias {Name}{Generics}{Assignment}");
             Requirements.Write(writer);
         }
     }

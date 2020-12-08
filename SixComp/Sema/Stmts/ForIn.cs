@@ -18,12 +18,6 @@ namespace SixComp.Sema
         public IExpression? Where { get; }
         public CodeBlock Block { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: Pattern??
-            Resolve(writer, Values, Where, Block);
-        }
-
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

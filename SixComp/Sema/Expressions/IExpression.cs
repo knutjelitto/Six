@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public interface IExpression: IScoped, IReportable, IResolveable, IStatement
+    public interface IExpression: IScoped, IReportable, IStatement
     {
         public static IExpression? MaybeBuild(IScoped outer, Tree.AnyExpression? tree)
         {

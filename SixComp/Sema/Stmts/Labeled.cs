@@ -16,11 +16,6 @@ namespace SixComp.Sema
         public BaseName Name { get; }
         public IStatement Statement { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Statement);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Labeled))

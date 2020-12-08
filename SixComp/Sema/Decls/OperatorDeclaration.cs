@@ -32,12 +32,6 @@ namespace SixComp.Sema
         public BaseNames TypeNames { get; }
         public PrecedenceGroupDeclaration? Precedence { get; private set; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: ??
-            //base.Resolve(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Operator))

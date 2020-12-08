@@ -29,7 +29,7 @@ namespace SixComp.Sema
             return new BaseName(outer, "self");
         }
 
-        public override void Resolve(IWriter writer)
+        public void Resolve(IWriter writer)
         {
             if (Text.StartsWith('$'))
             {

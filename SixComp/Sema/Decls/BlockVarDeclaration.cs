@@ -19,11 +19,6 @@ namespace SixComp.Sema
         public ITypeDefinition? Type { get; }
         public PropertyBlocks Blocks { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Type, Blocks);
-        }
-
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

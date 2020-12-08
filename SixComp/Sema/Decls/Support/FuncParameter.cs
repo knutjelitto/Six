@@ -33,11 +33,6 @@ namespace SixComp.Sema
 
         public BaseName Name => Intern;
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Type, Init);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Parameter))

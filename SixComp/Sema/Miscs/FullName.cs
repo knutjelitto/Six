@@ -16,10 +16,10 @@ namespace SixComp.Sema
 
         public bool IsSimplest => Arguments.Count == 0;
 
-        public override void Resolve(IWriter writer)
+        public void Resolve(IWriter writer)
         {
             var candidates = Scope.LookUp(Name);
-            Arguments.Resolve(writer);
+            //Arguments.Resolve(writer);
             if (candidates.Count == 1)
             {
                 Entity = candidates[0];
@@ -40,7 +40,7 @@ namespace SixComp.Sema
         public void ResolveChained(IWriter writer, IScoped scoped)
         {
             var candidates = scoped.Scope.Look(Name);
-            Arguments.Resolve(writer);
+            //Arguments.Resolve(writer);
             if (candidates.Count == 1)
             {
                 Entity = candidates[0];

@@ -11,11 +11,6 @@ namespace SixComp.Sema
         {
         }
 
-        public override void Resolve(IWriter writer)
-        {
-            ResolveItems(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.Conditions);

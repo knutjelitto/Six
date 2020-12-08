@@ -16,12 +16,6 @@ namespace SixComp.Sema
         public ITypeDefinition? Type { get; }
         public IExpression? Initializer { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: Pattern??
-            Resolve(writer, Type, Initializer);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Pattern))

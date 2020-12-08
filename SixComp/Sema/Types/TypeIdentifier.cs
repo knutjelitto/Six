@@ -13,8 +13,12 @@ namespace SixComp.Sema
         }
 
 
-        public override void Resolve(IWriter writer)
+        public void Resolve(IWriter writer)
         {
+            if (this.ToString() == "EnumeratedSequence.Iterator")
+            {
+                Debug.Assert(true);
+            }
             if (Count > 1)
             {
                 Debug.Assert(true);

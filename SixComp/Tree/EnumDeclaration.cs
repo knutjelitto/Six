@@ -2,7 +2,7 @@
 
 namespace SixComp.Tree
 {
-    public class EnumDeclaration : AnyDeclaration
+    public class EnumDeclaration : AnyDeclaration, INominalWhithDeclarations
     {
         public EnumDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
         {

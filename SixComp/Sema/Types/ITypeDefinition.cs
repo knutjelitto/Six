@@ -2,7 +2,7 @@
 
 namespace SixComp.Sema
 {
-    public interface ITypeDefinition : IReportable, IResolveable
+    public interface ITypeDefinition : IReportable
     {
         public static ITypeDefinition? MaybeBuild(IScoped outer, Tree.AnyType? type)
         {

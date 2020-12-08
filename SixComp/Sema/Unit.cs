@@ -18,11 +18,6 @@ namespace SixComp.Sema
             Statements = new Statements(Outer, Tree.Statements);
         }
 
-        public override void Resolve(IWriter writer)
-        {
-            Statements!.Resolve(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent($"unit {Short}:"))

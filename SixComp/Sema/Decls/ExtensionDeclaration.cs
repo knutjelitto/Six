@@ -23,20 +23,6 @@ namespace SixComp.Sema
         public GenericRestrictions Where { get; }
         public Declarations Declarations { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Extended.Resolve(writer);
-            if (Extended.Entity != null)
-            {
-                Debug.Assert(true);
-
-                Extended.Entity.Scope.Extend(this);
-                Scope.Extends(Extended.Entity);
-            }
-
-            Resolve(writer, Extended, Inheritance, Where, Declarations);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Extension))
@@ -52,7 +38,7 @@ namespace SixComp.Sema
         {
             Extended.Resolve(writer);
             var entity = Extended.Entity;
-            var check = entity != null ? "X" : " ";
+            var check = entity != null ? "✓" : " ";
             writer.WriteLine($"[{check}] {Extended}");
 
             if (entity != null)

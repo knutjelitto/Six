@@ -11,11 +11,6 @@ namespace SixComp.Sema
         {
         }
 
-        public override void Resolve(IWriter writer)
-        {
-            ResolveItems(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.TupleExpression);
@@ -37,11 +32,6 @@ namespace SixComp.Sema
 
             public BaseName? Name { get; }
             public IExpression Value { get; }
-
-            public override void Resolve(IWriter writer)
-            {
-                Resolve(writer, Value);
-            }
 
             public override void Report(IWriter writer)
             {

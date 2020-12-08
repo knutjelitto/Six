@@ -1,5 +1,4 @@
 ﻿using SixComp.Support;
-using System.Diagnostics;
 
 namespace SixComp.Sema
 {
@@ -17,12 +16,6 @@ namespace SixComp.Sema
         public BaseName Operator { get; }
         public IExpression Number { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Debug.Assert(Operator.Text == ".");
-
-            Resolve(writer, Left, Number);
-        }
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Select))

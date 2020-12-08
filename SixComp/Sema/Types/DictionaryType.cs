@@ -14,11 +14,6 @@ namespace SixComp.Sema
         public ITypeDefinition Key { get; }
         public ITypeDefinition Value { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Key, Value);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.DictionaryType))

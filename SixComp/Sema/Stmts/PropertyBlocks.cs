@@ -16,11 +16,6 @@ namespace SixComp.Sema.Stmts
             this.ReportList(writer, Strings.Head.Blocks);
         }
 
-        public override void Resolve(IWriter writer)
-        {
-            ResolveItems(writer);
-        }
-
         private static IEnumerable<PropertyBlock> Enum(IScoped outer, Tree.PropertyBlocks tree)
         {
             return tree.OrderBy(b => b.Value.index).Select(block => new PropertyBlock(outer, block.Value.block));

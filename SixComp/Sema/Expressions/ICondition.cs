@@ -46,11 +46,6 @@ namespace SixComp.Sema
             {
             }
 
-            public override void Resolve(IWriter writer)
-            {
-                // TODO: ?
-            }
-
             public override void Report(IWriter writer)
             {
                 Tree.Tokens.ToString().Report(writer, Strings.Head.Available);
@@ -70,12 +65,6 @@ namespace SixComp.Sema
             public IPattern Pattern { get; }
             public ITypeDefinition? Type { get; }
             public IExpression Initializer { get; }
-
-            public override void Resolve(IWriter writer)
-            {
-                // TODO: Pattern??
-                Resolve(writer, Type, Initializer);
-            }
 
             protected void Report(IWriter writer, string label)
             {

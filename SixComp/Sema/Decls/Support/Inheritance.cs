@@ -4,16 +4,16 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class Inheritance : Items<ITypeDefinition, Tree.TypeInheritanceClause>
+    public class Inheritance : Items<ITypeDefinition>
     {
         public Inheritance(IScoped outer, Tree.TypeInheritanceClause tree)
-            : base(outer, tree, Enum(outer, tree))
+            : base(outer, Enum(outer, tree))
         {
         }
 
-        public override void Resolve(IWriter writer)
+        public Inheritance(IScoped outer)
+            : base(outer)
         {
-            ResolveItems(writer);
         }
 
         public override void Report(IWriter writer)

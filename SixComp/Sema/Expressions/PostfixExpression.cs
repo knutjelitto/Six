@@ -14,12 +14,6 @@ namespace SixComp.Sema
         public IExpression Left { get; }
         public BaseName Operator { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: resolve operator
-            Resolve(writer, Left);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Postfix))

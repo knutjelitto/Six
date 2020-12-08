@@ -22,11 +22,6 @@ namespace SixComp.Sema
         public GenericRestrictions Where { get; }
         public ITypeDefinition? Type { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Inheritance, Where, Type);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.AssociatedType))

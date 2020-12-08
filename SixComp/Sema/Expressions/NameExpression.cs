@@ -13,11 +13,6 @@ namespace SixComp.Sema
         public BaseName Name { get; }
         public GenericArguments Arguments { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Name, Arguments);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Name))

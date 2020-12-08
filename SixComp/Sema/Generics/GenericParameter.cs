@@ -20,13 +20,6 @@ namespace SixComp.Sema
 
         public BaseName Name { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // nothing to resolve
-            // TODO: remove thee following
-            //Debug.Assert(Scope.Look(this).Single() == this);
-        }
-
         public override void Report(IWriter writer)
         {
             writer.WriteLine(Name.Text);

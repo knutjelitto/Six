@@ -18,11 +18,6 @@ namespace SixComp.Sema
         public IExpression IfTrue { get; }
         public IExpression IfFalse { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Condition, IfTrue, IfFalse);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Conditional))

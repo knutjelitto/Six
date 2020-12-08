@@ -16,11 +16,6 @@ namespace SixComp.Sema
         public IExpression Value { get; }
         public SwitchCases Cases { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Value, Cases);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Switch))
@@ -35,11 +30,6 @@ namespace SixComp.Sema
             public SwitchCases(IScoped outer, Tree.SwitchCaseClause tree)
                 : base(outer, tree, Enum(outer, tree))
             {
-            }
-
-            public override void Resolve(IWriter writer)
-            {
-                ResolveItems(writer);
             }
 
             public override void Report(IWriter writer)
@@ -65,11 +55,6 @@ namespace SixComp.Sema
             public SwitchCaseLabel Label { get; }
             public Statements Statements { get; }
 
-            public override void Resolve(IWriter writer)
-            {
-                Resolve(writer, Label, Statements);
-            }
-
             public override void Report(IWriter writer)
             {
                 using (writer.Indent(Strings.Head.Case))
@@ -85,11 +70,6 @@ namespace SixComp.Sema
             public SwitchCaseLabel(IScoped outer, Tree.CaseLabel tree)
                 : base(outer, tree, Enum(outer, tree))
             {
-            }
-
-            public override void Resolve(IWriter writer)
-            {
-                ResolveItems(writer);
             }
 
             public override void Report(IWriter writer)
@@ -121,12 +101,6 @@ namespace SixComp.Sema
 
             public IPattern Pattern { get; }
             public IExpression? Where { get; }
-
-            public override void Resolve(IWriter writer)
-            {
-                // TODO: Pattern??
-                Resolve(writer, Where);
-            }
 
             public override void Report(IWriter writer)
             {

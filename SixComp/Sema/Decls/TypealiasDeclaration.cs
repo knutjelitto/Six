@@ -5,24 +5,14 @@ namespace SixComp.Sema
     public class TypealiasDeclaration : Nominal<Tree.TypealiasDeclaration>
     {
         public TypealiasDeclaration(IScoped outer, Tree.TypealiasDeclaration tree)
-            : base(outer, tree, tree.Name)
+            : base(outer, tree)
         {
-            Generics = new GenericParameters(this, Tree.Parameters);
-            Where.Add(this, Tree.Requirements);
             Type = ITypeDefinition.Build(Outer, tree.Assignment);
-            Declarations = new Declarations(this);
 
             Declare(this);
         }
 
-        public override GenericParameters Generics { get; }
         public ITypeDefinition Type { get; }
-        public override Declarations Declarations { get; }
-
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Generics, Where, Type);
-        }
 
         public override void Report(IWriter writer)
         {

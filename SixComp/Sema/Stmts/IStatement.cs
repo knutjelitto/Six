@@ -1,6 +1,6 @@
 ﻿namespace SixComp.Sema
 {
-    public interface IStatement : IScoped, IReportable, IResolveable
+    public interface IStatement : IScoped, IReportable
     {
         public static IStatement? MaybeBuild(IScoped scope, Tree.AnyStatement? tree)
         {

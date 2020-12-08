@@ -4,7 +4,7 @@ using System;
 
 namespace SixComp.Sema
 {
-    public abstract class Base : IScoped, IReportable, IResolveable
+    public abstract class Base : IScoped, IReportable
     {
         public Base(IScoped outer, IScope? scope = null)
         {
@@ -20,27 +20,6 @@ namespace SixComp.Sema
         public IEntity? Entity { get; protected set; }
 
         public abstract void Report(IWriter writer);
-
-        public void Apply(Action applyPhase)
-        {
-            applyPhase();
-        }
-
-        protected void Resolve(IWriter writer, params IResolveable?[] resolveables)
-        {
-            foreach (var resolveable in resolveables)
-            {
-                if (resolveable != null)
-                {
-                    resolveable.Resolve(writer);
-                }
-            }
-        }
-
-        public virtual void Resolve(IWriter writer)
-        {
-            throw new NotImplementedException();
-        }
 
         protected void UnResolve(IWriter writer, BaseName name)
         {

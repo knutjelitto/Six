@@ -6,13 +6,14 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class Scope : IScope, IReportable
+    public class IScope : IReportable
     {
+        private static readonly IReadOnlyList<IEntity> NoEntity = new IEntity[] { };
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
         private readonly List<ExtensionDeclaration> Extensions = new List<ExtensionDeclaration>();
         private IEntity? Extendee = null;
 
-        public Scope(IScoped parent, Module? module = null)
+        public IScope(IScoped parent, Module? module = null)
         {
             Parent = parent;
             Module = module ?? parent.Scope.Module;
@@ -68,9 +69,12 @@ namespace SixComp.Sema
             return found;
         }
 
-        public IReadOnlyList<IEntity> LookUp(INamed named)
+        private static IReadOnlyList<IEntity> LookUp(IScope scope, INamed named)
         {
-            Scope scope = this;
+            if (named.Name.Text == "EnumeratedSequence")
+            {
+                Debug.Assert(true);
+            }
             while (true)
             {
                 var found = scope.Look(named);
@@ -78,12 +82,23 @@ namespace SixComp.Sema
                 {
                     return found;
                 }
-                if (scope == Module.Scope)
+                if (scope == scope.Parent.Scope)
                 {
-                    return IScope.NoEntity;
+                    return NoEntity;
                 }
-                scope = (Scope)scope.Parent.Scope;
+                scope = scope.Parent.Scope;
             }
+        }
+
+        public IReadOnlyList<IEntity> LookUp(INamed named)
+        {
+            var found = LookUp(this, named);
+            if (found.Count == 0 && Extendee != null)
+            {
+                found = Extendee.Scope.LookUp(named);
+            }
+
+            return found;
         }
 
         public T FindParent<T>(IScoped scoped) where T : notnull, IScoped

@@ -7,6 +7,7 @@
 
         public static readonly string KwInOut = "inout";
         public static readonly string KwSelf = "self";
+        public static readonly string KwStruct = "struct";
 
         public static readonly string NIL = "<NIL>";
         public static readonly string NONE = "<NONE>";

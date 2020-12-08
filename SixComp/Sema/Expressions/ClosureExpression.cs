@@ -26,11 +26,6 @@ namespace SixComp.Sema
         public ITypeDefinition? Result { get; }
         public Statements Statements { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Parameters, Result, Statements);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Closure))
@@ -47,11 +42,6 @@ namespace SixComp.Sema
             public ClosureParameters(IScoped outer, Tree.ClosureParameterClause tree)
                 : base(outer, tree, Enum(outer, tree))
             {
-            }
-
-            public override void Resolve(IWriter writer)
-            {
-                ResolveItems(writer);
             }
 
             public override void Report(IWriter writer)
@@ -85,11 +75,6 @@ namespace SixComp.Sema
             public BaseName Name { get; }
             public ITypeDefinition? Type { get; }
             public Tree.AnyType? TreeType { get; }
-
-            public override void Resolve(IWriter writer)
-            {
-                Resolve(writer, Type);
-            }
 
             public override void Report(IWriter writer)
             {

@@ -12,12 +12,6 @@ namespace SixComp.Sema
 
         public string Text { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: TODO
-            //UnResolve(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             this.Report(writer, Strings.Head.Literal);

@@ -26,6 +26,17 @@ namespace SixComp.Tree
 
             switch (prefix.Last)
             {
+                case ToKind.KwClass:
+                    return ClassDeclaration.Parse(parser, prefix);
+                case ToKind.KwStruct:
+                    return StructDeclaration.Parse(parser, prefix);
+                case ToKind.KwEnum:
+                    return EnumDeclaration.Parse(parser, prefix);
+                case ToKind.KwProtocol:
+                    return ProtocolDeclaration.Parse(parser, prefix);
+                case ToKind.KwTypealias:
+                    return TypealiasDeclaration.Parse(parser, prefix);
+
                 case ToKind.KwLet:
                     return LetDeclaration.Parse(parser, prefix);
                 case ToKind.KwVar:
@@ -34,12 +45,6 @@ namespace SixComp.Tree
                     return FunctionDeclaration.Parse(parser, prefix);
                 case ToKind.KwSubscript:
                     return SubscriptDeclaration.Parse(parser, prefix);
-                case ToKind.KwClass:
-                    return ClassDeclaration.Parse(parser, prefix);
-                case ToKind.KwStruct:
-                    return StructDeclaration.Parse(parser, prefix);
-                case ToKind.KwEnum:
-                    return EnumDeclaration.Parse(parser, prefix);
                 case ToKind.KwCase when context == Context.Enum:
                     return EnumCase.Parse(parser, prefix);
                 case ToKind.KwInit:
@@ -50,10 +55,6 @@ namespace SixComp.Tree
                     return ImportDeclaration.Parse(parser);
                 case ToKind.KwExtension:
                     return ExtensionDeclaration.Parse(parser, prefix);
-                case ToKind.KwTypealias:
-                    return TypealiasDeclaration.Parse(parser, prefix);
-                case ToKind.KwProtocol:
-                    return ProtocolDeclaration.Parse(parser, prefix);
                 case ToKind.KwAssociatedType:
                     return AssociatedTypeDeclaration.Parse(parser, prefix);
                 case ToKind.KwPrefix when parser.Next == ToKind.KwOperator:

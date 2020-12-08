@@ -22,11 +22,6 @@ namespace SixComp.Sema
         public TupleType? Tuple { get; }
         public IExpression? Initializer { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Tuple, Initializer);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Case))

@@ -12,11 +12,6 @@ namespace SixComp.Sema
         {
         }
 
-        public override void Resolve(IWriter writer)
-        {
-            // TODO: nothing to resolve here?
-        }
-
         public override void Report(IWriter writer)
         {
             this.ReportList(writer, Strings.Head.GenericParameters);

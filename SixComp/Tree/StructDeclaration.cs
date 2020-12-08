@@ -2,7 +2,7 @@
 
 namespace SixComp.Tree
 {
-    public class StructDeclaration : AnyDeclaration
+    public class StructDeclaration : AnyDeclaration, INominalWhithDeclarations
     {
         public StructDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
         {

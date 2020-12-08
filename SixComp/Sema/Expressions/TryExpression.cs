@@ -14,11 +14,6 @@ namespace SixComp.Sema
         public TryKind Kind { get; }
         public IExpression Expression { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Expression);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Try))

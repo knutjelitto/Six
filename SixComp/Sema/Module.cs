@@ -12,7 +12,7 @@ namespace SixComp.Sema
         {
             Global = new Global();
             ModuleName = moduleName;
-            Scope = new Scope(this, this);
+            Scope = new IScope(this, this);
         }
 
         public IReadOnlyList<Unit> Units => this.units;
@@ -45,7 +45,7 @@ namespace SixComp.Sema
         {
             Console.Write("RESOLVE     ");
 
-#if false
+#if true
             Global.UnresolvedNames.Clear();
             using (writer.Indent("EXTENSIONS:"))
             {
@@ -58,16 +58,19 @@ namespace SixComp.Sema
             writer.WriteLine();
 #endif
 
+#if false
+            Global.UnresolvedNames.Clear();
             using (writer.Indent("UNITS:"))
             {
                 foreach (var unit in Units)
                 {
-                    unit.Resolve(writer);
+                    //unit.Resolve(writer);
                     Console.Write($".");
                 }
                 Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
             }
             writer.WriteLine();
+#endif
             Console.WriteLine();
         }
 

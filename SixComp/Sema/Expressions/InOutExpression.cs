@@ -12,11 +12,6 @@ namespace SixComp.Sema
 
         public IExpression Expression { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Expression);
-        }
-
         public override void Report(IWriter writer)
         {
             Expression.Report(writer, Strings.Head.InOut);

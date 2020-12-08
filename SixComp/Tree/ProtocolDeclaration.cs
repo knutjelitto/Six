@@ -2,7 +2,7 @@
 
 namespace SixComp.Tree
 {
-    public class ProtocolDeclaration : AnyDeclaration
+    public class ProtocolDeclaration : AnyDeclaration, INominalWhithDeclarations
     {
         public ProtocolDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
         {

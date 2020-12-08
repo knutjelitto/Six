@@ -23,11 +23,6 @@ namespace SixComp.Sema
         public GenericRestrictions Where { get; }
         public PropertyBlocks Blocks { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Generics, Parameters, Result, Where, Blocks);
-        }
-
         public override void Report(IWriter writer)
         {
             using (writer.Indent(Strings.Head.Subscript))

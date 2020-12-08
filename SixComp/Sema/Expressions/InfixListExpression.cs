@@ -16,11 +16,6 @@ namespace SixComp.Sema
 
         public IExpression? Infix { get; private set; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Infix);
-        }
-
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

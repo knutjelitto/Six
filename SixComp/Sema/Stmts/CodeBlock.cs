@@ -12,11 +12,6 @@ namespace SixComp.Sema
 
         public Statements Statements { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Statements.Resolve(writer);
-        }
-
         public override void Report(IWriter writer)
         {
             Statements.ReportList(writer, Strings.Head.Block);

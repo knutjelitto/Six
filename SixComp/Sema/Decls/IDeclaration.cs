@@ -1,6 +1,6 @@
 ﻿namespace SixComp.Sema
 {
-    public interface IDeclaration : IScoped, IReportable, IResolveable, IStatement
+    public interface IDeclaration : IScoped, IReportable, IStatement
     {
         public static IDeclaration Build(IScoped outer, Tree.AnyDeclaration tree)
         {

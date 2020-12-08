@@ -16,11 +16,6 @@ namespace SixComp.Sema
         public CodeBlock Then { get; }
         public IStatement? Else { get; }
 
-        public override void Resolve(IWriter writer)
-        {
-            Resolve(writer, Conditions, Then, Else);
-        }
-
         public override void Report(IWriter writer)
         {
             Tree.Tree(writer);

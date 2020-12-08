@@ -4,7 +4,7 @@ using System.Linq;
 namespace SixComp.Sema
 {
     public abstract class Items<TItem, TTree> : Items<TItem>, IWithTree<TTree>
-        where TItem : IReportable, IResolveable
+        where TItem : IReportable
         where TTree : notnull
     {
         public TTree Tree { get; }
