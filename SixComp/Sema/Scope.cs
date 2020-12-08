@@ -1,8 +1,8 @@
 ﻿using SixComp.Entities;
 using SixComp.Support;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SixComp.Sema
 {
@@ -10,6 +10,7 @@ namespace SixComp.Sema
     {
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
         private readonly List<ExtensionDeclaration> Extensions = new List<ExtensionDeclaration>();
+        private IEntity? Extendee = null;
 
         public Scope(IScoped parent, Module? module = null)
         {
@@ -37,22 +38,34 @@ namespace SixComp.Sema
             Extensions.Add(extension);
         }
 
-        public IReadOnlyList<IEntity> Look(INamed named)
+        public void Extends(IEntity extendee)
         {
+            Extendee = extendee;
+        }
+
+        public IReadOnlyList<IEntity> Look(INamed named, bool stop = false)
+        {
+            if (named.Name.Text == "Base")
+            {
+                Debug.Assert(true);
+            }
             if (lookup.TryGetValue(named.Name, out var decls))
             {
                 return decls.list;
             }
             var found = new List<IEntity>();
-            foreach (var extension in Extensions)
+            if (!stop)
             {
-                found.AddRange(extension.Scope.Look(named));
+                foreach (var extension in Extensions)
+                {
+                    found.AddRange(extension.Scope.Look(named));
+                }
+                if (found.Count == 0 && Extendee != null)
+                {
+                    found.AddRange(Extendee.Scope.Look(named, true));
+                }
             }
-            if (found.Count > 0)
-            {
-                return found;
-            }
-            return IScope.NoEntity;
+            return found;
         }
 
         public IReadOnlyList<IEntity> LookUp(INamed named)
@@ -60,17 +73,17 @@ namespace SixComp.Sema
             Scope scope = this;
             while (true)
             {
-                if (scope.lookup.TryGetValue(named.Name, out var decls))
+                var found = scope.Look(named);
+                if (found.Count > 0)
                 {
-                    return decls.list;
+                    return found;
                 }
                 if (scope == Module.Scope)
                 {
-                    break;
+                    return IScope.NoEntity;
                 }
                 scope = (Scope)scope.Parent.Scope;
             }
-            return IScope.NoEntity;
         }
 
         public T FindParent<T>(IScoped scoped) where T : notnull, IScoped

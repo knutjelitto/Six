@@ -13,8 +13,8 @@ namespace SixComp.Sema
 
         void Declare(IEntity named);
         void Extend(ExtensionDeclaration extension);
-
-        IReadOnlyList<IEntity> Look(INamed named);
+        void Extends(IEntity extendee);
+        IReadOnlyList<IEntity> Look(INamed named, bool stop = false);
         IReadOnlyList<IEntity> LookUp(INamed named);
 
         T FindParent<T>(IScoped scoped) where T : notnull, IScoped;

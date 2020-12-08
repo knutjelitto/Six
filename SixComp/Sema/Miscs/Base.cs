@@ -18,7 +18,7 @@ namespace SixComp.Sema
         public Global Global => Scope.Global;
 
         public IEntity? Entity { get; protected set; }
-       
+
         public abstract void Report(IWriter writer);
 
         public void Apply(Action applyPhase)

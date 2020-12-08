@@ -31,6 +31,7 @@ namespace SixComp.Sema
                 Debug.Assert(true);
 
                 Extended.Entity.Scope.Extend(this);
+                Scope.Extends(Extended.Entity);
             }
 
             Resolve(writer, Extended, Inheritance, Where, Declarations);
