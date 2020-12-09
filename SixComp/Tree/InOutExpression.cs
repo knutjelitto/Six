@@ -1,22 +1,25 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class InOutExpression : BaseExpression, AnyPrefixExpression
+    public partial class Tree
     {
-        private InOutExpression(AnyExpression expression)
+        public class InOutExpression : BaseExpression, AnyPrefixExpression
         {
-            Expression = expression;
-        }
+            private InOutExpression(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public AnyExpression Expression { get; }
+            public AnyExpression Expression { get; }
 
-        public static InOutExpression From(AnyExpression expression)
-        {
-            return new InOutExpression(expression);
-        }
+            public static InOutExpression From(AnyExpression expression)
+            {
+                return new InOutExpression(expression);
+            }
 
-        public override string ToString()
-        {
-            return $"&{Expression}";
+            public override string ToString()
+            {
+                return $"&{Expression}";
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SixComp.Sema

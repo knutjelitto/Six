@@ -1,43 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class DictionaryLiteral : ItemList<(AnyExpression key, AnyExpression value)>, AnyPrimaryExpression
+    public partial class Tree
     {
-        public DictionaryLiteral(List<(AnyExpression, AnyExpression)> items)
-            : base(items)
+        public class DictionaryLiteral : ItemList<(AnyExpression key, AnyExpression value)>, AnyPrimaryExpression
         {
-        }
-
-        public AnyExpression? LastExpression => this;
-
-        public static DictionaryLiteral Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LBracket);
-            var items = new List<(AnyExpression, AnyExpression)>();
-            if (parser.Current == ToKind.Colon)
+            public DictionaryLiteral(List<(AnyExpression, AnyExpression)> items)
+                : base(items)
             {
-                parser.ConsumeAny();
-                parser.Consume(ToKind.RBracket);
-                return new DictionaryLiteral(items); // empty
             }
-            do
+
+            public AnyExpression? LastExpression => this;
+
+            public static DictionaryLiteral Parse(Parser parser)
             {
-                if (parser.Current == ToKind.RBracket)
+                parser.Consume(ToKind.LBracket);
+                var items = new List<(AnyExpression, AnyExpression)>();
+                if (parser.Current == ToKind.Colon)
                 {
-                    break; // additional ','
+                    parser.ConsumeAny();
+                    parser.Consume(ToKind.RBracket);
+                    return new DictionaryLiteral(items); // empty
                 }
-                var key = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
-                parser.Consume(ToKind.Colon);
-                var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
-                items.Add((key, value));
+                do
+                {
+                    if (parser.Current == ToKind.RBracket)
+                    {
+                        break; // additional ','
+                    }
+                    var key = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
+                    parser.Consume(ToKind.Colon);
+                    var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
+                    items.Add((key, value));
+                }
+                while (parser.Match(ToKind.Comma));
+
+                parser.Consume(ToKind.RBracket);
+
+                return new DictionaryLiteral(items);
             }
-            while (parser.Match(ToKind.Comma));
-
-            parser.Consume(ToKind.RBracket);
-
-            return new DictionaryLiteral(items);
         }
     }
 }

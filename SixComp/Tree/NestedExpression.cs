@@ -1,22 +1,25 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class NestedExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        private NestedExpression(AnyExpression expression)
+        public class NestedExpression : BaseExpression, AnyPrimaryExpression
         {
-            Expression = expression;
-        }
+            private NestedExpression(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public AnyExpression Expression { get; }
+            public AnyExpression Expression { get; }
 
-        public static NestedExpression From(AnyExpression expression)
-        {
-            return new NestedExpression(expression);
-        }
+            public static NestedExpression From(AnyExpression expression)
+            {
+                return new NestedExpression(expression);
+            }
 
-        public override string ToString()
-        {
-            return $"({Expression})";
+            public override string ToString()
+            {
+                return $"({Expression})";
+            }
         }
     }
 }

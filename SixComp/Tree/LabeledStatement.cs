@@ -1,39 +1,42 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class LabeledStatement : AnyStatement
+    public partial class Tree
     {
-        public LabeledStatement(BaseName label, AnyStatement statement)
+        public class LabeledStatement : AnyStatement
         {
-            Label = label;
-            Statement = statement;
-        }
-
-        public BaseName Label { get; }
-        public AnyStatement Statement { get; }
-
-        public static LabeledStatement Parse(Parser parser)
-        {
-            var label = BaseName.Parse(parser);
-            parser.Consume(ToKind.Colon);
-            var statement = AnyStatement.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(LabeledStatement)}");
-            return new LabeledStatement(label, statement);
-        }
-
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"{Label}:");
-            using (writer.Indent())
+            public LabeledStatement(BaseName label, AnyStatement statement)
             {
-                Statement.Write(writer);
+                Label = label;
+                Statement = statement;
             }
-        }
 
-        public override string ToString()
-        {
-            return $"{Label}: {Statement}";
+            public BaseName Label { get; }
+            public AnyStatement Statement { get; }
+
+            public static LabeledStatement Parse(Parser parser)
+            {
+                var label = BaseName.Parse(parser);
+                parser.Consume(ToKind.Colon);
+                var statement = AnyStatement.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(LabeledStatement)}");
+                return new LabeledStatement(label, statement);
+            }
+
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"{Label}:");
+                using (writer.Indent())
+                {
+                    Statement.Write(writer);
+                }
+            }
+
+            public override string ToString()
+            {
+                return $"{Label}: {Statement}";
+            }
         }
     }
 }

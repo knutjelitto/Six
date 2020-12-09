@@ -1,38 +1,41 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class DeclarationClause : IWritable
+    public partial class Tree
     {
-        public DeclarationClause(DeclarationList declarations)
+        public class DeclarationClause : IWritable
         {
-            Declarations = declarations;
-        }
-
-        public DeclarationList Declarations { get; }
-
-        public static DeclarationClause Parse(Parser parser, AnyDeclaration.Context context)
-        {
-            parser.Consume(ToKind.LBrace);
-
-            var declarations = DeclarationList.Parse(parser, context);
-
-            parser.Consume(ToKind.RBrace);
-
-            return new DeclarationClause(declarations);
-        }
-
-        public void Write(IWriter writer)
-        {
-            using (writer.Block())
+            public DeclarationClause(DeclarationList declarations)
             {
-                Declarations.Write(writer);
+                Declarations = declarations;
             }
-        }
 
-        public override string ToString()
-        {
-            return $" {{ {Declarations} }}";
+            public DeclarationList Declarations { get; }
+
+            public static DeclarationClause Parse(Parser parser, AnyDeclaration.Context context)
+            {
+                parser.Consume(ToKind.LBrace);
+
+                var declarations = DeclarationList.Parse(parser, context);
+
+                parser.Consume(ToKind.RBrace);
+
+                return new DeclarationClause(declarations);
+            }
+
+            public void Write(IWriter writer)
+            {
+                using (writer.Block())
+                {
+                    Declarations.Write(writer);
+                }
+            }
+
+            public override string ToString()
+            {
+                return $" {{ {Declarations} }}";
+            }
         }
     }
 }

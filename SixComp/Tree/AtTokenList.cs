@@ -1,56 +1,57 @@
 ﻿using SixComp.Support;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class AtTokenList : ItemList<AtToken>
+    public partial class Tree
     {
-        public AtTokenList(List<AtToken> tokens) : base(tokens) { }
-        public AtTokenList() { }
-
-        public static AtTokenList Parse(Parser parser, ToKind right)
+        public class AtTokenList : ItemList<AtToken>
         {
-            var tokens = new List<AtToken>();
+            public AtTokenList(List<AtToken> tokens) : base(tokens) { }
+            public AtTokenList() { }
 
-            while (parser.Current != right)
+            public static AtTokenList Parse(Parser parser, ToKind right)
             {
-                var token = (AtToken?)null;
+                var tokens = new List<AtToken>();
 
-                switch (parser.Current)
+                while (parser.Current != right)
                 {
-                    case ToKind.LParent:
-                        token = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
-                        break;
-                    case ToKind.LBrace:
-                        token = AtTokenGroup.Parse(parser, ToKind.LBrace, ToKind.RBrace);
-                        break;
-                    case ToKind.LBracket:
-                        token = AtTokenGroup.Parse(parser, ToKind.LBracket, ToKind.RBracket);
-                        break;
-                    default:
-                        if (parser.Current < ToKind._LAST_)
-                        {
-                            token = AtTokenSingle.Parse(parser);
-                        }
-                        break;
+                    var token = (AtToken?)null;
+
+                    switch (parser.Current)
+                    {
+                        case ToKind.LParent:
+                            token = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
+                            break;
+                        case ToKind.LBrace:
+                            token = AtTokenGroup.Parse(parser, ToKind.LBrace, ToKind.RBrace);
+                            break;
+                        case ToKind.LBracket:
+                            token = AtTokenGroup.Parse(parser, ToKind.LBracket, ToKind.RBracket);
+                            break;
+                        default:
+                            if (parser.Current < ToKind._LAST_)
+                            {
+                                token = AtTokenSingle.Parse(parser);
+                            }
+                            break;
+                    }
+
+                    if (token == null)
+                    {
+                        throw new ParserException(parser.CurrentToken, "illformed attribute");
+                    }
+
+                    tokens.Add(token);
                 }
 
-                if (token == null)
-                {
-                    throw new ParserException(parser.CurrentToken, "illformed attribute");
-                }
-
-                tokens.Add(token);
+                return new AtTokenList(tokens);
             }
 
-            return new AtTokenList(tokens);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(" ", this);
+            public override string ToString()
+            {
+                return string.Join(" ", this);
+            }
         }
     }
 }

@@ -1,49 +1,52 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaseLabel
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwDefault);
-
-        public CaseLabel(Prefix prefix, CaseItemList caseItems)
+        public class CaseLabel
         {
-            Prefix = prefix;
-            CaseItems = caseItems;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwDefault);
 
-        public Prefix Prefix { get; }
-        public CaseItemList CaseItems { get; }
-
-        public static CaseLabel Parse(Parser parser)
-        {
-            var prefix = Prefix.Parse(parser, onlyAttributes: true);
-            switch (parser.Current)
+            public CaseLabel(Prefix prefix, CaseItemList caseItems)
             {
-                case ToKind.KwCase:
-                    parser.ConsumeAny();
-                    var items = CaseItemList.Parse(parser);
-                    parser.Consume(ToKind.Colon);
-                    return new CaseLabel(prefix, items);
-                case ToKind.KwDefault:
-                    parser.ConsumeAny();
-                    parser.Consume(ToKind.Colon);
-                    return new CaseLabel(prefix, new CaseItemList());
+                Prefix = prefix;
+                CaseItems = caseItems;
             }
 
-            parser.Consume(Firsts);
+            public Prefix Prefix { get; }
+            public CaseItemList CaseItems { get; }
 
-            throw new NotSupportedException();
-        }
-
-        public override string ToString()
-        {
-            if (CaseItems.Count == 0)
+            public static CaseLabel Parse(Parser parser)
             {
-                return "default:";
+                var prefix = Prefix.Parse(parser, onlyAttributes: true);
+                switch (parser.Current)
+                {
+                    case ToKind.KwCase:
+                        parser.ConsumeAny();
+                        var items = CaseItemList.Parse(parser);
+                        parser.Consume(ToKind.Colon);
+                        return new CaseLabel(prefix, items);
+                    case ToKind.KwDefault:
+                        parser.ConsumeAny();
+                        parser.Consume(ToKind.Colon);
+                        return new CaseLabel(prefix, new CaseItemList());
+                }
+
+                parser.Consume(Firsts);
+
+                throw new NotSupportedException();
             }
-            return $"case {CaseItems}:";
+
+            public override string ToString()
+            {
+                if (CaseItems.Count == 0)
+                {
+                    return "default:";
+                }
+                return $"case {CaseItems}:";
+            }
         }
     }
 }

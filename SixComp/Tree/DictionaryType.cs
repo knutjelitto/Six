@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class DictionaryType : AnyType
+    public partial class Tree
     {
-        private DictionaryType(AnyType keyType, AnyType valueType)
+        public class DictionaryType : AnyType
         {
-            KeyType = keyType;
-            ValueType = valueType;
-        }
+            private DictionaryType(AnyType keyType, AnyType valueType)
+            {
+                KeyType = keyType;
+                ValueType = valueType;
+            }
 
-        public AnyType KeyType { get; }
-        public AnyType ValueType { get; }
+            public AnyType KeyType { get; }
+            public AnyType ValueType { get; }
 
-        public static DictionaryType From(AnyType keyType, AnyType valueType)
-        {
-            return new DictionaryType(keyType, valueType);
-        }
+            public static DictionaryType From(AnyType keyType, AnyType valueType)
+            {
+                return new DictionaryType(keyType, valueType);
+            }
 
-        public override string ToString()
-        {
-            return $"[{KeyType}:{ValueType}]";
+            public override string ToString()
+            {
+                return $"[{KeyType}:{ValueType}]";
+            }
         }
     }
 }

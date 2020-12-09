@@ -1,38 +1,41 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ExpressionCondition : BaseExpression, AnyCondition
+    public partial class Tree
     {
-        private ExpressionCondition(AnyExpression expression)
+        public class ExpressionCondition : BaseExpression, AnyCondition
         {
-            Expression = expression;
-        }
-
-        public AnyExpression Expression { get; }
-
-        public static ExpressionCondition? TryParse(Parser parser)
-        {
-            var expression = AnyExpression.TryParse(parser);
-
-            if (expression == null)
+            private ExpressionCondition(AnyExpression expression)
             {
-                return null;
+                Expression = expression;
             }
 
-            return new ExpressionCondition(expression);
-        }
+            public AnyExpression Expression { get; }
 
-        public override AnyExpression? LastExpression
-        {
-            get
+            public static ExpressionCondition? TryParse(Parser parser)
             {
-                var last = Expression.LastExpression;
-                return last;
-            }
-        }
+                var expression = AnyExpression.TryParse(parser);
 
-        public override string ToString()
-        {
-            return $"{Expression}";
+                if (expression == null)
+                {
+                    return null;
+                }
+
+                return new ExpressionCondition(expression);
+            }
+
+            public override AnyExpression? LastExpression
+            {
+                get
+                {
+                    var last = Expression.LastExpression;
+                    return last;
+                }
+            }
+
+            public override string ToString()
+            {
+                return $"{Expression}";
+            }
         }
     }
 }

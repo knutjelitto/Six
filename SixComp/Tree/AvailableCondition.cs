@@ -1,26 +1,29 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class AvailableCondition : BaseExpression, AnyCondition
+    public partial class Tree
     {
-        private AvailableCondition(AtTokenGroup tokens)
+        public class AvailableCondition : BaseExpression, AnyCondition
         {
-            Tokens = tokens;
-        }
+            private AvailableCondition(AtTokenGroup tokens)
+            {
+                Tokens = tokens;
+            }
 
-        public AtTokenGroup Tokens { get; }
+            public AtTokenGroup Tokens { get; }
 
-        public static AvailableCondition Parse(Parser parser)
-        {
-            parser.Consume(ToKind.CdAvailable);
+            public static AvailableCondition Parse(Parser parser)
+            {
+                parser.Consume(ToKind.CdAvailable);
 
-            var tokens = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
+                var tokens = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
 
-            return new AvailableCondition(tokens);
-        }
+                return new AvailableCondition(tokens);
+            }
 
-        public override string ToString()
-        {
-            return $"{Tokens}";
+            public override string ToString()
+            {
+                return $"{Tokens}";
+            }
         }
     }
 }

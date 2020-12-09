@@ -1,41 +1,44 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class YieldStatement : AnyStatement
+    public partial class Tree
     {
-        public YieldStatement(AnyExpression? value)
+        public class YieldStatement : AnyStatement
         {
-            Value = value;
-        }
-
-        public AnyExpression? Value { get; }
-
-        public static YieldStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwYield);
-
-            AnyExpression? value = null;
-
-            if (!parser.CurrentToken.NewlineBefore)
+            public YieldStatement(AnyExpression? value)
             {
-                value = AnyExpression.TryParse(parser);
+                Value = value;
             }
 
-            return new YieldStatement(value);
-        }
+            public AnyExpression? Value { get; }
 
-        public void Write(IWriter writer)
-        {
-            var value = Value == null ? string.Empty : $" {Value.StripParents()}";
+            public static YieldStatement Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwYield);
 
-            writer.WriteLine($"{ToKind.KwYield.GetRep()}{value}");
-        }
+                AnyExpression? value = null;
 
-        public override string ToString()
-        {
-            var value = Value == null ? string.Empty : $" {Value}";
-            return $"{ToKind.KwYield.GetRep()}{value}";
+                if (!parser.CurrentToken.NewlineBefore)
+                {
+                    value = AnyExpression.TryParse(parser);
+                }
+
+                return new YieldStatement(value);
+            }
+
+            public void Write(IWriter writer)
+            {
+                var value = Value == null ? string.Empty : $" {Value.StripParents()}";
+
+                writer.WriteLine($"{ToKind.KwYield.GetRep()}{value}");
+            }
+
+            public override string ToString()
+            {
+                var value = Value == null ? string.Empty : $" {Value}";
+                return $"{ToKind.KwYield.GetRep()}{value}";
+            }
         }
     }
 }

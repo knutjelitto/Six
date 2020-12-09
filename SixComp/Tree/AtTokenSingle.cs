@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class AtTokenSingle : AtToken
+    public partial class Tree
     {
-        public AtTokenSingle(Token token)
+        public class AtTokenSingle : AtToken
         {
-            Token = token;
-        }
+            public AtTokenSingle(Token token)
+            {
+                Token = token;
+            }
 
-        public Token Token { get; }
+            public Token Token { get; }
 
-        public static AtTokenSingle Parse(Parser parser)
-        {
-            var token = parser.ConsumeAny();
+            public static AtTokenSingle Parse(Parser parser)
+            {
+                var token = parser.ConsumeAny();
 
-            return new AtTokenSingle(token);
-        }
+                return new AtTokenSingle(token);
+            }
 
-        public override string ToString()
-        {
-            return $"{Token}";
+            public override string ToString()
+            {
+                return $"{Token}";
+            }
         }
     }
 }

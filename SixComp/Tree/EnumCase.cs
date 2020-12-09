@@ -1,36 +1,39 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class EnumCase : AnyDeclaration
+    public partial class Tree
     {
-        public EnumCase(Prefix prefix, EnumCaseItemList caseItems)
+        public class EnumCase : AnyDeclaration
         {
-            Prefix = prefix;
-            CaseItems = caseItems;
-        }
-
-        public Prefix Prefix { get; }
-        public EnumCaseItemList CaseItems { get; }
-
-        public static EnumCase Parse(Parser parser, Prefix prefix)
-        {
-            var caseItems = EnumCaseItemList.Parse(parser);
-
-            return new EnumCase(prefix, caseItems);
-        }
-
-        public void Write(IWriter writer)
-        {
-            foreach (var items in CaseItems)
+            public EnumCase(Prefix prefix, EnumCaseItemList caseItems)
             {
-                items.Write(writer);
+                Prefix = prefix;
+                CaseItems = caseItems;
             }
-        }
 
-        public override string ToString()
-        {
-            return $"{CaseItems}";
+            public Prefix Prefix { get; }
+            public EnumCaseItemList CaseItems { get; }
+
+            public static EnumCase Parse(Parser parser, Prefix prefix)
+            {
+                var caseItems = EnumCaseItemList.Parse(parser);
+
+                return new EnumCase(prefix, caseItems);
+            }
+
+            public void Write(IWriter writer)
+            {
+                foreach (var items in CaseItems)
+                {
+                    items.Write(writer);
+                }
+            }
+
+            public override string ToString()
+            {
+                return $"{CaseItems}";
+            }
         }
     }
 }

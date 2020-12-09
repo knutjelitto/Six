@@ -1,28 +1,31 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public sealed class PropertyBlocks : Dictionary<BaseName, (int index, PropertyBlock block)>
+    public partial class Tree
     {
-        private int index = 0;
-        private TokenSet have = new TokenSet();
-
-        public void Add(PropertyBlock block)
+        public sealed class PropertyBlocks : Dictionary<BaseName, (int index, PropertyBlock block)>
         {
-            have.Add(block.Keyword.Kind);
-            Add(block.BlockName, (index, block));
-            index += 1;
-        }
+            private int index = 0;
+            private TokenSet have = new TokenSet();
 
-        public bool Have(ToKind kind)
-        {
-            return have.Contains(kind);
-        }
+            public void Add(PropertyBlock block)
+            {
+                have.Add(block.Keyword.Kind);
+                Add(block.BlockName, (index, block));
+                index += 1;
+            }
 
-        public bool Have(Token token)
-        {
-            return have.Contains(token.Kind);
+            public bool Have(ToKind kind)
+            {
+                return have.Contains(kind);
+            }
+
+            public bool Have(Token token)
+            {
+                return have.Contains(token.Kind);
+            }
         }
     }
 }

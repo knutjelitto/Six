@@ -1,32 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class DeclarationList : ItemList<AnyDeclaration>
+    public partial class Tree
     {
-        public DeclarationList(List<AnyDeclaration> items) : base(items) { }
-        public DeclarationList() { }
-
-        public static DeclarationList Parse(Parser parser, AnyDeclaration.Context context)
+        public class DeclarationList : ItemList<AnyDeclaration>
         {
-            var declarations = new List<AnyDeclaration>();
+            public DeclarationList(List<AnyDeclaration> items) : base(items) { }
+            public DeclarationList() { }
 
-            while (AnyDeclaration.TryParse(parser, context) is AnyDeclaration declaration)
+            public static DeclarationList Parse(Parser parser, AnyDeclaration.Context context)
             {
-                declarations.Add(declaration);
+                var declarations = new List<AnyDeclaration>();
 
-                while (parser.Match(ToKind.SemiColon))
+                while (AnyDeclaration.TryParse(parser, context) is AnyDeclaration declaration)
                 {
-                    ;
+                    declarations.Add(declaration);
+
+                    while (parser.Match(ToKind.SemiColon))
+                    {
+                        ;
+                    }
                 }
+
+                return new DeclarationList(declarations);
             }
 
-            return new DeclarationList(declarations);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(" ", this);
+            public override string ToString()
+            {
+                return string.Join(" ", this);
+            }
         }
     }
 }

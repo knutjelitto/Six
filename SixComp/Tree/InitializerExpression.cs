@@ -1,22 +1,25 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class InitializerExpression : PostfixExpression
+    public partial class Tree
     {
-        public InitializerExpression(AnyExpression left, Token op, ArgumentNameClause names)
-            : base(left, op)
+        public class InitializerExpression : PostfixExpression
         {
-            Names = names;
-        }
+            public InitializerExpression(AnyExpression left, Token op, ArgumentNameClause names)
+                : base(left, op)
+            {
+                Names = names;
+            }
 
-        public ArgumentNameClause Names { get; }
+            public ArgumentNameClause Names { get; }
 
-        public static InitializerExpression Parse(Parser parser, AnyExpression left)
-        {
-            var op = parser.Consume(ToKind.Dot);
-            parser.Consume(ToKind.KwInit);
-            var names = ArgumentNameClause.TryParse(parser) ?? new ArgumentNameClause();
+            public static InitializerExpression Parse(Parser parser, AnyExpression left)
+            {
+                var op = parser.Consume(ToKind.Dot);
+                parser.Consume(ToKind.KwInit);
+                var names = ArgumentNameClause.TryParse(parser) ?? new ArgumentNameClause();
 
-            return new InitializerExpression(left, op, names);
+                return new InitializerExpression(left, op, names);
+            }
         }
     }
 }

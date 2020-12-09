@@ -1,35 +1,38 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ParameterList : ItemList<Parameter>
+    public partial class Tree
     {
-        public ParameterList(List<Parameter> items) : base(items) { }
-        public ParameterList() { }
-
-        public static ParameterList Parse(Parser parser, TokenSet follow)
+        public class ParameterList : ItemList<Parameter>
         {
-            var parameters = new List<Parameter>();
+            public ParameterList(List<Parameter> items) : base(items) { }
+            public ParameterList() { }
 
-            while (!follow.Contains(parser.Current))
+            public static ParameterList Parse(Parser parser, TokenSet follow)
             {
-                var parameter = Parameter.Parse(parser);
+                var parameters = new List<Parameter>();
 
-                parameters.Add(parameter);
-
-                if (!parser.Match(ToKind.Comma))
+                while (!follow.Contains(parser.Current))
                 {
-                    break;
+                    var parameter = Parameter.Parse(parser);
+
+                    parameters.Add(parameter);
+
+                    if (!parser.Match(ToKind.Comma))
+                    {
+                        break;
+                    }
                 }
+
+                return new ParameterList(parameters);
             }
 
-            return new ParameterList(parameters);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

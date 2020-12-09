@@ -1,19 +1,22 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SELFType : AnyType
+    public partial class Tree
     {
-        public SELFType(Token token)
+        public class SELFType : AnyType
         {
-            Token = token;
-        }
+            public SELFType(Token token)
+            {
+                Token = token;
+            }
 
-        public Token Token { get; }
+            public Token Token { get; }
 
-        public static SELFType Parse(Parser parser)
-        {
-            var token = parser.Consume(ToKind.KwSELF);
+            public static SELFType Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.KwSELF);
 
-            return new SELFType(token);
+                return new SELFType(token);
+            }
         }
     }
 }

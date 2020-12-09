@@ -1,34 +1,37 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class LabeledTypeList : ItemList<TupleTypeElement>, AnyType
+    public partial class Tree
     {
-        public LabeledTypeList(List<TupleTypeElement> items) : base(items) { }
-        public LabeledTypeList() { }
-
-        public static LabeledTypeList Parse(Parser parser)
+        public class LabeledTypeList : ItemList<TupleTypeElement>, AnyType
         {
-            parser.Consume(ToKind.LParent);
+            public LabeledTypeList(List<TupleTypeElement> items) : base(items) { }
+            public LabeledTypeList() { }
 
-            var items = new List<TupleTypeElement>();
-            if (parser.Current != ToKind.RParent)
+            public static LabeledTypeList Parse(Parser parser)
             {
-                do
+                parser.Consume(ToKind.LParent);
+
+                var items = new List<TupleTypeElement>();
+                if (parser.Current != ToKind.RParent)
                 {
-                    var item = TupleTypeElement.Parse(parser);
-                    items.Add(item);
+                    do
+                    {
+                        var item = TupleTypeElement.Parse(parser);
+                        items.Add(item);
+                    }
+                    while (parser.Match(ToKind.Comma));
                 }
-                while (parser.Match(ToKind.Comma));
+                parser.Consume(ToKind.RParent);
+
+                return new LabeledTypeList(items);
             }
-            parser.Consume(ToKind.RParent);
 
-            return new LabeledTypeList(items);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

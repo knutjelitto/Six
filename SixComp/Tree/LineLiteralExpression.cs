@@ -1,17 +1,20 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class LineLiteralExpression : AnyLiteralExpression
+    public partial class Tree
     {
-        private LineLiteralExpression(Token token)
-            : base(token)
+        public class LineLiteralExpression : AnyLiteralExpression
         {
-        }
+            private LineLiteralExpression(Token token)
+                : base(token)
+            {
+            }
 
-        public static LineLiteralExpression Parse(Parser parser)
-        {
-            var token = parser.Consume(ToKind.CdLine);
+            public static LineLiteralExpression Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.CdLine);
 
-            return new LineLiteralExpression(token);
+                return new LineLiteralExpression(token);
+            }
         }
     }
 }

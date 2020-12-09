@@ -1,17 +1,20 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public abstract class AnyLiteralExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        public AnyLiteralExpression(Token token)
+        public abstract class AnyLiteralExpression : BaseExpression, AnyPrimaryExpression
         {
-            Token = token;
-        }
+            public AnyLiteralExpression(Token token)
+            {
+                Token = token;
+            }
 
-        public Token Token { get; }
+            public Token Token { get; }
 
-        public override string ToString()
-        {
-            return $"{Token}";
+            public override string ToString()
+            {
+                return $"{Token}";
+            }
         }
     }
 }

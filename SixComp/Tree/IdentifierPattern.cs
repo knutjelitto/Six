@@ -1,27 +1,29 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class IdentifierPattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        public IdentifierPattern(BaseName name)
+        public class IdentifierPattern : SyntaxNode, AnyPattern
         {
-            Name = name;
-        }
+            public IdentifierPattern(BaseName name)
+            {
+                Name = name;
+            }
 
-        public BaseName Name { get; }
+            public BaseName Name { get; }
 
-        public static IdentifierPattern Parse(Parser parser)
-        {
-            var name = BaseName.Parse(parser);
-            //var type = parser.Try(ToKind.Colon, TypeAnnotation.Parse);
+            public static IdentifierPattern Parse(Parser parser)
+            {
+                var name = BaseName.Parse(parser);
 
-            return new IdentifierPattern(name);
-        }
+                return new IdentifierPattern(name);
+            }
 
-        public bool NameOnly => true;
+            public bool NameOnly => true;
 
-        public override string ToString()
-        {
-            return $"{Name}";
+            public override string ToString()
+            {
+                return $"{Name}";
+            }
         }
     }
 }

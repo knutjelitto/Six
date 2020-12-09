@@ -1,19 +1,22 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class AtArgumentClause
+    public partial class Tree
     {
-        public AtArgumentClause(AtTokenGroup arguments)
+        public class AtArgumentClause
         {
-            Arguments = arguments;
-        }
+            public AtArgumentClause(AtTokenGroup arguments)
+            {
+                Arguments = arguments;
+            }
 
-        public AtTokenGroup Arguments { get; }
+            public AtTokenGroup Arguments { get; }
 
-        public static AtArgumentClause Parse(Parser parser)
-        {
-            var arguments = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
+            public static AtArgumentClause Parse(Parser parser)
+            {
+                var arguments = AtTokenGroup.Parse(parser, ToKind.LParent, ToKind.RParent);
 
-            return new AtArgumentClause(arguments);
+                return new AtArgumentClause(arguments);
+            }
         }
     }
 }

@@ -1,26 +1,29 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class AsPattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        public AsPattern(AnyPattern pattern, AnyType type)
+        public class AsPattern : SyntaxNode, AnyPattern
         {
-            Pattern = pattern;
-            Type = type;
-        }
+            public AsPattern(AnyPattern pattern, AnyType type)
+            {
+                Pattern = pattern;
+                Type = type;
+            }
 
-        public AnyPattern Pattern { get; }
-        public AnyType Type { get; }
+            public AnyPattern Pattern { get; }
+            public AnyType Type { get; }
 
-        public static AsPattern Parse(Parser parser, AnyPattern pattern)
-        {
-            parser.Consume(ToKind.KwAs);
-            var type = AnyType.Parse(parser);
+            public static AsPattern Parse(Parser parser, AnyPattern pattern)
+            {
+                parser.Consume(ToKind.KwAs);
+                var type = AnyType.Parse(parser);
 
-            return new AsPattern(pattern, type);
-        }
-        public override string ToString()
-        {
-            return $"{Pattern} as {Type}";
+                return new AsPattern(pattern, type);
+            }
+            public override string ToString()
+            {
+                return $"{Pattern} as {Type}";
+            }
         }
     }
 }

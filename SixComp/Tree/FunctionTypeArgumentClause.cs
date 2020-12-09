@@ -1,31 +1,34 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class FunctionTypeArgumentClause
+    public partial class Tree
     {
-        private FunctionTypeArgumentClause(FunctionTypeArgumentList arguments, Optional variadic)
+        public class FunctionTypeArgumentClause
         {
-            Arguments = arguments;
-            Variadic = variadic;
-        }
+            private FunctionTypeArgumentClause(FunctionTypeArgumentList arguments, Optional variadic)
+            {
+                Arguments = arguments;
+                Variadic = variadic;
+            }
 
-        public FunctionTypeArgumentList Arguments { get; }
-        public Optional Variadic { get; }
+            public FunctionTypeArgumentList Arguments { get; }
+            public Optional Variadic { get; }
 
-        public static FunctionTypeArgumentClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LParent);
+            public static FunctionTypeArgumentClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LParent);
 
-            var arguments = FunctionTypeArgumentList.Parse(parser);
-            var variadic = Optional.Parse(parser, ToKind.DotDotDot);
+                var arguments = FunctionTypeArgumentList.Parse(parser);
+                var variadic = Optional.Parse(parser, ToKind.DotDotDot);
 
-            parser.Consume(ToKind.RParent);
+                parser.Consume(ToKind.RParent);
 
-            return new FunctionTypeArgumentClause(arguments, variadic);
-        }
+                return new FunctionTypeArgumentClause(arguments, variadic);
+            }
 
-        public override string ToString()
-        {
-            return $"({Arguments}{Variadic})";
+            public override string ToString()
+            {
+                return $"({Arguments}{Variadic})";
+            }
         }
     }
 }

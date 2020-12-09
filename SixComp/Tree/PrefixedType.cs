@@ -1,30 +1,33 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class PrefixedType : AnyType
+    public partial class Tree
     {
-        public PrefixedType(Prefix prefix, bool inout, AnyType type)
+        public class PrefixedType : AnyType
         {
-            Prefix = prefix;
-            Inout = inout;
-            Type = type;
-        }
+            public PrefixedType(Prefix prefix, bool inout, AnyType type)
+            {
+                Prefix = prefix;
+                Inout = inout;
+                Type = type;
+            }
 
-        public Prefix Prefix { get; }
-        public bool Inout { get; }
-        public AnyType Type { get; }
+            public Prefix Prefix { get; }
+            public bool Inout { get; }
+            public AnyType Type { get; }
 
-        public static PrefixedType Parse(Parser parser)
-        {
-            var prefix = Prefix.Parse(parser, onlyAttributes: true);
-            var inout = parser.Match(ToKind.KwInout);
-            var type = AnyType.Parse(parser);
+            public static PrefixedType Parse(Parser parser)
+            {
+                var prefix = Prefix.Parse(parser, onlyAttributes: true);
+                var inout = parser.Match(ToKind.KwInout);
+                var type = AnyType.Parse(parser);
 
-            return new PrefixedType(prefix, inout, type);
-        }
+                return new PrefixedType(prefix, inout, type);
+            }
 
-        public override string ToString()
-        {
-            return $"{Prefix}{Type}";
+            public override string ToString()
+            {
+                return $"{Prefix}{Type}";
+            }
         }
     }
 }

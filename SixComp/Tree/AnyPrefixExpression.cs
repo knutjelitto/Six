@@ -1,35 +1,38 @@
 ﻿using System.Diagnostics;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public interface AnyPrefixExpression : AnyExpression
+    public partial class Tree
     {
-        public static new AnyPrefixExpression? TryParse(Parser parser)
+        public interface AnyPrefixExpression : AnyExpression
         {
-            if (parser.Current == ToKind.Amper)
+            public static new AnyPrefixExpression? TryParse(Parser parser)
             {
-                Debug.Assert(true);
-                //return InOutExpression.TryParse(parser);
-            }
-
-            var offset = parser.Offset;
-
-            if (parser.IsPrefixOperator())
-            {
-                var op = parser.ConsumeAny();
-                var operand = AnyPostfixExpression.TryParse(parser);
-                if (operand != null)
+                if (parser.Current == ToKind.Amper)
                 {
-                    if (op.Kind == ToKind.Amper)
-                    {
-                        return InOutExpression.From(operand);
-                    }
-                    return new PrefixExpression(op, operand);
+                    Debug.Assert(true);
+                    //return InOutExpression.TryParse(parser);
                 }
-                parser.Offset = offset;
-                return null;
+
+                var offset = parser.Offset;
+
+                if (parser.IsPrefixOperator())
+                {
+                    var op = parser.ConsumeAny();
+                    var operand = AnyPostfixExpression.TryParse(parser);
+                    if (operand != null)
+                    {
+                        if (op.Kind == ToKind.Amper)
+                        {
+                            return InOutExpression.From(operand);
+                        }
+                        return new PrefixExpression(op, operand);
+                    }
+                    parser.Offset = offset;
+                    return null;
+                }
+                return AnyPostfixExpression.TryParse(parser);
             }
-            return AnyPostfixExpression.TryParse(parser);
         }
     }
 }

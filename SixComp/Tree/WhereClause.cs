@@ -1,31 +1,34 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class WhereClause
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
-
-        private WhereClause(AnyExpression expression)
+        public class WhereClause
         {
-            Expression = expression;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
 
-        public AnyExpression Expression { get; }
+            private WhereClause(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public static WhereClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwWhere);
+            public AnyExpression Expression { get; }
 
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(WhereClause)}");
+            public static WhereClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwWhere);
 
-            return new WhereClause(expression);
-        }
+                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(WhereClause)}");
 
-        public override string ToString()
-        {
-            return $" where {Expression}";
+                return new WhereClause(expression);
+            }
+
+            public override string ToString()
+            {
+                return $" where {Expression}";
+            }
         }
     }
 }

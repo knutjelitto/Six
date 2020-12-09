@@ -1,32 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class BinaryExpressionList : ItemList<BinaryExpression>
+    public partial class Tree
     {
-        private BinaryExpressionList(List<BinaryExpression> binaries) : base(binaries) { }
-        public BinaryExpressionList() { }
-
-        public static BinaryExpressionList Parse(Parser parser)
+        public class BinaryExpressionList : ItemList<BinaryExpression>
         {
-            var binaries = new List<BinaryExpression>();
-            BinaryExpression? binary;
+            private BinaryExpressionList(List<BinaryExpression> binaries) : base(binaries) { }
+            public BinaryExpressionList() { }
 
-            while ((binary = BinaryExpression.TryParse(parser)) != null)
+            public static BinaryExpressionList Parse(Parser parser)
             {
-                binaries.Add(binary);
+                var binaries = new List<BinaryExpression>();
+                BinaryExpression? binary;
+
+                while ((binary = BinaryExpression.TryParse(parser)) != null)
+                {
+                    binaries.Add(binary);
+                }
+
+                return new BinaryExpressionList(binaries);
             }
 
-            return new BinaryExpressionList(binaries);
-        }
-
-        public override string ToString()
-        {
-            if (Count > 0)
+            public override string ToString()
             {
-                return " " + string.Join(" ", this);
+                if (Count > 0)
+                {
+                    return " " + string.Join(" ", this);
+                }
+                return string.Empty;
             }
-            return string.Empty;
         }
     }
 }

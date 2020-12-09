@@ -1,22 +1,25 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ArrayType : AnyType
+    public partial class Tree
     {
-        private ArrayType(AnyType elementType)
+        public class ArrayType : AnyType
         {
-            ElementType = elementType;
-        }
+            private ArrayType(AnyType elementType)
+            {
+                ElementType = elementType;
+            }
 
-        public AnyType ElementType { get; }
+            public AnyType ElementType { get; }
 
-        public static ArrayType From(AnyType elementType)
-        {
-            return new ArrayType(elementType);
-        }
+            public static ArrayType From(AnyType elementType)
+            {
+                return new ArrayType(elementType);
+            }
 
-        public override string ToString()
-        {
-            return $"[{ElementType}]";
+            public override string ToString()
+            {
+                return $"[{ElementType}]";
+            }
         }
     }
 }

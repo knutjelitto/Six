@@ -1,32 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class FunctionTypeArgumentList : ItemList<FunctionTypeArgument>
+    public partial class Tree
     {
-        public FunctionTypeArgumentList(List<FunctionTypeArgument> arguments) : base(arguments) { }
-        public FunctionTypeArgumentList() { }
-
-        public static FunctionTypeArgumentList Parse(Parser parser)
+        public class FunctionTypeArgumentList : ItemList<FunctionTypeArgument>
         {
-            var arguments = new List<FunctionTypeArgument>();
+            public FunctionTypeArgumentList(List<FunctionTypeArgument> arguments) : base(arguments) { }
+            public FunctionTypeArgumentList() { }
 
-            if (parser.Current != ToKind.RParent)
+            public static FunctionTypeArgumentList Parse(Parser parser)
             {
-                do
+                var arguments = new List<FunctionTypeArgument>();
+
+                if (parser.Current != ToKind.RParent)
                 {
-                    var argument = FunctionTypeArgument.Parse(parser);
-                    arguments.Add(argument);
+                    do
+                    {
+                        var argument = FunctionTypeArgument.Parse(parser);
+                        arguments.Add(argument);
+                    }
+                    while (parser.Match(ToKind.Comma));
                 }
-                while (parser.Match(ToKind.Comma));
+
+                return new FunctionTypeArgumentList(arguments);
             }
 
-            return new FunctionTypeArgumentList(arguments);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

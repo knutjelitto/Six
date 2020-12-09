@@ -1,19 +1,22 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SelfExpression : BaseExpression, AnySelfExpression
+    public partial class Tree
     {
-        private SelfExpression(Token self)
+        public class SelfExpression : BaseExpression, AnySelfExpression
         {
-            Self = self;
-        }
+            private SelfExpression(Token self)
+            {
+                Self = self;
+            }
 
-        public Token Self { get; }
+            public Token Self { get; }
 
-        public static SelfExpression Parse(Parser parser)
-        {
-            var self = parser.Consume(ToKind.KwSelf);
+            public static SelfExpression Parse(Parser parser)
+            {
+                var self = parser.Consume(ToKind.KwSelf);
 
-            return new SelfExpression(self);
+                return new SelfExpression(self);
+            }
         }
     }
 }

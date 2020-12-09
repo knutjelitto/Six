@@ -1,23 +1,26 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public interface AnyRequirement
+    public partial class Tree
     {
-        public static AnyRequirement Parse(Parser parser)
+        public interface AnyRequirement
         {
-            TypeIdentifier name = TypeIdentifier.Parse(parser);
-
-            if (parser.Match(ToKind.Equals))
+            public static AnyRequirement Parse(Parser parser)
             {
-                var type = AnyType.Parse(parser);
+                TypeIdentifier name = TypeIdentifier.Parse(parser);
 
-                return SameTypeRequirement.From(name, type);
+                if (parser.Match(ToKind.Equals))
+                {
+                    var type = AnyType.Parse(parser);
+
+                    return SameTypeRequirement.From(name, type);
+                }
+
+                parser.Match(ToKind.Colon);
+
+                var composition = ProtocolCompositionType.Parse(parser);
+
+                return ConformanceRequirement.From(name, composition);
             }
-
-            parser.Match(ToKind.Colon);
-
-            var composition = ProtocolCompositionType.Parse(parser);
-
-            return ConformanceRequirement.From(name, composition);
         }
     }
 }

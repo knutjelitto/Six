@@ -1,42 +1,45 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class SwitchCaseClause : ItemList<SwitchCase>
+    public partial class Tree
     {
-        public SwitchCaseClause(List<SwitchCase> cases) : base(cases) { }
-        public SwitchCaseClause() { }
-
-        public static SwitchCaseClause Parse(Parser parser)
+        public class SwitchCaseClause : ItemList<SwitchCase>
         {
-            parser.Consume(ToKind.LBrace);
+            public SwitchCaseClause(List<SwitchCase> cases) : base(cases) { }
+            public SwitchCaseClause() { }
 
-            var cases = new List<SwitchCase>();
-
-            while (parser.Current != ToKind.RBrace)
+            public static SwitchCaseClause Parse(Parser parser)
             {
-                CcBlock.Ignore(parser, force: false);
-                var @case = SwitchCase.Parse(parser);
-                cases.Add(@case);
+                parser.Consume(ToKind.LBrace);
+
+                var cases = new List<SwitchCase>();
+
+                while (parser.Current != ToKind.RBrace)
+                {
+                    CcBlock.Ignore(parser, force: false);
+                    var @case = SwitchCase.Parse(parser);
+                    cases.Add(@case);
+                }
+
+                parser.Consume(ToKind.RBrace);
+
+                return new SwitchCaseClause(cases);
             }
 
-            parser.Consume(ToKind.RBrace);
-
-            return new SwitchCaseClause(cases);
-        }
-
-        public override void Write(IWriter writer)
-        {
-            using (writer.Block())
+            public override void Write(IWriter writer)
             {
-                base.Write(writer);
+                using (writer.Block())
+                {
+                    base.Write(writer);
+                }
             }
-        }
 
-        public override string ToString()
-        {
-            return $"{{ {string.Join(" ", this)} }}";
+            public override string ToString()
+            {
+                return $"{{ {string.Join(" ", this)} }}";
+            }
         }
     }
 }

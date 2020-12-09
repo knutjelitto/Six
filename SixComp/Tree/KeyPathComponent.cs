@@ -1,31 +1,34 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class KeyPathComponent
+    public partial class Tree
     {
-        public KeyPathComponent(BaseName? name, KeyPathPostfixList postfixes)
+        public class KeyPathComponent
         {
-            Name = name;
-            Postfixes = postfixes;
-        }
+            public KeyPathComponent(BaseName? name, KeyPathPostfixList postfixes)
+            {
+                Name = name;
+                Postfixes = postfixes;
+            }
 
-        public BaseName? Name { get; }
-        public KeyPathPostfixList Postfixes { get; }
+            public BaseName? Name { get; }
+            public KeyPathPostfixList Postfixes { get; }
 
-        public static KeyPathComponent Parse(Parser parser)
-        {
-            var name = parser.Current == ToKind.Name
-                ? BaseName.Parse(parser)
-                : null
-                ;
+            public static KeyPathComponent Parse(Parser parser)
+            {
+                var name = parser.Current == ToKind.Name
+                    ? BaseName.Parse(parser)
+                    : null
+                    ;
 
-            var postfixes = KeyPathPostfixList.Parse(parser);
+                var postfixes = KeyPathPostfixList.Parse(parser);
 
-            return new KeyPathComponent(name, postfixes);
-        }
+                return new KeyPathComponent(name, postfixes);
+            }
 
-        public override string ToString()
-        {
-            return $"{Name}{Postfixes}";
+            public override string ToString()
+            {
+                return $"{Name}{Postfixes}";
+            }
         }
     }
 }

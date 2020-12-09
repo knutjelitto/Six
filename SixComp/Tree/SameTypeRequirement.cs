@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SameTypeRequirement : AnyRequirement
+    public partial class Tree
     {
-        private SameTypeRequirement(AnyType name, AnyType type)
+        public class SameTypeRequirement : AnyRequirement
         {
-            Name = name;
-            Type = type;
-        }
+            private SameTypeRequirement(AnyType name, AnyType type)
+            {
+                Name = name;
+                Type = type;
+            }
 
-        public AnyType Name { get; }
-        public AnyType Type { get; }
+            public AnyType Name { get; }
+            public AnyType Type { get; }
 
-        public static SameTypeRequirement From(AnyType name, AnyType type)
-        {
-            return new SameTypeRequirement(name, type);
-        }
+            public static SameTypeRequirement From(AnyType name, AnyType type)
+            {
+                return new SameTypeRequirement(name, type);
+            }
 
-        public override string ToString()
-        {
-            return $"{Name} == {Type}";
+            public override string ToString()
+            {
+                return $"{Name} == {Type}";
+            }
         }
     }
 }

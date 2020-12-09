@@ -1,34 +1,37 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class TrailingClosure
+    public partial class Tree
     {
-        private TrailingClosure(Label? label, ClosureExpression closure)
+        public class TrailingClosure
         {
-            Label = label;
-            Closure = closure;
-        }
-
-        public Label? Label { get; }
-        public ClosureExpression Closure { get; }
-
-        public bool BlockOnly => Label == null && Closure.BlockOnly;
-
-        public static TrailingClosure? TryParse(Parser parser, bool first)
-        {
-            var label = first ? null : Label.Parse(parser, true);
-            var closure = ClosureExpression.TryParse(parser);
-
-            if (closure == null)
+            private TrailingClosure(Label? label, ClosureExpression closure)
             {
-                return null;
+                Label = label;
+                Closure = closure;
             }
 
-            return new TrailingClosure(label, closure);
-        }
+            public Label? Label { get; }
+            public ClosureExpression Closure { get; }
 
-        public override string ToString()
-        {
-            return $"{Label}{Closure}";
+            public bool BlockOnly => Label == null && Closure.BlockOnly;
+
+            public static TrailingClosure? TryParse(Parser parser, bool first)
+            {
+                var label = first ? null : Label.Parse(parser, true);
+                var closure = ClosureExpression.TryParse(parser);
+
+                if (closure == null)
+                {
+                    return null;
+                }
+
+                return new TrailingClosure(label, closure);
+            }
+
+            public override string ToString()
+            {
+                return $"{Label}{Closure}";
+            }
         }
     }
 }

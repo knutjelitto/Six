@@ -1,37 +1,40 @@
 ﻿using SixComp.Support;
 
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class KeyPathExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.Backslash);
-
-        public KeyPathExpression(AnyType? type, KeyPathComponentList components)
+        public class KeyPathExpression : BaseExpression, AnyPrimaryExpression
         {
-            Type = type;
-            Components = components;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.Backslash);
 
-        public AnyType? Type { get; }
-        public KeyPathComponentList Components { get; }
+            public KeyPathExpression(AnyType? type, KeyPathComponentList components)
+            {
+                Type = type;
+                Components = components;
+            }
 
-        public static KeyPathExpression Parse(Parser parser)
-        {
-            parser.Consume(Firsts);
+            public AnyType? Type { get; }
+            public KeyPathComponentList Components { get; }
 
-            var type = parser.Current == ToKind.Dot
-                ? null
-                : AnyType.Parse(parser);
+            public static KeyPathExpression Parse(Parser parser)
+            {
+                parser.Consume(Firsts);
 
-            var components = KeyPathComponentList.Parse(parser);
+                var type = parser.Current == ToKind.Dot
+                    ? null
+                    : AnyType.Parse(parser);
 
-            return new KeyPathExpression(type, components);
-        }
+                var components = KeyPathComponentList.Parse(parser);
 
-        public override string ToString()
-        {
-            return $"\\.{Type}{Components}";
+                return new KeyPathExpression(type, components);
+            }
+
+            public override string ToString()
+            {
+                return $"\\.{Type}{Components}";
+            }
         }
     }
 }

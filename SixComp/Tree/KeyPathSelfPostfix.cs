@@ -1,20 +1,23 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class KeyPathSelfPostfix : AnyKeyPathPostfix
+    public partial class Tree
     {
-        public KeyPathSelfPostfix() { }
-
-        public static KeyPathSelfPostfix Parse(Parser parser)
+        public class KeyPathSelfPostfix : AnyKeyPathPostfix
         {
-            parser.Consume(ToKind.KwSelf);
-            return new KeyPathSelfPostfix();
-        }
-
-        public override string ToString()
-        {
-            return $"{ToKind.KwSelf.GetRep()}";
+            public KeyPathSelfPostfix()
+            {
+            }
+            public static KeyPathSelfPostfix Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwSelf);
+                return new KeyPathSelfPostfix();
+            }
+            public override string ToString()
+            {
+                return $"{ToKind.KwSelf.GetRep()}";
+            }
         }
     }
 }

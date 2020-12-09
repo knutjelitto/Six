@@ -1,7 +1,10 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SyntaxNode : AnySyntaxNode
+    public partial class Tree
     {
-        public NodeData? Data { get; set; } = null;
+        public class SyntaxNode : AnySyntaxNode
+        {
+            public NodeData? Data { get; set; } = null;
+        }
     }
 }

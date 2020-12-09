@@ -1,30 +1,33 @@
 ﻿using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class Initializer : BaseExpression, AnyExpression
+    public partial class Tree
     {
-        public Initializer(AnyExpression expression)
+        public class Initializer : BaseExpression, AnyExpression
         {
-            Expression = expression;
-        }
+            public Initializer(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public AnyExpression Expression { get; }
+            public AnyExpression Expression { get; }
 
-        public override AnyExpression? LastExpression => Expression.LastExpression;
+            public override AnyExpression? LastExpression => Expression.LastExpression;
 
-        public static Initializer Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Assign);
+            public static Initializer Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Assign);
 
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Initializer)}");
+                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Initializer)}");
 
-            return new Initializer(expression);
-        }
+                return new Initializer(expression);
+            }
 
-        public override string ToString()
-        {
-            return $" = {Expression}";
+            public override string ToString()
+            {
+                return $" = {Expression}";
+            }
         }
     }
 }

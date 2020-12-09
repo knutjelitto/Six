@@ -1,33 +1,36 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TuplePatternElementList : ItemList<TuplePatternElement>
+    public partial class Tree
     {
-        public TuplePatternElementList(List<TuplePatternElement> elements) : base(elements) { }
-        public TuplePatternElementList() { }
-
-        public static TuplePatternElementList Parse(Parser parser, TokenSet follows)
+        public class TuplePatternElementList : ItemList<TuplePatternElement>
         {
-            var elements = new List<TuplePatternElement>();
+            public TuplePatternElementList(List<TuplePatternElement> elements) : base(elements) { }
+            public TuplePatternElementList() { }
 
-            if (!follows.Contains(parser.Current))
+            public static TuplePatternElementList Parse(Parser parser, TokenSet follows)
             {
-                do
+                var elements = new List<TuplePatternElement>();
+
+                if (!follows.Contains(parser.Current))
                 {
-                    var element = TuplePatternElement.Parse(parser);
-                    elements.Add(element);
+                    do
+                    {
+                        var element = TuplePatternElement.Parse(parser);
+                        elements.Add(element);
+                    }
+                    while (parser.Match(ToKind.Comma));
                 }
-                while (parser.Match(ToKind.Comma));
+
+                return new TuplePatternElementList(elements);
             }
 
-            return new TuplePatternElementList(elements);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

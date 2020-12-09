@@ -1,16 +1,19 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public sealed class NumberLiteralExpression : AnyLiteralExpression
+    public partial class Tree
     {
-        public NumberLiteralExpression(Token token) : base(token)
+        public sealed class NumberLiteralExpression : AnyLiteralExpression
         {
-        }
+            public NumberLiteralExpression(Token token) : base(token)
+            {
+            }
 
-        public static NumberLiteralExpression Parse(Parser parser)
-        {
-            var token = parser.Consume(ToKind.Number);
+            public static NumberLiteralExpression Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.Number);
 
-            return new NumberLiteralExpression(token);
+                return new NumberLiteralExpression(token);
+            }
         }
     }
 }

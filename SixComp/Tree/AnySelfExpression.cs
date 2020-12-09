@@ -1,29 +1,32 @@
 ﻿using System.Diagnostics;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public interface AnySelfExpression : AnyPrimaryExpression
+    public partial class Tree
     {
-        public static AnySelfExpression Parse(Parser parser)
+        public interface AnySelfExpression : AnyPrimaryExpression
         {
-            Debug.Assert(parser.Current == ToKind.KwSelf);
-
-            if (parser.Next == ToKind.LBracket)
+            public static AnySelfExpression Parse(Parser parser)
             {
-                return SelfSubscriptExpression.Parse(parser);
-            }
+                Debug.Assert(parser.Current == ToKind.KwSelf);
 
-            if (parser.Next == ToKind.Dot)
-            {
-                if (parser.NextNext == ToKind.KwInit)
+                if (parser.Next == ToKind.LBracket)
                 {
-                    return SelfInitExpression.Parse(parser);
+                    return SelfSubscriptExpression.Parse(parser);
                 }
 
-                return SelfMethodExpression.Parse(parser);
-            }
+                if (parser.Next == ToKind.Dot)
+                {
+                    if (parser.NextNext == ToKind.KwInit)
+                    {
+                        return SelfInitExpression.Parse(parser);
+                    }
 
-            return SelfExpression.Parse(parser);
+                    return SelfMethodExpression.Parse(parser);
+                }
+
+                return SelfExpression.Parse(parser);
+            }
         }
     }
 }

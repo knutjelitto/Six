@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ExpressionList : ItemList<AnyExpression>
+    public partial class Tree
     {
-        public ExpressionList(List<AnyExpression> items) : base(items) { }
-        public ExpressionList() { }
-
-        public override string ToString()
+        public class ExpressionList : ItemList<AnyExpression>
         {
-            return string.Join(", ", this);
+            public ExpressionList(List<AnyExpression> items) : base(items) { }
+            public ExpressionList() { }
+
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

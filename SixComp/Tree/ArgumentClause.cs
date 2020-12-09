@@ -1,35 +1,38 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ArgumentClause
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.LParent);
-
-        public ArgumentClause(ArgumentList arguments)
+        public class ArgumentClause
         {
-            Arguments = arguments;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.LParent);
 
-        public ArgumentClause() : this(new ArgumentList()) { }
+            public ArgumentClause(ArgumentList arguments)
+            {
+                Arguments = arguments;
+            }
 
-        public ArgumentList Arguments { get; }
-        public bool Missing => Arguments.Missing;
+            public ArgumentClause() : this(new ArgumentList()) { }
 
-        public static ArgumentClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LParent);
+            public ArgumentList Arguments { get; }
+            public bool Missing => Arguments.Missing;
 
-            var arguments = ArgumentList.Parse(parser);
+            public static ArgumentClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LParent);
 
-            parser.Consume(ToKind.RParent);
+                var arguments = ArgumentList.Parse(parser);
 
-            return new ArgumentClause(arguments);
-        }
+                parser.Consume(ToKind.RParent);
 
-        public override string ToString()
-        {
-            return Arguments.Missing ? string.Empty : $"({Arguments})";
+                return new ArgumentClause(arguments);
+            }
+
+            public override string ToString()
+            {
+                return Arguments.Missing ? string.Empty : $"({Arguments})";
+            }
         }
     }
 }

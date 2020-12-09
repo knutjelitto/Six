@@ -1,17 +1,20 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class FunctionLiteralExpression : AnyLiteralExpression
+    public partial class Tree
     {
-        private FunctionLiteralExpression(Token token)
-            : base(token)
+        public class FunctionLiteralExpression : AnyLiteralExpression
         {
-        }
+            private FunctionLiteralExpression(Token token)
+                : base(token)
+            {
+            }
 
-        public static FunctionLiteralExpression Parse(Parser parser)
-        {
-            var token = parser.Consume(ToKind.CdFunction);
+            public static FunctionLiteralExpression Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.CdFunction);
 
-            return new FunctionLiteralExpression(token);
+                return new FunctionLiteralExpression(token);
+            }
         }
     }
 }

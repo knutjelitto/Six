@@ -1,26 +1,29 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class OperatorExpression : BaseExpression
+    public partial class Tree
     {
-        public OperatorExpression(Token op)
+        public class OperatorExpression : BaseExpression
         {
-            Op = op;
-            Operator = BaseName.From(Op);
-        }
+            public OperatorExpression(Token op)
+            {
+                Op = op;
+                Operator = BaseName.From(Op);
+            }
 
-        public Token Op { get; }
-        public BaseName Operator { get; }
+            public Token Op { get; }
+            public BaseName Operator { get; }
 
-        public static OperatorExpression Parse(Parser parser)
-        {
-            var @operator = parser.ConsumeAny();
+            public static OperatorExpression Parse(Parser parser)
+            {
+                var @operator = parser.ConsumeAny();
 
-            return new OperatorExpression(@operator);
-        }
+                return new OperatorExpression(@operator);
+            }
 
-        public override string ToString()
-        {
-            return $"{Op}";
+            public override string ToString()
+            {
+                return $"{Op}";
+            }
         }
     }
 }

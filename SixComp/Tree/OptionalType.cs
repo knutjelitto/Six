@@ -1,17 +1,20 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class OptionalType : AnyType
+    public partial class Tree
     {
-        public OptionalType(AnyType type)
+        public class OptionalType : AnyType
         {
-            Type = type;
-        }
+            public OptionalType(AnyType type)
+            {
+                Type = type;
+            }
 
-        public AnyType Type { get; }
+            public AnyType Type { get; }
 
-        public override string ToString()
-        {
-            return $"{Type}?";
+            public override string ToString()
+            {
+                return $"{Type}?";
+            }
         }
     }
 }

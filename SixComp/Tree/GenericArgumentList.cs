@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class GenericArgumentList : ItemList<GenericArgument>
+    public partial class Tree
     {
-        public GenericArgumentList(List<GenericArgument> items) : base(items) { }
-        public GenericArgumentList() { }
-
-        public static GenericArgumentList Parse(Parser parser)
+        public class GenericArgumentList : ItemList<GenericArgument>
         {
-            var arguments = new List<GenericArgument>();
+            public GenericArgumentList(List<GenericArgument> items) : base(items) { }
+            public GenericArgumentList() { }
 
-            do
+            public static GenericArgumentList Parse(Parser parser)
             {
-                var argument = GenericArgument.Parse(parser);
-                arguments.Add(argument);
+                var arguments = new List<GenericArgument>();
+
+                do
+                {
+                    var argument = GenericArgument.Parse(parser);
+                    arguments.Add(argument);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new GenericArgumentList(arguments);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new GenericArgumentList(arguments);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

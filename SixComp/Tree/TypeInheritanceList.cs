@@ -1,30 +1,33 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TypeInheritanceList : ItemList<AnyType>
+    public partial class Tree
     {
-        public TypeInheritanceList(List<AnyType> types) : base(types) { }
-        public TypeInheritanceList() { }
-
-        public static TypeInheritanceList Parse(Parser parser)
+        public class TypeInheritanceList : ItemList<AnyType>
         {
-            var types = new List<AnyType>();
+            public TypeInheritanceList(List<AnyType> types) : base(types) { }
+            public TypeInheritanceList() { }
 
-            do
+            public static TypeInheritanceList Parse(Parser parser)
             {
-                var type = AnyType.Parse(parser);
+                var types = new List<AnyType>();
 
-                types.Add(type);
+                do
+                {
+                    var type = AnyType.Parse(parser);
+
+                    types.Add(type);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new TypeInheritanceList(types);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new TypeInheritanceList(types);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

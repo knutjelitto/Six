@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ElsePart
+    public partial class Tree
     {
+        public class ElsePart
+        {
+        }
     }
 }

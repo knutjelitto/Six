@@ -2,56 +2,59 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ItemList<T> : AnySyntaxNode, IReadOnlyList<T>, IWritable
+    public partial class Tree
     {
-        private List<T> items;
-
-        public ItemList(List<T> items)
+        public class ItemList<T> : AnySyntaxNode, IReadOnlyList<T>, IWritable
         {
-            this.items = items;
-        }
+            private List<T> items;
 
-        protected ItemList()
-            : this(new List<T>())
-        {
-            Missing = true;
-        }
-
-        public T this[int index] => items[index];
-        public int Count => items.Count;
-
-        public bool Missing { get; private set; }
-
-        public NodeData? Data { get; set; }
-
-        protected void ClearToMissing()
-        {
-            items.Clear();
-            Missing = true;
-        }
-
-        protected void Backdoor(T item)
-        {
-            items.Add(item);
-            Missing = false;
-        }
-
-        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
-
-        public virtual void Write(IWriter writer)
-        {
-            foreach (var item in this)
+            public ItemList(List<T> items)
             {
-                if (item is IWritable writable)
+                this.items = items;
+            }
+
+            protected ItemList()
+                : this(new List<T>())
+            {
+                Missing = true;
+            }
+
+            public T this[int index] => items[index];
+            public int Count => items.Count;
+
+            public bool Missing { get; private set; }
+
+            public NodeData? Data { get; set; }
+
+            protected void ClearToMissing()
+            {
+                items.Clear();
+                Missing = true;
+            }
+
+            protected void Backdoor(T item)
+            {
+                items.Add(item);
+                Missing = false;
+            }
+
+            public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+
+            public virtual void Write(IWriter writer)
+            {
+                foreach (var item in this)
                 {
-                    writable.Write(writer);
-                }
-                else
-                {
-                    writer.WriteLine(item?.ToString() ?? string.Empty);
+                    if (item is IWritable writable)
+                    {
+                        writable.Write(writer);
+                    }
+                    else
+                    {
+                        writer.WriteLine(item?.ToString() ?? string.Empty);
+                    }
                 }
             }
         }

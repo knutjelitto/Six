@@ -1,29 +1,32 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TypeAnnotation : AnyType
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.Colon);
-
-        private TypeAnnotation(PrefixedType type)
+        public class TypeAnnotation : AnyType
         {
-            Type = type;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.Colon);
 
-        public PrefixedType Type { get; }
+            private TypeAnnotation(PrefixedType type)
+            {
+                Type = type;
+            }
 
-        public static TypeAnnotation Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Colon);
-            var type = PrefixedType.Parse(parser);
+            public PrefixedType Type { get; }
 
-            return new TypeAnnotation(type);
-        }
+            public static TypeAnnotation Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Colon);
+                var type = PrefixedType.Parse(parser);
 
-        public override string ToString()
-        {
-            return $": {Type}";
+                return new TypeAnnotation(type);
+            }
+
+            public override string ToString()
+            {
+                return $": {Type}";
+            }
         }
     }
 }

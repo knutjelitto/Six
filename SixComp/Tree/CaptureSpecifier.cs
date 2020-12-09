@@ -1,19 +1,21 @@
 ﻿using SixComp.Common;
 using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaptureSpecifier
+    public partial class Tree
     {
-        private CaptureSpecifier(CaptureKind kind)
+        public class CaptureSpecifier
         {
-            Kind = kind;
-        }
+            private CaptureSpecifier(CaptureKind kind)
+            {
+                Kind = kind;
+            }
 
-        public CaptureKind Kind { get; }
+            public CaptureKind Kind { get; }
 
-        public static CaptureSpecifier? Parse(Parser parser)
-        {
+            public static CaptureSpecifier? Parse(Parser parser)
+            {
                 if (parser.Match(ToKind.KwWeak))
                 {
                     return new CaptureSpecifier(CaptureKind.Weak);
@@ -38,6 +40,7 @@ namespace SixComp.Tree
                 }
 
                 return null;
+            }
         }
     }
 }

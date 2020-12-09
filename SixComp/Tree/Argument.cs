@@ -1,45 +1,48 @@
 ﻿using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class Argument
+    public partial class Tree
     {
-        public Argument(ArgumentName? label, AnyExpression value)
+        public class Argument
         {
-            Label = label;
-            Value = value;
-        }
-
-        public ArgumentName? Label { get; }
-        public AnyExpression Value { get; }
-
-        public static Argument Parse(Parser parser)
-        {
-            var name = ArgumentName.TryParse(parser);
-
-            var expression = AnyExpression.TryParse(parser);
-            if (expression == null)
+            public Argument(ArgumentName? label, AnyExpression value)
             {
-                if (parser.CurrentToken.IsOperator)
-                {
-                    expression = OperatorExpression.Parse(parser);
-                }
-                else
-                {
-                    parser.Consume(ToKind.Operator);
-
-                    throw new InvalidOperationException();
-                }
+                Label = label;
+                Value = value;
             }
 
-            return new Argument(name, expression);
-        }
+            public ArgumentName? Label { get; }
+            public AnyExpression Value { get; }
 
-        public override string ToString()
-        {
-            var label = Label == null ? string.Empty : $"{Label} ";
+            public static Argument Parse(Parser parser)
+            {
+                var name = ArgumentName.TryParse(parser);
 
-            return $"{label}{Value}";
+                var expression = AnyExpression.TryParse(parser);
+                if (expression == null)
+                {
+                    if (parser.CurrentToken.IsOperator)
+                    {
+                        expression = OperatorExpression.Parse(parser);
+                    }
+                    else
+                    {
+                        parser.Consume(ToKind.Operator);
+
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                return new Argument(name, expression);
+            }
+
+            public override string ToString()
+            {
+                var label = Label == null ? string.Empty : $"{Label} ";
+
+                return $"{label}{Value}";
+            }
         }
     }
 }

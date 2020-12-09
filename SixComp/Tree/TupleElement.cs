@@ -1,35 +1,38 @@
 ﻿using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TupleElement : SyntaxNode
+    public partial class Tree
     {
-        public TupleElement(BaseName? name, AnyExpression value)
+        public class TupleElement : SyntaxNode
         {
-            Name = name;
-            Value = value;
-        }
-
-        public BaseName? Name { get; }
-        public AnyExpression Value { get; }
-
-        public static TupleElement Parse(Parser parser)
-        {
-            BaseName? name = null;
-            if (parser.Next == ToKind.Colon)
+            public TupleElement(BaseName? name, AnyExpression value)
             {
-                name = BaseName.Parse(parser);
-                parser.Consume(ToKind.Colon);
+                Name = name;
+                Value = value;
             }
-            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(TupleElement)}");
 
-            return new TupleElement(name, value);
-        }
+            public BaseName? Name { get; }
+            public AnyExpression Value { get; }
 
-        public override string ToString()
-        {
-            var name = Name == null ? string.Empty : $"{Name}: ";
-            return $"{name}{Value}";
+            public static TupleElement Parse(Parser parser)
+            {
+                BaseName? name = null;
+                if (parser.Next == ToKind.Colon)
+                {
+                    name = BaseName.Parse(parser);
+                    parser.Consume(ToKind.Colon);
+                }
+                var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(TupleElement)}");
+
+                return new TupleElement(name, value);
+            }
+
+            public override string ToString()
+            {
+                var name = Name == null ? string.Empty : $"{Name}: ";
+                return $"{name}{Value}";
+            }
         }
     }
 }

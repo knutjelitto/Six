@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class RequirementList : ItemList<AnyRequirement>
+    public partial class Tree
     {
-        public RequirementList(List<AnyRequirement> requirements) : base(requirements) { }
-        public RequirementList() { }
-
-        public static RequirementList Parse(Parser parser)
+        public class RequirementList : ItemList<AnyRequirement>
         {
-            var requirements = new List<AnyRequirement>();
+            public RequirementList(List<AnyRequirement> requirements) : base(requirements) { }
+            public RequirementList() { }
 
-            do
+            public static RequirementList Parse(Parser parser)
             {
-                var requirement = AnyRequirement.Parse(parser);
-                requirements.Add(requirement);
+                var requirements = new List<AnyRequirement>();
+
+                do
+                {
+                    var requirement = AnyRequirement.Parse(parser);
+                    requirements.Add(requirement);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new RequirementList(requirements);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new RequirementList(requirements);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

@@ -1,14 +1,17 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public interface AnyExpression : IWritable
+    public partial class Tree
     {
-        public static AnyExpression? TryParse(Parser parser)
+        public interface AnyExpression : IWritable
         {
-            return InfixList.TryParse(parser);
-        }
+            public static AnyExpression? TryParse(Parser parser)
+            {
+                return InfixList.TryParse(parser);
+            }
 
-        AnyExpression? LastExpression { get; }
+            AnyExpression? LastExpression { get; }
+        }
     }
 }

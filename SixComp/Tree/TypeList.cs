@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TypeList : ItemList<AnyType>
+    public partial class Tree
     {
-        public TypeList(List<AnyType> items) : base(items) { }
-        public TypeList() { }
-
-        public override string ToString()
+        public class TypeList : ItemList<AnyType>
         {
-            return string.Join(", ", this);
+            public TypeList(List<AnyType> items) : base(items) { }
+            public TypeList() { }
+
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

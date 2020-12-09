@@ -1,35 +1,38 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TypeInheritanceClause
+    public partial class Tree
     {
-        public static TokenSet Firsts = new TokenSet(ToKind.Colon);
-
-        public TypeInheritanceClause(TypeInheritanceList types)
+        public class TypeInheritanceClause
         {
-            Types = types;
-        }
+            public static TokenSet Firsts = new TokenSet(ToKind.Colon);
 
-        public TypeInheritanceClause()
-            : this(new TypeInheritanceList())
-        {
-        }
+            public TypeInheritanceClause(TypeInheritanceList types)
+            {
+                Types = types;
+            }
 
-        public TypeInheritanceList Types { get; }
+            public TypeInheritanceClause()
+                : this(new TypeInheritanceList())
+            {
+            }
 
-        public static TypeInheritanceClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Colon);
+            public TypeInheritanceList Types { get; }
 
-            var types = TypeInheritanceList.Parse(parser);
+            public static TypeInheritanceClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Colon);
 
-            return new TypeInheritanceClause(types);
-        }
+                var types = TypeInheritanceList.Parse(parser);
 
-        public override string ToString()
-        {
-            return Types.Missing ? string.Empty : $": {Types}";
+                return new TypeInheritanceClause(types);
+            }
+
+            public override string ToString()
+            {
+                return Types.Missing ? string.Empty : $": {Types}";
+            }
         }
     }
 }

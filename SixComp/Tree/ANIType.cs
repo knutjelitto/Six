@@ -1,19 +1,22 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ANIType : AnyType
+    public partial class Tree
     {
-        public ANIType(Token token)
+        public class ANIType : AnyType
         {
-            Token = token;
-        }
+            public ANIType(Token token)
+            {
+                Token = token;
+            }
 
-        public Token Token { get; }
+            public Token Token { get; }
 
-        public static ANIType Parse(Parser parser)
-        {
-            var token = parser.Consume(ToKind.KwANY);
+            public static ANIType Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.KwANY);
 
-            return new ANIType(token);
+                return new ANIType(token);
+            }
         }
     }
 }

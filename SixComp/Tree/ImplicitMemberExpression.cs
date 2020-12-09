@@ -1,28 +1,31 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ImplicitMemberExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        public ImplicitMemberExpression(Token op, BaseName name)
+        public class ImplicitMemberExpression : BaseExpression, AnyPrimaryExpression
         {
-            Name = name;
-            Operator = BaseName.From(op);
-        }
+            public ImplicitMemberExpression(Token op, BaseName name)
+            {
+                Name = name;
+                Operator = BaseName.From(op);
+            }
 
-        public BaseName Name { get; }
-        public BaseName Operator { get; }
+            public BaseName Name { get; }
+            public BaseName Operator { get; }
 
-        public static ImplicitMemberExpression Parse(Parser parser)
-        {
-            var op = parser.Consume(ToKind.Dot);
+            public static ImplicitMemberExpression Parse(Parser parser)
+            {
+                var op = parser.Consume(ToKind.Dot);
 
-            var name = BaseName.Parse(parser);
+                var name = BaseName.Parse(parser);
 
-            return new ImplicitMemberExpression(op, name);
-        }
+                return new ImplicitMemberExpression(op, name);
+            }
 
-        public override string ToString()
-        {
-            return $"{Operator}{Name}";
+            public override string ToString()
+            {
+                return $"{Operator}{Name}";
+            }
         }
     }
 }

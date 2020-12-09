@@ -1,49 +1,52 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class EnumCasePattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        //
-        // enum-case-pattern -> type-name? '.' enum-case-name tuple-pattern?
-
-        public EnumCasePattern(BaseName? enumName, BaseName caseName, TuplePattern? tuplePattern)
+        public class EnumCasePattern : SyntaxNode, AnyPattern
         {
-            EnumName = enumName;
-            CaseName = caseName;
-            TuplePattern = tuplePattern;
-        }
+            //
+            // enum-case-pattern -> type-name? '.' enum-case-name tuple-pattern?
 
-        public BaseName? EnumName { get; }
-        public BaseName CaseName { get; }
-        public TuplePattern? TuplePattern { get; }
-
-        public static AnyPattern Parse(Parser parser)
-        {
-            var offset = parser.Offset;
-
-            BaseName? enumName = null;
-            if (BaseName.CanParse(parser))
+            public EnumCasePattern(BaseName? enumName, BaseName caseName, TuplePattern? tuplePattern)
             {
-                enumName = BaseName.Parse(parser);
+                EnumName = enumName;
+                CaseName = caseName;
+                TuplePattern = tuplePattern;
             }
 
-            if (parser.Match(ToKind.Dot) && BaseName.CanParse(parser))
-            {
-                var caseName = BaseName.Parse(parser);
-                var pattern = parser.Try(ToKind.LParent, TuplePattern.Parse);
+            public BaseName? EnumName { get; }
+            public BaseName CaseName { get; }
+            public TuplePattern? TuplePattern { get; }
 
-                if (parser.Current != ToKind.Dot)
+            public static AnyPattern Parse(Parser parser)
+            {
+                var offset = parser.Offset;
+
+                BaseName? enumName = null;
+                if (BaseName.CanParse(parser))
                 {
-                    return new EnumCasePattern(enumName, caseName, pattern);
+                    enumName = BaseName.Parse(parser);
                 }
+
+                if (parser.Match(ToKind.Dot) && BaseName.CanParse(parser))
+                {
+                    var caseName = BaseName.Parse(parser);
+                    var pattern = parser.Try(ToKind.LParent, TuplePattern.Parse);
+
+                    if (parser.Current != ToKind.Dot)
+                    {
+                        return new EnumCasePattern(enumName, caseName, pattern);
+                    }
+                }
+
+                parser.Offset = offset;
+                return ExpressionPattern.Parse(parser);
             }
 
-            parser.Offset = offset;
-            return ExpressionPattern.Parse(parser);
-        }
-
-        public override string ToString()
-        {
-            return $"{EnumName}.{CaseName}{TuplePattern}";
+            public override string ToString()
+            {
+                return $"{EnumName}.{CaseName}{TuplePattern}";
+            }
         }
     }
 }

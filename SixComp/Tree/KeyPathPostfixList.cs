@@ -1,34 +1,37 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class KeyPathPostfixList : ItemList<AnyKeyPathPostfix>
+    public partial class Tree
     {
-        public KeyPathPostfixList(List<AnyKeyPathPostfix> postfixes) : base(postfixes) { }
-        public KeyPathPostfixList() { }
-
-        public static KeyPathPostfixList Parse(Parser parser)
+        public class KeyPathPostfixList : ItemList<AnyKeyPathPostfix>
         {
-            if (AnyKeyPathPostfix.Firsts.Contains(parser.Current))
-            {
-                var postfixes = new List<AnyKeyPathPostfix>();
+            public KeyPathPostfixList(List<AnyKeyPathPostfix> postfixes) : base(postfixes) { }
+            public KeyPathPostfixList() { }
 
-                do
+            public static KeyPathPostfixList Parse(Parser parser)
+            {
+                if (AnyKeyPathPostfix.Firsts.Contains(parser.Current))
                 {
-                    var postfix = AnyKeyPathPostfix.Parse(parser);
-                    postfixes.Add(postfix);
+                    var postfixes = new List<AnyKeyPathPostfix>();
+
+                    do
+                    {
+                        var postfix = AnyKeyPathPostfix.Parse(parser);
+                        postfixes.Add(postfix);
+                    }
+                    while (AnyKeyPathPostfix.Firsts.Contains(parser.Current));
+
+                    return new KeyPathPostfixList(postfixes);
                 }
-                while (AnyKeyPathPostfix.Firsts.Contains(parser.Current));
-            
-                return new KeyPathPostfixList(postfixes);
+
+                return new KeyPathPostfixList();
             }
 
-            return new KeyPathPostfixList();
-        }
-
-        public override string ToString()
-        {
-            return string.Join(string.Empty, this);
+            public override string ToString()
+            {
+                return string.Join(string.Empty, this);
+            }
         }
     }
 }

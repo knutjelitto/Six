@@ -1,29 +1,32 @@
 ﻿using System.Diagnostics;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ImportPathIdentifier
+    public partial class Tree
     {
-        public ImportPathIdentifier(Token token)
+        public class ImportPathIdentifier
         {
-            Name = BaseName.From(token);
-        }
+            public ImportPathIdentifier(Token token)
+            {
+                Name = BaseName.From(token);
+            }
 
-        public BaseName Name { get; }
-        public Token Token => Name.Token;
+            public BaseName Name { get; }
+            public Token Token => Name.Token;
 
-        public static ImportPathIdentifier Parse(Parser parser)
-        {
-            Debug.Assert(parser.Current == ToKind.Name || parser.IsOperator);
+            public static ImportPathIdentifier Parse(Parser parser)
+            {
+                Debug.Assert(parser.Current == ToKind.Name || parser.IsOperator);
 
-            var token = parser.ConsumeAny();
+                var token = parser.ConsumeAny();
 
-            return new ImportPathIdentifier(token);
-        }
+                return new ImportPathIdentifier(token);
+            }
 
-        public override string ToString()
-        {
-            return $"{Name}";
+            public override string ToString()
+            {
+                return $"{Name}";
+            }
         }
     }
 }

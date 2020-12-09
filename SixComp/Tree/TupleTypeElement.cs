@@ -1,38 +1,41 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class TupleTypeElement : AnyType
+    public partial class Tree
     {
-        public TupleTypeElement(BaseName? label, AnyType type)
+        public class TupleTypeElement : AnyType
         {
-            Label = label;
-            Type = type;
-        }
-
-        public BaseName? Label { get; }
-        public AnyType Type { get; }
-
-        public static TupleTypeElement Parse(Parser parser)
-        {
-            if (parser.Next == ToKind.Colon)
+            public TupleTypeElement(BaseName? label, AnyType type)
             {
-                var label = BaseName.Parse(parser);
-                var annotation = TypeAnnotation.Parse(parser);
-
-                return new TupleTypeElement(label, annotation);
+                Label = label;
+                Type = type;
             }
 
-            var type = AnyType.Parse(parser);
-            return new TupleTypeElement(null, type);
-        }
+            public BaseName? Label { get; }
+            public AnyType Type { get; }
 
-        public static TupleTypeElement From(BaseName? label, AnyType type)
-        {
-            return new TupleTypeElement(label, type);
-        }
+            public static TupleTypeElement Parse(Parser parser)
+            {
+                if (parser.Next == ToKind.Colon)
+                {
+                    var label = BaseName.Parse(parser);
+                    var annotation = TypeAnnotation.Parse(parser);
 
-        public override string ToString()
-        {
-            return $"{Label}{Type}";
+                    return new TupleTypeElement(label, annotation);
+                }
+
+                var type = AnyType.Parse(parser);
+                return new TupleTypeElement(null, type);
+            }
+
+            public static TupleTypeElement From(BaseName? label, AnyType type)
+            {
+                return new TupleTypeElement(label, type);
+            }
+
+            public override string ToString()
+            {
+                return $"{Label}{Type}";
+            }
         }
     }
 }

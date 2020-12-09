@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class KeyPathSubscriptPostfix : AnyKeyPathPostfix
+    public partial class Tree
     {
-        public KeyPathSubscriptPostfix(SubscriptClause subscript)
+        public class KeyPathSubscriptPostfix : AnyKeyPathPostfix
         {
-            Subscript = subscript;
-        }
+            public KeyPathSubscriptPostfix(SubscriptClause subscript)
+            {
+                Subscript = subscript;
+            }
 
-        public SubscriptClause Subscript { get; }
+            public SubscriptClause Subscript { get; }
 
-        public static KeyPathSubscriptPostfix Parse(Parser parser)
-        {
-            var subscript = SubscriptClause.Parse(parser);
+            public static KeyPathSubscriptPostfix Parse(Parser parser)
+            {
+                var subscript = SubscriptClause.Parse(parser);
 
-            return new KeyPathSubscriptPostfix(subscript);
-        }
+                return new KeyPathSubscriptPostfix(subscript);
+            }
 
-        public override string ToString()
-        {
-            return $"{Subscript}";
+            public override string ToString()
+            {
+                return $"{Subscript}";
+            }
         }
     }
 }

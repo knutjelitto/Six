@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class KeyPathComponentList : ItemList<KeyPathComponent>
+    public partial class Tree
     {
-        public KeyPathComponentList(List<KeyPathComponent> components) : base(components) { }
-        public KeyPathComponentList() { }
-
-        public static KeyPathComponentList Parse(Parser parser)
+        public class KeyPathComponentList : ItemList<KeyPathComponent>
         {
-            var components = new List<KeyPathComponent>();
+            public KeyPathComponentList(List<KeyPathComponent> components) : base(components) { }
+            public KeyPathComponentList() { }
 
-            do
+            public static KeyPathComponentList Parse(Parser parser)
             {
-                var component = KeyPathComponent.Parse(parser);
-                components.Add(component);
+                var components = new List<KeyPathComponent>();
+
+                do
+                {
+                    var component = KeyPathComponent.Parse(parser);
+                    components.Add(component);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new KeyPathComponentList(components);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new KeyPathComponentList(components);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(".", this);
+            public override string ToString()
+            {
+                return string.Join(".", this);
+            }
         }
     }
 }

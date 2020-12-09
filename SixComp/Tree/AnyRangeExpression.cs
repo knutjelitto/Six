@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public interface AnyRangeExpression
+    public partial class Tree
     {
+        public interface AnyRangeExpression
+        {
+        }
     }
 }

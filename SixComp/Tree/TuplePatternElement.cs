@@ -1,33 +1,36 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class TuplePatternElement
+    public partial class Tree
     {
-        public TuplePatternElement(NameLabel? name, AnyPattern pattern)
+        public class TuplePatternElement
         {
-            Name = name;
-            Pattern = pattern;
-        }
-
-        public NameLabel? Name { get; }
-        public AnyPattern Pattern { get; }
-
-        public static TuplePatternElement Parse(Parser parser)
-        {
-            var name = (NameLabel?)null;
-
-            if (BaseName.CanParse(parser) && parser.Next == ToKind.Colon)
+            public TuplePatternElement(NameLabel? name, AnyPattern pattern)
             {
-                name = NameLabel.Parse(parser);
+                Name = name;
+                Pattern = pattern;
             }
 
-            var pattern = AnyPattern.Parse(parser);
+            public NameLabel? Name { get; }
+            public AnyPattern Pattern { get; }
 
-            return new TuplePatternElement(name, pattern);
-        }
+            public static TuplePatternElement Parse(Parser parser)
+            {
+                var name = (NameLabel?)null;
 
-        public override string ToString()
-        {
-            return $"{Name}{Pattern}";
+                if (BaseName.CanParse(parser) && parser.Next == ToKind.Colon)
+                {
+                    name = NameLabel.Parse(parser);
+                }
+
+                var pattern = AnyPattern.Parse(parser);
+
+                return new TuplePatternElement(name, pattern);
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}{Pattern}";
+            }
         }
     }
 }

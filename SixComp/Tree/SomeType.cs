@@ -1,25 +1,28 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SomeType : AnyType
+    public partial class Tree
     {
-        public SomeType(AnyType type)
+        public class SomeType : AnyType
         {
-            Type = type;
-        }
+            public SomeType(AnyType type)
+            {
+                Type = type;
+            }
 
-        public AnyType Type { get; }
+            public AnyType Type { get; }
 
-        public static SomeType Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwSome);
-            var type = AnyType.Parse(parser);
+            public static SomeType Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwSome);
+                var type = AnyType.Parse(parser);
 
-            return new SomeType(type);
-        }
+                return new SomeType(type);
+            }
 
-        public override string ToString()
-        {
-            return $"some {Type}";
+            public override string ToString()
+            {
+                return $"some {Type}";
+            }
         }
     }
 }

@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class GenericArgument
+    public partial class Tree
     {
-        public GenericArgument(AnyType type)
+        public class GenericArgument
         {
-            Type = type;
-        }
+            public GenericArgument(AnyType type)
+            {
+                Type = type;
+            }
 
-        public AnyType Type { get; }
+            public AnyType Type { get; }
 
-        public static GenericArgument Parse(Parser parser)
-        {
-            var type = AnyType.Parse(parser);
+            public static GenericArgument Parse(Parser parser)
+            {
+                var type = AnyType.Parse(parser);
 
-            return new GenericArgument(type);
-        }
+                return new GenericArgument(type);
+            }
 
-        public override string ToString()
-        {
-            return $"{Type}";
+            public override string ToString()
+            {
+                return $"{Type}";
+            }
         }
     }
 }

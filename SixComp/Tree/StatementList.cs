@@ -1,44 +1,47 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class StatementList : ItemList<AnyStatement>
+    public partial class Tree
     {
-        public StatementList(List<AnyStatement> statements) : base(statements) { }
-        public StatementList() { }
-
-        public static StatementList Parse(Parser parser, TokenSet follow)
+        public class StatementList : ItemList<AnyStatement>
         {
-            var statements = new List<AnyStatement>();
+            public StatementList(List<AnyStatement> statements) : base(statements) { }
+            public StatementList() { }
 
-            while (!follow.Contains(parser.Current))
+            public static StatementList Parse(Parser parser, TokenSet follow)
             {
-                CcBlock.Ignore(parser, force: false);
-                var statement = AnyStatement.TryParse(parser);
+                var statements = new List<AnyStatement>();
 
-                if (statement == null)
+                while (!follow.Contains(parser.Current))
                 {
-                    break;
+                    CcBlock.Ignore(parser, force: false);
+                    var statement = AnyStatement.TryParse(parser);
+
+                    if (statement == null)
+                    {
+                        break;
+                    }
+                    statements.Add(statement);
+                    while (parser.Match(ToKind.SemiColon))
+                    {
+                        ;
+                    }
                 }
-                statements.Add(statement);
-                while (parser.Match(ToKind.SemiColon))
+
+                if (statements.Count == 0)
                 {
-                    ;
+                    return new StatementList();
                 }
+
+                return new StatementList(statements);
             }
 
-            if (statements.Count == 0)
+            public override string ToString()
             {
-                return new StatementList();
+                return string.Join("; ", this);
             }
-
-            return new StatementList(statements);
-        }
-
-        public override string ToString()
-        {
-            return string.Join("; ", this);
         }
     }
 }

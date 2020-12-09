@@ -11,14 +11,15 @@ namespace SixComp.Sema
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
         private readonly List<ExtensionDeclaration> Extensions = new List<ExtensionDeclaration>();
 
-        public Scope(IScoped parent, Module? module = null)
+        public Scope(IScoped outer, Module? module = null)
         {
-            Parent = parent;
-            Module = module ?? parent.Scope.Module;
+            Outer = outer;
+            Module = module ?? outer.Scope.Module;
         }
 
         public Module Module { get; }
-        public IScoped Parent { get; }
+        public IScoped Outer { get; }
+
         public Global Global => Module.Global;
             
         public void Declare(IEntity named)
@@ -59,11 +60,11 @@ namespace SixComp.Sema
             while (true)
             {
                 found.AddRange(scope.Look(named));
-                if (scope == scope.Parent.Scope)
+                if (scope == scope.Outer.Scope)
                 {
                     break;
                 }
-                scope = scope.Parent.Scope;
+                scope = scope.Outer.Scope;
             }
             return found;
         }

@@ -1,13 +1,16 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ChainExpression : PostfixExpression
+    public partial class Tree
     {
-        private ChainExpression(AnyExpression left, Token op) : base(left, op) { }
-
-        public static ChainExpression Parse(Parser parser, AnyExpression left)
+        public class ChainExpression : PostfixExpression
         {
-            var op = parser.Consume(ToKind.Quest);
-            return new ChainExpression(left, op);
+            private ChainExpression(AnyExpression left, Token op) : base(left, op) { }
+
+            public static ChainExpression Parse(Parser parser, AnyExpression left)
+            {
+                var op = parser.Consume(ToKind.Quest);
+                return new ChainExpression(left, op);
+            }
         }
     }
 }

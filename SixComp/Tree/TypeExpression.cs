@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class TypeExpression : BaseExpression
+    public partial class Tree
     {
-        public TypeExpression(AnyType type)
+        public class TypeExpression : BaseExpression
         {
-            Type = type;
-        }
+            public TypeExpression(AnyType type)
+            {
+                Type = type;
+            }
 
-        public AnyType Type { get; }
+            public AnyType Type { get; }
 
-        public static TypeExpression Parse(Parser parser)
-        {
-            var type = AnyType.Parse(parser);
+            public static TypeExpression Parse(Parser parser)
+            {
+                var type = AnyType.Parse(parser);
 
-            return new TypeExpression(type);
-        }
+                return new TypeExpression(type);
+            }
 
-        public override string ToString()
-        {
-            return $"{Type}";
+            public override string ToString()
+            {
+                return $"{Type}";
+            }
         }
     }
 }

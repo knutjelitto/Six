@@ -1,5 +1,4 @@
-﻿using SixComp.Entities;
-using SixComp.Support;
+﻿using SixComp.Support;
 
 namespace SixComp.Sema
 {

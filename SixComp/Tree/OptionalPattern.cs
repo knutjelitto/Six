@@ -1,24 +1,27 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class OptionalPattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        public OptionalPattern(AnyPattern pattern)
+        public class OptionalPattern : SyntaxNode, AnyPattern
         {
-            Pattern = pattern;
-        }
+            public OptionalPattern(AnyPattern pattern)
+            {
+                Pattern = pattern;
+            }
 
-        public AnyPattern Pattern { get; }
+            public AnyPattern Pattern { get; }
 
-        public static OptionalPattern Parse(Parser parser, AnyPattern pattern)
-        {
-            parser.Consume(ToKind.Quest);
+            public static OptionalPattern Parse(Parser parser, AnyPattern pattern)
+            {
+                parser.Consume(ToKind.Quest);
 
-            return new OptionalPattern(pattern);
-        }
+                return new OptionalPattern(pattern);
+            }
 
-        public override string ToString()
-        {
-            return $"{Pattern}?";
+            public override string ToString()
+            {
+                return $"{Pattern}?";
+            }
         }
     }
 }

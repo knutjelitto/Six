@@ -1,20 +1,23 @@
 ﻿using System.Diagnostics;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class PostfixOpExpression : PostfixExpression
+    public partial class Tree
     {
-        public PostfixOpExpression(AnyExpression left, Token op)
-            : base(left, op)
+        public class PostfixOpExpression : PostfixExpression
         {
-        }
+            public PostfixOpExpression(AnyExpression left, Token op)
+                : base(left, op)
+            {
+            }
 
-        public static AnyPostfixExpression Parse(Parser parser, AnyExpression left)
-        {
-            Debug.Assert(parser.IsPostfixOperator());
-            var op = parser.ConsumeAny();
+            public static AnyPostfixExpression Parse(Parser parser, AnyExpression left)
+            {
+                Debug.Assert(parser.IsPostfixOperator());
+                var op = parser.ConsumeAny();
 
-            return new PostfixOpExpression(left, op);
+                return new PostfixOpExpression(left, op);
+            }
         }
     }
 }

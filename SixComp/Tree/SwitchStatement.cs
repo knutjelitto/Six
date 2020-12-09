@@ -1,37 +1,40 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class SwitchStatement : AnyStatement
+    public partial class Tree
     {
-        public SwitchStatement(AnyExpression value, SwitchCaseClause cases)
+        public class SwitchStatement : AnyStatement
         {
-            Value = value;
-            Cases = cases;
-        }
+            public SwitchStatement(AnyExpression value, SwitchCaseClause cases)
+            {
+                Value = value;
+                Cases = cases;
+            }
 
-        public AnyExpression Value { get; }
-        public SwitchCaseClause Cases { get; }
+            public AnyExpression Value { get; }
+            public SwitchCaseClause Cases { get; }
 
-        public static SwitchStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwSwitch);
-            var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
-            var cases = SwitchCaseClause.Parse(parser);
+            public static SwitchStatement Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwSwitch);
+                var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
+                var cases = SwitchCaseClause.Parse(parser);
 
-            return new SwitchStatement(value, cases);
-        }
+                return new SwitchStatement(value, cases);
+            }
 
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"switch {Value}");
-            Cases.Write(writer);
-        }
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"switch {Value}");
+                Cases.Write(writer);
+            }
 
-        public override string ToString()
-        {
-            return $"switch {Value} {Cases}";
+            public override string ToString()
+            {
+                return $"switch {Value} {Cases}";
+            }
         }
     }
 }

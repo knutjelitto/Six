@@ -1,40 +1,43 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CompilationUnit : IWritable
+    public partial class Tree
     {
-        public static TokenSet Follows = new TokenSet(ToKind.EOF);
-
-        public CompilationUnit(StatementList statements)
+        public class CompilationUnit : IWritable
         {
-            Statements = statements;
-        }
+            public static TokenSet Follows = new TokenSet(ToKind.EOF);
 
-        public StatementList Statements { get; }
-
-        public void Write(IWriter writer)
-        {
-            bool more = false;
-
-            foreach (var statement in Statements)
+            public CompilationUnit(StatementList statements)
             {
-                if (more)
-                {
-                    writer.WriteLine();
-                }
-                statement.Write(writer);
-                more = true;
+                Statements = statements;
             }
-        }
 
-        public static CompilationUnit Parse(Parser parser)
-        {
-            var declarations = StatementList.Parse(parser, Follows);
+            public StatementList Statements { get; }
 
-            parser.Consume(ToKind.EOF);
+            public void Write(IWriter writer)
+            {
+                bool more = false;
 
-            return new CompilationUnit(declarations);
+                foreach (var statement in Statements)
+                {
+                    if (more)
+                    {
+                        writer.WriteLine();
+                    }
+                    statement.Write(writer);
+                    more = true;
+                }
+            }
+
+            public static CompilationUnit Parse(Parser parser)
+            {
+                var declarations = StatementList.Parse(parser, Follows);
+
+                parser.Consume(ToKind.EOF);
+
+                return new CompilationUnit(declarations);
+            }
         }
     }
 }

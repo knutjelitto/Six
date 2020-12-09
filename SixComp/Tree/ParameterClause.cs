@@ -1,31 +1,34 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ParameterClause
+    public partial class Tree
     {
-        private static readonly TokenSet rparent = new TokenSet(ToKind.RParent);
-        private ParameterClause(ParameterList parameters)
+        public class ParameterClause
         {
-            Parameters = parameters;
-        }
+            private static readonly TokenSet rparent = new TokenSet(ToKind.RParent);
+            private ParameterClause(ParameterList parameters)
+            {
+                Parameters = parameters;
+            }
 
-        public ParameterList Parameters { get; }
-        public bool Missing => Parameters.Missing;
+            public ParameterList Parameters { get; }
+            public bool Missing => Parameters.Missing;
 
-        public static ParameterClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LParent);
+            public static ParameterClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LParent);
 
-            var parameters = ParameterList.Parse(parser, rparent);
-            parser.Consume(ToKind.RParent);
+                var parameters = ParameterList.Parse(parser, rparent);
+                parser.Consume(ToKind.RParent);
 
-            return new ParameterClause(parameters);
-        }
+                return new ParameterClause(parameters);
+            }
 
-        public override string ToString()
-        {
-            return $"({Parameters})";
+            public override string ToString()
+            {
+                return $"({Parameters})";
+            }
         }
     }
 }

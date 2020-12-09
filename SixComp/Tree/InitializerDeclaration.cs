@@ -1,86 +1,89 @@
 ﻿using SixComp.Common;
 using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class InitializerDeclaration : AnyDeclaration
+    public partial class Tree
     {
-        public InitializerDeclaration(Prefix prefix, InitKind kind, GenericParameterClause genericParameters, ParameterClause parameters, RequirementClause requirements, CodeBlock? block)
+        public class InitializerDeclaration : AnyDeclaration
         {
-            Prefix = prefix;
-            Kind = kind;
-            GenericParameters = genericParameters;
-            Parameters = parameters;
-            Requirements = requirements;
-            Block = block;
-        }
-
-        public Prefix Prefix { get; }
-        public InitKind Kind { get; }
-        public GenericParameterClause GenericParameters { get; }
-        public ParameterClause Parameters { get; }
-        public RequirementClause Requirements { get; }
-        public CodeBlock? Block { get; }
-
-        public static InitializerDeclaration Parse(Parser parser, Prefix prefix)
-        {
-            //TODO: is incomplete
-            InitKind init = Head(parser);
-            var genericParameters = parser.TryList(GenericParameterClause.Firsts, GenericParameterClause.Parse);
-            var parameters = ParameterClause.Parse(parser);
-            var throws = parser.Match(ToKind.KwThrows);
-            var rethrows = parser.Match(ToKind.KwRethrows);
-            var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-            var block = parser.Try(CodeBlock.Firsts, CodeBlock.Parse);
-
-            return new InitializerDeclaration(prefix, InitKind.Init, genericParameters, parameters, requirements, block);
-        }
-
-        private static InitKind Head(Parser parser)
-        {
-            // already parsed //parser.Consume(ToKind.KwInit);
-
-            InitKind kind = InitKind.Init;
-
-            if (parser.Match(ToKind.Quest))
+            public InitializerDeclaration(Prefix prefix, InitKind kind, GenericParameterClause genericParameters, ParameterClause parameters, RequirementClause requirements, CodeBlock? block)
             {
-                kind = InitKind.InitChain;
+                Prefix = prefix;
+                Kind = kind;
+                GenericParameters = genericParameters;
+                Parameters = parameters;
+                Requirements = requirements;
+                Block = block;
             }
-            else if (parser.Match(ToKind.Bang))
-            {
-                kind = InitKind.InitForce;
-            }
-            else
-            {
-                var token = parser.CurrentToken;
 
-                if (token.IsOperator)
+            public Prefix Prefix { get; }
+            public InitKind Kind { get; }
+            public GenericParameterClause GenericParameters { get; }
+            public ParameterClause Parameters { get; }
+            public RequirementClause Requirements { get; }
+            public CodeBlock? Block { get; }
+
+            public static InitializerDeclaration Parse(Parser parser, Prefix prefix)
+            {
+                //TODO: is incomplete
+                InitKind init = Head(parser);
+                var genericParameters = parser.TryList(GenericParameterClause.Firsts, GenericParameterClause.Parse);
+                var parameters = ParameterClause.Parse(parser);
+                var throws = parser.Match(ToKind.KwThrows);
+                var rethrows = parser.Match(ToKind.KwRethrows);
+                var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
+                var block = parser.Try(CodeBlock.Firsts, CodeBlock.Parse);
+
+                return new InitializerDeclaration(prefix, InitKind.Init, genericParameters, parameters, requirements, block);
+            }
+
+            private static InitKind Head(Parser parser)
+            {
+                // already parsed //parser.Consume(ToKind.KwInit);
+
+                InitKind kind = InitKind.Init;
+
+                if (parser.Match(ToKind.Quest))
                 {
-                    if (token.First == '?')
+                    kind = InitKind.InitChain;
+                }
+                else if (parser.Match(ToKind.Bang))
+                {
+                    kind = InitKind.InitForce;
+                }
+                else
+                {
+                    var token = parser.CurrentToken;
+
+                    if (token.IsOperator)
                     {
-                        parser.ConsumeCarefully(ToKind.Quest);
-                        kind = InitKind.InitChain;
-                    }
-                    else if (token.First == '!')
-                    {
-                        parser.ConsumeCarefully(ToKind.Bang);
-                        kind = InitKind.InitForce;
+                        if (token.First == '?')
+                        {
+                            parser.ConsumeCarefully(ToKind.Quest);
+                            kind = InitKind.InitChain;
+                        }
+                        else if (token.First == '!')
+                        {
+                            parser.ConsumeCarefully(ToKind.Bang);
+                            kind = InitKind.InitForce;
+                        }
                     }
                 }
+
+                return kind;
             }
 
-            return kind;
-        }
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"init{GenericParameters}{Parameters}{Requirements}");
+                Block?.Write(writer);
+            }
 
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"init{GenericParameters}{Parameters}{Requirements}");
-            Block?.Write(writer);
-        }
-
-        public override string ToString()
-        {
-            return $"init{GenericParameters}{Parameters}{Requirements}{Block}";
+            public override string ToString()
+            {
+                return $"init{GenericParameters}{Parameters}{Requirements}{Block}";
+            }
         }
     }
 }

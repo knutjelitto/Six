@@ -1,6 +1,9 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public abstract class AtToken
+    public partial class Tree
     {
+        public abstract class AtToken
+        {
+        }
     }
 }

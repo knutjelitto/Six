@@ -1,29 +1,32 @@
 ﻿using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class IfCondition : BaseExpression, AnyCondition
+    public partial class Tree
     {
-        private IfCondition(AnyExpression expression)
+        public class IfCondition : BaseExpression, AnyCondition
         {
-            Expression = expression;
-        }
+            private IfCondition(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public AnyExpression Expression { get; }
+            public AnyExpression Expression { get; }
 
-        public static IfCondition Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwIf);
+            public static IfCondition Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwIf);
 
-            var expression = AnyExpression.TryParse(parser) ??  throw new InvalidOperationException($"{typeof(IfCondition)}");
+                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(IfCondition)}");
 
-            return new IfCondition(expression);
-        }
+                return new IfCondition(expression);
+            }
 
-        public override string ToString()
-        {
-            return $"{ToKind.KwIf.GetRep()} {Expression}";
+            public override string ToString()
+            {
+                return $"{ToKind.KwIf.GetRep()} {Expression}";
+            }
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using SixComp.Entities;
-using System.Collections.Generic;
 
 namespace SixComp.Sema
 {
-    public abstract class Nominal<TTree> : BaseScoped<TTree>, INamedDeclaration, IWithGenerics, IExtendable
+    public abstract class Nominal<TTree> : BaseScoped<TTree>, INamedDeclaration, IWithGenerics
         where TTree : Tree.INominal
     {
-        private readonly List<ExtensionDeclaration> extensions = new List<ExtensionDeclaration>();
-
         public Nominal(IScoped outer, TTree tree)
             : base(outer, tree)
         {
@@ -32,12 +29,5 @@ namespace SixComp.Sema
         public GenericParameters Generics { get; }
         public Inheritance Inheritance { get; }
         public Declarations Declarations { get; }
-        public IReadOnlyList<ExtensionDeclaration> Extensions => extensions;
-
-        public virtual bool Extend(ExtensionDeclaration with)
-        {
-            Scope.Extend(with);
-            return true;
-        }
     }
 }

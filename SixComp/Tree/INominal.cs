@@ -1,15 +1,18 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public interface INominal
+    public partial class Tree
     {
-        BaseName Name { get; }
-        GenericParameterClause Generics { get; }
-        RequirementClause Requirements { get; }
-    }
+        public interface INominal
+        {
+            BaseName Name { get; }
+            GenericParameterClause Generics { get; }
+            RequirementClause Requirements { get; }
+        }
 
-    public interface INominalWhithDeclarations : INominal
-    {
-        TypeInheritanceClause Inheritance { get; }
-        DeclarationClause Declarations { get; }
+        public interface INominalWhithDeclarations : INominal
+        {
+            TypeInheritanceClause Inheritance { get; }
+            DeclarationClause Declarations { get; }
+        }
     }
 }

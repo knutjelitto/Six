@@ -1,64 +1,67 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class IfStatement : AnyStatement
+    public partial class Tree
     {
-        public IfStatement(ConditionList conditions, CodeBlock thenPart, AnyStatement? elsePart)
+        public class IfStatement : AnyStatement
         {
-            Conditions = conditions;
-            ThenPart = thenPart;
-            ElsePart = elsePart;
-        }
-
-        public ConditionList Conditions { get; }
-        public CodeBlock ThenPart { get; }
-        public AnyStatement? ElsePart { get; }
-
-        public static IfStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwIf);
-            var conditions = ConditionList.Parse(parser);
-            CodeBlock thenPart;
-            if (parser.Current != ToKind.LBrace && conditions.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
+            public IfStatement(ConditionList conditions, CodeBlock thenPart, AnyStatement? elsePart)
             {
-                thenPart = call.Closures.ExtractBlock();
+                Conditions = conditions;
+                ThenPart = thenPart;
+                ElsePart = elsePart;
             }
-            else
+
+            public ConditionList Conditions { get; }
+            public CodeBlock ThenPart { get; }
+            public AnyStatement? ElsePart { get; }
+
+            public static IfStatement Parse(Parser parser)
             {
-                thenPart = CodeBlock.Parse(parser);
-            }
-            AnyStatement? elsePart = null;
-            if (parser.Match(ToKind.KwElse))
-            {
-                if (parser.Current == ToKind.KwIf)
+                parser.Consume(ToKind.KwIf);
+                var conditions = ConditionList.Parse(parser);
+                CodeBlock thenPart;
+                if (parser.Current != ToKind.LBrace && conditions.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
                 {
-                    elsePart = IfStatement.Parse(parser);
+                    thenPart = call.Closures.ExtractBlock();
                 }
                 else
                 {
-                    elsePart = CodeBlock.Parse(parser);
+                    thenPart = CodeBlock.Parse(parser);
+                }
+                AnyStatement? elsePart = null;
+                if (parser.Match(ToKind.KwElse))
+                {
+                    if (parser.Current == ToKind.KwIf)
+                    {
+                        elsePart = IfStatement.Parse(parser);
+                    }
+                    else
+                    {
+                        elsePart = CodeBlock.Parse(parser);
+                    }
+                }
+
+                return new IfStatement(conditions, thenPart, elsePart);
+            }
+
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"if {Conditions.StripParents()}");
+                ThenPart.Write(writer);
+                if (ElsePart != null)
+                {
+                    writer.WriteLine("else");
+                    ElsePart.Write(writer);
                 }
             }
 
-            return new IfStatement(conditions, thenPart, elsePart);
-        }
-
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"if {Conditions.StripParents()}");
-            ThenPart.Write(writer);
-            if (ElsePart != null)
+            public override string ToString()
             {
-                writer.WriteLine("else");
-                ElsePart.Write(writer);
+                var elsePart = ElsePart == null ? string.Empty : $" {ElsePart}";
+                return $"if {Conditions} {ThenPart}{elsePart}";
             }
-        }
-
-        public override string ToString()
-        {
-            var elsePart = ElsePart == null ? string.Empty : $" {ElsePart}";
-            return $"if {Conditions} {ThenPart}{elsePart}";
         }
     }
 }

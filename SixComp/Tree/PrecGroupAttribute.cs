@@ -1,133 +1,136 @@
 ﻿using SixComp.Common;
 using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public abstract class PrecGroupAttribute : SyntaxNode
+    public partial class Tree
     {
-        public static PrecGroupAttribute? TryParse(Parser parser)
+        public abstract class PrecGroupAttribute : SyntaxNode
         {
-            return parser.CurrentToken.Text switch
+            public static PrecGroupAttribute? TryParse(Parser parser)
             {
-                Contextual.LowerThan => Relation.Parse(parser, RelationKind.LowerThan),
-                Contextual.HigherThan => Relation.Parse(parser, RelationKind.HigherThan),
-                Contextual.Assignment => Assignment.Parse(parser),
-                Contextual.Associativity => Associativity.Parse(parser),
-                _ => null,
-            };
-        }
-
-        public abstract void Write(IWriter writer);
-
-        public class Relation : PrecGroupAttribute
-        {
-            public RelationKind Kind { get; }
-            public NameList Names { get; }
-
-            public Relation(RelationKind kind, NameList names)
-            {
-                Kind = kind;
-                Names = names;
-            }
-
-            public static PrecGroupAttribute Parse(Parser parser, RelationKind kind)
-            {
-                parser.ConsumeAny();
-                parser.Consume(ToKind.Colon);
-                var names = NameList.Parse(parser);
-
-                return new Relation(kind, names);
-            }
-
-            public override void Write(IWriter writer)
-            {
-                var hilo = Kind switch
+                return parser.CurrentToken.Text switch
                 {
-                    RelationKind.LowerThan => Contextual.HigherThan,
-                    RelationKind.HigherThan => Contextual.LowerThan,
-                    _ => string.Empty,
+                    Contextual.LowerThan => Relation.Parse(parser, RelationKind.LowerThan),
+                    Contextual.HigherThan => Relation.Parse(parser, RelationKind.HigherThan),
+                    Contextual.Assignment => Assignment.Parse(parser),
+                    Contextual.Associativity => Associativity.Parse(parser),
+                    _ => null,
                 };
-                writer.WriteLine($"{hilo}: {Names}");
-            }
-        }
-
-        public class Assignment : PrecGroupAttribute
-        {
-            public Assignment(bool isAssignment)
-            {
-                IsAssignment = isAssignment;
             }
 
-            public bool IsAssignment { get; }
+            public abstract void Write(IWriter writer);
 
-            public static PrecGroupAttribute Parse(Parser parser)
+            public class Relation : PrecGroupAttribute
             {
-                parser.ConsumeAny();
-                parser.Consume(ToKind.Colon);
-                var kind = parser.Current == ToKind.KwTrue;
-                if (kind)
+                public RelationKind Kind { get; }
+                public NameList Names { get; }
+
+                public Relation(RelationKind kind, NameList names)
                 {
-                    parser.Consume(ToKind.KwTrue);
-                }
-                else
-                {
-                    parser.Consume(ToKind.KwFalse);
+                    Kind = kind;
+                    Names = names;
                 }
 
-                return new Assignment(kind);
-            }
-
-            public override void Write(IWriter writer)
-            {
-                var @is = IsAssignment ? Kw.True : Kw.False;
-                writer.WriteLine($"{Contextual.Assignment}: {@is}");
-            }
-        }
-
-        public class Associativity : PrecGroupAttribute
-        {
-            private Associativity(AssociativityKind kind)
-            {
-                Kind = kind;
-            }
-
-            public AssociativityKind Kind { get; }
-
-            public static PrecGroupAttribute Parse(Parser parser)
-            {
-                parser.ConsumeAny();
-                parser.Consume(ToKind.Colon);
-
-                var kind = AssociativityKind.None;
-                switch (parser.CurrentToken.Text)
+                public static PrecGroupAttribute Parse(Parser parser, RelationKind kind)
                 {
-                    case Contextual.Left:
-                        parser.ConsumeAny();
-                        kind = AssociativityKind.Left;
-                        break;
-                    case Contextual.Right:
-                        parser.ConsumeAny();
-                        kind = AssociativityKind.Right;
-                        break;
-                    case Contextual.None:
-                        parser.ConsumeAny();
-                        kind = AssociativityKind.None;
-                        break;
+                    parser.ConsumeAny();
+                    parser.Consume(ToKind.Colon);
+                    var names = NameList.Parse(parser);
+
+                    return new Relation(kind, names);
                 }
 
-                return new Associativity(kind);
+                public override void Write(IWriter writer)
+                {
+                    var hilo = Kind switch
+                    {
+                        RelationKind.LowerThan => Contextual.HigherThan,
+                        RelationKind.HigherThan => Contextual.LowerThan,
+                        _ => string.Empty,
+                    };
+                    writer.WriteLine($"{hilo}: {Names}");
+                }
             }
 
-            public override void Write(IWriter writer)
+            public class Assignment : PrecGroupAttribute
             {
-                var kind = Kind switch
+                public Assignment(bool isAssignment)
                 {
-                    AssociativityKind.Left => Contextual.Left,
-                    AssociativityKind.Right => Contextual.Right,
-                    AssociativityKind.None => Contextual.None,
-                    _ => Contextual.None,
-                };
-                writer.WriteLine($"{Contextual.Associativity}: {kind}");
+                    IsAssignment = isAssignment;
+                }
+
+                public bool IsAssignment { get; }
+
+                public static PrecGroupAttribute Parse(Parser parser)
+                {
+                    parser.ConsumeAny();
+                    parser.Consume(ToKind.Colon);
+                    var kind = parser.Current == ToKind.KwTrue;
+                    if (kind)
+                    {
+                        parser.Consume(ToKind.KwTrue);
+                    }
+                    else
+                    {
+                        parser.Consume(ToKind.KwFalse);
+                    }
+
+                    return new Assignment(kind);
+                }
+
+                public override void Write(IWriter writer)
+                {
+                    var @is = IsAssignment ? Kw.True : Kw.False;
+                    writer.WriteLine($"{Contextual.Assignment}: {@is}");
+                }
+            }
+
+            public class Associativity : PrecGroupAttribute
+            {
+                private Associativity(AssociativityKind kind)
+                {
+                    Kind = kind;
+                }
+
+                public AssociativityKind Kind { get; }
+
+                public static PrecGroupAttribute Parse(Parser parser)
+                {
+                    parser.ConsumeAny();
+                    parser.Consume(ToKind.Colon);
+
+                    var kind = AssociativityKind.None;
+                    switch (parser.CurrentToken.Text)
+                    {
+                        case Contextual.Left:
+                            parser.ConsumeAny();
+                            kind = AssociativityKind.Left;
+                            break;
+                        case Contextual.Right:
+                            parser.ConsumeAny();
+                            kind = AssociativityKind.Right;
+                            break;
+                        case Contextual.None:
+                            parser.ConsumeAny();
+                            kind = AssociativityKind.None;
+                            break;
+                    }
+
+                    return new Associativity(kind);
+                }
+
+                public override void Write(IWriter writer)
+                {
+                    var kind = Kind switch
+                    {
+                        AssociativityKind.Left => Contextual.Left,
+                        AssociativityKind.Right => Contextual.Right,
+                        AssociativityKind.None => Contextual.None,
+                        _ => Contextual.None,
+                    };
+                    writer.WriteLine($"{Contextual.Associativity}: {kind}");
+                }
             }
         }
     }

@@ -1,17 +1,20 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class UnwrapType : AnyType
+    public partial class Tree
     {
-        public UnwrapType(AnyType type)
+        public class UnwrapType : AnyType
         {
-            Type = type;
-        }
+            public UnwrapType(AnyType type)
+            {
+                Type = type;
+            }
 
-        public AnyType Type { get; }
+            public AnyType Type { get; }
 
-        public override string ToString()
-        {
-            return $"{Type}!";
+            public override string ToString()
+            {
+                return $"{Type}!";
+            }
         }
     }
 }

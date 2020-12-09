@@ -1,22 +1,25 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class TupleExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        private TupleExpression(TupleElementList elements)
+        public class TupleExpression : BaseExpression, AnyPrimaryExpression
         {
-            Elements = elements;
-        }
+            private TupleExpression(TupleElementList elements)
+            {
+                Elements = elements;
+            }
 
-        public TupleElementList Elements { get; }
+            public TupleElementList Elements { get; }
 
-        public static TupleExpression From(TupleElementList elements)
-        {
-            return new TupleExpression(elements);
-        }
+            public static TupleExpression From(TupleElementList elements)
+            {
+                return new TupleExpression(elements);
+            }
 
-        public override string ToString()
-        {
-            return $"({Elements})";
+            public override string ToString()
+            {
+                return $"({Elements})";
+            }
         }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class BaseExpression : AnyExpression
+    public partial class Tree
     {
-        public virtual AnyExpression? LastExpression => this;
+        public class BaseExpression : AnyExpression
+        {
+            public virtual AnyExpression? LastExpression => this;
+        }
     }
 }

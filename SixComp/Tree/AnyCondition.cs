@@ -1,21 +1,24 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public interface AnyCondition : AnyExpression
+    public partial class Tree
     {
-        public static new AnyCondition? TryParse(Parser parser)
+        public interface AnyCondition : AnyExpression
         {
-            switch (parser.Current)
+            public static new AnyCondition? TryParse(Parser parser)
             {
-                case ToKind.KwCase:
-                case ToKind.KwLet:
-                case ToKind.KwVar:
-                    return PatternCondition.Parse(parser);
-                case ToKind.KwIf:
-                    return IfCondition.Parse(parser);
-                case ToKind.CdAvailable:
-                    return AvailableCondition.Parse(parser);
-                default:
-                    return ExpressionCondition.TryParse(parser);
+                switch (parser.Current)
+                {
+                    case ToKind.KwCase:
+                    case ToKind.KwLet:
+                    case ToKind.KwVar:
+                        return PatternCondition.Parse(parser);
+                    case ToKind.KwIf:
+                        return IfCondition.Parse(parser);
+                    case ToKind.CdAvailable:
+                        return AvailableCondition.Parse(parser);
+                    default:
+                        return ExpressionCondition.TryParse(parser);
+                }
             }
         }
     }

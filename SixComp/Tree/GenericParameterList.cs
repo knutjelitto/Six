@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class GenericParameterList : ItemList<GenericParameter>
+    public partial class Tree
     {
-        public GenericParameterList(List<GenericParameter> items) : base(items) { }
-        public GenericParameterList() { }
-
-        public static GenericParameterList Parse(Parser parser)
+        public class GenericParameterList : ItemList<GenericParameter>
         {
-            List<GenericParameter> names = new List<GenericParameter>();
+            public GenericParameterList(List<GenericParameter> items) : base(items) { }
+            public GenericParameterList() { }
 
-            do
+            public static GenericParameterList Parse(Parser parser)
             {
-                var parameter = GenericParameter.Parse(parser);
-                names.Add(parameter);
+                List<GenericParameter> names = new List<GenericParameter>();
+
+                do
+                {
+                    var parameter = GenericParameter.Parse(parser);
+                    names.Add(parameter);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new GenericParameterList(names);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new GenericParameterList(names);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

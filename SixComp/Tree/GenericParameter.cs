@@ -1,32 +1,35 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class GenericParameter
+    public partial class Tree
     {
-        public GenericParameter(BaseName name, GenericRequirement? requirement)
+        public class GenericParameter
         {
-            Name = name;
-            Requirement = requirement;
-        }
-
-        public BaseName Name { get; }
-        public GenericRequirement? Requirement { get; }
-
-        public static GenericParameter Parse(Parser parser)
-        {
-            var name = BaseName.Parse(parser);
-
-            if (parser.Current == ToKind.Colon)
+            public GenericParameter(BaseName name, GenericRequirement? requirement)
             {
-                var requirement = GenericRequirement.Parse(parser);
-                return new GenericParameter(name, requirement);
+                Name = name;
+                Requirement = requirement;
             }
 
-            return new GenericParameter(name, null);
-        }
+            public BaseName Name { get; }
+            public GenericRequirement? Requirement { get; }
 
-        public override string ToString()
-        {
-            return $"{Name}{Requirement}";
+            public static GenericParameter Parse(Parser parser)
+            {
+                var name = BaseName.Parse(parser);
+
+                if (parser.Current == ToKind.Colon)
+                {
+                    var requirement = GenericRequirement.Parse(parser);
+                    return new GenericParameter(name, requirement);
+                }
+
+                return new GenericParameter(name, null);
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}{Requirement}";
+            }
         }
     }
 }

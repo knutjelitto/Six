@@ -1,24 +1,27 @@
 ﻿using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaptureListItem
+    public partial class Tree
     {
-        public CaptureListItem(CaptureSpecifier? specifier, AnyExpression expression)
+        public class CaptureListItem
         {
-            Specifier = specifier;
-            Expression = expression;
-        }
+            public CaptureListItem(CaptureSpecifier? specifier, AnyExpression expression)
+            {
+                Specifier = specifier;
+                Expression = expression;
+            }
 
-        public CaptureSpecifier? Specifier { get; }
-        public AnyExpression Expression { get; }
+            public CaptureSpecifier? Specifier { get; }
+            public AnyExpression Expression { get; }
 
-        public static CaptureListItem Parse(Parser parser)
-        {
-            var specifier = CaptureSpecifier.Parse(parser);
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(CaptureListItem)}");
+            public static CaptureListItem Parse(Parser parser)
+            {
+                var specifier = CaptureSpecifier.Parse(parser);
+                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(CaptureListItem)}");
 
-            return new CaptureListItem(specifier, expression);
+                return new CaptureListItem(specifier, expression);
+            }
         }
     }
 }

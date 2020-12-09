@@ -1,36 +1,39 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ClosureParameter
+    public partial class Tree
     {
-        public ClosureParameter(BaseName name, TypeAnnotation? type)
+        public class ClosureParameter
         {
-            Name = name;
-            Type = type;
-        }
-
-        public BaseName Name { get; }
-        public TypeAnnotation? Type { get; }
-
-        public bool NameOnly => Type == null;
-
-        public static ClosureParameter? TryParse(Parser parser, bool nameOnly)
-        {
-            var name = BaseName.TryParse(parser, withImplicits: false);
-            if (name == null)
+            public ClosureParameter(BaseName name, TypeAnnotation? type)
             {
-                return null;
+                Name = name;
+                Type = type;
             }
 
-            var type = nameOnly
-                ? null
-                : parser.Try(ToKind.Colon, TypeAnnotation.Parse);
+            public BaseName Name { get; }
+            public TypeAnnotation? Type { get; }
 
-            return new ClosureParameter(name, type);
-        }
+            public bool NameOnly => Type == null;
 
-        public override string ToString()
-        {
-            return $"{Name}{Type}";
+            public static ClosureParameter? TryParse(Parser parser, bool nameOnly)
+            {
+                var name = BaseName.TryParse(parser, withImplicits: false);
+                if (name == null)
+                {
+                    return null;
+                }
+
+                var type = nameOnly
+                    ? null
+                    : parser.Try(ToKind.Colon, TypeAnnotation.Parse);
+
+                return new ClosureParameter(name, type);
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}{Type}";
+            }
         }
     }
 }

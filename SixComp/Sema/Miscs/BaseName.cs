@@ -1,7 +1,4 @@
-﻿using SixComp.Entities;
-using SixComp.Support;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using SixComp.Support;
 
 namespace SixComp.Sema
 {
@@ -27,29 +24,6 @@ namespace SixComp.Sema
         public static BaseName Self(IScoped outer)
         {
             return new BaseName(outer, "self");
-        }
-
-        public void Resolve(IWriter writer)
-        {
-            if (Text.StartsWith('$'))
-            {
-                Scope.FindParent<ClosureExpression>(Outer).Parameters.AddImplicit(this);
-            }
-            if (Text == "self")
-            {
-                Debug.Assert(true);
-            }
-            var decls = Scope.LookUp(this);
-
-            if (decls.Count == 0)
-            {
-                Global.UnresolvedNamesTodo.Add(Text);
-            }
-        }
-
-        public IReadOnlyList<IEntity> ResolveIn(IWriter writer, IScoped scoped)
-        {
-            return scoped.Scope.Look(this);
         }
 
         public override void Report(IWriter writer)

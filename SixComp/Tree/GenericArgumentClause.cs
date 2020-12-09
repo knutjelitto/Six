@@ -1,44 +1,47 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class GenericArgumentClause : IWritable
+    public partial class Tree
     {
-        public GenericArgumentClause(GenericArgumentList arguments)
+        public class GenericArgumentClause : IWritable
         {
-            Arguments = arguments;
-        }
-
-        public GenericArgumentClause()
-            : this(new GenericArgumentList())
-        {
-        }
-
-        public GenericArgumentList Arguments { get; }
-        public bool Missing => Arguments.Missing;
-
-        public static GenericArgumentClause? TryParse(Parser parser)
-        {
-            var offset = parser.Offset;
-
-            if (parser.Match(ToKind.Less))
+            public GenericArgumentClause(GenericArgumentList arguments)
             {
-                var arguments = GenericArgumentList.Parse(parser);
-
-                if (parser.ConsumeCarefully(ToKind.Greater) != null)
-                {
-                    return new GenericArgumentClause(arguments);
-
-                }
+                Arguments = arguments;
             }
 
-            parser.Offset = offset;
-            return null;
-        }
+            public GenericArgumentClause()
+                : this(new GenericArgumentList())
+            {
+            }
 
-        public override string ToString()
-        {
-            return Arguments.Missing ? string.Empty : $"<{Arguments}>";
+            public GenericArgumentList Arguments { get; }
+            public bool Missing => Arguments.Missing;
+
+            public static GenericArgumentClause? TryParse(Parser parser)
+            {
+                var offset = parser.Offset;
+
+                if (parser.Match(ToKind.Less))
+                {
+                    var arguments = GenericArgumentList.Parse(parser);
+
+                    if (parser.ConsumeCarefully(ToKind.Greater) != null)
+                    {
+                        return new GenericArgumentClause(arguments);
+
+                    }
+                }
+
+                parser.Offset = offset;
+                return null;
+            }
+
+            public override string ToString()
+            {
+                return Arguments.Missing ? string.Empty : $"<{Arguments}>";
+            }
         }
     }
 }

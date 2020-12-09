@@ -1,35 +1,38 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class PatternInitializerList : ItemList<PatternInitializer>
+    public partial class Tree
     {
-        public PatternInitializerList(List<PatternInitializer> items) : base(items) { }
-        public PatternInitializerList() { }
-
-        public static PatternInitializerList Parse(Parser parser)
+        public class PatternInitializerList : ItemList<PatternInitializer>
         {
-            var list = new List<PatternInitializer>();
+            public PatternInitializerList(List<PatternInitializer> items) : base(items) { }
+            public PatternInitializerList() { }
 
-            do
+            public static PatternInitializerList Parse(Parser parser)
             {
-                var patternInitializer = PatternInitializer.Parse(parser);
+                var list = new List<PatternInitializer>();
 
-                list.Add(patternInitializer);
+                do
+                {
+                    var patternInitializer = PatternInitializer.Parse(parser);
+
+                    list.Add(patternInitializer);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new PatternInitializerList(list);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new PatternInitializerList(list);
-        }
+            public static PatternInitializerList From(List<PatternInitializer> pattInits)
+            {
+                return new PatternInitializerList(pattInits);
+            }
 
-        public static PatternInitializerList From(List<PatternInitializer> pattInits)
-        {
-            return new PatternInitializerList(pattInits);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

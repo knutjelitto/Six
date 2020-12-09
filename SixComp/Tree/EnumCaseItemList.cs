@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class EnumCaseItemList : ItemList<EnumCaseItem>
+    public partial class Tree
     {
-        public EnumCaseItemList(List<EnumCaseItem> items) : base(items) { }
-        public EnumCaseItemList() { }
-
-        public static EnumCaseItemList Parse(Parser parser)
+        public class EnumCaseItemList : ItemList<EnumCaseItem>
         {
-            var caseItems = new List<EnumCaseItem>();
+            public EnumCaseItemList(List<EnumCaseItem> items) : base(items) { }
+            public EnumCaseItemList() { }
 
-            do
+            public static EnumCaseItemList Parse(Parser parser)
             {
-                var caseItem = EnumCaseItem.Parse(parser);
-                caseItems.Add(caseItem);
+                var caseItems = new List<EnumCaseItem>();
+
+                do
+                {
+                    var caseItem = EnumCaseItem.Parse(parser);
+                    caseItems.Add(caseItem);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new EnumCaseItemList(caseItems);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new EnumCaseItemList(caseItems);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

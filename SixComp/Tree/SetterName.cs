@@ -1,30 +1,33 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class SetterName
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.LParent);
-
-        public SetterName(BaseName name)
+        public class SetterName
         {
-            Name = name;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.LParent);
 
-        public BaseName Name { get; }
+            public SetterName(BaseName name)
+            {
+                Name = name;
+            }
 
-        public static SetterName Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LParent);
-            var name = BaseName.Parse(parser);
-            parser.Consume(ToKind.RParent);
+            public BaseName Name { get; }
 
-            return new SetterName(name);
-        }
+            public static SetterName Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LParent);
+                var name = BaseName.Parse(parser);
+                parser.Consume(ToKind.RParent);
 
-        public override string ToString()
-        {
-            return $"({Name})";
+                return new SetterName(name);
+            }
+
+            public override string ToString()
+            {
+                return $"({Name})";
+            }
         }
     }
 }

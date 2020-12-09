@@ -1,28 +1,31 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SubscriptClause
+    public partial class Tree
     {
-        private SubscriptClause(ArgumentList arguments)
+        public class SubscriptClause
         {
-            Arguments = arguments;
-        }
+            private SubscriptClause(ArgumentList arguments)
+            {
+                Arguments = arguments;
+            }
 
-        public ArgumentList Arguments { get; }
+            public ArgumentList Arguments { get; }
 
-        public static SubscriptClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LBracket);
+            public static SubscriptClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LBracket);
 
-            var arguments = ArgumentList.Parse(parser);
+                var arguments = ArgumentList.Parse(parser);
 
-            parser.Consume(ToKind.RBracket);
+                parser.Consume(ToKind.RBracket);
 
-            return new SubscriptClause(arguments);
-        }
+                return new SubscriptClause(arguments);
+            }
 
-        public override string ToString()
-        {
-            return $"[{Arguments}]";
+            public override string ToString()
+            {
+                return $"[{Arguments}]";
+            }
         }
     }
 }

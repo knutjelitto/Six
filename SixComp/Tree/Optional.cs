@@ -1,28 +1,31 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class Optional : SyntaxNode
+    public partial class Tree
     {
-        public Optional(Token? token)
+        public class Optional : SyntaxNode
         {
-            Token = token;
-        }
-
-        public Token? Token { get; }
-
-        public bool Present => Token != null;
-
-        public static Optional Parse(Parser parser, ToKind kind)
-        {
-            if (parser.Current == kind)
+            public Optional(Token? token)
             {
-                return new Optional(parser.Consume(kind));
+                Token = token;
             }
-            return new Optional(null);
-        }
 
-        public override string ToString()
-        {
-            return Present ? $" {Token}" : string.Empty;
+            public Token? Token { get; }
+
+            public bool Present => Token != null;
+
+            public static Optional Parse(Parser parser, ToKind kind)
+            {
+                if (parser.Current == kind)
+                {
+                    return new Optional(parser.Consume(kind));
+                }
+                return new Optional(null);
+            }
+
+            public override string ToString()
+            {
+                return Present ? $" {Token}" : string.Empty;
+            }
         }
     }
 }

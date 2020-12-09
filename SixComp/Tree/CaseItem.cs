@@ -1,29 +1,32 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaseItem : IWritable
+    public partial class Tree
     {
-        private CaseItem(AnyPattern pattern, WhereClause? where)
+        public class CaseItem : IWritable
         {
-            Pattern = pattern;
-            Where = where;
-        }
+            private CaseItem(AnyPattern pattern, WhereClause? where)
+            {
+                Pattern = pattern;
+                Where = where;
+            }
 
-        public AnyPattern Pattern { get; }
-        public WhereClause? Where { get; }
+            public AnyPattern Pattern { get; }
+            public WhereClause? Where { get; }
 
-        public static CaseItem Parse(Parser parser, TokenSet follows)
-        {
-            var pattern = AnyPattern.Parse(parser, new TokenSet(follows, ToKind.KwWhere));
-            var where = parser.Try(ToKind.KwWhere, WhereClause.Parse);
+            public static CaseItem Parse(Parser parser, TokenSet follows)
+            {
+                var pattern = AnyPattern.Parse(parser, new TokenSet(follows, ToKind.KwWhere));
+                var where = parser.Try(ToKind.KwWhere, WhereClause.Parse);
 
-            return new CaseItem(pattern, where);
-        }
+                return new CaseItem(pattern, where);
+            }
 
-        public override string ToString()
-        {
-            return $"{Pattern}{Where}";
+            public override string ToString()
+            {
+                return $"{Pattern}{Where}";
+            }
         }
     }
 }

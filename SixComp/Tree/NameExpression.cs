@@ -1,31 +1,34 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class NameExpression : BaseExpression, AnyPrimaryExpression
+    public partial class Tree
     {
-        public NameExpression(BaseName name, GenericArgumentClause arguments)
+        public class NameExpression : BaseExpression, AnyPrimaryExpression
         {
-            Name = name;
-            Arguments = arguments;
-        }
-
-        public BaseName Name { get; }
-        public GenericArgumentClause Arguments { get; }
-
-        public static NameExpression Parse(Parser parser)
-        {
-            var name = BaseName.Parse(parser);
-            GenericArgumentClause? arguments = null;
-            if (parser.Current == ToKind.Less && parser.Adjacent)
+            public NameExpression(BaseName name, GenericArgumentClause arguments)
             {
-                arguments = GenericArgumentClause.TryParse(parser);
+                Name = name;
+                Arguments = arguments;
             }
 
-            return new NameExpression(name, arguments ?? new GenericArgumentClause());
-        }
+            public BaseName Name { get; }
+            public GenericArgumentClause Arguments { get; }
 
-        public override string ToString()
-        {
-            return $"{Name}{Arguments}";
+            public static NameExpression Parse(Parser parser)
+            {
+                var name = BaseName.Parse(parser);
+                GenericArgumentClause? arguments = null;
+                if (parser.Current == ToKind.Less && parser.Adjacent)
+                {
+                    arguments = GenericArgumentClause.TryParse(parser);
+                }
+
+                return new NameExpression(name, arguments ?? new GenericArgumentClause());
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}{Arguments}";
+            }
         }
     }
 }

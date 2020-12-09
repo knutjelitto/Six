@@ -2,119 +2,122 @@
 using SixComp.Support;
 using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public abstract class Operator : SyntaxNode
+    public partial class Tree
     {
-        public static Operator From(Token op)
+        public abstract class Operator : SyntaxNode
         {
-            return new NamedOperator(op);
-        }
-
-        public static Operator Assignment(Token op)
-        {
-            return new AssignmentOperator(op);
-        }
-
-        public static Operator From(AnyExpression middle)
-        {
-            return new ConditionalOperator(middle);
-        }
-
-        public class CastOperator : Operator
-        {
-            public static readonly TokenSet Firsts = new TokenSet(ToKind.KwAs, ToKind.KwIs);
-
-            public CastOperator(CastKind kind)
+            public static Operator From(Token op)
             {
-                Kind = kind;
+                return new NamedOperator(op);
             }
 
-            public CastKind Kind { get; }
-
-            public static CastOperator Parse(Parser parser)
+            public static Operator Assignment(Token op)
             {
-                if (parser.Match(ToKind.KwIs))
+                return new AssignmentOperator(op);
+            }
+
+            public static Operator From(AnyExpression middle)
+            {
+                return new ConditionalOperator(middle);
+            }
+
+            public class CastOperator : Operator
+            {
+                public static readonly TokenSet Firsts = new TokenSet(ToKind.KwAs, ToKind.KwIs);
+
+                public CastOperator(CastKind kind)
                 {
-                    return new CastOperator(CastKind.Is);
-                }
-                if (parser.Match(ToKind.KwAs))
-                {
-                    if (parser.Match(ToKind.Bang))
-                    {
-                        return new CastOperator(CastKind.AsForce);
-                    }
-                    if (parser.Match(ToKind.Quest))
-                    {
-                        return new CastOperator(CastKind.AsChain);
-                    }
-                    return new CastOperator(CastKind.As);
+                    Kind = kind;
                 }
 
-                parser.Consume(Firsts);
+                public CastKind Kind { get; }
 
-                throw new InvalidOperationException("<NEVER>");
-            }
-
-            public override string ToString()
-            {
-                return Kind switch
+                public static CastOperator Parse(Parser parser)
                 {
-                    CastKind.Is => "is",
-                    CastKind.As => "as",
-                    CastKind.AsForce => "as!",
-                    CastKind.AsChain => "as?",
-                    _ => throw new InvalidOperationException(),
-                };
-            }
-        }
+                    if (parser.Match(ToKind.KwIs))
+                    {
+                        return new CastOperator(CastKind.Is);
+                    }
+                    if (parser.Match(ToKind.KwAs))
+                    {
+                        if (parser.Match(ToKind.Bang))
+                        {
+                            return new CastOperator(CastKind.AsForce);
+                        }
+                        if (parser.Match(ToKind.Quest))
+                        {
+                            return new CastOperator(CastKind.AsChain);
+                        }
+                        return new CastOperator(CastKind.As);
+                    }
 
-        public class AssignmentOperator : Operator
-        {
-            public AssignmentOperator(Token @operator)
-            {
-                Operator = @operator;
-                Name = BaseName.From(Operator);
-            }
+                    parser.Consume(Firsts);
 
-            public Token Operator { get; }
-            public BaseName Name { get; }
+                    throw new InvalidOperationException("<NEVER>");
+                }
 
-            public override string ToString()
-            {
-                return $"{Operator}";
-            }
-        }
-
-        public class NamedOperator : Operator
-        {
-            public NamedOperator(Token @operator)
-            {
-                Operator = @operator;
-                Name = BaseName.From(Operator);
-            }
-
-            public Token Operator { get; }
-            public BaseName Name { get; }
-
-            public override string ToString()
-            {
-                return $"{Operator}";
-            }
-        }
-
-        public class ConditionalOperator : Operator
-        {
-            public ConditionalOperator(AnyExpression middle)
-            {
-                Middle = middle;
+                public override string ToString()
+                {
+                    return Kind switch
+                    {
+                        CastKind.Is => "is",
+                        CastKind.As => "as",
+                        CastKind.AsForce => "as!",
+                        CastKind.AsChain => "as?",
+                        _ => throw new InvalidOperationException(),
+                    };
+                }
             }
 
-            public AnyExpression Middle { get; }
-
-            public override string ToString()
+            public class AssignmentOperator : Operator
             {
-                return $"? {Middle} :";
+                public AssignmentOperator(Token @operator)
+                {
+                    Operator = @operator;
+                    Name = BaseName.From(Operator);
+                }
+
+                public Token Operator { get; }
+                public BaseName Name { get; }
+
+                public override string ToString()
+                {
+                    return $"{Operator}";
+                }
+            }
+
+            public class NamedOperator : Operator
+            {
+                public NamedOperator(Token @operator)
+                {
+                    Operator = @operator;
+                    Name = BaseName.From(Operator);
+                }
+
+                public Token Operator { get; }
+                public BaseName Name { get; }
+
+                public override string ToString()
+                {
+                    return $"{Operator}";
+                }
+            }
+
+            public class ConditionalOperator : Operator
+            {
+                public ConditionalOperator(AnyExpression middle)
+                {
+                    Middle = middle;
+                }
+
+                public AnyExpression Middle { get; }
+
+                public override string ToString()
+                {
+                    return $"? {Middle} :";
+                }
             }
         }
     }

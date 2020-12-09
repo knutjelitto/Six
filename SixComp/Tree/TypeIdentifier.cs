@@ -1,29 +1,31 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-
-    public class TypeIdentifier : ItemList<FullName>, AnyType
+    public partial class Tree
     {
-        public TypeIdentifier(List<FullName> names) : base(names) { }
-
-        public static TypeIdentifier Parse(Parser parser)
+        public class TypeIdentifier : ItemList<FullName>, AnyType
         {
-            var names = new List<FullName>();
+            public TypeIdentifier(List<FullName> names) : base(names) { }
 
-            do
+            public static TypeIdentifier Parse(Parser parser)
             {
-                var name = FullName.Parse(parser);
-                names.Add(name);
+                var names = new List<FullName>();
+
+                do
+                {
+                    var name = FullName.Parse(parser);
+                    names.Add(name);
+                }
+                while (parser.Match(ToKind.Dot));
+
+                return new TypeIdentifier(names);
             }
-            while (parser.Match(ToKind.Dot));
 
-            return new TypeIdentifier(names);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(".", this);
+            public override string ToString()
+            {
+                return string.Join(".", this);
+            }
         }
     }
 }

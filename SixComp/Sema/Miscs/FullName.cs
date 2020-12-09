@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using SixComp.Entities;
+using SixComp.Support;
 
 namespace SixComp.Sema
 {
@@ -25,9 +26,9 @@ namespace SixComp.Sema
                 Entity = candidates[0];
                 return;
             }
-            foreach (var candidate in candidates)
+            foreach (IEntity candidate in candidates)
             {
-                if (candidate.Generics?.Count == Arguments.Count)
+                if (candidate.Declaration is IWithGenerics with && with.Generics.Count == Arguments.Count)
                 {
                     Entity = candidate;
                     return;

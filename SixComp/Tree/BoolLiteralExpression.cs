@@ -1,20 +1,23 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class BoolLiteralExpression : AnyLiteralExpression
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.KwFalse, ToKind.KwTrue);
-
-        public BoolLiteralExpression(Token token) : base(token)
+        public class BoolLiteralExpression : AnyLiteralExpression
         {
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.KwFalse, ToKind.KwTrue);
 
-        public static BoolLiteralExpression Parse(Parser parser)
-        {
-            var token = parser.Consume(Firsts);
+            public BoolLiteralExpression(Token token) : base(token)
+            {
+            }
 
-            return new BoolLiteralExpression(token);
+            public static BoolLiteralExpression Parse(Parser parser)
+            {
+                var token = parser.Consume(Firsts);
+
+                return new BoolLiteralExpression(token);
+            }
         }
     }
 }

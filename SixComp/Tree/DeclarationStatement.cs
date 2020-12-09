@@ -1,36 +1,39 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class DeclarationStatement : AnyStatement, AnyDeclaration
+    public partial class Tree
     {
-        public DeclarationStatement(AnyDeclaration declaration)
+        public class DeclarationStatement : AnyStatement, AnyDeclaration
         {
-            Declaration = declaration;
-        }
-
-        public AnyDeclaration Declaration { get; }
-
-        public static DeclarationStatement? TryParse(Parser parser)
-        {
-            var declaration = AnyDeclaration.TryParse(parser, AnyDeclaration.Context.Statement);
-
-            if (declaration != null)
+            public DeclarationStatement(AnyDeclaration declaration)
             {
-                return new DeclarationStatement(declaration);
+                Declaration = declaration;
             }
 
-            return null;
-        }
+            public AnyDeclaration Declaration { get; }
 
-        public void Write(IWriter writer)
-        {
-            Declaration.Write(writer);
-        }
+            public static DeclarationStatement? TryParse(Parser parser)
+            {
+                var declaration = AnyDeclaration.TryParse(parser, AnyDeclaration.Context.Statement);
 
-        public override string ToString()
-        {
-            return $"{Declaration}";
+                if (declaration != null)
+                {
+                    return new DeclarationStatement(declaration);
+                }
+
+                return null;
+            }
+
+            public void Write(IWriter writer)
+            {
+                Declaration.Write(writer);
+            }
+
+            public override string ToString()
+            {
+                return $"{Declaration}";
+            }
         }
     }
 }

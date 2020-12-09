@@ -1,41 +1,44 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ReturnStatement : AnyStatement
+    public partial class Tree
     {
-        public ReturnStatement(AnyExpression? value)
+        public class ReturnStatement : AnyStatement
         {
-            Value = value;
-        }
-
-        public AnyExpression? Value { get; }
-
-        public static ReturnStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwReturn);
-
-            AnyExpression? value = null;
-
-            if (!parser.CurrentToken.NewlineBefore)
+            public ReturnStatement(AnyExpression? value)
             {
-                value = AnyExpression.TryParse(parser);
+                Value = value;
             }
 
-            return new ReturnStatement(value);
-        }
+            public AnyExpression? Value { get; }
 
-        public void Write(IWriter writer)
-        {
-            var value = Value == null ? string.Empty : $" {Value.StripParents()}";
+            public static ReturnStatement Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwReturn);
 
-            writer.WriteLine($"return{value}");
-        }
+                AnyExpression? value = null;
 
-        public override string ToString()
-        {
-            var value = Value == null ? string.Empty : $" {Value}";
-            return $"return{value}";
+                if (!parser.CurrentToken.NewlineBefore)
+                {
+                    value = AnyExpression.TryParse(parser);
+                }
+
+                return new ReturnStatement(value);
+            }
+
+            public void Write(IWriter writer)
+            {
+                var value = Value == null ? string.Empty : $" {Value.StripParents()}";
+
+                writer.WriteLine($"return{value}");
+            }
+
+            public override string ToString()
+            {
+                var value = Value == null ? string.Empty : $" {Value}";
+                return $"return{value}";
+            }
         }
     }
 }

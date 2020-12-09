@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ConditionList : ExpressionItemList<AnyCondition>, AnyExpression
+    public partial class Tree
     {
-        public ConditionList(List<AnyCondition> conditions) : base(conditions) { }
-        public ConditionList() { }
-
-        public static ConditionList Parse(Parser parser)
+        public class ConditionList : ExpressionItemList<AnyCondition>, AnyExpression
         {
-            var conditions = new List<AnyCondition>();
+            public ConditionList(List<AnyCondition> conditions) : base(conditions) { }
+            public ConditionList() { }
 
-            do
+            public static ConditionList Parse(Parser parser)
             {
-                var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ConditionList)}");
-                conditions.Add(condition);
+                var conditions = new List<AnyCondition>();
+
+                do
+                {
+                    var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ConditionList)}");
+                    conditions.Add(condition);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new ConditionList(conditions);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new ConditionList(conditions);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

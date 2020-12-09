@@ -1,26 +1,29 @@
 ﻿using System;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ExpressionPattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        private ExpressionPattern(AnyExpression expression)
+        public class ExpressionPattern : SyntaxNode, AnyPattern
         {
-            Expression = expression;
-        }
+            private ExpressionPattern(AnyExpression expression)
+            {
+                Expression = expression;
+            }
 
-        public AnyExpression     Expression { get; }
+            public AnyExpression Expression { get; }
 
-        public static ExpressionPattern Parse(Parser parser)
-        {
-            var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ExpressionPattern)}");
+            public static ExpressionPattern Parse(Parser parser)
+            {
+                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ExpressionPattern)}");
 
-            return new ExpressionPattern(expression);
-        }
+                return new ExpressionPattern(expression);
+            }
 
-        public override string ToString()
-        {
-            return $"{Expression}";
+            public override string ToString()
+            {
+                return $"{Expression}";
+            }
         }
     }
 }

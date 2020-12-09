@@ -2,33 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ArgumentList : ItemList<Argument>
+    public partial class Tree
     {
-        public ArgumentList(List<Argument> arguments) : base(arguments) { }
-        public ArgumentList() { }
-
-        public static ArgumentList Parse(Parser parser)
+        public class ArgumentList : ItemList<Argument>
         {
-            var arguments = new List<Argument>();
+            public ArgumentList(List<Argument> arguments) : base(arguments) { }
+            public ArgumentList() { }
 
-            if (parser.Current != ToKind.RParent)
+            public static ArgumentList Parse(Parser parser)
             {
-                do
+                var arguments = new List<Argument>();
+
+                if (parser.Current != ToKind.RParent)
                 {
-                    var argument = Argument.Parse(parser);
-                    arguments.Add(argument);
+                    do
+                    {
+                        var argument = Argument.Parse(parser);
+                        arguments.Add(argument);
+                    }
+                    while (parser.Match(ToKind.Comma));
                 }
-                while (parser.Match(ToKind.Comma));
+
+                return new ArgumentList(arguments);
             }
 
-            return new ArgumentList(arguments);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this.Select(a => a.StripParents()));
+            public override string ToString()
+            {
+                return string.Join(", ", this.Select(a => a.StripParents()));
+            }
         }
     }
 }

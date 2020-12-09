@@ -1,44 +1,47 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ArgumentNameClause
+    public partial class Tree
     {
-        public ArgumentNameClause(ArgumentNameList names)
+        public class ArgumentNameClause
         {
-            Names = names;
-        }
-
-        public ArgumentNameClause() 
-            : this(new ArgumentNameList())
-        {
-        }
-
-        public ArgumentNameList Names { get; }
-        public bool Missing => Names.Missing;
-
-        public static ArgumentNameClause? TryParse(Parser parser)
-        {
-            var offset = parser.Offset;
-
-            if (parser.Match(ToKind.LParent))
+            public ArgumentNameClause(ArgumentNameList names)
             {
-                var names = ArgumentNameList.TryParse(parser, new TokenSet(ToKind.RParent));
-                if (names == null)
-                {
-                    parser.Offset = offset;
-                    return null;
-                }
-                parser.Consume(ToKind.RParent);
-                return new ArgumentNameClause(names);
+                Names = names;
             }
 
-            return null;
-        }
+            public ArgumentNameClause()
+                : this(new ArgumentNameList())
+            {
+            }
 
-        public override string ToString()
-        {
-            return Missing ? string.Empty : $"({Names})";
+            public ArgumentNameList Names { get; }
+            public bool Missing => Names.Missing;
+
+            public static ArgumentNameClause? TryParse(Parser parser)
+            {
+                var offset = parser.Offset;
+
+                if (parser.Match(ToKind.LParent))
+                {
+                    var names = ArgumentNameList.TryParse(parser, new TokenSet(ToKind.RParent));
+                    if (names == null)
+                    {
+                        parser.Offset = offset;
+                        return null;
+                    }
+                    parser.Consume(ToKind.RParent);
+                    return new ArgumentNameClause(names);
+                }
+
+                return null;
+            }
+
+            public override string ToString()
+            {
+                return Missing ? string.Empty : $"({Names})";
+            }
         }
     }
 }

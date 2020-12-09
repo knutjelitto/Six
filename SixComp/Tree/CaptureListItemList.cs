@@ -1,24 +1,27 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaptureListItemList : ItemList<CaptureListItem>
+    public partial class Tree
     {
-        public CaptureListItemList(List<CaptureListItem> captures) : base(captures) { }
-        public CaptureListItemList() { }
-
-        public static CaptureListItemList Parse(Parser parser)
+        public class CaptureListItemList : ItemList<CaptureListItem>
         {
-            var captures = new List<CaptureListItem>();
+            public CaptureListItemList(List<CaptureListItem> captures) : base(captures) { }
+            public CaptureListItemList() { }
 
-            do
+            public static CaptureListItemList Parse(Parser parser)
             {
-                var capture = CaptureListItem.Parse(parser);
-                captures.Add(capture);
-            }
-            while (parser.Match(ToKind.Comma));
+                var captures = new List<CaptureListItem>();
 
-            return new CaptureListItemList(captures);
+                do
+                {
+                    var capture = CaptureListItem.Parse(parser);
+                    captures.Add(capture);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new CaptureListItemList(captures);
+            }
         }
     }
 }

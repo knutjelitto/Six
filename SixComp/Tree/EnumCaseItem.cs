@@ -1,47 +1,50 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class EnumCaseItem : AnyDeclaration
+    public partial class Tree
     {
-        public EnumCaseItem(BaseName name, TupleType? types, Initializer? initializer)
+        public class EnumCaseItem : AnyDeclaration
         {
-            Name = name;
-            Tuple = types;
-            Initializer = initializer;
-        }
-
-        public BaseName Name { get; }
-        public TupleType? Tuple { get; }
-        public Initializer? Initializer { get; }
-
-        public static EnumCaseItem Parse(Parser parser)
-        {
-            var name = BaseName.Parse(parser);
-            TupleType? types = null;
-            Initializer? initializer = null;
-            if (parser.Current == ToKind.LParent)
+            public EnumCaseItem(BaseName name, TupleType? types, Initializer? initializer)
             {
-                types = TupleType.Parse(parser);
-            }
-            else if (parser.Current == ToKind.Assign)
-            {
-                initializer = Initializer.Parse(parser);
+                Name = name;
+                Tuple = types;
+                Initializer = initializer;
             }
 
-            return new EnumCaseItem(name, types, initializer);
-        }
+            public BaseName Name { get; }
+            public TupleType? Tuple { get; }
+            public Initializer? Initializer { get; }
 
-        public void Write(IWriter writer)
-        {
-            var types = Tuple?.ToString() ?? string.Empty;
+            public static EnumCaseItem Parse(Parser parser)
+            {
+                var name = BaseName.Parse(parser);
+                TupleType? types = null;
+                Initializer? initializer = null;
+                if (parser.Current == ToKind.LParent)
+                {
+                    types = TupleType.Parse(parser);
+                }
+                else if (parser.Current == ToKind.Assign)
+                {
+                    initializer = Initializer.Parse(parser);
+                }
 
-            writer.WriteLine($"case {Name}{types}");
-        }
+                return new EnumCaseItem(name, types, initializer);
+            }
 
-        public override string ToString()
-        {
-            return $"{Name}{Tuple}{Initializer}";
+            public void Write(IWriter writer)
+            {
+                var types = Tuple?.ToString() ?? string.Empty;
+
+                writer.WriteLine($"case {Name}{types}");
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}{Tuple}{Initializer}";
+            }
         }
     }
 }

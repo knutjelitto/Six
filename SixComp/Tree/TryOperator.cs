@@ -1,49 +1,52 @@
 ﻿using SixComp.Common;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TryOperator : SyntaxNode
+    public partial class Tree
     {
-        public TryOperator(TryKind kind)
+        public class TryOperator : SyntaxNode
         {
-            Kind = kind;
-        }
-
-        public TryKind Kind { get; }
-
-        public static TryOperator Parse(Parser parser)
-        {
-            var tryKind = TryKind.None;
-
-            if (parser.Match(ToKind.KwTry))
+            public TryOperator(TryKind kind)
             {
-                if (parser.Match(ToKind.Bang))
-                {
-                    tryKind = TryKind.TryForce;
-                }
-                else if (parser.Match(ToKind.Quest))
-                {
-                    tryKind = TryKind.TryChain;
-                }
-                else
-                {
-                    tryKind = TryKind.Try;
-                }
+                Kind = kind;
             }
 
-            return new TryOperator(tryKind);
-        }
+            public TryKind Kind { get; }
 
-        public override string ToString()
-        {
-            return Kind switch
+            public static TryOperator Parse(Parser parser)
             {
-                TryKind.None => string.Empty,
-                TryKind.Try => "try ",
-                TryKind.TryForce => "try! ",
-                TryKind.TryChain => "try? ",
-                _ => "<<try???>>",
-            };
+                var tryKind = TryKind.None;
+
+                if (parser.Match(ToKind.KwTry))
+                {
+                    if (parser.Match(ToKind.Bang))
+                    {
+                        tryKind = TryKind.TryForce;
+                    }
+                    else if (parser.Match(ToKind.Quest))
+                    {
+                        tryKind = TryKind.TryChain;
+                    }
+                    else
+                    {
+                        tryKind = TryKind.Try;
+                    }
+                }
+
+                return new TryOperator(tryKind);
+            }
+
+            public override string ToString()
+            {
+                return Kind switch
+                {
+                    TryKind.None => string.Empty,
+                    TryKind.Try => "try ",
+                    TryKind.TryForce => "try! ",
+                    TryKind.TryChain => "try? ",
+                    _ => "<<try???>>",
+                };
+            }
         }
     }
 }

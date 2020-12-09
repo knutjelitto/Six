@@ -1,29 +1,32 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class FunctionResult : AnyType
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.Arrow);
-
-        private FunctionResult(AnyType type)
+        public class FunctionResult : AnyType
         {
-            Type = type;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.Arrow);
 
-        public AnyType Type { get; }
+            private FunctionResult(AnyType type)
+            {
+                Type = type;
+            }
 
-        public static FunctionResult Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Arrow);
-            var type = AnyType.Parse(parser);
+            public AnyType Type { get; }
 
-            return new FunctionResult(type);
-        }
+            public static FunctionResult Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Arrow);
+                var type = AnyType.Parse(parser);
 
-        public override string ToString()
-        {
-            return $" -> {Type}";
+                return new FunctionResult(type);
+            }
+
+            public override string ToString()
+            {
+                return $" -> {Type}";
+            }
         }
     }
 }

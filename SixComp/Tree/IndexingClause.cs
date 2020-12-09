@@ -1,28 +1,31 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class IndexingClause
+    public partial class Tree
     {
-        public IndexingClause(ArgumentList arguments)
+        public class IndexingClause
         {
-            Arguments = arguments;
-        }
+            public IndexingClause(ArgumentList arguments)
+            {
+                Arguments = arguments;
+            }
 
-        public ArgumentList Arguments { get; }
+            public ArgumentList Arguments { get; }
 
-        public static IndexingClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LBracket);
+            public static IndexingClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LBracket);
 
-            var arguments = ArgumentList.Parse(parser);
+                var arguments = ArgumentList.Parse(parser);
 
-            parser.Consume(ToKind.RBracket);
+                parser.Consume(ToKind.RBracket);
 
-            return new IndexingClause(arguments);
-        }
+                return new IndexingClause(arguments);
+            }
 
-        public override string ToString()
-        {
-            return $"[{Arguments}]";
+            public override string ToString()
+            {
+                return $"[{Arguments}]";
+            }
         }
     }
 }

@@ -1,45 +1,48 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class CcBlock : AnyDeclaration
+    public partial class Tree
     {
-        public CcBlock()
+        public class CcBlock : AnyDeclaration
         {
-        }
-
-        private static CcBlock Parse(Parser parser, bool consumeIf)
-        {
-            if (consumeIf)
+            public CcBlock()
             {
-                parser.Consume(ToKind.CdIf);
             }
 
-            while (parser.Current != ToKind.CdEndif)
+            private static CcBlock Parse(Parser parser, bool consumeIf)
             {
-                if (parser.Current == ToKind.CdIf)
+                if (consumeIf)
                 {
-                    CcBlock.Parse(parser, true);
+                    parser.Consume(ToKind.CdIf);
                 }
-                else
+
+                while (parser.Current != ToKind.CdEndif)
                 {
-                    parser.ConsumeAny();
+                    if (parser.Current == ToKind.CdIf)
+                    {
+                        CcBlock.Parse(parser, true);
+                    }
+                    else
+                    {
+                        parser.ConsumeAny();
+                    }
                 }
+
+                parser.Consume(ToKind.CdEndif);
+
+                return new CcBlock();
             }
 
-            parser.Consume(ToKind.CdEndif);
-
-            return new CcBlock();
-        }
-
-        public static void Ignore(Parser parser, bool force)
-        {
-            //TODO: completely ignored `#if´
-            if (force)
+            public static void Ignore(Parser parser, bool force)
             {
-                Parse(parser, false);
-            }
-            else if (parser.Current == ToKind.CdIf)
-            {
-                Parse(parser, true);
+                //TODO: completely ignored `#if´
+                if (force)
+                {
+                    Parse(parser, false);
+                }
+                else if (parser.Current == ToKind.CdIf)
+                {
+                    Parse(parser, true);
+                }
             }
         }
     }

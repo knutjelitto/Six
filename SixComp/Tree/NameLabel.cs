@@ -1,25 +1,28 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class NameLabel
+    public partial class Tree
     {
-        public NameLabel(BaseName name)
+        public class NameLabel
         {
-            Name = name;
-        }
+            public NameLabel(BaseName name)
+            {
+                Name = name;
+            }
 
-        public BaseName Name { get; }
+            public BaseName Name { get; }
 
-        public static NameLabel Parse(Parser parser)
-        {
-            var name = BaseName.Parse(parser);
-            parser.Consume(ToKind.Colon);
+            public static NameLabel Parse(Parser parser)
+            {
+                var name = BaseName.Parse(parser);
+                parser.Consume(ToKind.Colon);
 
-            return new NameLabel(name);
-        }
+                return new NameLabel(name);
+            }
 
-        public override string ToString()
-        {
-            return $"{Name}: ";
+            public override string ToString()
+            {
+                return $"{Name}: ";
+            }
         }
     }
 }

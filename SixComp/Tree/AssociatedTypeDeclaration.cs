@@ -1,41 +1,44 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class AssociatedTypeDeclaration : AnyDeclaration
+    public partial class Tree
     {
-        public AssociatedTypeDeclaration(Prefix prefix, BaseName name, TypeInheritanceClause inheritance, TypealiasAssignment? assignment, RequirementClause requirements)
+        public class AssociatedTypeDeclaration : AnyDeclaration
         {
-            Prefix = prefix;
-            Name = name;
-            Inheritance = inheritance;
-            Assignment = assignment;
-            Requirements = requirements;
-        }
+            public AssociatedTypeDeclaration(Prefix prefix, BaseName name, TypeInheritanceClause inheritance, TypealiasAssignment? assignment, RequirementClause requirements)
+            {
+                Prefix = prefix;
+                Name = name;
+                Inheritance = inheritance;
+                Assignment = assignment;
+                Requirements = requirements;
+            }
 
-        public Prefix Prefix { get; }
-        public BaseName Name { get; }
-        public TypeInheritanceClause Inheritance { get; }
-        public TypealiasAssignment? Assignment { get; }
-        public RequirementClause Requirements { get; }
+            public Prefix Prefix { get; }
+            public BaseName Name { get; }
+            public TypeInheritanceClause Inheritance { get; }
+            public TypealiasAssignment? Assignment { get; }
+            public RequirementClause Requirements { get; }
 
-        public static AssociatedTypeDeclaration Parse(Parser parser, Prefix prefix)
-        {
-            // already parsed //parser.Consume(ToKind.KwAssociatedType);
+            public static AssociatedTypeDeclaration Parse(Parser parser, Prefix prefix)
+            {
+                // already parsed //parser.Consume(ToKind.KwAssociatedType);
 
-            var name = BaseName.Parse(parser);
-            var inheritance = parser.TryList(TypeInheritanceClause.Firsts, TypeInheritanceClause.Parse);
-            var assignment = parser.Try(TypealiasAssignment.Firsts, TypealiasAssignment.Parse);
-            var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
+                var name = BaseName.Parse(parser);
+                var inheritance = parser.TryList(TypeInheritanceClause.Firsts, TypeInheritanceClause.Parse);
+                var assignment = parser.Try(TypealiasAssignment.Firsts, TypealiasAssignment.Parse);
+                var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
 
-            return new AssociatedTypeDeclaration(prefix, name, inheritance, assignment, requirements);
-        }
+                return new AssociatedTypeDeclaration(prefix, name, inheritance, assignment, requirements);
+            }
 
-        public void Write(IWriter writer)
-        {
-            Prefix.Write(writer);
-            writer.WriteLine($"{Name}{Inheritance}{Assignment}");
-            Requirements.Write(writer);
+            public void Write(IWriter writer)
+            {
+                Prefix.Write(writer);
+                writer.WriteLine($"{Name}{Inheritance}{Assignment}");
+                Requirements.Write(writer);
+            }
         }
     }
 }

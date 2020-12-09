@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ExpressionItemList<T> : ItemList<T>, AnyExpression
-        where T : AnyExpression
+    public partial class Tree
     {
-        public ExpressionItemList(List<T> items) : base(items) { }
-        public ExpressionItemList() { }
-
-        public AnyExpression? LastExpression
+        public class ExpressionItemList<T> : ItemList<T>, AnyExpression
+        where T : AnyExpression
         {
-            get
+            public ExpressionItemList(List<T> items) : base(items) { }
+            public ExpressionItemList() { }
+
+            public AnyExpression? LastExpression
             {
-                var last = this.LastOrDefault()?.LastExpression;
-                return last;
+                get
+                {
+                    var last = this.LastOrDefault()?.LastExpression;
+                    return last;
+                }
             }
         }
     }

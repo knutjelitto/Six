@@ -1,43 +1,46 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ClosureParameterList : ItemList<ClosureParameter>
+    public partial class Tree
     {
-        public ClosureParameterList(List<ClosureParameter> parameters) : base(parameters) { }
-        public ClosureParameterList() { }
-
-        public bool OneNameOnly => Count == 1 && this[0].NameOnly;
-
-        public static ClosureParameterList? TryParse(Parser parser, bool nameOnly)
+        public class ClosureParameterList : ItemList<ClosureParameter>
         {
-            var parameters = new List<ClosureParameter>();
+            public ClosureParameterList(List<ClosureParameter> parameters) : base(parameters) { }
+            public ClosureParameterList() { }
 
-            if (parser.Current == ToKind.RParent)
+            public bool OneNameOnly => Count == 1 && this[0].NameOnly;
+
+            public static ClosureParameterList? TryParse(Parser parser, bool nameOnly)
             {
+                var parameters = new List<ClosureParameter>();
+
+                if (parser.Current == ToKind.RParent)
+                {
+                    return new ClosureParameterList(parameters);
+                }
+
+                var offset = parser.Offset;
+
+                do
+                {
+                    var parameter = ClosureParameter.TryParse(parser, nameOnly);
+                    if (parameter == null)
+                    {
+                        parser.Offset = offset;
+                        return null;
+                    }
+                    parameters.Add(parameter);
+                }
+                while (parser.Match(ToKind.Comma));
+
                 return new ClosureParameterList(parameters);
             }
 
-            var offset = parser.Offset;
-
-            do
+            public override string ToString()
             {
-                var parameter = ClosureParameter.TryParse(parser, nameOnly);
-                if (parameter == null)
-                {
-                    parser.Offset = offset;
-                    return null;
-                }
-                parameters.Add(parameter);
+                return string.Join(", ", this);
             }
-            while (parser.Match(ToKind.Comma));
-
-            return new ClosureParameterList(parameters);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
         }
     }
 }

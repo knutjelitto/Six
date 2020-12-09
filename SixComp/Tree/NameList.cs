@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class NameList : ItemList<BaseName>
+    public partial class Tree
     {
-        private NameList(List<BaseName> names) : base(names) { }
-        public NameList() { }
-
-        public static NameList Parse(Parser parser)
+        public class NameList : ItemList<BaseName>
         {
-            var names = new List<BaseName>();
+            private NameList(List<BaseName> names) : base(names) { }
+            public NameList() { }
 
-            do
+            public static NameList Parse(Parser parser)
             {
-                var name = BaseName.Parse(parser);
-                names.Add(name);
+                var names = new List<BaseName>();
+
+                do
+                {
+                    var name = BaseName.Parse(parser);
+                    names.Add(name);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                return new NameList(names);
             }
-            while (parser.Match(ToKind.Comma));
 
-            return new NameList(names);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this);
+            public override string ToString()
+            {
+                return string.Join(", ", this);
+            }
         }
     }
 }

@@ -1,34 +1,37 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class GenericParameterClause : IWritable
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.Less);
-
-        public GenericParameterClause(GenericParameterList parameters)
+        public class GenericParameterClause : IWritable
         {
-            Parameters = parameters;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.Less);
 
-        public GenericParameterClause() : this(new GenericParameterList()) { }
+            public GenericParameterClause(GenericParameterList parameters)
+            {
+                Parameters = parameters;
+            }
 
-        public GenericParameterList Parameters { get; }
+            public GenericParameterClause() : this(new GenericParameterList()) { }
 
-        public static GenericParameterClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Less);
+            public GenericParameterList Parameters { get; }
 
-            var parameters = GenericParameterList.Parse(parser);
+            public static GenericParameterClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Less);
 
-            parser.ConsumeCarefully(ToKind.Greater);
+                var parameters = GenericParameterList.Parse(parser);
 
-            return new GenericParameterClause(parameters);
-        }
+                parser.ConsumeCarefully(ToKind.Greater);
 
-        public override string ToString()
-        {
-            return Parameters.Missing ? string.Empty : $"<{Parameters}>";
+                return new GenericParameterClause(parameters);
+            }
+
+            public override string ToString()
+            {
+                return Parameters.Missing ? string.Empty : $"<{Parameters}>";
+            }
         }
     }
 }

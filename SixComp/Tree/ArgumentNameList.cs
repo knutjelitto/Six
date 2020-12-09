@@ -1,34 +1,37 @@
 ﻿using SixComp.Support;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ArgumentNameList : ItemList<ArgumentName>
+    public partial class Tree
     {
-        public ArgumentNameList(List<ArgumentName> names) : base(names) { }
-        public ArgumentNameList() { }
-
-        public static ArgumentNameList? TryParse(Parser parser, TokenSet follow)
+        public class ArgumentNameList : ItemList<ArgumentName>
         {
-            var names = new List<ArgumentName>();
+            public ArgumentNameList(List<ArgumentName> names) : base(names) { }
+            public ArgumentNameList() { }
 
-            do
+            public static ArgumentNameList? TryParse(Parser parser, TokenSet follow)
             {
-                var name = ArgumentName.TryParse(parser);
-                if (name == null)
+                var names = new List<ArgumentName>();
+
+                do
                 {
-                    return null;
+                    var name = ArgumentName.TryParse(parser);
+                    if (name == null)
+                    {
+                        return null;
+                    }
+                    names.Add(name);
                 }
-                names.Add(name);
+                while (!follow.Contains(parser.Current));
+
+                return new ArgumentNameList(names);
             }
-            while (!follow.Contains(parser.Current));
 
-            return new ArgumentNameList(names);
-        }
-
-        public override string ToString()
-        {
-            return string.Join(string.Empty, this);
+            public override string ToString()
+            {
+                return string.Join(string.Empty, this);
+            }
         }
     }
 }

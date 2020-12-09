@@ -1,26 +1,29 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class ContinueStatement : AnyStatement
+    public partial class Tree
     {
-        public ContinueStatement(BaseName? label)
+        public class ContinueStatement : AnyStatement
         {
-            Label = label;
-        }
-
-        public BaseName? Label { get; }
-
-        public static BreakStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwContinue);
-
-            var label = (BaseName?)null;
-
-            if (parser.Current == ToKind.Name && !parser.CurrentToken.NewlineBefore)
+            public ContinueStatement(BaseName? label)
             {
-                label = BaseName.Parse(parser);
+                Label = label;
             }
 
-            return new BreakStatement(label);
+            public BaseName? Label { get; }
+
+            public static BreakStatement Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwContinue);
+
+                var label = (BaseName?)null;
+
+                if (parser.Current == ToKind.Name && !parser.CurrentToken.NewlineBefore)
+                {
+                    label = BaseName.Parse(parser);
+                }
+
+                return new BreakStatement(label);
+            }
         }
     }
 }

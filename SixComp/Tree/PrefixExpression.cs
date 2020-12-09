@@ -1,30 +1,33 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class PrefixExpression : BaseExpression, AnyPrefixExpression
+    public partial class Tree
     {
-        public PrefixExpression(Token op, AnyExpression operand)
+        public class PrefixExpression : BaseExpression, AnyPrefixExpression
         {
-            Op = op;
-            Operator = BaseName.From(Op);
-            Operand = operand;
-        }
-
-        public Token Op { get; }
-        public BaseName Operator { get; }
-        public AnyExpression Operand { get; }
-
-        public override AnyExpression? LastExpression
-        {
-            get
+            public PrefixExpression(Token op, AnyExpression operand)
             {
-                var last = Operand.LastExpression;
-                return last;
+                Op = op;
+                Operator = BaseName.From(Op);
+                Operand = operand;
             }
-        }
 
-        public override string ToString()
-        {
-            return $"{Op}{Operand}";
+            public Token Op { get; }
+            public BaseName Operator { get; }
+            public AnyExpression Operand { get; }
+
+            public override AnyExpression? LastExpression
+            {
+                get
+                {
+                    var last = Operand.LastExpression;
+                    return last;
+                }
+            }
+
+            public override string ToString()
+            {
+                return $"{Op}{Operand}";
+            }
         }
     }
 }

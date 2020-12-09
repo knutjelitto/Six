@@ -1,28 +1,31 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class SelectExpression : BaseExpression, AnyExpression
+    public partial class Tree
     {
-        public SelectExpression(AnyExpression left, BaseName name)
+        public class SelectExpression : BaseExpression, AnyExpression
         {
-            Left = left;
-            Name = name;
-        }
+            public SelectExpression(AnyExpression left, BaseName name)
+            {
+                Left = left;
+                Name = name;
+            }
 
-        public AnyExpression Left { get; }
-        public BaseName Name { get; }
+            public AnyExpression Left { get; }
+            public BaseName Name { get; }
 
-        public static SelectExpression Parse(Parser parser, AnyExpression left)
-        {
-            parser.Consume(ToKind.Dot);
+            public static SelectExpression Parse(Parser parser, AnyExpression left)
+            {
+                parser.Consume(ToKind.Dot);
 
-            var name = BaseName.Parse(parser);
+                var name = BaseName.Parse(parser);
 
-            return new SelectExpression(left, name);
-        }
+                return new SelectExpression(left, name);
+            }
 
-        public override string ToString()
-        {
-            return $"{Left}.{Name}";
+            public override string ToString()
+            {
+                return $"{Left}.{Name}";
+            }
         }
     }
 }

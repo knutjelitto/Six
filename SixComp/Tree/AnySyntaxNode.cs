@@ -1,9 +1,12 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public interface AnySyntaxNode : IWritable
+    public partial class Tree
     {
-        NodeData? Data { get; }
+        public interface AnySyntaxNode : IWritable
+        {
+            NodeData? Data { get; }
+        }
     }
 }

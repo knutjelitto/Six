@@ -1,14 +1,17 @@
-﻿namespace SixComp.Tree
+﻿namespace SixComp
 {
-    public class NilLiteralExpression : AnyLiteralExpression
+    public partial class Tree
     {
-        public NilLiteralExpression(Token token) : base(token) { }
-
-        public static NilLiteralExpression Parse(Parser parser)
+        public class NilLiteralExpression : AnyLiteralExpression
         {
-            var token = parser.Consume(ToKind.KwNil);
+            public NilLiteralExpression(Token token) : base(token) { }
 
-            return new NilLiteralExpression(token);
+            public static NilLiteralExpression Parse(Parser parser)
+            {
+                var token = parser.Consume(ToKind.KwNil);
+
+                return new NilLiteralExpression(token);
+            }
         }
     }
 }

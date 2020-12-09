@@ -1,36 +1,39 @@
 ﻿using SixComp.Support;
 using System.Diagnostics;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TuplePattern : SyntaxNode, AnyPattern
+    public partial class Tree
     {
-        private TuplePattern(TuplePatternElementList elements)
+        public class TuplePattern : SyntaxNode, AnyPattern
         {
-            Elements = elements;
-        }
-
-        public TuplePatternElementList Elements { get; }
-
-        public static TuplePattern Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LParent);
-
-            if (parser.CurrentToken.Text == "let")
+            private TuplePattern(TuplePatternElementList elements)
             {
-                Debug.Assert(true);
+                Elements = elements;
             }
 
-            var elements = TuplePatternElementList.Parse(parser, new TokenSet(ToKind.RParent));
+            public TuplePatternElementList Elements { get; }
 
-            parser.Consume(ToKind.RParent);
+            public static TuplePattern Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LParent);
 
-            return new TuplePattern(elements);
-        }
+                if (parser.CurrentToken.Text == "let")
+                {
+                    Debug.Assert(true);
+                }
 
-        public override string ToString()
-        {
-            return $"({Elements})";
+                var elements = TuplePatternElementList.Parse(parser, new TokenSet(ToKind.RParent));
+
+                parser.Consume(ToKind.RParent);
+
+                return new TuplePattern(elements);
+            }
+
+            public override string ToString()
+            {
+                return $"({Elements})";
+            }
         }
     }
 }

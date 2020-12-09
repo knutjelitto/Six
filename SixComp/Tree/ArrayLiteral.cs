@@ -1,39 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ArrayLiteral : ItemList<AnyExpression>, AnyPrimaryExpression
+    public partial class Tree
     {
-        public ArrayLiteral(List<AnyExpression> items)
-            : base(items)
+        public class ArrayLiteral : ItemList<AnyExpression>, AnyPrimaryExpression
         {
-        }
-
-        public AnyExpression? LastExpression => this;
-
-        public static ArrayLiteral Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LBracket);
-            var items = new List<AnyExpression>();
-            if (parser.Match(ToKind.RBracket))
+            public ArrayLiteral(List<AnyExpression> items)
+                : base(items)
             {
-                return new ArrayLiteral(items); // Empty
             }
-            do
+
+            public AnyExpression? LastExpression => this;
+
+            public static ArrayLiteral Parse(Parser parser)
             {
-                if (parser.Current == ToKind.RBracket)
+                parser.Consume(ToKind.LBracket);
+                var items = new List<AnyExpression>();
+                if (parser.Match(ToKind.RBracket))
                 {
-                    break; // additional ','
+                    return new ArrayLiteral(items); // Empty
                 }
-                var item = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
-                items.Add(item);
+                do
+                {
+                    if (parser.Current == ToKind.RBracket)
+                    {
+                        break; // additional ','
+                    }
+                    var item = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
+                    items.Add(item);
+                }
+                while (parser.Match(ToKind.Comma));
+
+                parser.Match(ToKind.RBracket);
+
+                return new ArrayLiteral(items);
             }
-            while (parser.Match(ToKind.Comma));
-
-            parser.Match(ToKind.RBracket);
-
-            return new ArrayLiteral(items);
         }
     }
 }

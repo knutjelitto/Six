@@ -1,36 +1,39 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class ExpressionStatement : AnyStatement
+    public partial class Tree
     {
-        public ExpressionStatement(AnyExpression expression)
+        public class ExpressionStatement : AnyStatement
         {
-            Expression = expression;
-        }
-
-        public AnyExpression Expression { get; }
-
-        public static ExpressionStatement? TryParse(Parser parser)
-        {
-            var expression = AnyExpression.TryParse(parser);
-
-            if (expression == null)
+            public ExpressionStatement(AnyExpression expression)
             {
-                return null;
+                Expression = expression;
             }
 
-            return new ExpressionStatement(expression);
-        }
+            public AnyExpression Expression { get; }
 
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"{Expression.StripParents()}");
-        }
+            public static ExpressionStatement? TryParse(Parser parser)
+            {
+                var expression = AnyExpression.TryParse(parser);
 
-        public override string ToString()
-        {
-            return $"{Expression}";
+                if (expression == null)
+                {
+                    return null;
+                }
+
+                return new ExpressionStatement(expression);
+            }
+
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"{Expression.StripParents()}");
+            }
+
+            public override string ToString()
+            {
+                return $"{Expression}";
+            }
         }
     }
 }

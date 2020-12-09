@@ -1,30 +1,33 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class TypealiasAssignment : AnyType
+    public partial class Tree
     {
-        public static TokenSet Firsts = new TokenSet(ToKind.Assign);
-
-        private TypealiasAssignment(AnyType type)
+        public class TypealiasAssignment : AnyType
         {
-            Type = type;
-        }
+            public static TokenSet Firsts = new TokenSet(ToKind.Assign);
 
-        public AnyType Type { get; }
+            private TypealiasAssignment(AnyType type)
+            {
+                Type = type;
+            }
 
-        public static TypealiasAssignment Parse(Parser parser)
-        {
-            parser.Consume(ToKind.Assign);
+            public AnyType Type { get; }
 
-            var type = AnyType.Parse(parser);
+            public static TypealiasAssignment Parse(Parser parser)
+            {
+                parser.Consume(ToKind.Assign);
 
-            return new TypealiasAssignment(type);
-        }
+                var type = AnyType.Parse(parser);
 
-        public override string ToString()
-        {
-            return $" = {Type}";
+                return new TypealiasAssignment(type);
+            }
+
+            public override string ToString()
+            {
+                return $" = {Type}";
+            }
         }
     }
 }

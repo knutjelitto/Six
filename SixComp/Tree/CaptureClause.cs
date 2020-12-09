@@ -1,41 +1,44 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class CaptureClause
+    public partial class Tree
     {
-        public static readonly TokenSet Firsts = new TokenSet(ToKind.LBracket);
-
-        public CaptureClause(CaptureListItemList captures)
+        public class CaptureClause
         {
-            Captures = captures;
-        }
+            public static readonly TokenSet Firsts = new TokenSet(ToKind.LBracket);
 
-        public CaptureClause()
-            : this(new CaptureListItemList())
-        {
-        }
-
-        public bool Missing => Captures.Missing;
-
-        public CaptureListItemList Captures { get; }
-
-        public static CaptureClause Parse(Parser parser)
-        {
-            parser.Consume(ToKind.LBracket);
-            var captures = CaptureListItemList.Parse(parser);
-            parser.Consume(ToKind.RBracket);
-
-            return new CaptureClause(captures);
-        }
-
-        public override string ToString()
-        {
-            if (Missing)
+            public CaptureClause(CaptureListItemList captures)
             {
-                return string.Empty;
+                Captures = captures;
             }
-            return $"[{Captures}]";
+
+            public CaptureClause()
+                : this(new CaptureListItemList())
+            {
+            }
+
+            public bool Missing => Captures.Missing;
+
+            public CaptureListItemList Captures { get; }
+
+            public static CaptureClause Parse(Parser parser)
+            {
+                parser.Consume(ToKind.LBracket);
+                var captures = CaptureListItemList.Parse(parser);
+                parser.Consume(ToKind.RBracket);
+
+                return new CaptureClause(captures);
+            }
+
+            public override string ToString()
+            {
+                if (Missing)
+                {
+                    return string.Empty;
+                }
+                return $"[{Captures}]";
+            }
         }
     }
 }

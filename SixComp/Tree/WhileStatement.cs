@@ -1,44 +1,47 @@
 ﻿using SixComp.Support;
 
-namespace SixComp.Tree
+namespace SixComp
 {
-    public class WhileStatement : AnyStatement
+    public partial class Tree
     {
-        public WhileStatement(ConditionList conditions, CodeBlock block)
+        public class WhileStatement : AnyStatement
         {
-            Conditions = conditions;
-            Block = block;
-        }
-
-        public ConditionList Conditions { get; }
-        public CodeBlock Block { get; }
-
-        public static WhileStatement Parse(Parser parser)
-        {
-            parser.Consume(ToKind.KwWhile);
-            var condition = ConditionList.Parse(parser);
-            CodeBlock block;
-            if (parser.Current != ToKind.LBrace && condition.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
+            public WhileStatement(ConditionList conditions, CodeBlock block)
             {
-                block = call.Closures.ExtractBlock();
-            }
-            else
-            {
-                block = CodeBlock.Parse(parser);
+                Conditions = conditions;
+                Block = block;
             }
 
-            return new WhileStatement(condition, block);
-        }
+            public ConditionList Conditions { get; }
+            public CodeBlock Block { get; }
 
-        public void Write(IWriter writer)
-        {
-            writer.WriteLine($"while {Conditions}");
-            Block.Write(writer);
-        }
+            public static WhileStatement Parse(Parser parser)
+            {
+                parser.Consume(ToKind.KwWhile);
+                var condition = ConditionList.Parse(parser);
+                CodeBlock block;
+                if (parser.Current != ToKind.LBrace && condition.LastExpression is FunctionCallExpression call && call.Closures.BlockOnly)
+                {
+                    block = call.Closures.ExtractBlock();
+                }
+                else
+                {
+                    block = CodeBlock.Parse(parser);
+                }
 
-        public override string ToString()
-        {
-            return $"while {Conditions} {Block}";
+                return new WhileStatement(condition, block);
+            }
+
+            public void Write(IWriter writer)
+            {
+                writer.WriteLine($"while {Conditions}");
+                Block.Write(writer);
+            }
+
+            public override string ToString()
+            {
+                return $"while {Conditions} {Block}";
+            }
         }
     }
 }
