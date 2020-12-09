@@ -24,12 +24,15 @@ namespace SixComp.Support
 
         public void Report(IWriter writer, string label)
         {
-            writer.WriteLine(label);
-            using (writer.Indent())
+            if (strings.Count > 0)
             {
-                foreach (var kv in strings.OrderBy(kv => kv.Key))
+                writer.WriteLine(label);
+                using (writer.Indent())
                 {
-                    writer.WriteLine($"[{kv.Value,4}] {kv.Key}");
+                    foreach (var kv in strings.OrderBy(kv => kv.Key))
+                    {
+                        writer.WriteLine($"[{kv.Value,4}] {kv.Key}");
+                    }
                 }
             }
         }

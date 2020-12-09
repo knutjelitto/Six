@@ -15,14 +15,6 @@ namespace SixComp.Sema
 
         public void Resolve(IWriter writer)
         {
-            if (this.ToString() == "EnumeratedSequence.Iterator")
-            {
-                Debug.Assert(true);
-            }
-            if (Count > 1)
-            {
-                Debug.Assert(true);
-            }
             var anchor = this.First();
             anchor.Resolve(writer);
             var entity = anchor.Entity;

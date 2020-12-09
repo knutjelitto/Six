@@ -32,12 +32,11 @@ namespace SixComp.Sema
         public GenericParameters Generics { get; }
         public Inheritance Inheritance { get; }
         public Declarations Declarations { get; }
-
         public IReadOnlyList<ExtensionDeclaration> Extensions => extensions;
 
-        public virtual bool Extend(ExtensionDeclaration extension)
+        public virtual bool Extend(ExtensionDeclaration with)
         {
-            extensions.Add(extension);
+            Scope.Extend(with);
             return true;
         }
     }

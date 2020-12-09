@@ -19,8 +19,10 @@ namespace SixComp.Sema
             InfixOperators = new Dictionary<BaseName, OperatorDeclaration>();
             OperatorsTodo = new List<OperatorDeclaration>();
             InfixesTodo = new List<InfixListExpression>();
+            UnresolvedNamesTodo = new CountedStrings();
+
+            Structs = new List<StructDeclaration>();
             Extensions = new List<ExtensionDeclaration>();
-            UnresolvedNames = new CountedStrings();
         }
 
         public Dictionary<BaseName, PrecedenceGroupDeclaration> Precedences { get; }
@@ -31,15 +33,17 @@ namespace SixComp.Sema
         public Dictionary<BaseName, OperatorDeclaration> PostfixOperators { get; }
         public Dictionary<BaseName, OperatorDeclaration> InfixOperators { get; }
 
+        public List<StructDeclaration> Structs { get; }
+        public List<ExtensionDeclaration> Extensions { get; }
 
         public List<PrecedenceGroupDeclaration> PrecedencesTodo { get; }
         public List<OperatorDeclaration> OperatorsTodo { get; }
         public List<InfixListExpression> InfixesTodo { get; }
-        public List<ExtensionDeclaration> Extensions { get; }
-        public CountedStrings UnresolvedNames { get; }
+        public CountedStrings UnresolvedNamesTodo { get; }
 
         public HashSet<string> IgnoredNamesForNow = new HashSet<string>
         {
+#if false
             "Equatable",
             "Comparable",
             "Hashable",
@@ -52,7 +56,33 @@ namespace SixComp.Sema
             "Float",
             "Double",
             "String",
+#endif
         };
+
+        public void Add(StructDeclaration @struct)
+        {
+            Structs.Add(@struct);
+        }
+
+        public void Report(IWriter writer)
+        {
+            Report(writer, "STRUCTS", Structs);
+        }
+
+        private void Report(IWriter witer, string label, IReadOnlyList<Base> declarations)
+        {
+            if (declarations.Count > 0)
+            {
+                using (witer.Indent(label))
+                {
+                    foreach (var decl in declarations)
+                    {
+                        var path = (decl as IScoped).Path;
+                        witer.WriteLine($"{Strings.KwStruct} {path}");
+                    }
+                }
+            }
+        }
 
         public void CreatePrecedences(IScoped outer)
         {

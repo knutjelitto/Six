@@ -1,19 +1,17 @@
 ﻿using SixComp.Entities;
 using SixComp.Support;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class IScope : IReportable
+    public class Scope : IReportable
     {
         private static readonly IReadOnlyList<IEntity> NoEntity = new IEntity[] { };
         private readonly Dictionary<BaseName, (int order, List<IEntity> list)> lookup = new Dictionary<BaseName, (int order, List<IEntity> list)>();
         private readonly List<ExtensionDeclaration> Extensions = new List<ExtensionDeclaration>();
-        private IEntity? Extendee = null;
 
-        public IScope(IScoped parent, Module? module = null)
+        public Scope(IScoped parent, Module? module = null)
         {
             Parent = parent;
             Module = module ?? parent.Scope.Module;
@@ -34,69 +32,45 @@ namespace SixComp.Sema
             list.list.Add(named);
         }
 
-        public void Extend(ExtensionDeclaration extension)
+        public bool Extend(ExtensionDeclaration with)
         {
-            Extensions.Add(extension);
-        }
-
-        public void Extends(IEntity extendee)
-        {
-            Extendee = extendee;
+            Extensions.Add(with);
+            return true;
         }
 
         public IReadOnlyList<IEntity> Look(INamed named, bool stop = false)
         {
-            if (named.Name.Text == "Base")
-            {
-                Debug.Assert(true);
-            }
+            var found = new List<IEntity>();
+
             if (lookup.TryGetValue(named.Name, out var decls))
             {
-                return decls.list;
+                found.AddRange(decls.list);
             }
-            var found = new List<IEntity>();
-            if (!stop)
+            foreach (var extension in Extensions)
             {
-                foreach (var extension in Extensions)
-                {
-                    found.AddRange(extension.Scope.Look(named));
-                }
-                if (found.Count == 0 && Extendee != null)
-                {
-                    found.AddRange(Extendee.Scope.Look(named, true));
-                }
+                found.AddRange(extension.Scope.Look(named));
             }
             return found;
         }
 
-        private static IReadOnlyList<IEntity> LookUp(IScope scope, INamed named)
+        private static IReadOnlyList<IEntity> LookUp(Scope scope, INamed named)
         {
-            if (named.Name.Text == "EnumeratedSequence")
-            {
-                Debug.Assert(true);
-            }
+            var found = new List<IEntity>();
             while (true)
             {
-                var found = scope.Look(named);
-                if (found.Count > 0)
-                {
-                    return found;
-                }
+                found.AddRange(scope.Look(named));
                 if (scope == scope.Parent.Scope)
                 {
-                    return NoEntity;
+                    break;
                 }
                 scope = scope.Parent.Scope;
             }
+            return found;
         }
 
         public IReadOnlyList<IEntity> LookUp(INamed named)
         {
             var found = LookUp(this, named);
-            if (found.Count == 0 && Extendee != null)
-            {
-                found = Extendee.Scope.LookUp(named);
-            }
 
             return found;
         }
@@ -131,6 +105,12 @@ namespace SixComp.Sema
                     }
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            // this.FindParent(this);
+            return "XXX";
         }
     }
 }

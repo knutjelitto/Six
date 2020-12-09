@@ -5,7 +5,7 @@ namespace SixComp.Sema
     public interface IExtendable : INamedDeclaration
     {
         IReadOnlyList<ExtensionDeclaration> Extensions { get; }
-        bool Extend(ExtensionDeclaration extension);
+        bool Extend(ExtensionDeclaration with);
 
         Declarations Declarations { get; }
     }

@@ -38,12 +38,12 @@ namespace SixComp.Sema
         {
             Extended.Resolve(writer);
             var entity = Extended.Entity;
-            var check = entity != null ? "✓" : " ";
+            var check = entity != null ? "✓" : "  ";
             writer.WriteLine($"[{check}] {Extended}");
 
             if (entity != null)
             {
-                if (entity.Extend(this))
+                if (entity.Scope.Extend(with: this))
                 {
                     Debug.Assert(true);
                 }

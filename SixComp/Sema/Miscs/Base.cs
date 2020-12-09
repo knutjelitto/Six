@@ -6,7 +6,7 @@ namespace SixComp.Sema
 {
     public abstract class Base : IScoped, IReportable
     {
-        public Base(IScoped outer, IScope? scope = null)
+        public Base(IScoped outer, Scope? scope = null)
         {
             Outer = outer;
             Scope = scope ?? outer.Scope;
@@ -14,7 +14,7 @@ namespace SixComp.Sema
         }
 
         public IScoped Outer { get; }
-        public IScope Scope { get; }
+        public Scope Scope { get; }
         public Global Global => Scope.Global;
 
         public IEntity? Entity { get; protected set; }
@@ -27,7 +27,7 @@ namespace SixComp.Sema
             {
                 return;
             }
-            Global.UnresolvedNames.Add(name.Text);
+            Global.UnresolvedNamesTodo.Add(name.Text);
 
             if (name.Tree is Tree.BaseName treeName)
             {
@@ -72,6 +72,8 @@ namespace SixComp.Sema
         {
             Outer.Scope.Declare(new IEntity.Struct(declaration));
             declaration.Scope.Declare(new IEntity.SelfInstanceReference<StructDeclaration>(declaration));
+
+            Global.Structs.Add(declaration);
         }
 
         protected void Declare(BlockVarDeclaration declaration)

@@ -43,7 +43,7 @@ namespace SixComp.Sema
 
             if (decls.Count == 0)
             {
-                Global.UnresolvedNames.Add(Text);
+                Global.UnresolvedNamesTodo.Add(Text);
             }
         }
 

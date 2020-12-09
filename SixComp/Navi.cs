@@ -10,8 +10,7 @@ namespace SixComp
             Root = root;
             SixCore = new DirectoryInfo(Path.Combine(Root.FullName, "Six.Source", "Core"));
             SixTests = new DirectoryInfo(Path.Combine(Root.FullName, "Six.Source", "Tests"));
-            Temp = new DirectoryInfo(Path.Combine(Root.FullName, "../Temp/Six"));
-            SwiftSources = new DirectoryInfo(Path.Combine(Root.FullName, "../Swift"));
+            Temp = new DirectoryInfo(Path.Combine(Root.FullName, "Six.Source", "Reports"));
         }
 
         public Navi(string root) : this(new DirectoryInfo(root)) { }
@@ -22,7 +21,6 @@ namespace SixComp
         public DirectoryInfo SixCore { get; }
         public DirectoryInfo SixTests { get; }
         public DirectoryInfo Temp { get; }
-        public DirectoryInfo SwiftSources { get; }
 
         public DirectoryInfo TempFor(DirectoryInfo work)
         {

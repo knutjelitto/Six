@@ -12,11 +12,11 @@ namespace SixComp.Sema
         {
             Global = new Global();
             ModuleName = moduleName;
-            Scope = new IScope(this, this);
+            Scope = new Scope(this, this);
         }
 
         public IReadOnlyList<Unit> Units => this.units;
-        public IScope Scope { get; }
+        public Scope Scope { get; }
         public IScoped Outer => this;
         public Global Global { get; }
         public string ModuleName { get; }
@@ -46,7 +46,7 @@ namespace SixComp.Sema
             Console.Write("RESOLVE     ");
 
 #if true
-            Global.UnresolvedNames.Clear();
+            Global.UnresolvedNamesTodo.Clear();
             using (writer.Indent("EXTENSIONS:"))
             {
                 foreach (var extension in Global.Extensions)
@@ -54,8 +54,10 @@ namespace SixComp.Sema
                     extension.ResolveExtended(writer);
                 }
             }
-            Global.UnresolvedNames.Report(writer, "UNRESOLVED:");
+            Global.UnresolvedNamesTodo.Report(writer, "UNRESOLVED:");
             writer.WriteLine();
+
+            Global.Report(writer);
 #endif
 
 #if false

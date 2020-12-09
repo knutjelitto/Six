@@ -2,13 +2,13 @@
 
 namespace SixComp.Tree
 {
-    public class FunctionDeclaration : AnyDeclaration
+    public class FunctionDeclaration : AnyDeclaration, INominal
     {
         public FunctionDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, ParameterClause parameters, FunctionResult? result, RequirementClause requirements, CodeBlock? block)
         {
             Prefix = prefix;
             Name = name;
-            GenericParameters = generics;
+            Generics = generics;
             Parameters = parameters;
             Result = result;
             Requirements = requirements;
@@ -17,7 +17,7 @@ namespace SixComp.Tree
 
         public Prefix Prefix { get; }
         public BaseName Name { get; }
-        public GenericParameterClause GenericParameters { get; }
+        public GenericParameterClause Generics { get; }
         public ParameterClause Parameters { get; }
         public FunctionResult? Result { get; }
         public RequirementClause Requirements { get; }
@@ -42,13 +42,13 @@ namespace SixComp.Tree
         public void Write(IWriter writer)
         {
             Prefix.Write(writer);
-            writer.WriteLine($"{Name}{GenericParameters}{Parameters}{Requirements}{Result}");
+            writer.WriteLine($"{Name}{Generics}{Parameters}{Requirements}{Result}");
             Block?.Write(writer);
         }
 
         public override string ToString()
         {
-            return $"{Prefix}{Name}{GenericParameters}{Parameters}{Requirements}{Result}{Block}";
+            return $"{Prefix}{Name}{Generics}{Parameters}{Requirements}{Result}{Block}";
         }
     }
 }
