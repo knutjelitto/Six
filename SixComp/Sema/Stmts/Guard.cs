@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Guard : Base<Tree.GuardStatement>, IStatement
+    public class Guard : Base<ParseTree.GuardStatement>, IStatement
     {
-        public Guard(IScoped outer, Tree.GuardStatement tree)
+        public Guard(IScoped outer, ParseTree.GuardStatement tree)
             : base(outer, tree)
         {
             Conditions = new Conditions(Outer, Tree.Conditions);

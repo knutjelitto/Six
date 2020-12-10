@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class FunctionArgument : Base<Tree.Argument>
+    public class FunctionArgument : Base<ParseTree.ArgumentList.Argument>
     {
-        public FunctionArgument(IScoped outer, Tree.Argument tree)
+        public FunctionArgument(IScoped outer, ParseTree.ArgumentList.Argument tree)
             : base(outer, tree)
         {
             Label = tree.Label == null ? null : new BaseName(Outer, tree.Label.Name);

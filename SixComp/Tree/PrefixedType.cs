@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class PrefixedType : AnyType
+        public class PrefixedType : IType
         {
-            public PrefixedType(Prefix prefix, bool inout, AnyType type)
+            public PrefixedType(Prefix prefix, bool inout, IType type)
             {
                 Prefix = prefix;
                 Inout = inout;
@@ -13,13 +13,13 @@
 
             public Prefix Prefix { get; }
             public bool Inout { get; }
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static PrefixedType Parse(Parser parser)
             {
                 var prefix = Prefix.Parse(parser, onlyAttributes: true);
                 var inout = parser.Match(ToKind.KwInout);
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new PrefixedType(prefix, inout, type);
             }

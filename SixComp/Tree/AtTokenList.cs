@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class AtTokenList : ItemList<AtToken>
         {

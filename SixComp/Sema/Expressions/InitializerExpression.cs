@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class InitializerExpression : Base<Tree.InitializerExpression>, IExpression
+    public class InitializerExpression : Base<ParseTree.InitializerExpression>, IExpression
     {
-        public InitializerExpression(IScoped outer, Tree.InitializerExpression tree) : base(outer, tree)
+        public InitializerExpression(IScoped outer, ParseTree.InitializerExpression tree) : base(outer, tree)
         {
             Left = IExpression.Build(outer, tree.Left);
             ArgumentNames = new BaseNames(outer, tree.Names.Names.Select(n => n.Name));

@@ -2,23 +2,23 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class FunctionTypeArgument
         {
-            public FunctionTypeArgument(BaseName? @extern, AnyType type)
+            public FunctionTypeArgument(BaseName? @extern, IType type)
             {
                 Extern = @extern;
                 Type = type;
             }
 
             public BaseName? Extern { get; }
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static FunctionTypeArgument Parse(Parser parser)
             {
                 BaseName? label = null;
-                AnyType type;
+                IType type;
 
                 if (parser.Next == ToKind.Colon)
                 {

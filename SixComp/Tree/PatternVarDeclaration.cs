@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class PatternVarDeclaration : AnyVarDeclaration
+        public class PatternVarDeclaration : IVarDeclaration
         {
             private PatternVarDeclaration(Prefix prefix, PatternInitializerList initializers)
             {

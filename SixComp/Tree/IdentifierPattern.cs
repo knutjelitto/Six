@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class IdentifierPattern : SyntaxNode, AnyPattern
+        public class IdentifierPattern : SyntaxNode, IPattern
         {
             public IdentifierPattern(BaseName name)
             {

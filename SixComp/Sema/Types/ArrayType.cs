@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class ArrayType : Base<Tree.ArrayType>, ITypeDefinition
+    public class ArrayType : Base<ParseTree.ArrayType>, ITypeDefinition
     {
-        public ArrayType(IScoped outer, Tree.ArrayType tree)
+        public ArrayType(IScoped outer, ParseTree.ArrayType tree)
             : base(outer, tree)
         {
             Element = ITypeDefinition.Build(Outer, Tree.ElementType);

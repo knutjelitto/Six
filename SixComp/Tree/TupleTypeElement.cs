@@ -1,17 +1,17 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TupleTypeElement : AnyType
+        public class TupleTypeElement : IType
         {
-            public TupleTypeElement(BaseName? label, AnyType type)
+            public TupleTypeElement(BaseName? label, IType type)
             {
                 Label = label;
                 Type = type;
             }
 
             public BaseName? Label { get; }
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static TupleTypeElement Parse(Parser parser)
             {
@@ -23,11 +23,11 @@
                     return new TupleTypeElement(label, annotation);
                 }
 
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
                 return new TupleTypeElement(null, type);
             }
 
-            public static TupleTypeElement From(BaseName? label, AnyType type)
+            public static TupleTypeElement From(BaseName? label, IType type)
             {
                 return new TupleTypeElement(label, type);
             }

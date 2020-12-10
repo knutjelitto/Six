@@ -1,19 +1,19 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class GenericArgument
         {
-            public GenericArgument(AnyType type)
+            public GenericArgument(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static GenericArgument Parse(Parser parser)
             {
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new GenericArgument(type);
             }

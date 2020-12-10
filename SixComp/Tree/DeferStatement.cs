@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class DeferStatement : AnyStatement
+        public class DeferStatement : IStatement
         {
             public DeferStatement(CodeBlock block)
             {

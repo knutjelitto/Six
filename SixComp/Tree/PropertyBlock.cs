@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public sealed class PropertyBlock : IWritable
         {

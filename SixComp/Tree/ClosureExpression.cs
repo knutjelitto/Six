@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ClosureExpression : BaseExpression, AnyPrimaryExpression
+        public class ClosureExpression : BaseExpression, IPrimaryExpression
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 

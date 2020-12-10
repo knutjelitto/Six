@@ -3,13 +3,13 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyKeyPathPostfix
+        public interface IKeyPathPostfix
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.KwSelf, ToKind.Quest, ToKind.Bang, ToKind.LBracket);
 
-            public static AnyKeyPathPostfix Parse(Parser parser)
+            public static IKeyPathPostfix Parse(Parser parser)
             {
                 switch (parser.Current)
                 {

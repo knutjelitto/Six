@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Return : Base<Tree.ReturnStatement>, IStatement
+    public class Return : Base<ParseTree.ReturnStatement>, IStatement
     {
-        public Return(IScoped outer, Tree.ReturnStatement tree)
+        public Return(IScoped outer, ParseTree.ReturnStatement tree)
             : base(outer, tree)
         {
             Value = IExpression.MaybeBuild(Outer, tree.Value);

@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TuplePattern : SyntaxNode, AnyPattern
+        public class TuplePattern : SyntaxNode, IPattern
         {
             private TuplePattern(TuplePatternElementList elements)
             {

@@ -2,7 +2,7 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class TupleTypeElementList : ItemList<TupleTypeElement>
         {

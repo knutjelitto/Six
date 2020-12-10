@@ -3,30 +3,30 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public abstract class PatternCondition : BaseExpression, AnyCondition
+        public abstract class PatternCondition : BaseExpression, ICondition
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.KwCase, ToKind.KwLet, ToKind.KwVar);
 
-            protected PatternCondition(AnyPattern pattern, AnyType? type, Initializer initializer)
+            protected PatternCondition(IPattern pattern, IType? type, Initializer initializer)
             {
                 Pattern = pattern;
                 Type = type;
                 Initializer = initializer;
             }
 
-            public AnyPattern Pattern { get; }
-            public AnyType? Type { get; }
+            public IPattern Pattern { get; }
+            public IType? Type { get; }
             public Initializer Initializer { get; }
 
-            public override AnyExpression? LastExpression => Initializer.LastExpression;
+            public override IExpression? LastExpression => Initializer.LastExpression;
 
             public static PatternCondition Parse(Parser parser)
             {
                 var first = parser.Consume(Firsts);
 
-                var pattern = AnyPattern.Parse(parser);
+                var pattern = IPattern.Parse(parser);
                 var type = parser.Try(TypeAnnotation.Firsts, TypeAnnotation.Parse);
                 var init = Initializer.Parse(parser);
 
@@ -46,7 +46,7 @@ namespace SixComp
 
             public class LetPatternCondition : PatternCondition
             {
-                public LetPatternCondition(AnyPattern pattern, AnyType? type, Initializer initializer)
+                public LetPatternCondition(IPattern pattern, IType? type, Initializer initializer)
                     : base(pattern, type, initializer)
                 {
                 }
@@ -54,7 +54,7 @@ namespace SixComp
 
             public class VarPatternCondition : PatternCondition
             {
-                public VarPatternCondition(AnyPattern pattern, AnyType? type, Initializer initializer)
+                public VarPatternCondition(IPattern pattern, IType? type, Initializer initializer)
                     : base(pattern, type, initializer)
                 {
                 }
@@ -62,7 +62,7 @@ namespace SixComp
 
             public class CasePatternCondition : PatternCondition
             {
-                public CasePatternCondition(AnyPattern pattern, AnyType? type, Initializer initializer)
+                public CasePatternCondition(IPattern pattern, IType? type, Initializer initializer)
                     : base(pattern, type, initializer)
                 {
                 }

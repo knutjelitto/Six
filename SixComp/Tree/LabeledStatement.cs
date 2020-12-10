@@ -3,24 +3,24 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class LabeledStatement : AnyStatement
+        public class LabeledStatement : IStatement
         {
-            public LabeledStatement(BaseName label, AnyStatement statement)
+            public LabeledStatement(BaseName label, IStatement statement)
             {
                 Label = label;
                 Statement = statement;
             }
 
             public BaseName Label { get; }
-            public AnyStatement Statement { get; }
+            public IStatement Statement { get; }
 
             public static LabeledStatement Parse(Parser parser)
             {
                 var label = BaseName.Parse(parser);
                 parser.Consume(ToKind.Colon);
-                var statement = AnyStatement.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(LabeledStatement)}");
+                var statement = IStatement.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(LabeledStatement)}");
                 return new LabeledStatement(label, statement);
             }
 

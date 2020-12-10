@@ -6,7 +6,7 @@ namespace SixComp.Sema
 {
     public class BaseNames : Items<BaseName>
     {
-        public BaseNames(IScoped outer, IEnumerable<Tree.BaseName> names)
+        public BaseNames(IScoped outer, IEnumerable<ParseTree.BaseName> names)
             : base(outer, names.Select(n => new BaseName(outer, n)))
         {
         }

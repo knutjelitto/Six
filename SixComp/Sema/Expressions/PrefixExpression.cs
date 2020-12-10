@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class PrefixExpression : Base<Tree.PrefixExpression>, IExpression, INamed
+    public class PrefixExpression : Base<ParseTree.PrefixExpression>, IExpression, INamed
     {
-        public PrefixExpression(IScoped outer, Tree.PrefixExpression tree)
+        public PrefixExpression(IScoped outer, ParseTree.PrefixExpression tree)
             : base(outer, tree)
         {
             Name = new BaseName(Outer, Tree.Operator);

@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class Conditions : Items<IExpression, Tree.ConditionList>
+    public class Conditions : Items<IExpression, ParseTree.ConditionList>
     {
-        public Conditions(IScoped outer, Tree.ConditionList tree)
+        public Conditions(IScoped outer, ParseTree.ConditionList tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -16,7 +16,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.Conditions);
         }
 
-        private static IEnumerable<IExpression> Enum(IScoped outer, Tree.ConditionList tree)
+        private static IEnumerable<IExpression> Enum(IScoped outer, ParseTree.ConditionList tree)
         {
             return tree.Select(condition => ICondition.Build(outer, condition));
         }

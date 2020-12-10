@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class CodeBlock : SyntaxNode, AnyStatement
+        public class CodeBlock : SyntaxNode, IStatement
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.LBrace);
 

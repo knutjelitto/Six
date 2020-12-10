@@ -2,26 +2,26 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class YieldStatement : AnyStatement
+        public class YieldStatement : IStatement
         {
-            public YieldStatement(AnyExpression? value)
+            public YieldStatement(IExpression? value)
             {
                 Value = value;
             }
 
-            public AnyExpression? Value { get; }
+            public IExpression? Value { get; }
 
             public static YieldStatement Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwYield);
 
-                AnyExpression? value = null;
+                IExpression? value = null;
 
                 if (!parser.CurrentToken.NewlineBefore)
                 {
-                    value = AnyExpression.TryParse(parser);
+                    value = IExpression.TryParse(parser);
                 }
 
                 return new YieldStatement(value);

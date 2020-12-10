@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class InOutExpression : Base<Tree.InOutExpression>, IExpression
+    public class InOutExpression : Base<ParseTree.InOutExpression>, IExpression
     {
-        public InOutExpression(IScoped outer, Tree.InOutExpression tree)
+        public InOutExpression(IScoped outer, ParseTree.InOutExpression tree)
             : base(outer, tree)
         {
             Expression = IExpression.Build(Outer, Tree.Expression);

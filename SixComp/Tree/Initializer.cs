@@ -2,24 +2,24 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class Initializer : BaseExpression, AnyExpression
+        public class Initializer : BaseExpression, IExpression
         {
-            public Initializer(AnyExpression expression)
+            public Initializer(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
-            public override AnyExpression? LastExpression => Expression.LastExpression;
+            public override IExpression? LastExpression => Expression.LastExpression;
 
             public static Initializer Parse(Parser parser)
             {
                 parser.Consume(ToKind.Assign);
 
-                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Initializer)}");
+                var expression = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(Initializer)}");
 
                 return new Initializer(expression);
             }

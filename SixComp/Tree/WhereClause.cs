@@ -3,24 +3,24 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class WhereClause
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.KwWhere);
 
-            private WhereClause(AnyExpression expression)
+            private WhereClause(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
             public static WhereClause Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwWhere);
 
-                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(WhereClause)}");
+                var expression = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(WhereClause)}");
 
                 return new WhereClause(expression);
             }

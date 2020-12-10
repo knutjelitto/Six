@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class GenericArgument : Base<Tree.GenericArgument>, ITypeDefinition
+    public class GenericArgument : Base<ParseTree.GenericArgument>, ITypeDefinition
     {
-        public GenericArgument(IScoped outer, Tree.GenericArgument tree)
+        public GenericArgument(IScoped outer, ParseTree.GenericArgument tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(Outer, Tree.Type);

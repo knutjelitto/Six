@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class DictionaryType : Base<Tree.DictionaryType>, ITypeDefinition
+    public class DictionaryType : Base<ParseTree.DictionaryType>, ITypeDefinition
     {
-        public DictionaryType(IScoped outer, Tree.DictionaryType tree)
+        public DictionaryType(IScoped outer, ParseTree.DictionaryType tree)
             : base(outer, tree)
         {
             Key = ITypeDefinition.Build(Outer, Tree.KeyType);

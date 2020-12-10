@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnySyntaxNode : IWritable
+        public interface ISyntaxNode : IWritable
         {
             NodeData? Data { get; }
         }

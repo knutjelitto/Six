@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class IfStatement : AnyStatement
+        public class IfStatement : IStatement
         {
-            public IfStatement(ConditionList conditions, CodeBlock thenPart, AnyStatement? elsePart)
+            public IfStatement(ConditionList conditions, CodeBlock thenPart, IStatement? elsePart)
             {
                 Conditions = conditions;
                 ThenPart = thenPart;
@@ -15,7 +15,7 @@ namespace SixComp
 
             public ConditionList Conditions { get; }
             public CodeBlock ThenPart { get; }
-            public AnyStatement? ElsePart { get; }
+            public IStatement? ElsePart { get; }
 
             public static IfStatement Parse(Parser parser)
             {
@@ -30,7 +30,7 @@ namespace SixComp
                 {
                     thenPart = CodeBlock.Parse(parser);
                 }
-                AnyStatement? elsePart = null;
+                IStatement? elsePart = null;
                 if (parser.Match(ToKind.KwElse))
                 {
                     if (parser.Current == ToKind.KwIf)

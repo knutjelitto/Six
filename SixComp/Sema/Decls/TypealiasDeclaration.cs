@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class TypealiasDeclaration : Nominal<Tree.TypealiasDeclaration>
+    public class TypealiasDeclaration : Nominal<ParseTree.TypealiasDeclaration>
     {
-        public TypealiasDeclaration(IScoped outer, Tree.TypealiasDeclaration tree)
+        public TypealiasDeclaration(IScoped outer, ParseTree.TypealiasDeclaration tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(Outer, tree.Assignment);

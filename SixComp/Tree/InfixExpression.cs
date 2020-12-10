@@ -1,21 +1,21 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class InfixExpression : BaseExpression, AnyExpression
+        public class InfixExpression : BaseExpression, IExpression
         {
-            public InfixExpression(AnyExpression left, Token op, AnyExpression right)
+            public InfixExpression(IExpression left, Token op, IExpression right)
             {
                 Left = left;
                 Op = op;
                 Right = right;
             }
 
-            public AnyExpression Left { get; }
+            public IExpression Left { get; }
             public Token Op { get; }
-            public AnyExpression Right { get; }
+            public IExpression Right { get; }
 
-            public override AnyExpression? LastExpression
+            public override IExpression? LastExpression
             {
                 get
                 {

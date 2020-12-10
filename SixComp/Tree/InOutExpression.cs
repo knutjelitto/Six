@@ -1,17 +1,17 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class InOutExpression : BaseExpression, AnyPrefixExpression
+        public class InOutExpression : BaseExpression, IPrefixExpression
         {
-            private InOutExpression(AnyExpression expression)
+            private InOutExpression(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
-            public static InOutExpression From(AnyExpression expression)
+            public static InOutExpression From(IExpression expression)
             {
                 return new InOutExpression(expression);
             }

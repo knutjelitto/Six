@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class InitializerDeclaration : AnyDeclaration
+        public class InitializerDeclaration : IDeclaration
         {
             public InitializerDeclaration(Prefix prefix, InitKind kind, GenericParameterClause genericParameters, ParameterClause parameters, RequirementClause requirements, CodeBlock? block)
             {

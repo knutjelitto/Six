@@ -5,9 +5,9 @@ using System.Linq;
 namespace SixComp.Sema
 {
     public class PatternLetVar<TTree> : Items<PatternInitializer, TTree>, IDeclaration
-        where TTree: Tree.AnyDeclaration
+        where TTree: ParseTree.IDeclaration
     {
-        protected PatternLetVar(IScoped outer, TTree tree, string reportLabel, Tree.PatternInitializerList patterns)
+        protected PatternLetVar(IScoped outer, TTree tree, string reportLabel, ParseTree.PatternInitializerList patterns)
             : base(outer, tree, Enum(outer, patterns))
         {
             ReportLabel = reportLabel;
@@ -21,23 +21,23 @@ namespace SixComp.Sema
             this.ReportList(writer, ReportLabel);
         }
 
-        private static IEnumerable<PatternInitializer> Enum(IScoped outer, Tree.PatternInitializerList tree)
+        private static IEnumerable<PatternInitializer> Enum(IScoped outer, ParseTree.PatternInitializerList tree)
         {
             return tree.Select(initializer => new PatternInitializer(outer, initializer));
         }
     }
 
-    public class PatternVar : PatternLetVar<Tree.PatternVarDeclaration>, IDeclaration
+    public class PatternVar : PatternLetVar<ParseTree.PatternVarDeclaration>, IDeclaration
     {
-        public PatternVar(IScoped outer, Tree.PatternVarDeclaration tree)
+        public PatternVar(IScoped outer, ParseTree.PatternVarDeclaration tree)
             : base(outer, tree, Strings.Head.Var, tree.Initializers)
         {
         }
     }
 
-    public class PatternLet : PatternLetVar<Tree.LetDeclaration>, IDeclaration
+    public class PatternLet : PatternLetVar<ParseTree.LetDeclaration>, IDeclaration
     {
-        public PatternLet(IScoped outer, Tree.LetDeclaration tree)
+        public PatternLet(IScoped outer, ParseTree.LetDeclaration tree)
             : base(outer, tree, Strings.Head.Let, tree.Initializers)
         {
         }

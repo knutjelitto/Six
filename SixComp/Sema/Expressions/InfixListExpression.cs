@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class InfixListExpression : Base<Tree.InfixList>, IExpression
+    public class InfixListExpression : Base<ParseTree.InfixList>, IExpression
     {
-        public InfixListExpression(IScoped outer, Tree.InfixList tree)
+        public InfixListExpression(IScoped outer, ParseTree.InfixList tree)
             : base(outer, tree)
         {
             Debug.Assert(tree.Binaries.Count > 0);

@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TupleType : AnyType
+        public class TupleType : IType
         {
             private TupleType(Prefix prefix, TupleTypeElementList elements)
             {

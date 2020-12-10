@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class PrefixExpression : BaseExpression, AnyPrefixExpression
+        public class PrefixExpression : BaseExpression, IPrefixExpression
         {
-            public PrefixExpression(Token op, AnyExpression operand)
+            public PrefixExpression(Token op, IExpression operand)
             {
                 Op = op;
                 Operator = BaseName.From(Op);
@@ -13,9 +13,9 @@
 
             public Token Op { get; }
             public BaseName Operator { get; }
-            public AnyExpression Operand { get; }
+            public IExpression Operand { get; }
 
-            public override AnyExpression? LastExpression
+            public override IExpression? LastExpression
             {
                 get
                 {

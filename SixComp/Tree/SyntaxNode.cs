@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SyntaxNode : AnySyntaxNode
+        public class SyntaxNode : ISyntaxNode
         {
             public NodeData? Data { get; set; } = null;
         }

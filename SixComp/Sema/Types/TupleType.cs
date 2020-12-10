@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class TupleType : Items<TupleType.Element, Tree.TupleType>, ITypeDefinition
+    public class TupleType : Items<TupleType.Element, ParseTree.TupleType>, ITypeDefinition
     {
-        public TupleType(IScoped outer, Tree.TupleType tree)
+        public TupleType(IScoped outer, ParseTree.TupleType tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -25,14 +25,14 @@ namespace SixComp.Sema
             return base.ToString()!;
         }
 
-        private static IEnumerable<Element> Enum(IScoped outer, Tree.TupleType tree)
+        private static IEnumerable<Element> Enum(IScoped outer, ParseTree.TupleType tree)
         {
             return tree.Elements.Select(element => new Element(outer, element));
         }
 
-        public class Element : Base<Tree.TupleTypeElement>, ITypeDefinition
+        public class Element : Base<ParseTree.TupleTypeElement>, ITypeDefinition
         {
-            public Element(IScoped outer, Tree.TupleTypeElement tree)
+            public Element(IScoped outer, ParseTree.TupleTypeElement tree)
                 : base(outer, tree)
             {
                 Label = BaseName.Maybe(outer, Tree.Label);

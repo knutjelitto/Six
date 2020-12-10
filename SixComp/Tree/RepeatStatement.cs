@@ -2,25 +2,25 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class RepeatStatement : AnyStatement
+        public class RepeatStatement : IStatement
         {
-            public RepeatStatement(CodeBlock block, AnyExpression condition)
+            public RepeatStatement(CodeBlock block, IExpression condition)
             {
                 Block = block;
                 Condition = condition;
             }
 
             public CodeBlock Block { get; }
-            public AnyExpression Condition { get; }
+            public IExpression Condition { get; }
 
             public static RepeatStatement Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwRepeat);
                 var block = CodeBlock.Parse(parser);
                 parser.Consume(ToKind.KwWhile);
-                var condition = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(RepeatStatement)}");
+                var condition = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(RepeatStatement)}");
 
                 return new RepeatStatement(block, condition);
             }

@@ -6,7 +6,7 @@ namespace SixComp.Sema
 {
     public class Inheritance : Items<ITypeDefinition>
     {
-        public Inheritance(IScoped outer, Tree.TypeInheritanceClause tree)
+        public Inheritance(IScoped outer, ParseTree.TypeInheritanceClause tree)
             : base(outer, Enum(outer, tree))
         {
         }
@@ -21,7 +21,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.Inherits);
         }
 
-        private static IEnumerable<ITypeDefinition> Enum(IScoped outer, Tree.TypeInheritanceClause tree)
+        private static IEnumerable<ITypeDefinition> Enum(IScoped outer, ParseTree.TypeInheritanceClause tree)
         {
             return tree.Types.Select(type => ITypeDefinition.Build(outer, type));
         }

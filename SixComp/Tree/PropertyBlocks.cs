@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public sealed class PropertyBlocks : Dictionary<BaseName, (int index, PropertyBlock block)>
         {

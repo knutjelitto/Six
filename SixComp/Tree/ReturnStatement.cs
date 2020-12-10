@@ -2,26 +2,26 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ReturnStatement : AnyStatement
+        public class ReturnStatement : IStatement
         {
-            public ReturnStatement(AnyExpression? value)
+            public ReturnStatement(IExpression? value)
             {
                 Value = value;
             }
 
-            public AnyExpression? Value { get; }
+            public IExpression? Value { get; }
 
             public static ReturnStatement Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwReturn);
 
-                AnyExpression? value = null;
+                IExpression? value = null;
 
                 if (!parser.CurrentToken.NewlineBefore)
                 {
-                    value = AnyExpression.TryParse(parser);
+                    value = IExpression.TryParse(parser);
                 }
 
                 return new ReturnStatement(value);

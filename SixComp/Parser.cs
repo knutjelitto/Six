@@ -31,9 +31,9 @@ namespace SixComp
             return new Disposable(() => Offset = offset);
         }
 
-        public Tree.CompilationUnit Parse()
+        public ParseTree.CompilationUnit Parse()
         {
-            return Tree.CompilationUnit.Parse(this);
+            return ParseTree.CompilationUnit.Parse(this);
         }
 
         public void SplitGreater()

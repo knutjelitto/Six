@@ -3,22 +3,22 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyPrimaryExpression : AnyPostfixExpression
+        public interface IPrimaryExpression : IPostfixExpression
         {
             private static TokenSet Firsts = new TokenSet(
-                ToKind.Number, ToKind.String, ToKind.Name, ToKind.KwSelf, ToKind.LParent, ToKind.LBracket, ToKind.Dot, ToKind.KwFalse, ToKind.KwTrue,
+                ToKind.Number, ToKind.String, ToKind.Name, ToKind.KwSelf, ToKind.LParent, ToKind.LBracket, ToKind.Dot, ToKind.False, ToKind.True,
                 ToKind.KwNil, ToKind.Backslash);
 
-            public static new AnyPrimaryExpression? TryParse(Parser parser)
+            public static new IPrimaryExpression? TryParse(Parser parser)
             {
                 switch (parser.Current)
                 {
                     case ToKind.Number:
-                        return NumberLiteralExpression.Parse(parser);
+                        return ILiteralExpression.NumberLiteralExpression.Parse(parser);
                     case ToKind.String:
-                        return StringLiteralExpression.Parse(parser);
+                        return ILiteralExpression.StringLiteralExpression.Parse(parser);
                     case ToKind.Name:
                         return NameExpression.Parse(parser);
                     case ToKind.LParent:
@@ -26,24 +26,24 @@ namespace SixComp
                     case ToKind.LBracket:
                         return ArrayOrDictionary(parser);
                     case ToKind.LBrace:
-                        return ClosureExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(AnyPrimaryExpression)}");
+                        return ClosureExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(IPrimaryExpression)}");
                     case ToKind.Dot:
                         return ImplicitMemberExpression.Parse(parser);
-                    case ToKind.KwFalse:
-                    case ToKind.KwTrue:
-                        return BoolLiteralExpression.Parse(parser);
+                    case ToKind.False:
+                    case ToKind.True:
+                        return ILiteralExpression.BoolLiteralExpression.Parse(parser);
                     case ToKind.KwNil:
-                        return NilLiteralExpression.Parse(parser);
+                        return ILiteralExpression.NilLiteralExpression.Parse(parser);
                     case ToKind.Backslash:
                         return KeyPathExpression.Parse(parser);
                     case ToKind.CdFile:
-                        return FileLiteralExpression.Parse(parser);
+                        return ILiteralExpression.FileLiteralExpression.Parse(parser);
                     case ToKind.CdLine:
-                        return LineLiteralExpression.Parse(parser);
+                        return ILiteralExpression.LineLiteralExpression.Parse(parser);
                     case ToKind.CdColumn:
-                        return ColumnLiteralExpression.Parse(parser);
+                        return ILiteralExpression.ColumnLiteralExpression.Parse(parser);
                     case ToKind.CdFunction:
-                        return FunctionLiteralExpression.Parse(parser);
+                        return ILiteralExpression.FunctionLiteralExpression.Parse(parser);
                     default:
                         if (BaseName.Contextual.Contains(parser.Current))
                         {
@@ -53,7 +53,7 @@ namespace SixComp
                 }
             }
 
-            private static AnyPrimaryExpression NestedOrTuple(Parser parser)
+            private static IPrimaryExpression NestedOrTuple(Parser parser)
             {
                 var token = parser.Consume(ToKind.LParent);
 
@@ -73,12 +73,12 @@ namespace SixComp
                 return TupleExpression.From(elements);
             }
 
-            private static AnyPrimaryExpression ArrayOrDictionary(Parser parser)
+            private static IPrimaryExpression ArrayOrDictionary(Parser parser)
             {
                 var offset = parser.Offset;
 
                 parser.Consume(ToKind.LBracket);
-                AnyExpression.TryParse(parser);
+                IExpression.TryParse(parser);
                 var current = parser.Current;
 
                 parser.Offset = offset;

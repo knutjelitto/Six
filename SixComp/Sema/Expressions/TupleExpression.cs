@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class TupleExpression : Items<TupleExpression.TupleElement, Tree.TupleExpression>, IExpression
+    public class TupleExpression : Items<TupleExpression.TupleElement, ParseTree.TupleExpression>, IExpression
     {
-        public TupleExpression(IScoped outer, Tree.TupleExpression tree)
+        public TupleExpression(IScoped outer, ParseTree.TupleExpression tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -16,14 +16,14 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.TupleExpression);
         }
 
-        private static IEnumerable<TupleElement> Enum(IScoped outer, Tree.TupleExpression tree)
+        private static IEnumerable<TupleElement> Enum(IScoped outer, ParseTree.TupleExpression tree)
         {
             return tree.Elements.Select(element => new TupleElement(outer, element));
         }
 
-        public class TupleElement : Base<Tree.TupleElement>
+        public class TupleElement : Base<ParseTree.TupleElement>
         {
-            public TupleElement(IScoped outer, Tree.TupleElement tree)
+            public TupleElement(IScoped outer, ParseTree.TupleElement tree)
                 : base(outer, tree)
             {
                 Name = Tree.Name == null ? null : new BaseName(Outer, Tree.Name);

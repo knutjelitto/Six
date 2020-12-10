@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyStatement : IWritable
+        public interface IStatement : IWritable
         {
-            public static AnyStatement? TryParse(Parser parser)
+            public static IStatement? TryParse(Parser parser)
             {
                 switch (parser.Current)
                 {
@@ -39,7 +39,7 @@ namespace SixComp
                         {
                             return LabeledStatement.Parse(parser);
                         }
-                        AnyStatement? statement = DeclarationStatement.TryParse(parser);
+                        IStatement? statement = DeclarationStatement.TryParse(parser);
                         if (statement == null)
                         {
                             statement = ExpressionStatement.TryParse(parser);

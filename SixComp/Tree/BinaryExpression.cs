@@ -2,18 +2,18 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class BinaryExpression : SyntaxNode
         {
-            private BinaryExpression(Operator @operator, AnyExpression right)
+            private BinaryExpression(Operator @operator, IExpression right)
             {
                 Operator = @operator;
                 Right = right;
             }
 
             public Operator Operator { get; }
-            public AnyExpression Right { get; }
+            public IExpression Right { get; }
 
             public static BinaryExpression? TryParse(Parser parser)
             {

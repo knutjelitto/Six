@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SELFType : AnyType
+        public class SELFType : IType
         {
             public SELFType(Token token)
             {

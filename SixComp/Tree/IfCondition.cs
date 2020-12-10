@@ -3,22 +3,22 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class IfCondition : BaseExpression, AnyCondition
+        public class IfCondition : BaseExpression, ICondition
         {
-            private IfCondition(AnyExpression expression)
+            private IfCondition(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
             public static IfCondition Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwIf);
 
-                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(IfCondition)}");
+                var expression = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(IfCondition)}");
 
                 return new IfCondition(expression);
             }

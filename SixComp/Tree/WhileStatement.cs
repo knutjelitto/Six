@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class WhileStatement : AnyStatement
+        public class WhileStatement : IStatement
         {
             public WhileStatement(ConditionList conditions, CodeBlock block)
             {

@@ -2,18 +2,18 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class TupleElement : SyntaxNode
         {
-            public TupleElement(BaseName? name, AnyExpression value)
+            public TupleElement(BaseName? name, IExpression value)
             {
                 Name = name;
                 Value = value;
             }
 
             public BaseName? Name { get; }
-            public AnyExpression Value { get; }
+            public IExpression Value { get; }
 
             public static TupleElement Parse(Parser parser)
             {
@@ -23,7 +23,7 @@ namespace SixComp
                     name = BaseName.Parse(parser);
                     parser.Consume(ToKind.Colon);
                 }
-                var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(TupleElement)}");
+                var value = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(TupleElement)}");
 
                 return new TupleElement(name, value);
             }

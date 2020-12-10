@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class PrecGroupDeclaration : AnyDeclaration
+        public class PrecGroupDeclaration : IDeclaration
         {
             public PrecGroupDeclaration(Prefix prefix, BaseName name, PrecGroupAttributeList attributes)
             {

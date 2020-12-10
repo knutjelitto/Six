@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TupleExpression : BaseExpression, AnyPrimaryExpression
+        public class TupleExpression : BaseExpression, IPrimaryExpression
         {
             private TupleExpression(TupleElementList elements)
             {

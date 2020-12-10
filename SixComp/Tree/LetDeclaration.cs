@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class LetDeclaration : AnyDeclaration
+        public class LetDeclaration : IDeclaration
         {
             public LetDeclaration(Prefix prefix, PatternInitializerList initializers)
             {

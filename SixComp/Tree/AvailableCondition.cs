@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class AvailableCondition : BaseExpression, AnyCondition
+        public class AvailableCondition : BaseExpression, ICondition
         {
             private AvailableCondition(AtTokenGroup tokens)
             {

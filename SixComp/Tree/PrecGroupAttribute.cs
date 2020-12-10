@@ -3,7 +3,7 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public abstract class PrecGroupAttribute : SyntaxNode
         {
@@ -66,14 +66,14 @@ namespace SixComp
                 {
                     parser.ConsumeAny();
                     parser.Consume(ToKind.Colon);
-                    var kind = parser.Current == ToKind.KwTrue;
+                    var kind = parser.Current == ToKind.True;
                     if (kind)
                     {
-                        parser.Consume(ToKind.KwTrue);
+                        parser.Consume(ToKind.True);
                     }
                     else
                     {
-                        parser.Consume(ToKind.KwFalse);
+                        parser.Consume(ToKind.False);
                     }
 
                     return new Assignment(kind);

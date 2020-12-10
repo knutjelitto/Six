@@ -1,15 +1,15 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class OptionalType : AnyType
+        public class OptionalType : IType
         {
-            public OptionalType(AnyType type)
+            public OptionalType(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public override string ToString()
             {

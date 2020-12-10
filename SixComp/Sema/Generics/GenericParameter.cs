@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class GenericParameter : Base<Tree.GenericParameter>, INamedDeclaration
+    public class GenericParameter : Base<ParseTree.GenericParameter>, INamedDeclaration
     {
-        public GenericParameter(IWithRestrictions where, Tree.GenericParameter tree)
+        public GenericParameter(IWithRestrictions where, ParseTree.GenericParameter tree)
             : base(where, tree)
         {
             Name = new BaseName(Outer, Tree.Name);

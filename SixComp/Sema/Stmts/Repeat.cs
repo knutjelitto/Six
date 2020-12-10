@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Repeat : Base<Tree.RepeatStatement>, IStatement
+    public class Repeat : Base<ParseTree.RepeatStatement>, IStatement
     {
-        public Repeat(IScoped outer, Tree.RepeatStatement tree)
+        public Repeat(IScoped outer, ParseTree.RepeatStatement tree)
             : base(outer, tree)
         {
             Block = new CodeBlock(Outer, Tree.Block);

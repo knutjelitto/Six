@@ -2,20 +2,20 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypeInheritanceList : ItemList<AnyType>
+        public class TypeInheritanceList : ItemList<IType>
         {
-            public TypeInheritanceList(List<AnyType> types) : base(types) { }
+            public TypeInheritanceList(List<IType> types) : base(types) { }
             public TypeInheritanceList() { }
 
             public static TypeInheritanceList Parse(Parser parser)
             {
-                var types = new List<AnyType>();
+                var types = new List<IType>();
 
                 do
                 {
-                    var type = AnyType.Parse(parser);
+                    var type = IType.Parse(parser);
 
                     types.Add(type);
                 }

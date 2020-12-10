@@ -4,9 +4,9 @@ using System.Diagnostics;
 
 namespace SixComp.Sema
 {
-    public class ExtensionDeclaration : BaseScoped<Tree.ExtensionDeclaration>, IDeclaration, IWithRestrictions
+    public class ExtensionDeclaration : BaseScoped<ParseTree.ExtensionDeclaration>, IDeclaration, IWithRestrictions
     {
-        public ExtensionDeclaration(IScoped outer, Tree.ExtensionDeclaration tree)
+        public ExtensionDeclaration(IScoped outer, ParseTree.ExtensionDeclaration tree)
             : base(outer, tree)
         {
             Extended = new TypeIdentifier(Outer, Tree.Name);

@@ -15,4 +15,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Six.peg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pegasus" Version="4.2.0-alpha0003" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PegGrammar Include="Six.peg" />
+  </ItemGroup>
+
 </Project>

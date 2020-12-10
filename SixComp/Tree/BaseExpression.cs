@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class BaseExpression : AnyExpression
+        public class BaseExpression : IExpression
         {
-            public virtual AnyExpression? LastExpression => this;
+            public virtual IExpression? LastExpression => this;
         }
     }
 }

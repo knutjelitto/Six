@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class TryExpression : Base<Tree.TryExpression>, IExpression
+    public class TryExpression : Base<ParseTree.TryExpression>, IExpression
     {
-        public TryExpression(IScoped outer, Tree.TryExpression tree) : base(outer, tree)
+        public TryExpression(IScoped outer, ParseTree.TryExpression tree) : base(outer, tree)
         {
             Kind = tree.Try.Kind;
             Expression = IExpression.Build(Outer, Tree.Expression);

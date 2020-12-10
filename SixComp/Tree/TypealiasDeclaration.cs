@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypealiasDeclaration : AnyDeclaration, INominal
+        public class TypealiasDeclaration : IDeclaration, INominal
         {
             public TypealiasDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypealiasAssignment assignment, RequirementClause requirements)
             {

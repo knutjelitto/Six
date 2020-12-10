@@ -1,17 +1,17 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public abstract class PostfixExpression : BaseExpression, AnyPostfixExpression
+        public abstract class PostfixExpression : BaseExpression, IPostfixExpression
         {
-            public PostfixExpression(AnyExpression left, Token op)
+            public PostfixExpression(IExpression left, Token op)
             {
                 Left = left;
                 Op = op;
                 Operator = BaseName.From(Op);
             }
 
-            public AnyExpression Left { get; }
+            public IExpression Left { get; }
             public Token Op { get; }
             public BaseName Operator { get; }
 

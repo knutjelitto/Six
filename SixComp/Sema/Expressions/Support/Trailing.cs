@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Trailing : Base<Tree.TrailingClosure>
+    public class Trailing : Base<ParseTree.TrailingClosure>
     {
-        public Trailing(IScoped outer, Tree.TrailingClosure tree)
+        public Trailing(IScoped outer, ParseTree.TrailingClosure tree)
             : base(outer, tree)
         {
             Label = BaseName.Maybe(Outer, tree.Label?.Name);

@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class TryExpression : BaseExpression
         {
-            private TryExpression(TryOperator @try, AnyExpression expression)
+            private TryExpression(TryOperator @try, IExpression expression)
             {
                 Try = @try;
                 Expression = expression;
@@ -15,15 +15,15 @@ namespace SixComp
 
 
             public TryOperator Try { get; }
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
-            public static TryExpression From(TryOperator @try, AnyExpression expression)
+            public static TryExpression From(TryOperator @try, IExpression expression)
             {
                 Debug.Assert(@try.Kind != TryKind.None);
                 return new TryExpression(@try, expression);
             }
 
-            public override AnyExpression? LastExpression => Expression.LastExpression;
+            public override IExpression? LastExpression => Expression.LastExpression;
         }
     }
 }

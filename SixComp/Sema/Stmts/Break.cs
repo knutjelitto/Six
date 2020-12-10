@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Break : Base<Tree.BreakStatement>, IStatement
+    public class Break : Base<ParseTree.BreakStatement>, IStatement
     {
-        public Break(IScoped outer, Tree.BreakStatement tree)
+        public Break(IScoped outer, ParseTree.BreakStatement tree)
             : base(outer, tree)
         {
             Label = Tree.Label == null ? null : new BaseName(Outer, Tree.Label);

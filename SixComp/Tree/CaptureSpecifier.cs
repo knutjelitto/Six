@@ -3,7 +3,7 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class CaptureSpecifier
         {

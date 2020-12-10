@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class DictionaryLiteral : ItemList<(AnyExpression key, AnyExpression value)>, AnyPrimaryExpression
+        public class DictionaryLiteral : ItemList<(IExpression key, IExpression value)>, IPrimaryExpression
         {
-            public DictionaryLiteral(List<(AnyExpression, AnyExpression)> items)
+            public DictionaryLiteral(List<(IExpression, IExpression)> items)
                 : base(items)
             {
             }
 
-            public AnyExpression? LastExpression => this;
+            public IExpression? LastExpression => this;
 
             public static DictionaryLiteral Parse(Parser parser)
             {
                 parser.Consume(ToKind.LBracket);
-                var items = new List<(AnyExpression, AnyExpression)>();
+                var items = new List<(IExpression, IExpression)>();
                 if (parser.Current == ToKind.Colon)
                 {
                     parser.ConsumeAny();
@@ -30,9 +30,9 @@ namespace SixComp
                     {
                         break; // additional ','
                     }
-                    var key = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
+                    var key = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
                     parser.Consume(ToKind.Colon);
-                    var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
+                    var value = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ArrayLiteral)}");
                     items.Add((key, value));
                 }
                 while (parser.Match(ToKind.Comma));

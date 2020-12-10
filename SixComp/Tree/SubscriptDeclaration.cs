@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SubscriptDeclaration : AnyDeclaration
+        public class SubscriptDeclaration : IDeclaration
         {
             public SubscriptDeclaration(Prefix prefx, GenericParameterClause generics, ParameterClause parameters, FunctionResult result, RequirementClause requirements, PropertyBlocks blocks)
             {
@@ -53,7 +53,7 @@ namespace SixComp
                         case ToKind.KwSet when !blocks.Have(parser.Current):
                             blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.Set));
                             break;
-                        case ToKind.Name when AnyVarDeclaration.Specials.Contains(parser.CurrentToken.Text):
+                        case ToKind.Name when IVarDeclaration.Specials.Contains(parser.CurrentToken.Text):
                             blocks.Add(PropertyBlock.Parse(parser, prefix, BlockKind.Special));
                             break;
                         default:

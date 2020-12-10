@@ -1,15 +1,15 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class ExplicitMemberExpression : PostfixExpression
         {
-            public ExplicitMemberExpression(AnyExpression left, Token op)
+            public ExplicitMemberExpression(IExpression left, Token op)
                 : base(left, op)
             {
             }
 
-            public static ExplicitMemberExpression Parse(Parser parser, AnyExpression left)
+            public static ExplicitMemberExpression Parse(Parser parser, IExpression left)
             {
                 var op = parser.Consume(ToKind.Dot);
 
@@ -23,18 +23,18 @@
 
             public class TupleMemberSelector : ExplicitMemberExpression
             {
-                private TupleMemberSelector(AnyExpression left, Token op, NumberLiteralExpression number)
+                private TupleMemberSelector(IExpression left, Token op, ILiteralExpression.NumberLiteralExpression number)
                     : base(left, op)
                 {
                     Number = number;
                 }
 
-                public NumberLiteralExpression Number { get; }
+                public ILiteralExpression.NumberLiteralExpression Number { get; }
 
-                public static TupleMemberSelector Parse(Parser parser, AnyExpression left, Token op)
+                public static TupleMemberSelector Parse(Parser parser, IExpression left, Token op)
                 {
                     //TODO: is incomplete - validate decimal digits
-                    var number = NumberLiteralExpression.Parse(parser);
+                    var number = ILiteralExpression.NumberLiteralExpression.Parse(parser);
 
                     return new TupleMemberSelector(left, op, number);
                 }
@@ -47,7 +47,7 @@
 
             public class NamedMemberSelector : ExplicitMemberExpression
             {
-                public NamedMemberSelector(AnyExpression left, Token op, FullName name, ArgumentNameClause names)
+                public NamedMemberSelector(IExpression left, Token op, FullName name, ArgumentNameClause names)
                     : base(left, op)
                 {
                     Name = name;
@@ -57,7 +57,7 @@
                 public FullName Name { get; }
                 public ArgumentNameClause Names { get; }
 
-                public static NamedMemberSelector Parse(Parser parser, AnyExpression left, Token op)
+                public static NamedMemberSelector Parse(Parser parser, IExpression left, Token op)
                 {
                     var name = FullName.Parse(parser);
 

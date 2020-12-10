@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class CompositionType : Items<ITypeDefinition, Tree.ProtocolCompositionType>, ITypeDefinition
+    public class CompositionType : Items<ITypeDefinition, ParseTree.ProtocolCompositionType>, ITypeDefinition
     {
-        public CompositionType(IScoped outer, Tree.ProtocolCompositionType tree)
+        public CompositionType(IScoped outer, ParseTree.ProtocolCompositionType tree)
             : base(outer, tree, Enum(outer, tree))
         {
             Debug.Assert(tree.Count >= 2);
@@ -18,7 +18,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.Union);
         }
 
-        private static IEnumerable<ITypeDefinition> Enum(IScoped outer, Tree.ProtocolCompositionType tree)
+        private static IEnumerable<ITypeDefinition> Enum(IScoped outer, ParseTree.ProtocolCompositionType tree)
         {
             return tree.Select(type => ITypeDefinition.Build(outer, type));
         }

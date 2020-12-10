@@ -3,23 +3,23 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SwitchStatement : AnyStatement
+        public class SwitchStatement : IStatement
         {
-            public SwitchStatement(AnyExpression value, SwitchCaseClause cases)
+            public SwitchStatement(IExpression value, SwitchCaseClause cases)
             {
                 Value = value;
                 Cases = cases;
             }
 
-            public AnyExpression Value { get; }
+            public IExpression Value { get; }
             public SwitchCaseClause Cases { get; }
 
             public static SwitchStatement Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwSwitch);
-                var value = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
+                var value = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(SwitchStatement)}");
                 var cases = SwitchCaseClause.Parse(parser);
 
                 return new SwitchStatement(value, cases);

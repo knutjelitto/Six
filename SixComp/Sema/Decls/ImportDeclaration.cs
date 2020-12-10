@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ImportDeclaration : Items<BaseName, Tree.ImportDeclaration>, IDeclaration
+    public class ImportDeclaration : Items<BaseName, ParseTree.ImportDeclaration>, IDeclaration
     {
-        public ImportDeclaration(IScoped outer, Tree.ImportDeclaration tree)
+        public ImportDeclaration(IScoped outer, ParseTree.ImportDeclaration tree)
             : base(outer, tree, Enum(outer, tree))
         {
             Kind = tree.Kind;
@@ -24,7 +24,7 @@ namespace SixComp.Sema
             }
         }
 
-        public static IEnumerable<BaseName> Enum(IScoped outer, Tree.ImportDeclaration tree)
+        public static IEnumerable<BaseName> Enum(IScoped outer, ParseTree.ImportDeclaration tree)
         {
             return tree.Path.Select(part => new BaseName(outer, part.Name));
         }

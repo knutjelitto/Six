@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class FunctionArguments : Items<FunctionArgument, Tree.ArgumentList>
+    public class FunctionArguments : Items<FunctionArgument, ParseTree.ArgumentList>
     {
-        public FunctionArguments(IScoped outer, Tree.ArgumentList tree)
+        public FunctionArguments(IScoped outer, ParseTree.ArgumentList tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -16,7 +16,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.Arguments);
         }
 
-        private static IEnumerable<FunctionArgument> Enum(IScoped outer, Tree.ArgumentList tree)
+        private static IEnumerable<FunctionArgument> Enum(IScoped outer, ParseTree.ArgumentList tree)
         {
             return tree.Select(argument => new FunctionArgument(outer, argument));
         }

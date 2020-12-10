@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace SixComp.Sema
+﻿namespace SixComp.Sema
 {
     public interface IScoped 
     {

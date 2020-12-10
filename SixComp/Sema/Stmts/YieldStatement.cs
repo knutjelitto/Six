@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class YieldStatement : Base<Tree.YieldStatement>, IStatement
+    public class YieldStatement : Base<ParseTree.YieldStatement>, IStatement
     {
-        public YieldStatement(IScoped outer, Tree.YieldStatement tree)
+        public YieldStatement(IScoped outer, ParseTree.YieldStatement tree)
             : base(outer, tree)
         {
             Value = IExpression.MaybeBuild(Outer, tree.Value);

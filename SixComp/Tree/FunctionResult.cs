@@ -2,23 +2,23 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class FunctionResult : AnyType
+        public class FunctionResult : IType
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.Arrow);
 
-            private FunctionResult(AnyType type)
+            private FunctionResult(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static FunctionResult Parse(Parser parser)
             {
                 parser.Consume(ToKind.Arrow);
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new FunctionResult(type);
             }

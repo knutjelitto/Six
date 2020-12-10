@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace SixComp.Sema
 {
-    public class FuncParameter: Base<Tree.Parameter>, INamedDeclaration
+    public class FuncParameter: Base<ParseTree.Parameter>, INamedDeclaration
     {
-        public FuncParameter(IScoped outer, Tree.Parameter tree)
+        public FuncParameter(IScoped outer, ParseTree.Parameter tree)
             : base(outer, tree)
         {
             Intern = new BaseName(Outer, Tree.Intern);

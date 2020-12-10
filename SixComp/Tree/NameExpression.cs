@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class NameExpression : BaseExpression, AnyPrimaryExpression
+        public class NameExpression : BaseExpression, IPrimaryExpression
         {
             public NameExpression(BaseName name, GenericArgumentClause arguments)
             {

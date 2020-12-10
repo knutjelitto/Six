@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypeIdentifier : ItemList<FullName>, AnyType
+        public class TypeIdentifier : ItemList<FullName>, IType
         {
             public TypeIdentifier(List<FullName> names) : base(names) { }
 

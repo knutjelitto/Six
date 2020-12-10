@@ -2,24 +2,24 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class AssignExpression : BaseExpression, AnyExpression
+        public class AssignExpression : BaseExpression, IExpression
         {
-            public AssignExpression(AnyExpression left, AnyExpression right)
+            public AssignExpression(IExpression left, IExpression right)
             {
                 Left = left;
                 Right = right;
             }
 
-            public AnyExpression Left { get; }
-            public AnyExpression Right { get; }
+            public IExpression Left { get; }
+            public IExpression Right { get; }
 
-            public static AssignExpression Parse(Parser parser, AnyExpression left)
+            public static AssignExpression Parse(Parser parser, IExpression left)
             {
                 parser.Consume(ToKind.Assign);
 
-                var right = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(AssignExpression)}");
+                var right = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(AssignExpression)}");
 
                 return new AssignExpression(left, right);
             }

@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class ImplicitSelectorExpression: Base<Tree.ImplicitMemberExpression>, IExpression
+    public class ImplicitSelectorExpression: Base<ParseTree.ImplicitMemberExpression>, IExpression
     {
-        public ImplicitSelectorExpression(IScoped outer, Tree.ImplicitMemberExpression tree)
+        public ImplicitSelectorExpression(IScoped outer, ParseTree.ImplicitMemberExpression tree)
             : base(outer, tree)
         {
             Name = new BaseName(Outer, Tree.Name);

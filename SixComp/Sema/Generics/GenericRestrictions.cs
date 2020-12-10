@@ -14,7 +14,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.Where);
         }
 
-        public void Add(IScoped outer, Tree.GenericParameter tree)
+        public void Add(IScoped outer, ParseTree.GenericParameter tree)
         {
             if (tree.Requirement != null)
             {
@@ -24,7 +24,7 @@ namespace SixComp.Sema
             }
         }
 
-        public void Add(IScoped outer, Tree.RequirementClause tree)
+        public void Add(IScoped outer, ParseTree.RequirementClause tree)
         {
             foreach (var req in tree.Requirements)
             {
@@ -32,26 +32,26 @@ namespace SixComp.Sema
             }
         }
 
-        private GenericRestriction Build(IScoped outer, Tree.AnyRequirement tree)
+        private GenericRestriction Build(IScoped outer, ParseTree.ITypeRestriction tree)
         {
             return Visit(outer, (dynamic)tree);
         }
 
-        private GenericRestriction Visit(IScoped outer, Tree.SameTypeRequirement tree)
+        private GenericRestriction Visit(IScoped outer, ParseTree.ITypeRestriction.SameTypeRequirement tree)
         {
             var left = ITypeDefinition.Build(outer, tree.Name);
             var right = ITypeDefinition.Build(outer, tree.Type);
             return new GenericSameType(outer, left, right);
         }
 
-        private GenericRestriction Visit(IScoped outer, Tree.ConformanceRequirement tree)
+        private GenericRestriction Visit(IScoped outer, ParseTree.ITypeRestriction.ConformanceRequirement tree)
         {
             var left = ITypeDefinition.Build(outer, tree.Name);
             var right = ITypeDefinition.Build(outer, tree.Composition);
             return new GenericConformance(outer, left, right);
         }
 
-        private GenericRestriction Visit(IScoped outer, Tree.AnyRequirement tree)
+        private GenericRestriction Visit(IScoped outer, ParseTree.ITypeRestriction tree)
         {
             throw new NotImplementedException();
         }

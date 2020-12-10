@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class ProtocolDeclaration : Nominal<Tree.ProtocolDeclaration>
+    public class ProtocolDeclaration : Nominal<ParseTree.ProtocolDeclaration>
     {
-        public ProtocolDeclaration(IScoped outer, Tree.ProtocolDeclaration tree)
+        public ProtocolDeclaration(IScoped outer, ParseTree.ProtocolDeclaration tree)
             : base(outer, tree)
         {
             Declare(this);

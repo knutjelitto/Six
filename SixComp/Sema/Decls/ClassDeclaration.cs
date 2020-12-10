@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class ClassDeclaration : Nominal<Tree.ClassDeclaration>
+    public class ClassDeclaration : Nominal<ParseTree.ClassDeclaration>
     {
-        public ClassDeclaration(IScoped outer, Tree.ClassDeclaration tree)
+        public ClassDeclaration(IScoped outer, ParseTree.ClassDeclaration tree)
             : base(outer, tree)
         {
             Declare(this);

@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class DeinitializerDeclaration : AnyDeclaration
+        public class DeinitializerDeclaration : IDeclaration
         {
             public DeinitializerDeclaration(Prefix prefix, CodeBlock block)
             {

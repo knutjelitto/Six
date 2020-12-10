@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyPattern : AnySyntaxNode, IWritable
+        public interface IPattern : ISyntaxNode, IWritable
         {
-            public static AnyPattern Parse(Parser parser, TokenSet? follows = null)
+            public static IPattern Parse(Parser parser, TokenSet? follows = null)
             {
                 var pattern = Pattern(parser);
 
@@ -21,7 +21,7 @@ namespace SixComp
 
                 return pattern;
 
-                AnyPattern Pattern(Parser parser)
+                IPattern Pattern(Parser parser)
                 {
                     var offset = parser.Offset;
 

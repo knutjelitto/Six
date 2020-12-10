@@ -27,7 +27,9 @@ namespace SixComp
 
             var compiler = new Compiler(Navi);
 
-            var names = Sources.GetFiles("*.swift").Select(f => f.Name).ToList();
+            var peg = new SixComp.Peg.Parser();
+
+            var names = Sources.GetFiles("*.swift").Select(f => f.Name).Where(n => !n.StartsWith('_')).ToList();
 
             var loaded = new List<(string name, Context context)>();
 
@@ -44,9 +46,19 @@ namespace SixComp
             var module = new Module(moduleName);
 
             Console.Write("PARSE       ");
-            foreach (var (name, context) in loaded)
+            foreach (var (_, context) in loaded)
             {
                 Console.Write($".");
+
+                try
+                {
+                    peg.Parse(context.Source.Content);
+                }
+                catch (FormatException error)
+                {
+                    Console.WriteLine($"ERROR: {error}");
+                    break;
+                }
 
                 var unit = compiler.Parse(new ConsoleWriter(), context);
 

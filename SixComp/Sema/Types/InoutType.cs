@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class InoutType : Base<Tree.PrefixedType>, ITypeDefinition
+    public class InoutType : Base<ParseTree.PrefixedType>, ITypeDefinition
     {
-        public InoutType(IScoped outer, Tree.PrefixedType tree)
+        public InoutType(IScoped outer, ParseTree.PrefixedType tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(outer, tree.Type);

@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class CodeBlock : BaseScoped<Tree.CodeBlock>, IStatement
+    public class CodeBlock : BaseScoped<ParseTree.CodeBlock>, IStatement
     {
-        public CodeBlock(IScoped outer, Tree.CodeBlock tree)
+        public CodeBlock(IScoped outer, ParseTree.CodeBlock tree)
             : base(outer, tree)
         {
             Statements = new Statements(this, tree.Statements);
@@ -17,7 +17,7 @@ namespace SixComp.Sema
             Statements.ReportList(writer, Strings.Head.Block);
         }
 
-        public static CodeBlock? Maybe(IScoped outer, Tree.CodeBlock? tree)
+        public static CodeBlock? Maybe(IScoped outer, ParseTree.CodeBlock? tree)
         {
             if (tree == null)
             {

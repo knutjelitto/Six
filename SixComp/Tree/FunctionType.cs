@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class FunctionType : AnyType
+        public class FunctionType : IType
         {
             public FunctionType(Prefix prefix, FunctionTypeArgumentClause arguments, Optional async, Optional throws, FunctionResult result)
             {

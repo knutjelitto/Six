@@ -1,21 +1,21 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class RangeExpression : BaseExpression, AnyExpression
+        public class RangeExpression : BaseExpression, IExpression
         {
-            public RangeExpression(AnyExpression? left, AnyExpression? right, bool exclusive)
+            public RangeExpression(IExpression? left, IExpression? right, bool exclusive)
             {
                 Left = left;
                 Right = right;
                 Exclusive = exclusive;
             }
 
-            public AnyExpression? Left { get; }
-            public AnyExpression? Right { get; }
+            public IExpression? Left { get; }
+            public IExpression? Right { get; }
             public bool Exclusive { get; }
 
-            public override AnyExpression? LastExpression => Right?.LastExpression;
+            public override IExpression? LastExpression => Right?.LastExpression;
         }
     }
 }

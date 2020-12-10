@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class UnwrapType : Base<Tree.UnwrapType>, ITypeDefinition
+    public class UnwrapType : Base<ParseTree.UnwrapType>, ITypeDefinition
     {
-        public UnwrapType(IScoped outer, Tree.UnwrapType tree)
+        public UnwrapType(IScoped outer, ParseTree.UnwrapType tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(outer, tree.Type);

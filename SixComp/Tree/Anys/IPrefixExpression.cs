@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyPrefixExpression : AnyExpression
+        public interface IPrefixExpression : IExpression
         {
-            public static new AnyPrefixExpression? TryParse(Parser parser)
+            public static new IPrefixExpression? TryParse(Parser parser)
             {
                 if (parser.Current == ToKind.Amper)
                 {
@@ -19,7 +19,7 @@ namespace SixComp
                 if (parser.IsPrefixOperator())
                 {
                     var op = parser.ConsumeAny();
-                    var operand = AnyPostfixExpression.TryParse(parser);
+                    var operand = IPostfixExpression.TryParse(parser);
                     if (operand != null)
                     {
                         if (op.Kind == ToKind.Amper)
@@ -31,7 +31,7 @@ namespace SixComp
                     parser.Offset = offset;
                     return null;
                 }
-                return AnyPostfixExpression.TryParse(parser);
+                return IPostfixExpression.TryParse(parser);
             }
         }
     }

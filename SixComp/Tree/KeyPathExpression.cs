@@ -3,19 +3,19 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class KeyPathExpression : BaseExpression, AnyPrimaryExpression
+        public class KeyPathExpression : BaseExpression, IPrimaryExpression
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.Backslash);
 
-            public KeyPathExpression(AnyType? type, KeyPathComponentList components)
+            public KeyPathExpression(IType? type, KeyPathComponentList components)
             {
                 Type = type;
                 Components = components;
             }
 
-            public AnyType? Type { get; }
+            public IType? Type { get; }
             public KeyPathComponentList Components { get; }
 
             public static KeyPathExpression Parse(Parser parser)
@@ -24,7 +24,7 @@ namespace SixComp
 
                 var type = parser.Current == ToKind.Dot
                     ? null
-                    : AnyType.Parse(parser);
+                    : IType.Parse(parser);
 
                 var components = KeyPathComponentList.Parse(parser);
 

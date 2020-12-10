@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class DeinitDeclaration : Base<Tree.DeinitializerDeclaration>, IDeclaration
+    public class DeinitDeclaration : Base<ParseTree.DeinitializerDeclaration>, IDeclaration
     {
-        public DeinitDeclaration(IScoped outer, Tree.DeinitializerDeclaration tree)
+        public DeinitDeclaration(IScoped outer, ParseTree.DeinitializerDeclaration tree)
             : base(outer, tree)
         {
             Block = new CodeBlock(outer, tree.Block);

@@ -1,6 +1,6 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class IndexingClause
         {

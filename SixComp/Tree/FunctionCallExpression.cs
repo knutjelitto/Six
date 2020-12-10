@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class FunctionCallExpression : PostfixExpression
         {
-            private FunctionCallExpression(AnyExpression left, Token op, ArgumentClause arguments, TrailingClosureList closures) : base(left, op)
+            private FunctionCallExpression(IExpression left, Token op, ArgumentClause arguments, TrailingClosureList closures) : base(left, op)
             {
                 Arguments = arguments;
                 Closures = closures;
@@ -15,7 +15,7 @@
 
             public bool IsDrained => Arguments.Missing && Closures.Count == 0;
 
-            public static FunctionCallExpression Parse(Parser parser, AnyExpression left)
+            public static FunctionCallExpression Parse(Parser parser, IExpression left)
             {
                 var op = parser.CurrentToken;
 

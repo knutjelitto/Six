@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class PrecedenceGroupDeclaration : Base<Tree.PrecGroupDeclaration>, IDeclaration, INamed
+    public class PrecedenceGroupDeclaration : Base<ParseTree.PrecGroupDeclaration>, IDeclaration, INamed
     {
-        public PrecedenceGroupDeclaration(IScoped outer, Tree.PrecGroupDeclaration tree)
+        public PrecedenceGroupDeclaration(IScoped outer, ParseTree.PrecGroupDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);

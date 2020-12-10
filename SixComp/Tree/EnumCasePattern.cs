@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class EnumCasePattern : SyntaxNode, AnyPattern
+        public class EnumCasePattern : SyntaxNode, IPattern
         {
             //
             // enum-case-pattern -> type-name? '.' enum-case-name tuple-pattern?
@@ -18,7 +18,7 @@
             public BaseName CaseName { get; }
             public TuplePattern? TuplePattern { get; }
 
-            public static AnyPattern Parse(Parser parser)
+            public static IPattern Parse(Parser parser)
             {
                 var offset = parser.Offset;
 

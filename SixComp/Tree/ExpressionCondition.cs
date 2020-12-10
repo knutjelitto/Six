@@ -1,19 +1,19 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExpressionCondition : BaseExpression, AnyCondition
+        public class ExpressionCondition : BaseExpression, ICondition
         {
-            private ExpressionCondition(AnyExpression expression)
+            private ExpressionCondition(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
             public static ExpressionCondition? TryParse(Parser parser)
             {
-                var expression = AnyExpression.TryParse(parser);
+                var expression = IExpression.TryParse(parser);
 
                 if (expression == null)
                 {
@@ -23,7 +23,7 @@
                 return new ExpressionCondition(expression);
             }
 
-            public override AnyExpression? LastExpression
+            public override IExpression? LastExpression
             {
                 get
                 {

@@ -1,19 +1,19 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SelectExpression : BaseExpression, AnyExpression
+        public class SelectExpression : BaseExpression, IExpression
         {
-            public SelectExpression(AnyExpression left, BaseName name)
+            public SelectExpression(IExpression left, BaseName name)
             {
                 Left = left;
                 Name = name;
             }
 
-            public AnyExpression Left { get; }
+            public IExpression Left { get; }
             public BaseName Name { get; }
 
-            public static SelectExpression Parse(Parser parser, AnyExpression left)
+            public static SelectExpression Parse(Parser parser, IExpression left)
             {
                 parser.Consume(ToKind.Dot);
 

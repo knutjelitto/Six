@@ -2,24 +2,24 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class PatternInitializer : IWritable
         {
-            public PatternInitializer(AnyPattern pattern, TypeAnnotation? type, Initializer? initializer)
+            public PatternInitializer(IPattern pattern, TypeAnnotation? type, Initializer? initializer)
             {
                 Pattern = pattern;
                 Type = type;
                 Initializer = initializer;
             }
 
-            public AnyPattern Pattern { get; }
+            public IPattern Pattern { get; }
             public TypeAnnotation? Type { get; }
             public Initializer? Initializer { get; }
 
             public static PatternInitializer Parse(Parser parser)
             {
-                var pattern = AnyPattern.Parse(parser);
+                var pattern = IPattern.Parse(parser);
                 var type = parser.Try(TypeAnnotation.Firsts, TypeAnnotation.Parse);
                 var initializer = parser.Try(ToKind.Assign, Initializer.Parse);
 

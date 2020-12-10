@@ -1,0 +1,28 @@
+﻿@namespace SixComp.Peg
+@accessibility internal
+@classname Parser
+@ignorecase false
+//@resources MyProject.Properties.Resources
+//@start startingRule
+@trace true
+//@using System.Linq
+//@using { Foo = System.String }
+
+unit
+	=	statement* EOF
+
+
+statement 
+	=	declaration_statement
+
+
+declaration_statement 
+	=	'func'
+
+space
+	= line_comment
+
+line_comment
+	= '//'
+
+EOF	= !.

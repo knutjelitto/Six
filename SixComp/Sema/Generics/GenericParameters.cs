@@ -7,7 +7,7 @@ namespace SixComp.Sema
 {
     public class GenericParameters : Items<GenericParameter>
     {
-        public GenericParameters(IWithRestrictions where, Tree.GenericParameterClause parameters)
+        public GenericParameters(IWithRestrictions where, ParseTree.GenericParameterClause parameters)
             : base(where, Enum(where, parameters))
         {
         }
@@ -17,7 +17,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.GenericParameters);
         }
 
-        private static IEnumerable<GenericParameter> Enum(IWithRestrictions where, Tree.GenericParameterClause tree)
+        private static IEnumerable<GenericParameter> Enum(IWithRestrictions where, ParseTree.GenericParameterClause tree)
         {
             return tree.Parameters.Select(p => new GenericParameter(where, p));
         }

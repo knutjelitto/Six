@@ -4,9 +4,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class SubscriptDeclaration : BaseScoped<Tree.SubscriptDeclaration>, IDeclaration, IWithGenerics
+    public class SubscriptDeclaration : BaseScoped<ParseTree.SubscriptDeclaration>, IDeclaration, IWithGenerics
     {
-        public SubscriptDeclaration(IScoped outer, Tree.SubscriptDeclaration tree)
+        public SubscriptDeclaration(IScoped outer, ParseTree.SubscriptDeclaration tree)
             : base(outer, tree)
         {
             Where = new GenericRestrictions(this);

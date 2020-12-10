@@ -2,20 +2,20 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExpressionPattern : SyntaxNode, AnyPattern
+        public class ExpressionPattern : SyntaxNode, IPattern
         {
-            private ExpressionPattern(AnyExpression expression)
+            private ExpressionPattern(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
             public static ExpressionPattern Parse(Parser parser)
             {
-                var expression = AnyExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ExpressionPattern)}");
+                var expression = IExpression.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ExpressionPattern)}");
 
                 return new ExpressionPattern(expression);
             }

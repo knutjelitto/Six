@@ -3,20 +3,20 @@ using System.Linq;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class InfixList : BaseExpression
         {
-            public InfixList(AnyPrefixExpression left, BinaryExpressionList binaries)
+            public InfixList(IPrefixExpression left, BinaryExpressionList binaries)
             {
                 Left = left;
                 Binaries = binaries;
             }
 
-            public AnyPrefixExpression Left { get; }
+            public IPrefixExpression Left { get; }
             public BinaryExpressionList Binaries { get; }
 
-            public override AnyExpression? LastExpression
+            public override IExpression? LastExpression
             {
                 get
                 {
@@ -24,13 +24,13 @@ namespace SixComp
                 }
             }
 
-            public static AnyExpression? TryParse(Parser parser, bool withBinaries = true)
+            public static IExpression? TryParse(Parser parser, bool withBinaries = true)
             {
                 var offset = parser.Offset;
 
                 var tryOp = TryOperator.Parse(parser);
 
-                var left = AnyPrefixExpression.TryParse(parser);
+                var left = IPrefixExpression.TryParse(parser);
 
                 if (left == null)
                 {
@@ -42,7 +42,7 @@ namespace SixComp
                     ? BinaryExpressionList.Parse(parser)
                     : new BinaryExpressionList();
 
-                AnyExpression expression;
+                IExpression expression;
                 if (binaries.Count > 0)
                 {
                     expression = new InfixList(left, binaries);

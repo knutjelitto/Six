@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypeList : ItemList<AnyType>
+        public class TypeList : ItemList<IType>
         {
-            public TypeList(List<AnyType> items) : base(items) { }
+            public TypeList(List<IType> items) : base(items) { }
             public TypeList() { }
 
             public override string ToString()

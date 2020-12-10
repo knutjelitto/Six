@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class TypeExpression : Base<Tree.TypeExpression>, IExpression
+    public class TypeExpression : Base<ParseTree.TypeExpression>, IExpression
     {
-        public TypeExpression(IScoped outer, Tree.TypeExpression tree)
+        public TypeExpression(IScoped outer, ParseTree.TypeExpression tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(outer, tree.Type);

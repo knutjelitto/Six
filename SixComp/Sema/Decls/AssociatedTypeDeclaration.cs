@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class AssociatedTypeDeclaration : Base<Tree.AssociatedTypeDeclaration>, INamedDeclaration, IWithRestrictions
+    public class AssociatedTypeDeclaration : Base<ParseTree.AssociatedTypeDeclaration>, INamedDeclaration, IWithRestrictions
     {
-        public AssociatedTypeDeclaration(IScoped outer, Tree.AssociatedTypeDeclaration tree)
+        public AssociatedTypeDeclaration(IScoped outer, ParseTree.AssociatedTypeDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);

@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class FunctionDeclaration : AnyDeclaration, INominal
+        public class FunctionDeclaration : IDeclaration, INominal
         {
             public FunctionDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, ParameterClause parameters, FunctionResult? result, RequirementClause requirements, CodeBlock? block)
             {

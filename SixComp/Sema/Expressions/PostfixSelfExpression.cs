@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class PostfixSelf : Base<Tree.PostfixSelfExpression>, IExpression
+    public class PostfixSelf : Base<ParseTree.PostfixSelfExpression>, IExpression
     {
-        public PostfixSelf(IScoped outer, Tree.PostfixSelfExpression tree)
+        public PostfixSelf(IScoped outer, ParseTree.PostfixSelfExpression tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);

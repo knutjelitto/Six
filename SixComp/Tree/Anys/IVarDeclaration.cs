@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyVarDeclaration : AnyDeclaration
+        public interface IVarDeclaration : IDeclaration
         {
             public static HashSet<string> Specials = new HashSet<string>
-        {
-            "_modify",
-            "_read",
-            "unsafeAddress",
-            "unsafeMutableAddress",
-        };
+            {
+                "_modify",
+                "_read",
+                "unsafeAddress",
+                "unsafeMutableAddress",
+            };
 
             public static bool CheckWillSetDitSet(Parser parser)
             {
@@ -38,7 +38,7 @@ namespace SixComp
                 return false;
             }
 
-            public static AnyVarDeclaration Parse(Parser parser, Prefix prefix)
+            public static IVarDeclaration Parse(Parser parser, Prefix prefix)
             {
                 // already parsed //parser.Consume(ToKind.KwVar);
 
@@ -46,9 +46,9 @@ namespace SixComp
 
                 var pattInit = PatternInitializer.Parse(parser);
                 var pattInits = new List<PatternInitializer>
-            {
-                pattInit
-            };
+                {
+                    pattInit
+                };
 
                 while (parser.Match(ToKind.Comma))
                 {

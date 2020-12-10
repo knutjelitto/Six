@@ -2,18 +2,18 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class DeclarationList : ItemList<AnyDeclaration>
+        public class DeclarationList : ItemList<IDeclaration>
         {
-            public DeclarationList(List<AnyDeclaration> items) : base(items) { }
+            public DeclarationList(List<IDeclaration> items) : base(items) { }
             public DeclarationList() { }
 
-            public static DeclarationList Parse(Parser parser, AnyDeclaration.Context context)
+            public static DeclarationList Parse(Parser parser, IDeclaration.Context context)
             {
-                var declarations = new List<AnyDeclaration>();
+                var declarations = new List<IDeclaration>();
 
-                while (AnyDeclaration.TryParse(parser, context) is AnyDeclaration declaration)
+                while (IDeclaration.TryParse(parser, context) is IDeclaration declaration)
                 {
                     declarations.Add(declaration);
 

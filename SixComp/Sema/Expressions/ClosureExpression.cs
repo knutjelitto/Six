@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ClosureExpression : BaseScoped<Tree.ClosureExpression>, IExpression
+    public class ClosureExpression : BaseScoped<ParseTree.ClosureExpression>, IExpression
     {
-        public ClosureExpression(IScoped outer, Tree.ClosureExpression tree)
+        public ClosureExpression(IScoped outer, ParseTree.ClosureExpression tree)
             : base(outer, tree)
         {
             if (tree.Captures.Captures.Count > 0)
@@ -37,9 +37,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class ClosureParameters : Items<ClosureParameter, Tree.ClosureParameterClause>
+        public class ClosureParameters : Items<ClosureParameter, ParseTree.ClosureParameterClause>
         {
-            public ClosureParameters(IScoped outer, Tree.ClosureParameterClause tree)
+            public ClosureParameters(IScoped outer, ParseTree.ClosureParameterClause tree)
                 : base(outer, tree, Enum(outer, tree))
             {
             }
@@ -51,18 +51,18 @@ namespace SixComp.Sema
 
             public void AddImplicit(BaseName name)
             {
-                Add(new ClosureParameter(Outer, (Tree.BaseName)name.Tree, null));
+                Add(new ClosureParameter(Outer, (ParseTree.BaseName)name.Tree, null));
             }
 
-            private static IEnumerable<ClosureParameter> Enum(IScoped outer, Tree.ClosureParameterClause tree)
+            private static IEnumerable<ClosureParameter> Enum(IScoped outer, ParseTree.ClosureParameterClause tree)
             {
                 return tree.Parameters.Select(parameter => new ClosureParameter(outer, parameter.Name, parameter.Type));
             }
         }
 
-        public class ClosureParameter : Base<Tree.BaseName>, INamedDeclaration
+        public class ClosureParameter : Base<ParseTree.BaseName>, INamedDeclaration
         {
-            public ClosureParameter(IScoped outer, Tree.BaseName tree, Tree.AnyType? treeType)
+            public ClosureParameter(IScoped outer, ParseTree.BaseName tree, ParseTree.IType? treeType)
                 : base(outer, tree)
             {
                 Name = new BaseName(outer, tree);
@@ -74,7 +74,7 @@ namespace SixComp.Sema
 
             public BaseName Name { get; }
             public ITypeDefinition? Type { get; }
-            public Tree.AnyType? TreeType { get; }
+            public ParseTree.IType? TreeType { get; }
 
             public override void Report(IWriter writer)
             {

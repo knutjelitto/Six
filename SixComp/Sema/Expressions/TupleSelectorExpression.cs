@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class TupleSelectorExpression: Base<Tree.ExplicitMemberExpression.TupleMemberSelector>, IExpression
+    public class TupleSelectorExpression: Base<ParseTree.ExplicitMemberExpression.TupleMemberSelector>, IExpression
     {
-        public TupleSelectorExpression(IScoped outer, Tree.ExplicitMemberExpression.TupleMemberSelector tree)
+        public TupleSelectorExpression(IScoped outer, ParseTree.ExplicitMemberExpression.TupleMemberSelector tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);

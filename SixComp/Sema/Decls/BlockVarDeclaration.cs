@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class BlockVarDeclaration : BaseScoped<Tree.VarDeclaration>, INamedDeclaration
+    public class BlockVarDeclaration : BaseScoped<ParseTree.VarDeclaration>, INamedDeclaration
     {
-        public BlockVarDeclaration(IScoped outer, Tree.VarDeclaration tree)
+        public BlockVarDeclaration(IScoped outer, ParseTree.VarDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Name);

@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class While : Base<Tree.WhileStatement>, IStatement
+    public class While : Base<ParseTree.WhileStatement>, IStatement
     {
-        public While(IScoped outer, Tree.WhileStatement tree)
+        public While(IScoped outer, ParseTree.WhileStatement tree)
             : base(outer, tree)
         {
             Conditions = new Conditions(Outer, Tree.Conditions);

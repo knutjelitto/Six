@@ -2,20 +2,20 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExpressionStatement : AnyStatement
+        public class ExpressionStatement : IStatement
         {
-            public ExpressionStatement(AnyExpression expression)
+            public ExpressionStatement(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
             public static ExpressionStatement? TryParse(Parser parser)
             {
-                var expression = AnyExpression.TryParse(parser);
+                var expression = IExpression.TryParse(parser);
 
                 if (expression == null)
                 {

@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class EnumCase : AnyDeclaration
+        public class EnumCase : IDeclaration
         {
             public EnumCase(Prefix prefix, EnumCaseItemList caseItems)
             {

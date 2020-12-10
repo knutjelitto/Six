@@ -110,22 +110,22 @@ namespace SixComp.Sema
                 {
                     switch (attribute)
                     {
-                        case Tree.PrecGroupAttribute.Relation relation when relation.Kind == RelationKind.HigherThan:
+                        case ParseTree.PrecGroupAttribute.Relation relation when relation.Kind == RelationKind.HigherThan:
                             group.MakeHigherThan(relation.Names.Select(name => new BaseName(outer, name)));
                             break;
-                        case Tree.PrecGroupAttribute.Relation relation when relation.Kind == RelationKind.LowerThan:
+                        case ParseTree.PrecGroupAttribute.Relation relation when relation.Kind == RelationKind.LowerThan:
                             group.MakeLowerThan(relation.Names.Select(name => new BaseName(outer, name)));
                             break;
-                        case Tree.PrecGroupAttribute.Assignment assignment:
+                        case ParseTree.PrecGroupAttribute.Assignment assignment:
                             group.SetAssign(assignment.IsAssignment);
                             break;
-                        case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.None:
+                        case ParseTree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.None:
                             group.SetAssoc(Common.AssociativityKind.None);
                             break;
-                        case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Left:
+                        case ParseTree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Left:
                             group.SetAssoc(Common.AssociativityKind.Left);
                             break;
-                        case Tree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Right:
+                        case ParseTree.PrecGroupAttribute.Associativity assoc when assoc.Kind == AssociativityKind.Right:
                             group.SetAssoc(Common.AssociativityKind.Right);
                             break;
                     }

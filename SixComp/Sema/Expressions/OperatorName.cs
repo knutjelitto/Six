@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class OperatorName : Base<Tree.OperatorExpression>, IExpression, INamed
+    public class OperatorName : Base<ParseTree.OperatorExpression>, IExpression, INamed
     {
-        public OperatorName(IScoped outer, Tree.OperatorExpression tree)
+        public OperatorName(IScoped outer, ParseTree.OperatorExpression tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Operator);

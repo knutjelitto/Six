@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class EnumDeclaration : Nominal<Tree.EnumDeclaration>
+    public class EnumDeclaration : Nominal<ParseTree.EnumDeclaration>
     {
-        public EnumDeclaration(IScoped outer, Tree.EnumDeclaration tree)
+        public EnumDeclaration(IScoped outer, ParseTree.EnumDeclaration tree)
             : base(outer, tree)
         {
             Declare(this);

@@ -3,15 +3,15 @@ using System.Linq;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExpressionItemList<T> : ItemList<T>, AnyExpression
-        where T : AnyExpression
+        public class ExpressionItemList<T> : ItemList<T>, IExpression
+        where T : IExpression
         {
             public ExpressionItemList(List<T> items) : base(items) { }
             public ExpressionItemList() { }
 
-            public AnyExpression? LastExpression
+            public IExpression? LastExpression
             {
                 get
                 {

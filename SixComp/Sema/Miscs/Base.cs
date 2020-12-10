@@ -29,7 +29,7 @@ namespace SixComp.Sema
             }
             Global.UnresolvedNamesTodo.Add(name.Text);
 
-            if (name.Tree is Tree.BaseName treeName)
+            if (name.Tree is ParseTree.BaseName treeName)
             {
                 treeName.Token.Error(writer, $"can't resolve `{name.Text}`");
             }

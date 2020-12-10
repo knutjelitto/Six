@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class VarDeclaration : AnyVarDeclaration
+        public class VarDeclaration : IVarDeclaration
         {
             public VarDeclaration(Prefix prefix, BaseName name, TypeAnnotation? type, PropertyBlocks blocks)
             {

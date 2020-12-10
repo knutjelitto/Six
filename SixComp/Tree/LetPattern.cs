@@ -1,21 +1,21 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class LetPattern : SyntaxNode, AnyPattern
+        public class LetPattern : SyntaxNode, IPattern
         {
-            public LetPattern(AnyPattern pattern)
+            public LetPattern(IPattern pattern)
             {
                 Pattern = pattern;
             }
 
-            public AnyPattern Pattern { get; }
+            public IPattern Pattern { get; }
 
             public static LetPattern Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwLet);
 
-                var pattern = AnyPattern.Parse(parser);
+                var pattern = IPattern.Parse(parser);
 
                 return new LetPattern(pattern);
             }

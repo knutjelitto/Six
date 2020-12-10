@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class TypeIdentifier : Items<FullName, Tree.TypeIdentifier>, ITypeDefinition
+    public class TypeIdentifier : Items<FullName, ParseTree.TypeIdentifier>, ITypeDefinition
     {
-        public TypeIdentifier(IScoped outer, Tree.TypeIdentifier tree)
+        public TypeIdentifier(IScoped outer, ParseTree.TypeIdentifier tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -42,7 +42,7 @@ namespace SixComp.Sema
             return string.Join(".", this);
         }
 
-        private static IEnumerable<FullName> Enum(IScoped outer, Tree.TypeIdentifier identifier)
+        private static IEnumerable<FullName> Enum(IScoped outer, ParseTree.TypeIdentifier identifier)
         {
             return identifier.Select(name => new FullName(outer, name));
         }

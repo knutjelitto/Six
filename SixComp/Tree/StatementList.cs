@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class StatementList : ItemList<AnyStatement>
+        public class StatementList : ItemList<IStatement>
         {
-            public StatementList(List<AnyStatement> statements) : base(statements) { }
+            public StatementList(List<IStatement> statements) : base(statements) { }
             public StatementList() { }
 
             public static StatementList Parse(Parser parser, TokenSet follow)
             {
-                var statements = new List<AnyStatement>();
+                var statements = new List<IStatement>();
 
                 while (!follow.Contains(parser.Current))
                 {
                     CcBlock.Ignore(parser, force: false);
-                    var statement = AnyStatement.TryParse(parser);
+                    var statement = IStatement.TryParse(parser);
 
                     if (statement == null)
                     {

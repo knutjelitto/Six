@@ -10,23 +10,23 @@ namespace SixComp.Sema
         bool GreaterThan(PrecedenceGroupDeclaration? otherPrecedence);
         PrecedenceGroupDeclaration? Precedence { get; }
 
-        public static IOperator Build(IScoped outer, Tree.Operator tree)
+        public static IOperator Build(IScoped outer, ParseTree.Operator tree)
         {
             return tree switch
             {
-                Tree.Operator.NamedOperator named => new Named(outer, named),
-                Tree.Operator.AssignmentOperator named => new Assignment(outer, named),
-                Tree.Operator.ConditionalOperator conditional => new Conditional(outer, conditional),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.Is => new CastIs(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.As => new CastAsStatic(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsChain => new CastAsDynamicSoft(outer, cast),
-                Tree.Operator.CastOperator cast when cast.Kind == CastKind.AsForce => new CastAsDynamicHard(outer, cast),
+                ParseTree.Operator.NamedOperator named => new Named(outer, named),
+                ParseTree.Operator.AssignmentOperator named => new Assignment(outer, named),
+                ParseTree.Operator.ConditionalOperator conditional => new Conditional(outer, conditional),
+                ParseTree.Operator.CastOperator cast when cast.Kind == CastKind.Is => new CastIs(outer, cast),
+                ParseTree.Operator.CastOperator cast when cast.Kind == CastKind.As => new CastAsStatic(outer, cast),
+                ParseTree.Operator.CastOperator cast when cast.Kind == CastKind.AsChain => new CastAsDynamicSoft(outer, cast),
+                ParseTree.Operator.CastOperator cast when cast.Kind == CastKind.AsForce => new CastAsDynamicHard(outer, cast),
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
 
         public abstract class Operator<TTree> : Base<TTree>, IOperator
-            where TTree : Tree.Operator
+            where TTree : ParseTree.Operator
         {
             public Operator(IScoped outer, TTree tree, BaseName name, PrecedenceGroupDeclaration? precedence)
                 : base(outer, tree)
@@ -72,57 +72,57 @@ namespace SixComp.Sema
 
         }
 
-        public class Assignment : Operator<Tree.Operator.AssignmentOperator>
+        public class Assignment : Operator<ParseTree.Operator.AssignmentOperator>
         {
-            public Assignment(IScoped outer, Tree.Operator.AssignmentOperator tree)
+            public Assignment(IScoped outer, ParseTree.Operator.AssignmentOperator tree)
                 : base(outer, tree, new BaseName(outer, tree.Name), outer.Global.AssignmentPrecedence)
             {
             }
         }
 
-        public class Named : Operator<Tree.Operator.NamedOperator>
+        public class Named : Operator<ParseTree.Operator.NamedOperator>
         {
-            public Named(IScoped outer, Tree.Operator.NamedOperator tree)
+            public Named(IScoped outer, ParseTree.Operator.NamedOperator tree)
                 : base(outer, tree, new BaseName(outer, tree.Name), null)
             {
             }
         }
 
-        public class Conditional : Operator<Tree.Operator.ConditionalOperator>
+        public class Conditional : Operator<ParseTree.Operator.ConditionalOperator>
         {
-            public Conditional(IScoped outer, Tree.Operator.ConditionalOperator tree)
+            public Conditional(IScoped outer, ParseTree.Operator.ConditionalOperator tree)
                 : base(outer, tree, new BaseName(outer, "?:"), outer.Global.TernaryPrecedence)
             {
             }
         }
 
-        public class CastIs : Operator<Tree.Operator.CastOperator>
+        public class CastIs : Operator<ParseTree.Operator.CastOperator>
         {
-            public CastIs(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastIs(IScoped outer, ParseTree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "is"), outer.Global.CastingPrecedence)
             {
             }
         }
 
-        public class CastAsStatic : Operator<Tree.Operator.CastOperator>
+        public class CastAsStatic : Operator<ParseTree.Operator.CastOperator>
         {
-            public CastAsStatic(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsStatic(IScoped outer, ParseTree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as"), outer.Global.CastingPrecedence)
             {
             }
         }
 
-        public class CastAsDynamicSoft : Operator<Tree.Operator.CastOperator>
+        public class CastAsDynamicSoft : Operator<ParseTree.Operator.CastOperator>
         {
-            public CastAsDynamicSoft(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsDynamicSoft(IScoped outer, ParseTree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as?"), outer.Global.CastingPrecedence)
             {
             }
         }
 
-        public class CastAsDynamicHard : Operator<Tree.Operator.CastOperator>
+        public class CastAsDynamicHard : Operator<ParseTree.Operator.CastOperator>
         {
-            public CastAsDynamicHard(IScoped outer, Tree.Operator.CastOperator tree)
+            public CastAsDynamicHard(IScoped outer, ParseTree.Operator.CastOperator tree)
                 : base(outer, tree, new BaseName(outer, "as!"), outer.Global.CastingPrecedence)
             {
             }

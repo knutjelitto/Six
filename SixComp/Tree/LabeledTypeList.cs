@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class LabeledTypeList : ItemList<TupleTypeElement>, AnyType
+        public class LabeledTypeList : ItemList<TupleTypeElement>, IType
         {
             public LabeledTypeList(List<TupleTypeElement> items) : base(items) { }
             public LabeledTypeList() { }

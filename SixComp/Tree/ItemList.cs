@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ItemList<T> : AnySyntaxNode, IReadOnlyList<T>, IWritable
+        public class ItemList<T> : ISyntaxNode, IReadOnlyList<T>, IWritable
         {
             private List<T> items;
 

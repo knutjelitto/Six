@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ConditionList : ExpressionItemList<AnyCondition>, AnyExpression
+        public class ConditionList : ExpressionItemList<ICondition>, IExpression
         {
-            public ConditionList(List<AnyCondition> conditions) : base(conditions) { }
+            public ConditionList(List<ICondition> conditions) : base(conditions) { }
             public ConditionList() { }
 
             public static ConditionList Parse(Parser parser)
             {
-                var conditions = new List<AnyCondition>();
+                var conditions = new List<ICondition>();
 
                 do
                 {
-                    var condition = AnyCondition.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ConditionList)}");
+                    var condition = ICondition.TryParse(parser) ?? throw new InvalidOperationException($"{typeof(ConditionList)}");
                     conditions.Add(condition);
                 }
                 while (parser.Match(ToKind.Comma));

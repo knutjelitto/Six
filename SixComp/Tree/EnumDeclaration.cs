@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class EnumDeclaration : AnyDeclaration, INominalWhithDeclarations
+        public class EnumDeclaration : IDeclaration, INominalWhithDeclarations
         {
             public EnumDeclaration(Prefix prefix, BaseName name, GenericParameterClause generics, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
             {
@@ -31,7 +31,7 @@ namespace SixComp
                 var generics = parser.TryList(ToKind.Less, GenericParameterClause.Parse);
                 var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
                 var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-                var declarations = DeclarationClause.Parse(parser, AnyDeclaration.Context.Enum);
+                var declarations = DeclarationClause.Parse(parser, IDeclaration.Context.Enum);
 
                 return new EnumDeclaration(prefix, name, generics, inheritance, requirements, declarations);
             }

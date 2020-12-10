@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class GenericRequirement : AnyRequirement
+        public class GenericRequirement : ITypeRestriction
         {
             public GenericRequirement(ProtocolCompositionType composition)
             {

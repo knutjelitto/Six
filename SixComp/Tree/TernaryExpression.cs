@@ -1,21 +1,21 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TernaryExpression : BaseExpression, AnyExpression
+        public class TernaryExpression : BaseExpression, IExpression
         {
-            public TernaryExpression(AnyExpression condition, AnyExpression whenTrue, AnyExpression whenFalse)
+            public TernaryExpression(IExpression condition, IExpression whenTrue, IExpression whenFalse)
             {
                 Condition = condition;
                 WhenTrue = whenTrue;
                 WhenFalse = whenFalse;
             }
 
-            public AnyExpression Condition { get; }
-            public AnyExpression WhenTrue { get; }
-            public AnyExpression WhenFalse { get; }
+            public IExpression Condition { get; }
+            public IExpression WhenTrue { get; }
+            public IExpression WhenFalse { get; }
 
-            public static TernaryExpression From(AnyExpression condition, AnyExpression whenTrue, AnyExpression whenFalse)
+            public static TernaryExpression From(IExpression condition, IExpression whenTrue, IExpression whenFalse)
             {
                 return new TernaryExpression(condition, whenTrue, whenFalse);
             }

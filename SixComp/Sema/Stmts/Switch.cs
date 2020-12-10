@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class Switch : Base<Tree.SwitchStatement>, IStatement
+    public class Switch : Base<ParseTree.SwitchStatement>, IStatement
     {
-        public Switch(IScoped outer, Tree.SwitchStatement tree)
+        public Switch(IScoped outer, ParseTree.SwitchStatement tree)
             : base(outer, tree)
         {
             Value = IExpression.Build(Outer, Tree.Value);
@@ -25,9 +25,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class SwitchCases : Items<SwitchCase, Tree.SwitchCaseClause>
+        public class SwitchCases : Items<SwitchCase, ParseTree.SwitchCaseClause>
         {
-            public SwitchCases(IScoped outer, Tree.SwitchCaseClause tree)
+            public SwitchCases(IScoped outer, ParseTree.SwitchCaseClause tree)
                 : base(outer, tree, Enum(outer, tree))
             {
             }
@@ -37,15 +37,15 @@ namespace SixComp.Sema
                 this.ReportList(writer, Strings.Head.Cases);
             }
 
-            private static IEnumerable<SwitchCase> Enum(IScoped outer, Tree.SwitchCaseClause tree)
+            private static IEnumerable<SwitchCase> Enum(IScoped outer, ParseTree.SwitchCaseClause tree)
             {
                 return tree.Select(c => new SwitchCase(outer, c));
             }
         }
 
-        public class SwitchCase : Base<Tree.SwitchCase>
+        public class SwitchCase : Base<ParseTree.SwitchCase>
         {
-            public SwitchCase(IScoped outer, Tree.SwitchCase tree)
+            public SwitchCase(IScoped outer, ParseTree.SwitchCase tree)
                 : base(outer, tree)
             {
                 Label = new SwitchCaseLabel(this, tree.Label);
@@ -65,9 +65,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class SwitchCaseLabel : Items<SwitchCaseItem, Tree.CaseLabel>
+        public class SwitchCaseLabel : Items<SwitchCaseItem, ParseTree.CaseLabel>
         {
-            public SwitchCaseLabel(IScoped outer, Tree.CaseLabel tree)
+            public SwitchCaseLabel(IScoped outer, ParseTree.CaseLabel tree)
                 : base(outer, tree, Enum(outer, tree))
             {
             }
@@ -84,15 +84,15 @@ namespace SixComp.Sema
                 }
             }
 
-            private static IEnumerable<SwitchCaseItem> Enum(IScoped outer, Tree.CaseLabel tree)
+            private static IEnumerable<SwitchCaseItem> Enum(IScoped outer, ParseTree.CaseLabel tree)
             {
                 return tree.CaseItems.Select(item => new SwitchCaseItem(outer, item));
             }
         }
 
-        public class SwitchCaseItem : Base<Tree.CaseItem>
+        public class SwitchCaseItem : Base<ParseTree.CaseItem>
         {
-            public SwitchCaseItem(IScoped outer, Tree.CaseItem tree)
+            public SwitchCaseItem(IScoped outer, ParseTree.CaseItem tree)
                 : base(outer, tree)
             {
                 Pattern = IPattern.Build(outer, tree.Pattern);

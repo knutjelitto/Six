@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypeAnnotation : AnyType
+        public class TypeAnnotation : IType
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.Colon);
 

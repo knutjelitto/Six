@@ -4,7 +4,7 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public abstract class Operator : SyntaxNode
         {
@@ -18,7 +18,7 @@ namespace SixComp
                 return new AssignmentOperator(op);
             }
 
-            public static Operator From(AnyExpression middle)
+            public static Operator From(IExpression middle)
             {
                 return new ConditionalOperator(middle);
             }
@@ -107,12 +107,12 @@ namespace SixComp
 
             public class ConditionalOperator : Operator
             {
-                public ConditionalOperator(AnyExpression middle)
+                public ConditionalOperator(IExpression middle)
                 {
                     Middle = middle;
                 }
 
-                public AnyExpression Middle { get; }
+                public IExpression Middle { get; }
 
                 public override string ToString()
                 {

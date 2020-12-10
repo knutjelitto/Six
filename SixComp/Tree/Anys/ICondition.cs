@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyCondition : AnyExpression
+        public interface ICondition : IExpression
         {
-            public static new AnyCondition? TryParse(Parser parser)
+            public static new ICondition? TryParse(Parser parser)
             {
                 switch (parser.Current)
                 {

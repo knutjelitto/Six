@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Unit : Base<Tree.CompilationUnit>
+    public class Unit : Base<ParseTree.CompilationUnit>
     {
-        public Unit(Context context, IScoped outer, Tree.CompilationUnit tree)
+        public Unit(Context context, IScoped outer, ParseTree.CompilationUnit tree)
             : base(outer, tree)
         {
             Context = context;

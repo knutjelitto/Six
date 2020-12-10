@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class FullName : AnyType, AnyExpression
+        public class FullName : IType, IExpression
         {
             public FullName(BaseName name, GenericArgumentClause arguments)
             {
@@ -14,7 +14,7 @@
 
             public GenericArgumentClause Arguments { get; }
 
-            public AnyExpression? LastExpression => this;
+            public IExpression? LastExpression => this;
 
             public static FullName Parse(Parser parser)
             {

@@ -2,12 +2,12 @@
 
 namespace SixComp.Sema
 {
-    public class LiteralExpression : Base<Tree.AnyLiteralExpression>, IExpression
+    public class LiteralExpression : Base<ParseTree.ILiteralExpression>, IExpression
     {
-        public LiteralExpression(IScoped outer, Tree.AnyLiteralExpression tree)
+        public LiteralExpression(IScoped outer, ParseTree.ILiteralExpression tree)
             : base(outer, tree)
         {
-            Text = tree.ToString();
+            Text = tree.ToString()!;
         }
 
         public string Text { get; }

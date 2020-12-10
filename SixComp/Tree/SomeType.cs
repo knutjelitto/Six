@@ -1,20 +1,20 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SomeType : AnyType
+        public class SomeType : IType
         {
-            public SomeType(AnyType type)
+            public SomeType(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static SomeType Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwSome);
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new SomeType(type);
             }

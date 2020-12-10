@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ArrayLiteralExpression : Items<IExpression, Tree.ArrayLiteral>, IExpression
+    public class ArrayLiteralExpression : Items<IExpression, ParseTree.ArrayLiteral>, IExpression
     {
-        public ArrayLiteralExpression(IScoped outer, Tree.ArrayLiteral tree)
+        public ArrayLiteralExpression(IScoped outer, ParseTree.ArrayLiteral tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -16,7 +16,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.ArrayLit);
         }
 
-        private static IEnumerable<IExpression> Enum(IScoped outer, Tree.ArrayLiteral tree)
+        private static IEnumerable<IExpression> Enum(IScoped outer, ParseTree.ArrayLiteral tree)
         {
             return tree.Select(expression => IExpression.Build(outer, expression));
         }

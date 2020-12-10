@@ -4,44 +4,44 @@ namespace SixComp.Sema
 {
     public interface ICondition : IExpression
     {
-        public static IExpression Build(IScoped outer, Tree.AnyCondition tree)
+        public static IExpression Build(IScoped outer, ParseTree.ICondition tree)
         {
             return Visit(outer, (dynamic)tree);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.PatternCondition.LetPatternCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.PatternCondition.LetPatternCondition tree)
         {
             return new LetPatternCondition(outer, tree);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.PatternCondition.VarPatternCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.PatternCondition.VarPatternCondition tree)
         {
             return new VarPatternCondition(outer, tree);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.PatternCondition.CasePatternCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.PatternCondition.CasePatternCondition tree)
         {
             return new CasePatternCondition(outer, tree);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.ExpressionCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.ExpressionCondition tree)
         {
             return Build(outer, tree.Expression);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.AvailableCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.AvailableCondition tree)
         {
             return new AvailableCondition(outer, tree);
         }
 
-        private static IExpression Visit(IScoped outer, Tree.AnyCondition tree)
+        private static IExpression Visit(IScoped outer, ParseTree.ICondition tree)
         {
             return new Dummy(outer, tree);
         }
 
-        public class AvailableCondition : Base<Tree.AvailableCondition>, ICondition
+        public class AvailableCondition : Base<ParseTree.AvailableCondition>, ICondition
         {
-            public AvailableCondition(IScoped outer, Tree.AvailableCondition tree)
+            public AvailableCondition(IScoped outer, ParseTree.AvailableCondition tree)
                 : base(outer, tree)
             {
             }
@@ -52,9 +52,9 @@ namespace SixComp.Sema
             }
         }
 
-        public abstract class PatternCondition : Base<Tree.PatternCondition>, ICondition
+        public abstract class PatternCondition : Base<ParseTree.PatternCondition>, ICondition
         {
-            protected PatternCondition(IScoped outer, Tree.PatternCondition tree)
+            protected PatternCondition(IScoped outer, ParseTree.PatternCondition tree)
                 : base(outer, tree)
             {
                 Pattern = IPattern.Build(outer, tree.Pattern);
@@ -79,7 +79,7 @@ namespace SixComp.Sema
 
         public class LetPatternCondition : PatternCondition
         {
-            public LetPatternCondition(IScoped outer, Tree.PatternCondition tree)
+            public LetPatternCondition(IScoped outer, ParseTree.PatternCondition tree)
                 : base(outer, tree)
             {
             }
@@ -92,7 +92,7 @@ namespace SixComp.Sema
 
         public class VarPatternCondition : PatternCondition
         {
-            public VarPatternCondition(IScoped outer, Tree.PatternCondition tree)
+            public VarPatternCondition(IScoped outer, ParseTree.PatternCondition tree)
                 : base(outer, tree)
             {
             }
@@ -105,7 +105,7 @@ namespace SixComp.Sema
 
         public class CasePatternCondition : PatternCondition
         {
-            public CasePatternCondition(IScoped outer, Tree.PatternCondition tree)
+            public CasePatternCondition(IScoped outer, ParseTree.PatternCondition tree)
                 : base(outer, tree)
             {
             }

@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class EnumCaseDeclaration : BaseScoped<Tree.EnumCaseItem>, INamedDeclaration
+    public class EnumCaseDeclaration : BaseScoped<ParseTree.EnumCaseItem>, INamedDeclaration
     {
-        public EnumCaseDeclaration(IScoped outer, Tree.Prefix prefix, Tree.EnumCaseItem tree)
+        public EnumCaseDeclaration(IScoped outer, ParseTree.Prefix prefix, ParseTree.EnumCaseItem tree)
             : base(outer, tree)
         {
             Prefix = prefix;
@@ -16,7 +16,7 @@ namespace SixComp.Sema
             Declare(this);
         }
 
-        public Tree.Prefix Prefix { get; }
+        public ParseTree.Prefix Prefix { get; }
 
         public BaseName Name { get; }
         public TupleType? Tuple { get; }

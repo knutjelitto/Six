@@ -4,9 +4,9 @@ using System;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class OperatorDeclaration : AnyDeclaration
+        public class OperatorDeclaration : IDeclaration
         {
             public static readonly TokenSet Firsts = new TokenSet(ToKind.KwPrefix, ToKind.KwPostfix, ToKind.KwInfix);
 

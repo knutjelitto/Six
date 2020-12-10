@@ -1,17 +1,17 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ArrayType : AnyType
+        public class ArrayType : IType
         {
-            private ArrayType(AnyType elementType)
+            private ArrayType(IType elementType)
             {
                 ElementType = elementType;
             }
 
-            public AnyType ElementType { get; }
+            public IType ElementType { get; }
 
-            public static ArrayType From(AnyType elementType)
+            public static ArrayType From(IType elementType)
             {
                 return new ArrayType(elementType);
             }

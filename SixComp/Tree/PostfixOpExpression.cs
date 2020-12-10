@@ -2,16 +2,16 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class PostfixOpExpression : PostfixExpression
         {
-            public PostfixOpExpression(AnyExpression left, Token op)
+            public PostfixOpExpression(IExpression left, Token op)
                 : base(left, op)
             {
             }
 
-            public static AnyPostfixExpression Parse(Parser parser, AnyExpression left)
+            public static IPostfixExpression Parse(Parser parser, IExpression left)
             {
                 Debug.Assert(parser.IsPostfixOperator());
                 var op = parser.ConsumeAny();

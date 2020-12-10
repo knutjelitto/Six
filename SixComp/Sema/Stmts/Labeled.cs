@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Labeled : Base<Tree.LabeledStatement>, IStatement, INamedDeclaration
+    public class Labeled : Base<ParseTree.LabeledStatement>, IStatement, INamedDeclaration
     {
-        public Labeled(IScoped outer, Tree.LabeledStatement tree)
+        public Labeled(IScoped outer, ParseTree.LabeledStatement tree)
             : base(outer, tree)
         {
             Name = new BaseName(outer, tree.Label);

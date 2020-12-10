@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExtensionDeclaration : AnyDeclaration
+        public class ExtensionDeclaration : IDeclaration
         {
             public ExtensionDeclaration(Prefix prefix, TypeIdentifier name, TypeInheritanceClause inheritance, RequirementClause requirements, DeclarationClause declarations)
             {
@@ -28,7 +28,7 @@ namespace SixComp
                 var name = TypeIdentifier.Parse(parser);
                 var inheritance = parser.TryList(ToKind.Colon, TypeInheritanceClause.Parse);
                 var requirements = parser.TryList(RequirementClause.Firsts, RequirementClause.Parse);
-                var declarations = DeclarationClause.Parse(parser, AnyDeclaration.Context.Extension);
+                var declarations = DeclarationClause.Parse(parser, IDeclaration.Context.Extension);
 
                 return new ExtensionDeclaration(prefix, name, inheritance, requirements, declarations);
             }

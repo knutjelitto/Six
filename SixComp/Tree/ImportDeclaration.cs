@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ImportDeclaration : AnyDeclaration
+        public class ImportDeclaration : IDeclaration
         {
             public ImportDeclaration(ImportKind kind, ImportPath path)
             {

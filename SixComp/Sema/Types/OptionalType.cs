@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class OptionalType : Base<Tree.OptionalType>, ITypeDefinition
+    public class OptionalType : Base<ParseTree.OptionalType>, ITypeDefinition
     {
-        public OptionalType(IScoped outer, Tree.OptionalType tree)
+        public OptionalType(IScoped outer, ParseTree.OptionalType tree)
             : base(outer, tree)
         {
             Type = ITypeDefinition.Build(Outer, Tree.Type);

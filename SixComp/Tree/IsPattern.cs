@@ -1,20 +1,20 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class IsPattern : SyntaxNode, AnyPattern
+        public class IsPattern : SyntaxNode, IPattern
         {
-            public IsPattern(AnyType type)
+            public IsPattern(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static IsPattern Parse(Parser parser)
             {
                 parser.Consume(ToKind.KwIs);
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new IsPattern(type);
             }

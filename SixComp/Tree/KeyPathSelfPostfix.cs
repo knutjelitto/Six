@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class KeyPathSelfPostfix : AnyKeyPathPostfix
+        public class KeyPathSelfPostfix : IKeyPathPostfix
         {
             public KeyPathSelfPostfix()
             {

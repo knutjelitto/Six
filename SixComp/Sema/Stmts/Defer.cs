@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class Defer : Base<Tree.DeferStatement>, IStatement
+    public class Defer : Base<ParseTree.DeferStatement>, IStatement
     {
-        public Defer(IScoped outer, Tree.DeferStatement tree)
+        public Defer(IScoped outer, ParseTree.DeferStatement tree)
             : base(outer, tree)
         {
             Block = new CodeBlock(Outer, tree.Block);

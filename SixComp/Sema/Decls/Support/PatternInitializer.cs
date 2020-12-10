@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class PatternInitializer : Base<Tree.PatternInitializer>
+    public class PatternInitializer : Base<ParseTree.PatternInitializer>
     {
-        public PatternInitializer(IScoped outer, Tree.PatternInitializer tree)
+        public PatternInitializer(IScoped outer, ParseTree.PatternInitializer tree)
             : base(outer, tree)
         {
             Pattern = IPattern.Build(outer, tree.Pattern);

@@ -4,9 +4,9 @@ using SixComp.Support;
 namespace SixComp.Sema
 
 {
-    public class PropertyBlock : Base<Tree.PropertyBlock>
+    public class PropertyBlock : Base<ParseTree.PropertyBlock>
     {
-        public PropertyBlock(IScoped outer, Tree.PropertyBlock tree)
+        public PropertyBlock(IScoped outer, ParseTree.PropertyBlock tree)
             : base(outer, tree)
         {
             Kind = tree.Kind;

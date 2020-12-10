@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class FunctionDeclaration : Nominal<Tree.FunctionDeclaration>
+    public class FunctionDeclaration : Nominal<ParseTree.FunctionDeclaration>
     {
-        public FunctionDeclaration(IScoped outer, Tree.FunctionDeclaration tree)
+        public FunctionDeclaration(IScoped outer, ParseTree.FunctionDeclaration tree)
             : base(outer, tree)
         {
             Parameters = new FuncParameters(this, Tree.Parameters);

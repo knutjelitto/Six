@@ -2,24 +2,24 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class TypealiasAssignment : AnyType
+        public class TypealiasAssignment : IType
         {
             public static TokenSet Firsts = new TokenSet(ToKind.Assign);
 
-            private TypealiasAssignment(AnyType type)
+            private TypealiasAssignment(IType type)
             {
                 Type = type;
             }
 
-            public AnyType Type { get; }
+            public IType Type { get; }
 
             public static TypealiasAssignment Parse(Parser parser)
             {
                 parser.Consume(ToKind.Assign);
 
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new TypealiasAssignment(type);
             }

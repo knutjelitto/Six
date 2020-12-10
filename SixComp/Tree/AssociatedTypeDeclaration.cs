@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class AssociatedTypeDeclaration : AnyDeclaration
+        public class AssociatedTypeDeclaration : IDeclaration
         {
             public AssociatedTypeDeclaration(Prefix prefix, BaseName name, TypeInheritanceClause inheritance, TypealiasAssignment? assignment, RequirementClause requirements)
             {

@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ImplicitMemberExpression : BaseExpression, AnyPrimaryExpression
+        public class ImplicitMemberExpression : BaseExpression, IPrimaryExpression
         {
             public ImplicitMemberExpression(Token op, BaseName name)
             {

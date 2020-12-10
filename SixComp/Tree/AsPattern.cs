@@ -1,22 +1,22 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class AsPattern : SyntaxNode, AnyPattern
+        public class AsPattern : SyntaxNode, IPattern
         {
-            public AsPattern(AnyPattern pattern, AnyType type)
+            public AsPattern(IPattern pattern, IType type)
             {
                 Pattern = pattern;
                 Type = type;
             }
 
-            public AnyPattern Pattern { get; }
-            public AnyType Type { get; }
+            public IPattern Pattern { get; }
+            public IType Type { get; }
 
-            public static AsPattern Parse(Parser parser, AnyPattern pattern)
+            public static AsPattern Parse(Parser parser, IPattern pattern)
             {
                 parser.Consume(ToKind.KwAs);
-                var type = AnyType.Parse(parser);
+                var type = IType.Parse(parser);
 
                 return new AsPattern(pattern, type);
             }

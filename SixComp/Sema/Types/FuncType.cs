@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class FuncType : Items<FuncType.Parameter, Tree.FunctionType>, ITypeDefinition
+    public class FuncType : Items<FuncType.Parameter, ParseTree.FunctionType>, ITypeDefinition
     {
-        public FuncType(IScoped outer, Tree.FunctionType tree)
+        public FuncType(IScoped outer, ParseTree.FunctionType tree)
             : base(outer, tree, Enum(outer, tree))
         {
             Async = tree.Async.Present;
@@ -31,14 +31,14 @@ namespace SixComp.Sema
             }
         }
 
-        public static IEnumerable<Parameter> Enum(IScoped outer, Tree.FunctionType tree)
+        public static IEnumerable<Parameter> Enum(IScoped outer, ParseTree.FunctionType tree)
         {
             return tree.Arguments.Arguments.Select(parameter => new Parameter(outer, parameter));
         }
 
-        public class Parameter : Base<Tree.FunctionTypeArgument>
+        public class Parameter : Base<ParseTree.FunctionTypeArgument>
         {
-            public Parameter(IScoped outer, Tree.FunctionTypeArgument tree)
+            public Parameter(IScoped outer, ParseTree.FunctionTypeArgument tree)
                 : base(outer, tree)
             {
                 Extern = BaseName.Maybe(Outer, Tree.Extern);

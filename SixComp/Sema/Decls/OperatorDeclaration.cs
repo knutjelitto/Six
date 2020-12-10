@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class OperatorDeclaration : Base<Tree.OperatorDeclaration>, INamedDeclaration
+    public class OperatorDeclaration : Base<ParseTree.OperatorDeclaration>, INamedDeclaration
     {
-        public OperatorDeclaration(IScoped outer, Tree.OperatorDeclaration tree)
+        public OperatorDeclaration(IScoped outer, ParseTree.OperatorDeclaration tree)
             : base(outer, tree)
         {
             Name = new BaseName(Outer, tree.Operator);

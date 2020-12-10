@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class SubscriptExpression : Base<Tree.SubscriptExpression>, IExpression
+    public class SubscriptExpression : Base<ParseTree.SubscriptExpression>, IExpression
     {
-        public SubscriptExpression(IScoped outer, Tree.SubscriptExpression tree)
+        public SubscriptExpression(IScoped outer, ParseTree.SubscriptExpression tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);

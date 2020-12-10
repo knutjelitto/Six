@@ -1,17 +1,17 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class NestedExpression : BaseExpression, AnyPrimaryExpression
+        public class NestedExpression : BaseExpression, IPrimaryExpression
         {
-            private NestedExpression(AnyExpression expression)
+            private NestedExpression(IExpression expression)
             {
                 Expression = expression;
             }
 
-            public AnyExpression Expression { get; }
+            public IExpression Expression { get; }
 
-            public static NestedExpression From(AnyExpression expression)
+            public static NestedExpression From(IExpression expression)
             {
                 return new NestedExpression(expression);
             }

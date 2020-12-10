@@ -2,7 +2,7 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class DeclarationClause : IWritable
         {
@@ -13,7 +13,7 @@ namespace SixComp
 
             public DeclarationList Declarations { get; }
 
-            public static DeclarationClause Parse(Parser parser, AnyDeclaration.Context context)
+            public static DeclarationClause Parse(Parser parser, IDeclaration.Context context)
             {
                 parser.Consume(ToKind.LBrace);
 

@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class DictionaryLiteralExpression : Items<KeyValue, Tree.DictionaryLiteral>, IExpression
+    public class DictionaryLiteralExpression : Items<KeyValue, ParseTree.DictionaryLiteral>, IExpression
     {
-        public DictionaryLiteralExpression(IScoped outer, Tree.DictionaryLiteral tree)
+        public DictionaryLiteralExpression(IScoped outer, ParseTree.DictionaryLiteral tree)
             : base(outer, tree, Enum(outer, tree))
         {
         }
@@ -16,7 +16,7 @@ namespace SixComp.Sema
             this.ReportList(writer, Strings.Head.DictionaryLit);
         }
 
-        private static IEnumerable<KeyValue> Enum(IScoped outer, Tree.DictionaryLiteral tree)
+        private static IEnumerable<KeyValue> Enum(IScoped outer, ParseTree.DictionaryLiteral tree)
         {
             return tree.Select(expression => new KeyValue(outer, IExpression.Build(outer, expression.key), IExpression.Build(outer, expression.value)));
         }

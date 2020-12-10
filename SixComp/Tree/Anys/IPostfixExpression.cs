@@ -2,13 +2,13 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyPostfixExpression : AnyPrefixExpression
+        public interface IPostfixExpression : IPrefixExpression
         {
-            public static new AnyPostfixExpression? TryParse(Parser parser)
+            public static new IPostfixExpression? TryParse(Parser parser)
             {
-                AnyPostfixExpression? left = AnyPrimaryExpression.TryParse(parser);
+                IPostfixExpression? left = IPrimaryExpression.TryParse(parser);
 
                 if (left == null)
                 {
@@ -64,7 +64,7 @@ namespace SixComp
                 return left;
             }
 
-            private static bool CanAquireBraceForFunction(Parser parser, AnyExpression left)
+            private static bool CanAquireBraceForFunction(Parser parser, IExpression left)
             {
                 if (left is FunctionCallExpression || left is TupleExpression)
                 {
@@ -75,7 +75,7 @@ namespace SixComp
                 {
                     parser.Consume(ToKind.LBrace);
 
-                    return !AnyVarDeclaration.CheckWillSetDitSet(parser);
+                    return !IVarDeclaration.CheckWillSetDitSet(parser);
                 }
             }
         }

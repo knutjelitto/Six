@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class If : Base<Tree.IfStatement>, IStatement
+    public class If : Base<ParseTree.IfStatement>, IStatement
     {
-        public If(IScoped outer, Tree.IfStatement tree)
+        public If(IScoped outer, ParseTree.IfStatement tree)
             : base(outer, tree)
         {
             Conditions = new Conditions(Outer, Tree.Conditions);

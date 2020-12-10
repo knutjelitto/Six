@@ -4,9 +4,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class InitDeclaration : BaseScoped<Tree.InitializerDeclaration>, IDeclaration, IWithGenerics
+    public class InitDeclaration : BaseScoped<ParseTree.InitializerDeclaration>, IDeclaration, IWithGenerics
     {
-        public InitDeclaration(IScoped outer, Tree.InitializerDeclaration tree)
+        public InitDeclaration(IScoped outer, ParseTree.InitializerDeclaration tree)
             : base(outer, tree)
         {
             Kind = tree.Kind;

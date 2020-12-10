@@ -1,10 +1,10 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
         public class SubscriptExpression : PostfixExpression
         {
-            private SubscriptExpression(AnyExpression left, Token op, SubscriptClause subscript)
+            private SubscriptExpression(IExpression left, Token op, SubscriptClause subscript)
                 : base(left, op)
             {
                 Subscript = subscript;
@@ -12,7 +12,7 @@
 
             public SubscriptClause Subscript { get; }
 
-            public static SubscriptExpression Parse(Parser parser, AnyExpression left)
+            public static SubscriptExpression Parse(Parser parser, IExpression left)
             {
                 var op = parser.CurrentToken;
 

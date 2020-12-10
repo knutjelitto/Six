@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class SelfInitExpression : BaseExpression, AnySelfExpression
+        public class SelfInitExpression : BaseExpression, ISelfExpression
         {
             private SelfInitExpression(Token self, Token init)
             {

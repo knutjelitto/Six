@@ -1,19 +1,19 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class DictionaryType : AnyType
+        public class DictionaryType : IType
         {
-            private DictionaryType(AnyType keyType, AnyType valueType)
+            private DictionaryType(IType keyType, IType valueType)
             {
                 KeyType = keyType;
                 ValueType = valueType;
             }
 
-            public AnyType KeyType { get; }
-            public AnyType ValueType { get; }
+            public IType KeyType { get; }
+            public IType ValueType { get; }
 
-            public static DictionaryType From(AnyType keyType, AnyType valueType)
+            public static DictionaryType From(IType keyType, IType valueType)
             {
                 return new DictionaryType(keyType, valueType);
             }

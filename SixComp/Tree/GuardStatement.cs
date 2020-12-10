@@ -2,9 +2,9 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class GuardStatement : AnyStatement
+        public class GuardStatement : IStatement
         {
             public GuardStatement(ConditionList conditions, CodeBlock block)
             {

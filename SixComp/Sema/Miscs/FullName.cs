@@ -3,9 +3,9 @@ using SixComp.Support;
 
 namespace SixComp.Sema
 {
-    public class FullName : Base<Tree.FullName>, ITypeDefinition, IExpression, INamed
+    public class FullName : Base<ParseTree.FullName>, ITypeDefinition, IExpression, INamed
     {
-        public FullName(IScoped outer, Tree.FullName tree)
+        public FullName(IScoped outer, ParseTree.FullName tree)
             : base(outer, tree)
         {
             Name = new BaseName(Outer, Tree.Name);

@@ -6,16 +6,20 @@ namespace SixComp
     [Flags]
     public enum ToClass
     {
-        None = 0,
-        Keyword = 1,
-        Operator = 2,
+        None = 1 << 0,
+        Keyword = 1 << 1,
+        Operator = 1 << 2,
+        Literal = 1 << 3,
+        Name = 1 << 3,
     }
 
     public enum ToKind
     {
-        Name,
-        Number,
-        String,
+        [Rep("<-name->", ToClass.Name)] Name,
+        [Rep("<-number->", ToClass.Literal)] Number,
+        [Rep("<-string->", ToClass.Literal)] String,
+        [Rep("true", ToClass.Keyword | ToClass.Literal)] True,
+        [Rep("false", ToClass.Keyword | ToClass.Literal)] False,
 
         [Rep(";")] SemiColon,
         [Rep(":")] Colon,
@@ -30,6 +34,7 @@ namespace SixComp
         [Rep("=", ToClass.Operator)] Assign,
         [Rep("&", ToClass.Operator)] Amper,
         [Rep("==", ToClass.Operator)] Equals,
+        [Rep("...", ToClass.Operator)] DotDotDot,
         [Rep("<-op->", ToClass.Operator)] Operator,
 
         [Rep("@")] At,
@@ -42,43 +47,8 @@ namespace SixComp
         [Rep("[")] LBracket,
         [Rep("]")] RBracket,
 
-        [Rep("...", ToClass.Operator)] DotDotDot,
-        [Rep("..<", ToClass.Operator)] DotDotLess,
-
-        [Rep("!=", ToClass.Operator)] BangEqual,
-        [Rep("^", ToClass.Operator)] Caret,
-        [Rep("~", ToClass.Operator)] Tilde,
-        [Rep("&&", ToClass.Operator)] AmperAmper,
-        [Rep("|", ToClass.Operator)] VBar,
-        [Rep("||", ToClass.Operator)] VBarVBar,
-
-        [Rep("<<", ToClass.Operator)] LessLess,
-        [Rep("<<<", ToClass.Operator)] LessLessLess,
-        [Rep("<=", ToClass.Operator)] LessEqual,
-        [Rep(">=", ToClass.Operator)] GreaterEqual,
-
-        [Rep("+", ToClass.Operator)] Plus,
-        [Rep("&+", ToClass.Operator)] AmperPlus,
-        [Rep("+=", ToClass.Operator)] PlusEqual,
-        [Rep("-", ToClass.Operator)] Minus,
-        [Rep("&-", ToClass.Operator)] AmperMinus,
-        [Rep("-=", ToClass.Operator)] MinusEqual,
-        [Rep("*", ToClass.Operator)] Asterisk,
-        [Rep("&*", ToClass.Operator)] AmperAsterisk,
-        [Rep("*=", ToClass.Operator)] AsteriskEqual,
-        [Rep("/", ToClass.Operator)] Slash,
-        [Rep("&/", ToClass.Operator)] AmperSlash,
-        [Rep("/=", ToClass.Operator)] SlashEqual,
-        [Rep("%", ToClass.Operator)] Percent,
-        [Rep("&%", ToClass.Operator)] AmperPercent,
-        [Rep("%=", ToClass.Operator)] PercentEqual,
-
-        [Rep("??", ToClass.Operator)] QuestQuest,
-
         [Rep("is", ToClass.Operator | ToClass.Keyword)] KwIs,
         [Rep("as", ToClass.Operator | ToClass.Keyword)] KwAs,
-        [Rep("as!", ToClass.Operator | ToClass.Keyword)] KwAsForce,
-        [Rep("as?", ToClass.Operator | ToClass.Keyword)] KwAsChain,
 
         [Rep("Any", ToClass.Keyword)] KwANY,
         [Rep("associatedtype", ToClass.Keyword)] KwAssociatedType,
@@ -96,7 +66,6 @@ namespace SixComp
         [Rep("else", ToClass.Keyword)] KwElse,
         [Rep("enum", ToClass.Keyword)] KwEnum,
         [Rep("extension", ToClass.Keyword)] KwExtension,
-        [Rep("false", ToClass.Keyword)] KwFalse,
         [Rep("fileprivate", ToClass.Keyword)] KwFileprivate,
         [Rep("final", ToClass.Keyword)] KwFinal,
         [Rep("for", ToClass.Keyword)] KwFor,
@@ -140,7 +109,6 @@ namespace SixComp
         [Rep("super", ToClass.Keyword)] KwSuper,
         [Rep("switch", ToClass.Keyword)] KwSwitch,
         [Rep("throws", ToClass.Keyword)] KwThrows,
-        [Rep("true", ToClass.Keyword)] KwTrue,
         [Rep("try", ToClass.Keyword)] KwTry,
         [Rep("typealias", ToClass.Keyword)] KwTypealias,
         [Rep("unowned", ToClass.Keyword)] KwUnowned,

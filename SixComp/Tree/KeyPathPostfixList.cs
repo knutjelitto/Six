@@ -2,25 +2,25 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class KeyPathPostfixList : ItemList<AnyKeyPathPostfix>
+        public class KeyPathPostfixList : ItemList<IKeyPathPostfix>
         {
-            public KeyPathPostfixList(List<AnyKeyPathPostfix> postfixes) : base(postfixes) { }
+            public KeyPathPostfixList(List<IKeyPathPostfix> postfixes) : base(postfixes) { }
             public KeyPathPostfixList() { }
 
             public static KeyPathPostfixList Parse(Parser parser)
             {
-                if (AnyKeyPathPostfix.Firsts.Contains(parser.Current))
+                if (IKeyPathPostfix.Firsts.Contains(parser.Current))
                 {
-                    var postfixes = new List<AnyKeyPathPostfix>();
+                    var postfixes = new List<IKeyPathPostfix>();
 
                     do
                     {
-                        var postfix = AnyKeyPathPostfix.Parse(parser);
+                        var postfix = IKeyPathPostfix.Parse(parser);
                         postfixes.Add(postfix);
                     }
-                    while (AnyKeyPathPostfix.Firsts.Contains(parser.Current));
+                    while (IKeyPathPostfix.Firsts.Contains(parser.Current));
 
                     return new KeyPathPostfixList(postfixes);
                 }

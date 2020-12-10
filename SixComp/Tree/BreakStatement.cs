@@ -1,8 +1,8 @@
 ﻿namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class BreakStatement : AnyStatement
+        public class BreakStatement : IStatement
         {
             public BreakStatement(BaseName? label)
             {

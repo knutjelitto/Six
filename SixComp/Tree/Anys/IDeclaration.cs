@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public interface AnyDeclaration : IWritable
+        public interface IDeclaration : IWritable
         {
-            public AnyDeclaration Declaration => this;
+            public IDeclaration Declaration => this;
 
             public enum Context
             {
@@ -20,7 +20,7 @@ namespace SixComp
                 Struct,
             }
 
-            public static AnyDeclaration? TryParse(Parser parser, Context context)
+            public static IDeclaration? TryParse(Parser parser, Context context)
             {
                 var offset = parser.Offset;
 
@@ -42,7 +42,7 @@ namespace SixComp
                     case ToKind.KwLet:
                         return LetDeclaration.Parse(parser, prefix);
                     case ToKind.KwVar:
-                        return AnyVarDeclaration.Parse(parser, prefix);
+                        return IVarDeclaration.Parse(parser, prefix);
                     case ToKind.KwFunc:
                         return FunctionDeclaration.Parse(parser, prefix);
                     case ToKind.KwSubscript:
@@ -66,7 +66,7 @@ namespace SixComp
 
                     case ToKind.CdIf:
                         CcBlock.Ignore(parser, force: true);
-                        return AnyDeclaration.TryParse(parser, context);
+                        return IDeclaration.TryParse(parser, context);
 
                     default:
                         if (context == Context.Enum && parser.Match(ToKind.KwCase))

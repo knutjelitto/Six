@@ -2,9 +2,9 @@
 
 namespace SixComp.Sema
 {
-    public class ForIn : Base<Tree.ForInStatement>, IStatement
+    public class ForIn : Base<ParseTree.ForInStatement>, IStatement
     {
-        public ForIn(IScoped outer, Tree.ForInStatement tree)
+        public ForIn(IScoped outer, ParseTree.ForInStatement tree)
             : base(outer, tree)
         {
             Pattern = IPattern.Build(Outer, tree.Pattern);

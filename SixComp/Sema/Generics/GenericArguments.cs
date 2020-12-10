@@ -6,13 +6,13 @@ namespace SixComp.Sema
 {
     public class GenericArguments : Items<GenericArgument>
     {
-        public GenericArguments(IScoped outer, Tree.GenericArgumentClause tree)
+        public GenericArguments(IScoped outer, ParseTree.GenericArgumentClause tree)
             : base(outer, EnumArguments(outer, tree.Arguments))
         {
             Tree = tree;
         }
 
-        public Tree.GenericArgumentClause Tree { get; }
+        public ParseTree.GenericArgumentClause Tree { get; }
 
         public override void Report(IWriter writer)
         {
@@ -22,7 +22,7 @@ namespace SixComp.Sema
             }
         }
 
-        private static IEnumerable<GenericArgument> EnumArguments(IScoped outer, IEnumerable<Tree.GenericArgument> arguments)
+        private static IEnumerable<GenericArgument> EnumArguments(IScoped outer, IEnumerable<ParseTree.GenericArgument> arguments)
         {
             return arguments.Select(argument => new GenericArgument(outer, argument));
         }

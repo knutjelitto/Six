@@ -2,11 +2,11 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class ExpressionList : ItemList<AnyExpression>
+        public class ExpressionList : ItemList<IExpression>
         {
-            public ExpressionList(List<AnyExpression> items) : base(items) { }
+            public ExpressionList(List<IExpression> items) : base(items) { }
             public ExpressionList() { }
 
             public override string ToString()

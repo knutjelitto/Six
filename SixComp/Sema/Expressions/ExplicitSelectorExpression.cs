@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace SixComp.Sema
 {
-    public class ExplicitSelectorExpression: Base<Tree.ExplicitMemberExpression.NamedMemberSelector>, IExpression
+    public class ExplicitSelectorExpression: Base<ParseTree.ExplicitMemberExpression.NamedMemberSelector>, IExpression
     {
-        public ExplicitSelectorExpression(IScoped outer, Tree.ExplicitMemberExpression.NamedMemberSelector tree)
+        public ExplicitSelectorExpression(IScoped outer, ParseTree.ExplicitMemberExpression.NamedMemberSelector tree)
             : base(outer, tree)
         {
             Left = IExpression.Build(Outer, Tree.Left);

@@ -6,7 +6,7 @@ namespace SixComp.Sema
 {
     public interface IPattern: IReportable
     {
-        public static IPattern? MaybeBuild(IScoped outer, Tree.AnyPattern? tree)
+        public static IPattern? MaybeBuild(IScoped outer, ParseTree.IPattern? tree)
         {
             if (tree == null)
             {
@@ -15,59 +15,59 @@ namespace SixComp.Sema
             return Visit(outer, (dynamic)tree);
         }
 
-        public static IPattern Build(IScoped outer, Tree.AnyPattern tree)
+        public static IPattern Build(IScoped outer, ParseTree.IPattern tree)
         {
             return Visit(outer, (dynamic)tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.TuplePattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.TuplePattern tree)
         {
             return new TuplePattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.IdentifierPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.IdentifierPattern tree)
         {
             return new IdentifierPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.LetPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.LetPattern tree)
         {
             return new LetPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.VarPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.VarPattern tree)
         {
             return new VarPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.AsPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.AsPattern tree)
         {
             return new AsPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.ExpressionPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.ExpressionPattern tree)
         {
             return new ExpressionPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.OptionalPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.OptionalPattern tree)
         {
             return new OptionalPattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.EnumCasePattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.EnumCasePattern tree)
         {
             return new CasePattern(outer, tree);
         }
 
-        private static IPattern Visit(IScoped outer, Tree.AnyPattern tree)
+        private static IPattern Visit(IScoped outer, ParseTree.IPattern tree)
         {
             return new Dummy(outer, tree);
         }
 
-        public class TuplePattern : Items<NamedPattern, Tree.TuplePattern>, IPattern
+        public class TuplePattern : Items<NamedPattern, ParseTree.TuplePattern>, IPattern
         {
-            public TuplePattern(IScoped outer, Tree.TuplePattern tree)
+            public TuplePattern(IScoped outer, ParseTree.TuplePattern tree)
                 : base(outer, tree, Enum(outer, tree))
             {
             }
@@ -77,15 +77,15 @@ namespace SixComp.Sema
                 this.ReportList(writer, Strings.Head.TuplePattern);
             }
 
-            private static IEnumerable<NamedPattern> Enum(IScoped outer, Tree.TuplePattern tree)
+            private static IEnumerable<NamedPattern> Enum(IScoped outer, ParseTree.TuplePattern tree)
             {
                 return tree.Elements.Select(element => new NamedPattern(outer, element));
             }
         }
 
-        public class IdentifierPattern : Base<Tree.IdentifierPattern>, IPattern, INamedDeclaration
+        public class IdentifierPattern : Base<ParseTree.IdentifierPattern>, IPattern, INamedDeclaration
         {
-            public IdentifierPattern(IScoped outer, Tree.IdentifierPattern tree)
+            public IdentifierPattern(IScoped outer, ParseTree.IdentifierPattern tree)
                 : base(outer, tree)
             {
                 Name = new BaseName(outer, tree.Name);
@@ -101,9 +101,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class LetPattern : Base<Tree.LetPattern>, IPattern
+        public class LetPattern : Base<ParseTree.LetPattern>, IPattern
         {
-            public LetPattern(IScoped outer, Tree.LetPattern tree)
+            public LetPattern(IScoped outer, ParseTree.LetPattern tree)
                 : base(outer, tree)
             {
                 Pattern = Build(outer, tree.Pattern);
@@ -117,9 +117,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class VarPattern : Base<Tree.VarPattern>, IPattern
+        public class VarPattern : Base<ParseTree.VarPattern>, IPattern
         {
-            public VarPattern(IScoped outer, Tree.VarPattern tree)
+            public VarPattern(IScoped outer, ParseTree.VarPattern tree)
                 : base(outer, tree)
             {
                 Pattern = Build(outer, tree.Pattern);
@@ -133,9 +133,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class AsPattern : Base<Tree.AsPattern>, IPattern
+        public class AsPattern : Base<ParseTree.AsPattern>, IPattern
         {
-            public AsPattern(IScoped outer, Tree.AsPattern tree)
+            public AsPattern(IScoped outer, ParseTree.AsPattern tree)
                 : base(outer, tree)
             {
                 Pattern = Build(outer, tree.Pattern);
@@ -155,9 +155,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class CasePattern : Base<Tree.EnumCasePattern>, IPattern
+        public class CasePattern : Base<ParseTree.EnumCasePattern>, IPattern
         {
-            public CasePattern(IScoped outer, Tree.EnumCasePattern tree)
+            public CasePattern(IScoped outer, ParseTree.EnumCasePattern tree)
                 : base(outer, tree)
             {
                 EnumName = BaseName.Maybe(outer, tree.EnumName);
@@ -180,9 +180,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class ExpressionPattern : Base<Tree.ExpressionPattern>, IPattern
+        public class ExpressionPattern : Base<ParseTree.ExpressionPattern>, IPattern
         {
-            public ExpressionPattern(IScoped outer, Tree.ExpressionPattern tree)
+            public ExpressionPattern(IScoped outer, ParseTree.ExpressionPattern tree)
                 : base(outer, tree)
             {
                 Expression = IExpression.Build(outer, tree.Expression);
@@ -195,9 +195,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class OptionalPattern : Base<Tree.OptionalPattern>, IPattern
+        public class OptionalPattern : Base<ParseTree.OptionalPattern>, IPattern
         {
-            public OptionalPattern(IScoped outer, Tree.OptionalPattern tree)
+            public OptionalPattern(IScoped outer, ParseTree.OptionalPattern tree)
                 : base(outer, tree)
             {
                 Pattern = Build(outer, tree.Pattern);
@@ -210,9 +210,9 @@ namespace SixComp.Sema
             }
         }
 
-        public class NamedPattern : Base<Tree.TuplePatternElement>
+        public class NamedPattern : Base<ParseTree.TuplePatternElement>
         {
-            public NamedPattern(IScoped outer, Tree.TuplePatternElement tree)
+            public NamedPattern(IScoped outer, ParseTree.TuplePatternElement tree)
                 : base(outer, tree)
             {
                 Name = BaseName.Maybe(outer, tree.Name?.Name);

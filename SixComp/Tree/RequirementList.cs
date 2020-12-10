@@ -2,20 +2,20 @@
 
 namespace SixComp
 {
-    public partial class Tree
+    public partial class ParseTree
     {
-        public class RequirementList : ItemList<AnyRequirement>
+        public class RequirementList : ItemList<ITypeRestriction>
         {
-            public RequirementList(List<AnyRequirement> requirements) : base(requirements) { }
+            public RequirementList(List<ITypeRestriction> requirements) : base(requirements) { }
             public RequirementList() { }
 
             public static RequirementList Parse(Parser parser)
             {
-                var requirements = new List<AnyRequirement>();
+                var requirements = new List<ITypeRestriction>();
 
                 do
                 {
-                    var requirement = AnyRequirement.Parse(parser);
+                    var requirement = ITypeRestriction.Parse(parser);
                     requirements.Add(requirement);
                 }
                 while (parser.Match(ToKind.Comma));
