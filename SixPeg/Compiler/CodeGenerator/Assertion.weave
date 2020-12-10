@@ -1,0 +1,28 @@
+﻿{{
+    var mustMatch = (bool)model.MustMatch;
+    var expression = (Expression)model.Expression;
+    var startCursorName = this.CreateVariable("startCursor");
+    var oldContext = this.currentContext;
+    this.currentContext = new ResultContext(
+        resultName: this.CreateVariable("r"),
+        resultType: this.types[expression]);
+}}
+var {{: startCursorName }} = cursor;
+IParseResult<{{= this.currentContext.ResultType }}> {{: this.currentContext.ResultName }} = null;
+{{@WalkExpression expression}}
+if ({{: this.currentContext.ResultName }} {{if mustMatch}}!={{else}}=={{/if}} null)
+{
+    {{if mustMatch}}
+        cursor = {{: startCursorName }};
+    {{/if}}
+    {{: oldContext.ResultName }} = this.ReturnHelper<{{= oldContext.ResultType }}>(cursor, ref cursor, state => {{if mustMatch}}{{: this.currentContext.ResultName }}.Value{{else}}string.Empty{{/if}}{{if this.currentContext.ResultRuleName != null}}, ruleName: {{= ToLiteral(this.currentContext.ResultRuleName) }}{{/if}});
+}
+{{if !mustMatch}}
+    else
+    {
+        cursor = {{: startCursorName }};
+    }
+{{/if}}
+{{
+    this.currentContext = oldContext;
+}}

@@ -1,0 +1,63 @@
+﻿@model RepetitionExpression
+{{
+    var startCursorName = this.CreateVariable("startCursor");
+    var listName = this.CreateVariable("l");
+    var oldContext = this.currentContext;
+    var listResultType = this.types[model.Expression];
+    var loopCursorName = model.Quantifier.Delimiter == null ? null : this.CreateVariable("startCursor");
+}}
+var {{: startCursorName }} = cursor;
+var {{: listName }} = new List<{{= listResultType }}>();
+while ({{if model.Quantifier.Max.HasValue}}{{: listName }}.Count < {{= model.Quantifier.Max }}{{else}}true{{/if}})
+{
+    {{if model.Quantifier.Delimiter != null}}
+        {{
+            this.currentContext = new ResultContext(
+                resultName: this.CreateVariable("r"),
+                resultType: this.types[model.Quantifier.Delimiter]);
+        }}
+        var {{: loopCursorName }} = cursor;
+        if ({{: listName }}.Count > 0)
+        {
+            IParseResult<{{= this.currentContext.ResultType }}> {{: this.currentContext.ResultName }} = null;
+            {{@WalkExpression model.Quantifier.Delimiter}}
+            if ({{: this.currentContext.ResultName }} == null)
+            {
+                break;
+            }
+        }
+    {{/if}}
+    {{
+        this.currentContext = new ResultContext(
+            resultName: this.CreateVariable("r"),
+            resultType: listResultType);
+    }}
+    IParseResult<{{= this.currentContext.ResultType }}> {{: this.currentContext.ResultName }} = null;
+    {{@WalkExpression model.Expression}}
+    if ({{: this.currentContext.ResultName }} != null)
+    {
+        {{: listName }}.Add({{: this.currentContext.ResultName }}.Value);
+    }
+    else
+    {
+        {{if model.Quantifier.Delimiter != null}}
+            cursor = {{: loopCursorName }};
+        {{/if}}
+        break;
+    }
+}
+{{
+    this.currentContext = oldContext;
+}}
+{{if model.Quantifier.Min == 0}}
+    {{: this.currentContext.ResultName }} = this.ReturnHelper<{{= this.types[model] }}>({{: startCursorName }}, ref cursor, state => {{: listName }}.AsReadOnly(){{if this.currentContext.ResultRuleName != null}}, ruleName: {{= ToLiteral(this.currentContext.ResultRuleName) }}{{/if}});
+{{else}}
+    if ({{: listName }}.Count >= {{= model.Quantifier.Min }})
+    {
+        {{: this.currentContext.ResultName }} = this.ReturnHelper<{{= this.types[model] }}>({{: startCursorName }}, ref cursor, state => {{: listName }}.AsReadOnly(){{if this.currentContext.ResultRuleName != null}}, ruleName: {{= ToLiteral(this.currentContext.ResultRuleName) }}{{/if}});
+    }
+    else
+    {
+        cursor = {{: startCursorName }};
+    }
+{{/if}}

@@ -27,7 +27,8 @@ namespace SixComp
 
             var compiler = new Compiler(Navi);
 
-            var peg = new SixComp.Peg.Parser();
+            var peg = new Peg.Parser();
+            //peg.Tracer = Pegasus.Common.Tracing.DiagnosticsTracer.Instance;
 
             var names = Sources.GetFiles("*.swift").Select(f => f.Name).Where(n => !n.StartsWith('_')).ToList();
 
@@ -56,6 +57,7 @@ namespace SixComp
                 }
                 catch (FormatException error)
                 {
+                    Console.WriteLine();
                     Console.WriteLine($"ERROR: {error}");
                     break;
                 }

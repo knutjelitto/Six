@@ -1,0 +1,7 @@
+﻿@model ChoiceExpression
+{{each expression in model.Choices}}
+    if ({{: this.currentContext.ResultName }} == null)
+    {
+        {{@WalkExpression expression}}
+    }
+{{/each}}

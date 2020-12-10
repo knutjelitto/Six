@@ -3,26 +3,157 @@
 @classname Parser
 @ignorecase false
 //@resources MyProject.Properties.Resources
-//@start startingRule
-@trace true
+@start unit
+@trace false
 //@using System.Linq
 //@using { Foo = System.String }
 
 unit
-	=	statement* EOF
+    = statement* _ EOF
 
+EOF	<IName>
+    = sp:_ !.   { Names.Build(sp, string.Empty, state) }
 
 statement 
-	=	declaration_statement
+    = declaration_statement
 
 
 declaration_statement 
-	=	'func'
+    = function_declaration
+
+function_declaration
+    = anyprefix _ 'func' function_name generic_parameters? function_parameters
+
+function_name
+    = name
+
+function_parameters
+    = _ '(' function_parameter<0,,comma> _ ')'
+
+function_parameter
+    = external_name local_name type_annotation default_argument
+    / external_name local_name type_annotation _ '...'
+    / external_name local_name type_annotation
+    / local_name type_annotation default_argument
+    / local_name type_annotation _ '...'
+    / local_name type_annotation
+
+external_name
+    = _ name
+
+local_name
+    = _ name
+
+default_argument
+    = _ '=' expression
+
+type_annotation
+    = _ ':' attributes? _ 'inout'? type
+
+generic_parameters
+    = _ '<' generic_parameter<1,,comma> _ '>'
+
+generic_parameter <Generics.GenericParameter>
+    = n:type_name c:colon t:protocol_composition_type   { Generics.Parameter(n, c, t) }
+    / n:type_name c:colon t:type_identifier             { Generics.Parameter(n, c, t) }
+    / n:type_name                                       { Generics.Parameter(n, null, null) }
+    / #error{ "XXX" }
+
+generic_arguments <Generics.GenericArguments>
+    = la:langle f:generic_argument r:generic_argument_more* ra:rangle { Generics.Arguments(la, f, r, ra, state) }
+
+generic_argument <Generics.GenericArgument>
+    = t:type                                            { Generics.Argument(t, state) }
+
+generic_argument_more <Generics.GenericArgument>
+    = c:comma t:type                                    { Generics.Argument(c, t, state) }
+
+anyprefix
+    = attributes? modifiers? _
+
+attributes
+    =	(_ attribute)+
+
+attribute
+    = '@' name attribute_arguments?
+
+attribute_arguments
+    = _ '(' ')'
+
+modifiers
+    = (_ modifier)+
+
+modifier
+    = 'private'
+    / 'public'
+    / 'internal'
+
+//== expression
+
+expression
+    = name
+
+//== types
+
+type <IType>
+    = type_identifier
+    / protocol_composition_type
+
+type_name
+    = name
+
+type_identifier <IType> -memoize
+    = start:type_identifier_part rest:(dot type_identifier_part)*  { Types.Identifier(start, rest, state) }
+
+type_identifier_part <Types.IdentifierPart>
+    = type_name generic_arguments?  {}
+
+type_identifier_rest <Types.TypeIdentifierRest>
+    = dot type_identifier_part {}
+
+protocol_composition_type <IType> -memoize
+    = ids:type_identifier<2,,(_ '&')> { Types.Compose(ids) }
+
+
+//== literals
+
+name <IName>
+    = sp:_ id:([a-zA-Z_][a-zA-Z0-9_]*) { Names.Build(sp, id, state) }
+
+//== helpers
+
+dot    <IName> = sp:_ id:'.' { Names.Build(sp, id, state) }
+comma  <IName> = sp:_ id:','	{ Names.Build(sp, id, state) }
+colon  <IName> = sp:_ id:':' { Names.Build(sp, id, state) }
+langle <IName> = sp:_ id:'<' { Names.Build(sp, id, state) }
+rangle <IName> = sp:_ id:'>' { Names.Build(sp, id, state) }
+
+
+//== spacing
+
+_ <ISpace>
+    = sp:space* { AnySpace.Build(sp, state) }
 
 space
-	= line_comment
+    = w:line_comment+ { string.Join(string.Empty, w) }
+    / w:whitespace+   { string.Join(string.Empty, w) }
+    / w:comment+	  { string.Join(string.Empty, w) }		
 
 line_comment
-	= '//'
+    = '//' (![\n\r] .)* 
 
-EOF	= !.
+comment
+    = start_comment (not_comment / comment)* stop_comment
+
+not_comment
+    = !start_comment !stop_comment .
+
+start_comment
+    = '/*'
+
+stop_comment
+    = '*/'
+
+whitespace
+    = [\n\r\t ]
+

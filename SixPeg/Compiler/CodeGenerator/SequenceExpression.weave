@@ -1,0 +1,24 @@
+﻿@model SequenceExpression
+{{
+    var startCursorName = this.CreateVariable("startCursor");
+    var oldContext = this.currentContext;
+
+    var sequence = model.Sequence;
+
+    var codeExpression = sequence.Count > 0
+        ? sequence[sequence.Count - 1] as CodeExpression
+        : null;
+
+    if (codeExpression == null || codeExpression.CodeType != CodeType.Result)
+    {
+        var newSequence = new List<Expression>(sequence.Count + 1);
+        newSequence.AddRange(sequence);
+        newSequence.Add(null);
+        sequence = newSequence;
+    }
+}}
+var {{: startCursorName }} = cursor;
+{{@RenderSequence new { FinalContext = oldContext, Index = 0, Sequence = sequence, StartCursorName = startCursorName } }}
+{{
+    this.currentContext = oldContext;
+}}

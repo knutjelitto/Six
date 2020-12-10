@@ -1,0 +1,97 @@
+﻿@model Rule
+{{
+    var memoize = model.Flags.Any(f => f.Name == "memoize");
+    var lexical = model.Flags.Any(f => f.Name == "lexical");
+    this.currentContext = new ResultContext(
+        resultName: this.CreateVariable("r"),
+        resultRuleName: lexical ? model.Identifier.Name : null,
+        resultType: this.types[model.Expression]);
+    var leftRecursive = memoize && this.leftRecursiveRules.Contains(model);
+}}
+{{if model.Expression is TypedExpression}}
+    private IParseResult<
+        {{@RenderCode this.currentContext.ResultType}}
+        > {{: model.Identifier.Name }}(ref Cursor cursor)
+{{else}}
+    private IParseResult<{{= this.currentContext.ResultType }}> {{: model.Identifier.Name }}(ref Cursor cursor)
+{{/if}}
+{
+    {{wrapif this.trace}}
+        this.tracer.TraceRuleEnter({{= ToLiteral(model.Identifier.Name) }}, cursor);
+        {{body}}
+            IParseResult<{{= this.currentContext.ResultType }}> {{: this.currentContext.ResultName }} = null;
+            {{wrapif leftRecursive || memoize}}
+                var storageKey = new CacheKey({{= ToLiteral(model.Identifier.Name) }}, cursor.StateKey, cursor.Location);
+                if (this.storage.ContainsKey(storageKey))
+                {
+                    {{: this.currentContext.ResultName }} = (IParseResult<{{= this.currentContext.ResultType }}>)this.storage[storageKey];
+                    {{if this.trace}}
+                        this.tracer.TraceCacheHit({{= ToLiteral(model.Identifier.Name) }}, cursor, storageKey, {{: this.currentContext.ResultName }});
+                    {{/if}}
+                    if ({{: this.currentContext.ResultName }} != null)
+                    {
+                        cursor = {{: this.currentContext.ResultName }}.EndCursor;
+                    }
+                }
+                else
+                {
+                    {{if this.trace}}
+                        this.tracer.TraceCacheMiss({{= ToLiteral(model.Identifier.Name) }}, cursor, storageKey);
+                    {{/if}}
+                    {{body}}
+                        {{if leftRecursive}}
+                            {{
+                                var startCursorName = this.CreateVariable("startCursor");
+                                var resultName = this.currentContext.ResultName;
+                                var nextResultName = this.CreateVariable("r");
+                            }}
+                            {{if this.trace}}
+                                this.tracer.TraceInfo({{= ToLiteral(model.Identifier.Name) }}, cursor, "Seeding left-recursion with an unsuccessful match.");
+                            {{/if}}
+                            this.storage[storageKey] = null;
+                            var {{: startCursorName }} = cursor;
+                            while (true)
+                            {
+                                IParseResult<{{= this.currentContext.ResultType }}> {{: nextResultName }} = null;
+                                {{ this.currentContext = this.currentContext.WithResultName(nextResultName); }}
+                                {{@WalkRule model}}
+                                {{ this.currentContext = this.currentContext.WithResultName(resultName); }}
+                                if ({{: nextResultName }} == null || ({{: this.currentContext.ResultName }} != null && {{: this.currentContext.ResultName }}.EndCursor.Location >= r1.EndCursor.Location))
+                                {
+                                    {{if this.trace}}
+                                        this.tracer.TraceInfo({{= ToLiteral(model.Identifier.Name) }}, cursor, "No forward progress made, current cache entry will be kept.");
+                                    {{/if}}
+                                    break;
+                                }
+                                {{if this.trace}}
+                                    this.tracer.TraceInfo({{= ToLiteral(model.Identifier.Name) }}, cursor, "Caching result and retrying.");
+                                {{/if}}
+                                this.storage[storageKey] = {{: this.currentContext.ResultName }} = {{: nextResultName }};
+                                cursor = {{: startCursorName }};
+                            }
+                            if ({{: this.currentContext.ResultName }} != null)
+                            {
+                                cursor = {{: this.currentContext.ResultName }}.EndCursor;
+                            }
+                        {{elif memoize}}
+                            {{@WalkRule model}}
+                            {{if this.trace}}
+                                this.tracer.TraceInfo({{= ToLiteral(model.Identifier.Name) }}, cursor, "Caching result.");
+                            {{/if}}
+                            this.storage[storageKey] = {{: this.currentContext.ResultName }};
+                        {{else}}
+                            {{@WalkRule model}}
+                        {{/if}}
+                    {{/body}}
+                }
+            {{/wrapif}}
+        {{/body}}
+        this.tracer.TraceRuleExit({{= ToLiteral(model.Identifier.Name) }}, cursor, {{: this.currentContext.ResultName }});
+    {{/wrapif}}
+    return {{: this.currentContext.ResultName }};
+}
+
+{{
+    this.currentContext = default(ResultContext);
+    this.variables.Clear();
+}}

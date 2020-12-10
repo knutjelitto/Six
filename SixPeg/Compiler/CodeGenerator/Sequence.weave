@@ -1,0 +1,56 @@
+﻿{{
+    var finalContext = (ResultContext)model.FinalContext;
+    var index = (int)model.Index;
+    var sequence = (IList<Expression>)model.Sequence;
+    var startCursorName = (string)model.StartCursorName;
+
+    var expression = sequence[index];
+
+    var codeExpression = expression as CodeExpression;
+    if (codeExpression != null && codeExpression.CodeType != CodeType.Error && codeExpression.CodeType != CodeType.Result)
+    {
+        codeExpression = null;
+    }
+}}
+{{if expression == null}}
+    {
+        var len = cursor.Location - {{: startCursorName }}.Location;
+        {{: finalContext.ResultName }} = this.ReturnHelper<{{= finalContext.ResultType }}>({{: startCursorName }}, ref cursor, state =>
+            state.Subject.Substring({{: startCursorName }}.Location, len)
+            {{if finalContext.ResultRuleName != null}}, ruleName: {{= ToLiteral(finalContext.ResultRuleName) }}{{/if}});
+    }
+{{elif codeExpression != null}}
+    {{if codeExpression.CodeType == CodeType.Result}}
+        {{: finalContext.ResultName }} = this.ReturnHelper<{{= finalContext.ResultType }}>({{: startCursorName }}, ref cursor, state =>
+            {{@RenderCode codeExpression.CodeSpan}}
+            {{if finalContext.ResultRuleName != null}}, ruleName: {{= ToLiteral(finalContext.ResultRuleName) }}{{/if}});
+    {{elif codeExpression.CodeType == CodeType.Error}}
+        {{@WalkExpression expression}}
+    {{else}}
+        {{
+            throw new NotImplementedException();
+        }}
+    {{/if}}
+{{else}}
+    {{
+        this.currentContext = new ResultContext(
+            resultName: this.CreateVariable("r"),
+            resultType: this.types[expression]);
+    }}
+    {{if this.currentContext.ResultType is CodeSpan}}
+        IParseResult<
+            {{@RenderCode this.currentContext.ResultType}}
+            > {{: this.currentContext.ResultName }} = null;
+    {{else}}
+        IParseResult<{{= this.currentContext.ResultType }}> {{: this.currentContext.ResultName }} = null;
+    {{/if}}
+    {{@WalkExpression expression}}
+    if ({{: this.currentContext.ResultName }} != null)
+    {
+        {{@RenderSequence new { FinalContext = finalContext, Index = index + 1, Sequence = sequence, StartCursorName = startCursorName } }}
+    }
+    else
+    {
+        cursor = {{: startCursorName }};
+    }
+{{/if}}
