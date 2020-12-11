@@ -59,7 +59,6 @@ namespace SixComp
                 {
                     Console.WriteLine();
                     Console.WriteLine($"ERROR: {error}");
-                    break;
                 }
 
                 var unit = compiler.Parse(new ConsoleWriter(), context);

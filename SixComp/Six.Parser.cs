@@ -1,5 +1,4 @@
 ﻿using Pegasus.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,122 +10,151 @@ namespace SixComp.Peg
         {
         }
 
-
-        public interface IType
+        public interface IAny
         {
+            int Start { get; }
+            int End { get; }
         }
 
-        public interface ISpace
+        public interface IType { }
+        public interface ISpace : IAny { }
+        public interface IName : IAny { }
+        public interface IToken : IName { }
+
+        public abstract class Any : IAny
         {
+            protected Any(IAny first, Cursor end)
+            {
+                First = first;
+                Start = first.Start;
+                End = end.Location;
+            }
+
+            protected Any(int start, Cursor end)
+            {
+                Start = start;
+                End = end.Location;
+            }
+
+            public int Start { get; }
+            public int End { get; }
+            public IAny? First { get; }
         }
 
-        public interface IName
+        public static class Funcs
         {
+            public class Result : Any
+            {
+                public Result(IName arrow, IList<Attribs.Attribute> attributes, Cursor end)
+                    : base(arrow, end)
+                {
+                    Attributes = attributes;
+                }
+
+                public IList<Attribs.Attribute> Attributes { get; }
+            }
         }
 
-        public interface IToken
+        public static class Attribs
         {
+            public class Attribute : Any
+            {
+                public Attribute(IAny start, Cursor end)
+                    : base(start, end)
+                {
+                }
+            }
         }
 
         public static class Types
         {
-            public static IType Identifier(object start, object rest, Cursor state)
+            public class Identifier : IType
             {
-                throw new NotImplementedException();
+                public Identifier(IType first, IList<IType> rest)
+                {
+                    Parts = Enumerable.Repeat(first, 1).Concat(rest).Cast<IdentifierPart>().ToArray();
+                }
+
+                public IReadOnlyList<IdentifierPart> Parts { get; }
             }
 
-            public static IType IdPart(IName name, Generics.GenericArguments arguments)
+            public class IdentifierPart : IType
             {
-                throw new NotImplementedException();
+                public IdentifierPart(IName name, IList<Generics.Arguments> arguments)
+                {
+                    Name = name;
+                    Arguments = arguments.SingleOrDefault();
+                }
+
+                public IName Name { get; }
+                public Generics.Arguments? Arguments { get; }
             }
 
-            public static IType IdPart(IName dot, IName name, Generics.GenericArguments arguments)
+            public class Composed : IType
             {
-                throw new NotImplementedException();
+                public Composed(IList<IType> types)
+                {
+                    Types = types;
+                }
+
+                public IList<IType> Types { get; }
             }
 
-            public static IType Compose(IList<IType> types)
+            public class PrefixedType : IType
             {
-                throw new NotImplementedException();
-            }
+                public PrefixedType(IName prefix, IType type)
+                {
+                    Prefix = prefix;
+                    Type = type;
+                }
 
-            public static IType PrefixedType(IName prefix, IType type)
-            {
-                throw new NotImplementedException();
+                public IName Prefix { get; }
+                public IType Type { get; }
             }
         }
 
-        public static class AnySpace
+        public static class Spaces
         {
-            public static ISpace Build(IList<string> spaces, Cursor state)
+            public class Space : Any, ISpace
             {
-                return new Space(spaces, state);
-            }
-
-            private class Space : ISpace
-            {
-                public Space(IList<string> spaces, Cursor state)
+                public Space(Cursor start, IList<string> spaces, Cursor next) 
+                    : base(start.Location, next)
                 {
                     Spaces = spaces;
-                    State = state;
                 }
 
                 public IList<string> Spaces { get; }
-                public Cursor State { get; }
             }
         }
 
         public static class Names
-        {
-            public static IName Build(ISpace space, string text, Cursor state)
+        {           
+            public class Name : Any, IName
             {
-                return new Name(space, text, state);
+                public Name(ISpace space, string text, Cursor end)
+                    : base(space, end)
+                {
+                    Text = text;
+                }
+                public string Text { get; }
             }
 
-            private class Name : IName
+            private class PrefixName : Any, IName
             {
-                public Name(ISpace space, string text, Cursor state)
+                public PrefixName(IName prefix, IName name, Cursor end)
+                    : base(prefix, end)
                 {
-                    Space = space;
-                    Text = text;
-                    State = state;
+                    Name = name;
                 }
-
-                public ISpace Space { get; }
-                public string Text { get; }
-                public Cursor State { get; }
+                public IName Name { get; }
             }
         }
 
         public static class Generics
         {
-            public static GenericParameter Parameter(IName typeName, IName? colon, IType? restriction)
+            public class Parameter
             {
-                return new GenericParameter(typeName, colon, restriction);
-
-            }
-
-            public static GenericArgument Argument(IType type, Cursor state)
-            {
-                return new GenericArgument(type);
-
-            }
-
-            public static GenericArgument Argument(IName comma, IType type, Cursor state)
-            {
-                return new GenericArgument(Types.PrefixedType(comma, type));
-
-            }
-
-            public static GenericArguments Arguments(IName lAngle, GenericArgument first, IList<GenericArgument> rest, IName rAngle, Cursor state)
-            {
-                return new GenericArguments(lAngle, Enumerable.Repeat(first, 1).Concat(rest).ToArray(), rAngle);
-
-            }
-
-            public class GenericParameter
-            {
-                public GenericParameter(IName typeName, IName? colon, IType? restriction)
+                public Parameter(IName typeName, IName? colon, IType? restriction)
                 {
                     TypeName = typeName;
                     Colon = colon;
@@ -138,29 +166,40 @@ namespace SixComp.Peg
                 public IType? Restriction { get; }
             }
 
-            public class GenericArgument : IType
+            public class Argument : IType
             {
-                public GenericArgument(IType type)
+                public Argument(IType type, Cursor state)
                 {
                     Type = type;
+                    State = state;
                 }
 
                 public IType Type { get; }
+                public Cursor State { get; }
             }
 
-            public class GenericArguments
+            public class Arguments
             {
-                public GenericArguments(IName lAngle, IReadOnlyList<GenericArgument> arguments, IName rAngle)
+                public Arguments(IName lAngle, Argument first, IList<Argument> rest, IName rAngle, Cursor state)
+                    : this(lAngle, Enumerable.Repeat(first, 1).Concat(rest).ToArray(), rAngle, state)
+                {
+
+                }
+
+                public Arguments(IName lAngle, IReadOnlyList<Argument> arguments, IName rAngle, Cursor state)
                 {
                     LAngle = lAngle;
-                    Arguments = arguments;
+                    Items = arguments;
                     RAngle = rAngle;
+                    State = state;
                 }
 
                 public IName LAngle { get; }
-                public IReadOnlyList<GenericArgument> Arguments { get; }
+                public IReadOnlyList<Argument> Items { get; }
                 public IName RAngle { get; }
+                public Cursor State { get; }
             }
         }
     }
 }
+

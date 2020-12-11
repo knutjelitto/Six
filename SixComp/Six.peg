@@ -12,23 +12,27 @@ unit
     = statement* _ EOF
 
 EOF	<IName>
-    = sp:_ !.   { Names.Build(sp, string.Empty, state) }
+    = sp:_ !.   { new Names.Name(sp, string.Empty, state) }
 
 statement 
     = declaration_statement
 
-
 declaration_statement 
+    = declaration
+
+declaration
     = function_declaration
 
 function_declaration
-    = anyprefix _ 'func' function_name generic_parameters? function_parameters
+    = any_prefix _ 'func' function_name generic_parameters? function_parameters .*
 
 function_name
     = name
+    / #error{ "function_name" }
 
 function_parameters
-    = _ '(' function_parameter<0,,comma> _ ')'
+    = lparent function_parameter<0,,comma> rparent
+    / #error{ "function_parameters" }
 
 function_parameter
     = external_name local_name type_annotation default_argument
@@ -48,40 +52,36 @@ default_argument
     = _ '=' expression
 
 type_annotation
-    = _ ':' attributes? _ 'inout'? type
+    = _ ':' attribute* _ 'inout'? type
 
 generic_parameters
-    = _ '<' generic_parameter<1,,comma> _ '>'
+    = langle generic_parameter<1,,comma> rangle
+    / langle #error{ "generic_parameters" }
 
-generic_parameter <Generics.GenericParameter>
-    = n:type_name c:colon t:protocol_composition_type   { Generics.Parameter(n, c, t) }
-    / n:type_name c:colon t:type_identifier             { Generics.Parameter(n, c, t) }
-    / n:type_name                                       { Generics.Parameter(n, null, null) }
-    / #error{ "XXX" }
+generic_parameter <Generics.Parameter>
+    = n:type_name c:colon t:protocol_composition_type   { new Generics.Parameter(n, c, t) }
+    / n:type_name c:colon t:type_identifier             { new Generics.Parameter(n, c, t) }
+    / n:type_name                                       { new Generics.Parameter(n, null, null) }
+    / #error{ "generic_parameter" }
 
-generic_arguments <Generics.GenericArguments>
-    = la:langle f:generic_argument r:generic_argument_more* ra:rangle { Generics.Arguments(la, f, r, ra, state) }
+generic_arguments <Generics.Arguments>
+    = la:langle f:generic_argument r:generic_argument_more* ra:rangle { new Generics.Arguments(la, f, r, ra, state) }
 
-generic_argument <Generics.GenericArgument>
-    = t:type                                            { Generics.Argument(t, state) }
+generic_argument <Generics.Argument>
+    = t:type                                            { new Generics.Argument(t, state) }
 
-generic_argument_more <Generics.GenericArgument>
-    = c:comma t:type                                    { Generics.Argument(c, t, state) }
+generic_argument_more <Generics.Argument>
+    = c:comma t:type                                    { new Generics.Argument(new Types.PrefixedType(c, t), state) }
 
-anyprefix
-    = attributes? modifiers? _
-
-attributes
-    =	(_ attribute)+
+any_prefix
+    = _ attribute* _ modifier*
+    / #error{ "any-prefix" }
 
 attribute
     = '@' name attribute_arguments?
 
 attribute_arguments
-    = _ '(' ')'
-
-modifiers
-    = (_ modifier)+
+    = lparent rparent
 
 modifier
     = 'private'
@@ -103,36 +103,38 @@ type_name
     = name
 
 type_identifier <IType> -memoize
-    = start:type_identifier_part rest:(dot type_identifier_part)*  { Types.Identifier(start, rest, state) }
+    = start:type_identifier_part rest:type_identifier_rest*  { new Types.Identifier(start, rest) }
 
-type_identifier_part <Types.IdentifierPart>
-    = type_name generic_arguments?  {}
+type_identifier_part <IType>
+    = t:type_name a:generic_arguments? { new Types.IdentifierPart(t, a) }
 
-type_identifier_rest <Types.TypeIdentifierRest>
-    = dot type_identifier_part {}
+type_identifier_rest <IType>
+    = d:dot t:type_identifier_part { new Types.PrefixedType(d, t) }
 
 protocol_composition_type <IType> -memoize
-    = ids:type_identifier<2,,(_ '&')> { Types.Compose(ids) }
+    = ids:type_identifier<2,,(_ '&')> { new Types.Composed(ids) }
 
 
 //== literals
 
 name <IName>
-    = sp:_ id:([a-zA-Z_][a-zA-Z0-9_]*) { Names.Build(sp, id, state) }
+    = sp:_ id:([a-zA-Z_][a-zA-Z0-9_]*) { new Names.Name(sp, id, state) }
 
 //== helpers
 
-dot    <IName> = sp:_ id:'.' { Names.Build(sp, id, state) }
-comma  <IName> = sp:_ id:','	{ Names.Build(sp, id, state) }
-colon  <IName> = sp:_ id:':' { Names.Build(sp, id, state) }
-langle <IName> = sp:_ id:'<' { Names.Build(sp, id, state) }
-rangle <IName> = sp:_ id:'>' { Names.Build(sp, id, state) }
+dot     <IName> = sp:_ id:'.' { new Names.Name(sp, id, state) }
+comma   <IName> = sp:_ id:',' { new Names.Name(sp, id, state) }
+colon   <IName> = sp:_ id:':' { new Names.Name(sp, id, state) }
+langle  <IName> = sp:_ id:'<' { new Names.Name(sp, id, state) }
+rangle  <IName> = sp:_ id:'>' { new Names.Name(sp, id, state) }
+lparent <IName> = sp:_ id:'(' { new Names.Name(sp, id, state) }
+rparent <IName> = sp:_ id:')' { new Names.Name(sp, id, state) }
 
 
 //== spacing
 
 _ <ISpace>
-    = sp:space* { AnySpace.Build(sp, state) }
+    = sp:space* { new Spaces.Space(spStart, sp, state) }
 
 space
     = w:line_comment+ { string.Join(string.Empty, w) }
