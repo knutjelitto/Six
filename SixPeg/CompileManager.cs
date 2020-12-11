@@ -1,15 +1,15 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus
+namespace SixPeg
 {
     using System;
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Text.RegularExpressions;
-    using Pegasus.Common;
-    using Pegasus.Compiler;
-    using Pegasus.Expressions;
-    using Pegasus.Parser;
+    using SixPeg.Common;
+    using SixPeg.Compiler;
+    using SixPeg.Expressions;
+    using SixPeg.Parser;
 
     /// <summary>
     /// Provides a simple interface for parsing and compiling a PEG grammar.

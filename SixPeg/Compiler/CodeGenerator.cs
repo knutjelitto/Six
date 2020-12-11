@@ -1,12 +1,12 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Text;
-    using Pegasus.Expressions;
+    using SixPeg.Expressions;
 
     internal partial class CodeGenerator : ExpressionTreeWalker
     {

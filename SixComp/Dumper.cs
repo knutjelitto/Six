@@ -9,7 +9,7 @@ namespace SixComp
         {
             var treeName = Path.ChangeExtension(context.File.Name, ".parsed.swift");
             var treeFile = Path.Combine(context.Temp.FullName, treeName);
-            Directory.CreateDirectory(Path.GetDirectoryName(treeFile));
+            Directory.CreateDirectory(Path.GetDirectoryName(treeFile)!);
             using (var writer = new FileWriter(treeFile))
             {
                 unit.Write(writer);

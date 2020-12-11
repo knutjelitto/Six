@@ -29,9 +29,9 @@ namespace
 {
     using System;
     using System.Collections.Generic;
-    using Pegasus.Common;
+    using SixPeg.Common;
     {{if trace}}
-        using Pegasus.Common.Tracing;
+        using SixPeg.Common.Tracing;
     {{/if}}
     {{each @using in settings[SettingName.Using]}}
         using

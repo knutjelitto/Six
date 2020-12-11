@@ -1,12 +1,12 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Pegasus.Expressions;
+    using SixPeg.Expressions;
 
     internal class ReportCodeSyntaxIssuesPass : CompilePass
     {

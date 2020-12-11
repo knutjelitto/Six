@@ -1,8 +1,8 @@
-﻿@namespace Pegasus.Compiler
+﻿@namespace SixPeg.Compiler
 @classname CodeGenerator
 @encode EscapeName
 @static false
 @using System.Collections.Generic
 @using System.Linq
 @using System.Reflection
-@using Pegasus.Expressions
+@using SixPeg.Expressions

@@ -1,14 +1,14 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Common.Highlighting
+namespace SixPeg.Common.Highlighting
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Pegasus.Common;
+    using SixPeg.Common;
 
     /// <summary>
-    /// Provides syntax highlighting services for Pegasus grammars.
+    /// Provides syntax highlighting services for SixPeg grammars.
     /// </summary>
     /// <typeparam name="T">The type of the value of each token.</typeparam>
     public class SyntaxHighlighter<T>

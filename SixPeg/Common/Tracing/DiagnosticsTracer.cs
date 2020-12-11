@@ -2,7 +2,7 @@
 
 #if !NETSTANDARD1_0
 
-namespace Pegasus.Common.Tracing
+namespace SixPeg.Common.Tracing
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

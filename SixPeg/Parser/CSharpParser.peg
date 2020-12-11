@@ -1,4 +1,4 @@
-﻿@namespace Pegasus.Parser
+﻿@namespace SixPeg.Parser
 @classname CSharpParser
 @accessibility internal
 @using Microsoft.CodeAnalysis.CSharp

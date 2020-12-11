@@ -1,6 +1,6 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,8 @@ namespace Pegasus.Compiler
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Pegasus.Expressions;
-    using Pegasus.Properties;
+    using SixPeg.Expressions;
+    using SixPeg.Properties;
 
     internal class GenerateCodePass : CompilePass
     {

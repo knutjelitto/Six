@@ -1,14 +1,14 @@
 // Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Pegasus.Expressions;
+    using SixPeg.Expressions;
 
     /// <summary>
-    /// Provides mutual left-recursion detection services for Pegasus <see cref="Grammar">Grammars</see>.
+    /// Provides mutual left-recursion detection services for SixPeg <see cref="Grammar">Grammars</see>.
     /// </summary>
     public static class MutualRecursionDetector
     {

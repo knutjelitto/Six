@@ -1,14 +1,14 @@
 ﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using Pegasus.Common;
-    using Pegasus.Expressions;
+    using SixPeg.Common;
+    using SixPeg.Expressions;
 
     /// <summary>
     /// Encapsulates the results and errors from the compilation of a PEG grammar.

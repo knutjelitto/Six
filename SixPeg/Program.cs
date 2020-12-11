@@ -1,11 +1,11 @@
 ﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus
+namespace SixPeg
 {
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using Pegasus.Properties;
+    using SixPeg.Properties;
 
     internal class Program
     {

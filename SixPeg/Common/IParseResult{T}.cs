@@ -1,6 +1,6 @@
 ﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Common
+namespace SixPeg.Common
 {
     /// <summary>
     /// Encapsulates the success or failure of a particular parsing operation along with the result of operation.

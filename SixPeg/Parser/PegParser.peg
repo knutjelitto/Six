@@ -1,11 +1,11 @@
-@namespace Pegasus.Parser
+@namespace SixPeg.Parser
 @classname PegParser
 @using System.Globalization
 @using System.Linq
 @using System.Text.RegularExpressions
 @using Microsoft.CodeAnalysis.CSharp.Syntax
-@using Pegasus.Expressions
-@using Pegasus.Properties
+@using SixPeg.Expressions
+@using SixPeg.Properties
 @members
 {
     private readonly CSharpParser cSharpParser = new CSharpParser();

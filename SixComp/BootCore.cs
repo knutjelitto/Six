@@ -94,7 +94,7 @@ namespace SixComp
         private string EnsureTemp(string file)
         {
             var filename = Path.Combine(Temp.FullName, file);
-            Directory.CreateDirectory(Path.GetDirectoryName(filename));
+            Directory.CreateDirectory(Path.GetDirectoryName(filename)!);
             return filename;
         }
     }

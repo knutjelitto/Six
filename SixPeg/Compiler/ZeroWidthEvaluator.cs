@@ -1,21 +1,21 @@
 ﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Compiler
+namespace SixPeg.Compiler
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
-    using Pegasus.Expressions;
+    using SixPeg.Expressions;
 
     /// <summary>
-    /// Performs zero-width evaluation services for Pegasus <see cref="Grammar">Grammars</see>.
+    /// Performs zero-width evaluation services for SixPeg <see cref="Grammar">Grammars</see>.
     /// </summary>
     public static class ZeroWidthEvaluator
     {
         /// <summary>
-        /// Evaluates the expressions in a Pegasus <see cref="Grammar"/> to determine which of them are zero-width.
+        /// Evaluates the expressions in a SixPeg <see cref="Grammar"/> to determine which of them are zero-width.
         /// </summary>
         /// <param name="grammar">The <see cref="Grammar"/> to evaluate.</param>
         /// <returns>A <see cref="Dictionary{TKey, TValue}"/> detailing the whether each expression in the grammar is zero-width.</returns>

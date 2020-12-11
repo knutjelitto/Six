@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Six.peg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvailableItemName Include="PegGrammar" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PegGrammar Include="Six.peg" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PegasusAssemblyPath>$(MSBuildProjectDirectory)\..\SixPeg\bin\Debug\netcoreapp3.1\SixPeg.dll</PegasusAssemblyPath>
+  </PropertyGroup>
+  <UsingTask AssemblyFile="$(PegasusAssemblyPath)" TaskName="CompilePegGrammar" />
+  <Target Name="CompilePegGrammars" DependsOnTargets="CoreCompilePegGrammars" BeforeTargets="Compile;CoreCompile;Build;CoreBuild" Condition=" '@(PegGrammar)' != '' ">
+    <ItemGroup>
+      <Compile Include="%(PegGrammar.OutputPath)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="_UpdatePegGrammarsMetatdata">
+    <ItemGroup>
+      <PegGrammar Condition=" '%(PegGrammar.Link)' != '' And '%(PegGrammar.OutputPath)' == '' ">
+        <OutputPath>$(IntermediateOutputPath)$([System.Text.RegularExpressions.Regex]::Replace(%(PegGrammar.Link), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__')).g.cs</OutputPath>
+      </PegGrammar>
+      <PegGrammar Condition=" '%(PegGrammar.Link)' == '' And '%(PegGrammar.OutputPath)' == '' ">
+        <OutputPath>$(IntermediateOutputPath)$([System.Text.RegularExpressions.Regex]::Replace(%(PegGrammar.Identity), '(?&lt;=^|\\|/)..(?=$|\\|/)', '__')).g.cs</OutputPath>
+      </PegGrammar>
+    </ItemGroup>
+  </Target>
+  <Target Name="CleanPegGrammars" DependsOnTargets="_UpdatePegGrammarsMetatdata" BeforeTargets="Clean;CoreClean">
+    <Delete Files="@(PegGrammar -> '%(OutputPath)')" ContinueOnError="true" />
+  </Target>
+  <Target Name="CoreCompilePegGrammars" DependsOnTargets="_UpdatePegGrammarsMetatdata" Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFile);@(PegGrammar)" Outputs="@(PegGrammar -> '%(OutputPath)')">
+    <CompilePegGrammar InputFiles="@(PegGrammar -> '%(FullPath)')" OutputFiles="@(PegGrammar -> '%(OutputPath)')" />
+    <Message Text="%(PegGrammar.FullPath) -&gt; %(PegGrammar.OutputPath)" />
+  </Target>
+
+
+</Project>

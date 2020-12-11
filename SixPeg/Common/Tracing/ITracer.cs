@@ -1,6 +1,6 @@
 ﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
 
-namespace Pegasus.Common.Tracing
+namespace SixPeg.Common.Tracing
 {
     /// <summary>
     /// Provides an interface for PEG grammars to trace their activity.

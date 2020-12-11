@@ -19,7 +19,9 @@ namespace SixComp.Peg
         public interface IType { }
         public interface ISpace : IAny { }
         public interface IName : IAny { }
-        public interface IToken : IName { }
+        public interface IToken : IName, IAny { }
+
+        public interface IExpr : IAny { }
 
         public abstract class Any : IAny
         {
@@ -36,6 +38,20 @@ namespace SixComp.Peg
                 End = end.Location;
             }
 
+            protected Any(IReadOnlyList<IAny> starts,  Cursor end)
+            {
+                End = end.Location;
+                if (starts.Count == 0)
+                {
+                    Start = End;
+                }
+                else
+                {
+                    First = starts[0];
+                    Start = First.Start;
+                }
+            }
+
             public int Start { get; }
             public int End { get; }
             public IAny? First { get; }
@@ -43,26 +59,17 @@ namespace SixComp.Peg
 
         public static class Funcs
         {
-            public class Result : Any
+            public class Result : Any, IType
             {
-                public Result(IName arrow, IList<Attribs.Attribute> attributes, Cursor end)
+                public Result(IToken arrow, Prefixes.Attributes attributes, IType type, Cursor end)
                     : base(arrow, end)
                 {
                     Attributes = attributes;
+                    Type = type;
                 }
 
-                public IList<Attribs.Attribute> Attributes { get; }
-            }
-        }
-
-        public static class Attribs
-        {
-            public class Attribute : Any
-            {
-                public Attribute(IAny start, Cursor end)
-                    : base(start, end)
-                {
-                }
+                public Prefixes.Attributes Attributes { get; }
+                public IType Type { get; }
             }
         }
 
@@ -127,6 +134,36 @@ namespace SixComp.Peg
             }
         }
 
+        public class Prefixes
+        {
+            public class Prefix : Any
+            {
+                public Prefix(IList<IToken> attributes, Cursor end)
+                    : base(attributes.ToList(), end)
+                {
+                }
+            }
+
+            public class Attributes : Any
+            {
+                public Attributes(IList<Attribute> attributes, Cursor end)
+                    : base(attributes.ToList(), end)
+                {
+                }
+            }
+
+            public class Attribute : Any
+            {
+                public Attribute(IToken first, IName name, Cursor end)
+                    : base(first, end)
+                {
+                    Name = name;
+                }
+
+                public IName Name { get; }
+            }
+        }
+
         public static class Names
         {           
             public class Name : Any, IName
@@ -137,6 +174,14 @@ namespace SixComp.Peg
                     Text = text;
                 }
                 public string Text { get; }
+            }
+
+            public class Token : Name, IToken
+            {
+                public Token(ISpace first, string text, Cursor end)
+                    : base(first, text, end)
+                {
+                }
             }
 
             private class PrefixName : Any, IName
