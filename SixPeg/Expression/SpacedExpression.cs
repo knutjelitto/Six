@@ -1,11 +1,10 @@
 ﻿using SixPeg.Matchers;
+using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
     public class SpacedExpression : AnyExpression
     {
-        private IMatcher matcher;
-
         public SpacedExpression(string text)
         {
             Text = text;
@@ -14,9 +13,10 @@ namespace SixPeg.Expression
         public string Text { get; }
         public RuleExpression Rule { get; private set; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return matcher ??= Rule.GetMatcher();
+            Debug.Assert(Rule != null);
+            return Rule.GetMatcher(spaced);
         }
 
         public override void Resolve(GrammarExpression grammar)

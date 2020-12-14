@@ -18,7 +18,7 @@ namespace SixPeg
 
             var parser = new Parser.SixParser();
 
-            var file = "Simple.sixpeg";
+            var file = "SwiftExpression.sixpeg";
 
             var text = File.ReadAllText(file);
 

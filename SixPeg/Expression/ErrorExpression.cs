@@ -14,9 +14,9 @@ namespace SixPeg.Expression
         public int Code { get; }
         public IList<object> Arguments { get; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return new MatchError();
+            return new MatchError(spaced);
         }
 
         public override void Resolve(GrammarExpression grammar)

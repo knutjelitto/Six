@@ -25,21 +25,24 @@ namespace SixPeg.Expression
 
         private IWriter writer = null;
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return Start.GetMatcher();
+            return Start.GetMatcher(spaced);
         }
 
         public void ReportMatchers(IWriter writer)
         {
             bool more = false;
-            foreach (var matcher in Rules.Select(r => r.GetMatcher()))
+            foreach (var rule in Rules)
             {
                 if (more)
                 {
                     writer.WriteLine();
                 }
-                matcher.Write(writer);
+                using (writer.Indent($"rule {rule.Name}"))
+                {
+                    rule.GetMatcher(false).Write(writer);
+                }
                 more = true;
             }
         }
@@ -97,17 +100,13 @@ namespace SixPeg.Expression
                 i += 1;
             }
 
-            Matcher = GetMatcher();
+            Matcher = GetMatcher(false);
 
             foreach (var rule in Rules)
             {
                 if (!rule.Used)
                 {
                     writer.WriteLine($"unused rule: {rule.Name}");
-                }
-                else if (!rule.Reached)
-                {
-                    writer.WriteLine($"unreached rule: {rule.Name}");
                 }
             }
         }

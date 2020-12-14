@@ -1,0 +1,14 @@
+﻿expr    = add EOF
+
+EOF     = _ !.
+
+add     = mul ('+' mul)*
+
+mul     = prim ('*' prim)*
+
+prim    = _ [a-z]+
+		/ _ [0-9]+
+
+_       = space*
+
+space   = " "

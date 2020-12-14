@@ -4,6 +4,11 @@ namespace SixPeg.Matchers
 {
     public class MatchEpsilon : AnyMatcher
     {
+        public MatchEpsilon(bool spaced)
+            : base(spaced)
+        {
+        }
+
         public override bool Match(string subject, ref int cursor)
         {
             return true;

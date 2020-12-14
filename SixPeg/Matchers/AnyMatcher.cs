@@ -1,12 +1,15 @@
 ﻿using Six.Support;
-using SixPeg.Expression;
 
 namespace SixPeg.Matchers
 {
     public abstract class AnyMatcher : IMatcher
     {
-        public IMatcher Matcher => Expression.GetMatcher();
+        public AnyMatcher(bool spaced)
+        {
+            Spaced = spaced;
+        }
 
+        protected bool Spaced { get; }
         public abstract bool Match(string subject, ref int cursor);
         public abstract void Write(IWriter writer);
     }

@@ -13,11 +13,11 @@ namespace SixPeg.Expression
 
         public IList<AnyExpression> Expressions { get; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return Expressions.Count == 1 
-                ? Expressions[0].GetMatcher()
-                : new MatchChoice(Expressions.Select(e => e.GetMatcher()));
+            return Expressions.Count == 1
+                ? Expressions[0].GetMatcher(spaced)
+                : new MatchChoice(spaced, Expressions.Select(e => e.GetMatcher(false)));
         }
 
         public override void Resolve(GrammarExpression grammar)

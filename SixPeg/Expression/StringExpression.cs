@@ -11,9 +11,9 @@ namespace SixPeg.Expression
 
         public string Text { get; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return new MatchCharacterSequence(Text);
+            return new MatchCharacterSequence(spaced, Text);
         }
 
         public override void Resolve(GrammarExpression grammar)

@@ -1,16 +1,13 @@
 ﻿using Six.Support;
-using SixPeg.Expression;
 
 namespace SixPeg.Matchers
 {
     public class MatchAnyCharacter : AnyMatcher
     {
-        public MatchAnyCharacter(WildcardExpression expression)
+        public MatchAnyCharacter(bool spaced)
+            : base(spaced)
         {
-            Expression = expression;
         }
-
-        public WildcardExpression Expression { get; }
 
         public override bool Match(string subject, ref int cursor)
         {

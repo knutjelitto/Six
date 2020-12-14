@@ -4,6 +4,11 @@ namespace SixPeg.Matchers
 {
     public class MatchError : AnyMatcher
     {
+        public MatchError(bool spaced)
+            : base(spaced)
+        {
+        }
+
         public override bool Match(string subject, ref int cursor)
         {
             throw new System.NotImplementedException();

@@ -1,15 +1,11 @@
-﻿using Six.Support;
-
-namespace SixPeg.Matchers
+﻿namespace SixPeg.Matchers
 {
-    public class MatchNot : AnyMatcher
+    public class MatchNot : BaseMatcher
     {
-        public MatchNot(IMatcher matcher)
+        public MatchNot(bool spaced, IMatcher matcher)
+            : base("not", spaced, matcher)
         {
-            Matcher = matcher;
         }
-
-        public IMatcher Matcher { get; private set; }
 
         public override bool Match(string subject, ref int cursor)
         {
@@ -22,14 +18,6 @@ namespace SixPeg.Matchers
 
             cursor = start;
             return true;
-        }
-
-        public override void Write(IWriter writer)
-        {
-            using (writer.Indent("not"))
-            {
-                Matcher.Write(writer);
-            }
         }
     }
 }

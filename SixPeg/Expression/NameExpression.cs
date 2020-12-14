@@ -13,10 +13,10 @@ namespace SixPeg.Expression
         public Identifier Name { get; }
         public RuleExpression Rule { get; private set; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
             Debug.Assert(Rule != null);
-            return new MatchName(Rule);
+            return new MatchName(Rule.Name, spaced, Rule.GetMatcher(false));
         }
 
         public override void Resolve(GrammarExpression grammar)

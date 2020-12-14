@@ -5,7 +5,8 @@ namespace SixPeg.Matchers
 {
     public class MatchCharacterSequence : AnyMatcher
     {
-        public MatchCharacterSequence(string text)
+        public MatchCharacterSequence(bool spaced, string text)
+            : base(spaced)
         {
             Text = text;
         }

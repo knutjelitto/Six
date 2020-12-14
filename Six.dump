@@ -1,63 +1,61 @@
 unused rule: '+'
 unused rule: '*'
 
-rule `expr`
-    sequence
-        reference <add>
-        reference <EOF>
+rule expr
+    reference <EOF>
+        prefixed-by
+            reference <add>
 
-rule `EOF`
-    sequence
-        reference <_>
-        not
-            any-character
+rule EOF
+    not
+        any-character
+        prefixed-by
+            reference <_>
 
-rule `add`
-    sequence
+rule add
+    zero-or-more
         reference <mul>
-        zero-or-more
-            sequence
-                rule `'+'`
-                    sequence
+            prefixed-by
+                match "+"
+                    prefixed-by
                         reference <_>
-                        match "+"
-                reference <mul>
+        prefixed-by
+            reference <mul>
 
-rule `mul`
-    sequence
+rule mul
+    zero-or-more
         reference <prim>
-        zero-or-more
-            sequence
-                rule `'*'`
-                    sequence
+            prefixed-by
+                match "*"
+                    prefixed-by
                         reference <_>
-                        match "*"
-                reference <prim>
+        prefixed-by
+            reference <prim>
 
-rule `prim`
+rule prim
     choice
-        sequence
-            reference <_>
-            one-or-more
-                match "a" .. "z"
-        sequence
-            reference <_>
-            one-or-more
-                match "0" .. "9"
+        one-or-more
+            match "a" .. "z"
+            prefixed-by
+                reference <_>
+        one-or-more
+            match "0" .. "9"
+            prefixed-by
+                reference <_>
 
-rule `_`
+rule _
     zero-or-more
         reference <space>
 
-rule `space`
+rule space
     match " "
 
-rule `'+'`
-    sequence
-        reference <_>
-        match "+"
+rule '+'
+    match "+"
+        prefixed-by
+            reference <_>
 
-rule `'*'`
-    sequence
-        reference <_>
-        match "*"
+rule '*'
+    match "*"
+        prefixed-by
+            reference <_>

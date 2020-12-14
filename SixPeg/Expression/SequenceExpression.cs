@@ -13,14 +13,9 @@ namespace SixPeg.Expression
 
         public IReadOnlyList<AnyExpression> Expressions { get; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return Expressions.Count switch
-            {
-                0 => new MatchEpsilon(),
-                1 => Expressions[0].GetMatcher(),
-                _ => new MatchSequence(Expressions.Select(e => e.GetMatcher())),
-            };
+            return MatchSequence.From(spaced, Expressions.Select(e => e.GetMatcher(false)));
         }
 
         public override void Resolve(GrammarExpression grammar)

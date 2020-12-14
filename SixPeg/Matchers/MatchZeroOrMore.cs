@@ -1,15 +1,11 @@
-﻿using Six.Support;
-
-namespace SixPeg.Matchers
+﻿namespace SixPeg.Matchers
 {
-    public class MatchZeroOrMore : AnyMatcher
+    public class MatchZeroOrMore : BaseMatcher
     {
-        public MatchZeroOrMore(IMatcher matcher)
+        public MatchZeroOrMore(bool spaced, IMatcher matcher)
+            : base("zero-or-more", spaced, matcher)
         {
-            Matcher = matcher;
         }
-
-        public IMatcher Matcher { get; private set; }
 
         public override bool Match(string subject, ref int cursor)
         {
@@ -19,15 +15,6 @@ namespace SixPeg.Matchers
             }
 
             return true;
-        }
-
-
-        public override void Write(IWriter writer)
-        {
-            using (writer.Indent("zero-or-more"))
-            {
-                Matcher.Write(writer);
-            }
         }
     }
 }

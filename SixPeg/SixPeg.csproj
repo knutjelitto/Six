@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <Reference Include="Pegasus">
-      <HintPath>C:\Users\knutj\.nuget\packages\pegasus\4.2.0-alpha0003\build\netcoreapp2.0\Pegasus.dll</HintPath>
+      <HintPath>C:\Users\knut.jelitto\.nuget\packages\pegasus\4.2.0-alpha0003\build\netcoreapp2.0\Pegasus.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -47,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="SwiftExpression.sixpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Simple.sixpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

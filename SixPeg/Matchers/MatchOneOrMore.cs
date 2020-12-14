@@ -1,15 +1,11 @@
-﻿using Six.Support;
-
-namespace SixPeg.Matchers
+﻿namespace SixPeg.Matchers
 {
-    public class MatchOneOrMore : AnyMatcher
+    public class MatchOneOrMore : BaseMatcher
     {
-        public MatchOneOrMore(IMatcher matcher)
+        public MatchOneOrMore(bool spaced, IMatcher matcher)
+            : base("one-or-more", spaced, matcher)
         {
-            Matcher = matcher;
         }
-
-        public IMatcher Matcher { get; private set; }
 
         public override bool Match(string subject, ref int cursor)
         {
@@ -20,20 +16,6 @@ namespace SixPeg.Matchers
             }
 
             return matched;
-        }
-
-        public override void Write(IWriter writer)
-        {
-            using (writer.Indent("one-or-more"))
-            {
-                Matcher.Write(writer);
-            }
-        }
-
-        public override IMatcher Optimize()
-        {
-            Matcher = Matcher.Optimize();
-            return this;
         }
     }
 }

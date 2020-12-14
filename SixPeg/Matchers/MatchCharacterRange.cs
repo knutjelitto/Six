@@ -4,7 +4,8 @@ namespace SixPeg.Matchers
 {
     public class MatchCharacterRange : AnyMatcher
     {
-        public MatchCharacterRange(char minCharacter, char maxCharacter)
+        public MatchCharacterRange(bool spaced, char minCharacter, char maxCharacter)
+            : base(spaced)
         {
             MinCharacter = minCharacter;
             MaxCharacter = maxCharacter;

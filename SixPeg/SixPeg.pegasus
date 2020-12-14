@@ -4,7 +4,6 @@
 @using System.Linq
 @using System.Text.RegularExpressions
 @using SixPeg.Expression
-@using Pegasus.Properties
 
 grammar <GrammarExpression>
     = rules:rule* EOF                       { new GrammarExpression(rules) }
@@ -82,8 +81,18 @@ comma     -lexical = _ ","
 lbracket  -lexical = "["
 rbracket  -lexical = "]"
 
+//identifierX <Identifier> -memoize -lexical
+//    = _ name:(!digit (letter / digit / "_" / "$")+) { new Identifier(name) }
+
 identifier <Identifier> -memoize -lexical
-    = _ name:(!digit (letter / digit / "_" / "$")+) { new Identifier(name) }
+    = _ name:(identifier_head identifier_tail*) { new Identifier(name) }
+    / _ name:'_'  { new Identifier(name) }
+
+identifier_head
+    = _ start:(letter (letter / digit)*) { start }
+
+identifier_tail
+    = tail:('-' (letter / digit)+) { tail }
 
 spacedLiteral <SpacedExpression> -memoize -lexical
     = _ "'" chars:singleQuotedCharacter* ("'" / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })

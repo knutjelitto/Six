@@ -8,9 +8,9 @@ namespace SixPeg.Expression
         {
         }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return new MatchAnyCharacter(this);
+            return new MatchAnyCharacter(spaced);
         }
 
         public override void Resolve(GrammarExpression grammar)

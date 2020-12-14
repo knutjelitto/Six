@@ -4,7 +4,8 @@ namespace SixPeg.Matchers
 {
     public class MatchSingleCharacter : AnyMatcher
     {
-        public MatchSingleCharacter(char character)
+        public MatchSingleCharacter(bool spaced, char character)
+            : base(spaced)
         {
             Character = character;
         }

@@ -11,9 +11,9 @@ namespace SixPeg.Expression
 
         public AnyExpression Expression { get; }
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return new MatchAnd(Expression);
+            return new MatchAnd(spaced, Expression.GetMatcher(false));
         }
 
         public override void Resolve(GrammarExpression grammar)

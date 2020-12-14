@@ -4,8 +4,6 @@ namespace SixPeg.Expression
 {
     public class RuleExpression : AnyExpression
     {
-        private IMatcher matcher = null;
-
         public RuleExpression(Identifier name, AnyExpression expression)
         {
             Name = name;
@@ -16,11 +14,10 @@ namespace SixPeg.Expression
         public Identifier Name { get; }
         public AnyExpression Expression { get; }
         public bool Used { get; set; }
-        public bool Reached => matcher != null;
 
-        public override IMatcher GetMatcher()
+        public override IMatcher GetMatcher(bool spaced)
         {
-            return matcher ??= new MatchRule(Name, Expression);
+            return Expression.GetMatcher(spaced);
         }
 
         public override void Resolve(GrammarExpression grammar)

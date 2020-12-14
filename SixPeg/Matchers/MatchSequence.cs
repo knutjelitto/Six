@@ -1,17 +1,34 @@
-﻿using Six.Support;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SixPeg.Matchers
 {
-    public class MatchSequence : AnyMatcher
+    public class MatchSequence : BaseMatchers
     {
-        public MatchSequence(IEnumerable<IMatcher> matchers)
+        private MatchSequence(bool spaced, IEnumerable<IMatcher> matchers)
+            : base("sequence", spaced, matchers)
         {
-            Matchers = matchers.ToArray();
         }
 
-        public IReadOnlyList<IMatcher> Matchers { get; private set; }
+        public static IMatcher From(bool spaced, IEnumerable<IMatcher> ms)
+        {
+            var matchers = ms.ToList();
+
+            if (matchers.Count == 0)
+            {
+                return new MatchEpsilon(spaced);
+            }
+            if (matchers.Count == 1)
+            {
+                return matchers[0];
+            }
+            if (matchers.Count == 2)
+            {
+                    return new MatchPrefixed(spaced, matchers[0], matchers[1]);
+            }
+
+            return new MatchSequence(spaced, matchers);
+        }
 
         public override bool Match(string subject, ref int cursor)
         {
@@ -26,27 +43,6 @@ namespace SixPeg.Matchers
             }
 
             return true;
-        }
-
-        public override void Write(IWriter writer)
-        {
-            using (writer.Indent("sequence"))
-            {
-                foreach (var matcher in Matchers)
-                {
-                    matcher.Write(writer);
-                }
-            }
-        }
-
-        public override IMatcher Optimize()
-        {
-            if (Matchers.Count == 2 && Matchers[0] is MatchPrefixed)
-            {
-                return new MatchPrefixed(Matchers[0].Optimize(), Matchers[1].Optimize());
-            }
-            Matchers = Matchers.Select(m => m.Optimize()).ToArray();
-            return this;
         }
     }
 }

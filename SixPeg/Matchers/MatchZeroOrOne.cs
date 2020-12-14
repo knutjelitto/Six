@@ -4,7 +4,8 @@ namespace SixPeg.Matchers
 {
     public class MatchZeroOrOne : AnyMatcher
     {
-        public MatchZeroOrOne(IMatcher matcher)
+        public MatchZeroOrOne(bool spaced, IMatcher matcher)
+            : base(spaced)
         {
             Matcher = matcher;
         }

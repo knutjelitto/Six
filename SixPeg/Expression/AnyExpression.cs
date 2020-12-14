@@ -9,6 +9,6 @@ namespace SixPeg.Expression
         public Cursor StartCursor { get; set; }
 
         public abstract void Resolve(GrammarExpression grammar);
-        public abstract IMatcher GetMatcher();
+        public abstract IMatcher GetMatcher(bool spaced);
     }
 }

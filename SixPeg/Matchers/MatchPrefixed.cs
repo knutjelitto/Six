@@ -4,21 +4,22 @@ namespace SixPeg.Matchers
 {
     public class MatchPrefixed : AnyMatcher
     {
-        public MatchPrefixed(IMatcherSource prefix, IMatcherSource matcher)
+        public MatchPrefixed(bool spaced, IMatcher prefix, IMatcher matcher)
+            : base(spaced)
         {
             Prefix = prefix;
             Matcher = matcher;
         }
 
-        public IMatcherSource Prefix { get; private set; }
-        public IMatcherSource Matcher { get; private set; }
+        public IMatcher Prefix { get; private set; }
+        public IMatcher Matcher { get; private set; }
 
         public override bool Match(string subject, ref int cursor)
         {
             var start = cursor;
-            if (Prefix.GetMatcher().Match(subject, ref cursor))
+            if (Prefix.Match(subject, ref cursor))
             {
-                if (Matcher.GetMatcher().Match(subject, ref cursor))
+                if (Matcher.Match(subject, ref cursor))
                 {
                     return true;
                 }
@@ -29,21 +30,14 @@ namespace SixPeg.Matchers
 
         public override void Write(IWriter writer)
         {
-            Matcher.GetMatcher().Write(writer);
+            Matcher.Write(writer);
             using (writer.Indent())
             {
                 using (writer.Indent("prefixed-by"))
                 {
-                    Prefix.GetMatcher().Write(writer);
+                    Prefix.Write(writer);
                 }
             }
-        }
-
-        public override IMatcher Optimize()
-        {
-            Prefix = Prefix.GetMatcher().Optimize();
-            Matcher = Matcher.GetMatcher().Optimize();
-            return this;
         }
     }
 }
