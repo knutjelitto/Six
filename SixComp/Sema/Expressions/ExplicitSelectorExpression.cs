@@ -1,4 +1,4 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 using System.Linq;
 
 namespace SixComp.Sema

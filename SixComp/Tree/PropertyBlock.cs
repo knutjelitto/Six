@@ -1,5 +1,5 @@
-﻿using SixComp.Common;
-using SixComp.Support;
+﻿using Six.Support;
+using SixComp.Common;
 using System.Diagnostics;
 
 namespace SixComp

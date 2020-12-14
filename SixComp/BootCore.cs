@@ -1,5 +1,5 @@
-﻿using SixComp.Sema;
-using SixComp.Support;
+﻿using Six.Support;
+using SixComp.Sema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,8 +27,10 @@ namespace SixComp
 
             var compiler = new Compiler(Navi);
 
+#if false
             var peg = new Peg.Parser();
             //peg.Tracer = Pegasus.Common.Tracing.DiagnosticsTracer.Instance;
+#endif
 
             var names = Sources.GetFiles("*.swift").Select(f => f.Name).Where(n => !n.StartsWith('_')).ToList();
 
@@ -51,6 +53,7 @@ namespace SixComp
             {
                 Console.Write($".");
 
+#if false
                 try
                 {
                     peg.Parse(context.Source.Content);
@@ -60,6 +63,7 @@ namespace SixComp
                     Console.WriteLine();
                     Console.WriteLine($"ERROR: {error}");
                 }
+#endif
 
                 var unit = compiler.Parse(new ConsoleWriter(), context);
 

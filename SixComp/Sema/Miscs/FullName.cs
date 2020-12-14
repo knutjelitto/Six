@@ -1,5 +1,5 @@
-﻿using SixComp.Entities;
-using SixComp.Support;
+﻿using Six.Support;
+using SixComp.Entities;
 
 namespace SixComp.Sema
 {
@@ -67,11 +67,9 @@ namespace SixComp.Sema
 
         public override string ToString()
         {
-            if (Arguments.Count == 0)
-            {
-                return $"{Name.Text}";
-            }
-            return $"{Name.Text}<{string.Join(",", Arguments)}>";
+            return Arguments.Count == 0
+                ? $"{Name.Text}"
+                : $"{Name.Text}<{string.Join(",", Arguments)}>";
         }
     }
 }

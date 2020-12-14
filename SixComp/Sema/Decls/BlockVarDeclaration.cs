@@ -1,5 +1,5 @@
-﻿using SixComp.Sema.Stmts;
-using SixComp.Support;
+﻿using Six.Support;
+using SixComp.Sema.Stmts;
 
 namespace SixComp.Sema
 {

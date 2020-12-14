@@ -1,4 +1,4 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 
 namespace SixComp
 {
@@ -13,15 +13,9 @@ namespace SixComp
         public Source Source => Context.Source;
         public SourceIndex Index => Context.Index;
 
-        public void Report(IWriter writer, string error, Token atToken)
-        {
-            Write(writer, error, atToken.Span.Start, atToken.Span.Length);
-        }
+        public void Report(IWriter writer, string error, Token atToken) => Write(writer, error, atToken.Span.Start, atToken.Span.Length);
 
-        public void Report(IWriter writer, string error, int start, int length = 1)
-        {
-            Write(writer, error, start, length);
-        }
+        public void Report(IWriter writer, string error, int start, int length = 1) => Write(writer, error, start, length);
 
         private void Write(IWriter writer, string error, int start, int length)
         {

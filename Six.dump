@@ -1,0 +1,63 @@
+unused rule: '+'
+unused rule: '*'
+
+rule `expr`
+    sequence
+        reference <add>
+        reference <EOF>
+
+rule `EOF`
+    sequence
+        reference <_>
+        not
+            any-character
+
+rule `add`
+    sequence
+        reference <mul>
+        zero-or-more
+            sequence
+                rule `'+'`
+                    sequence
+                        reference <_>
+                        match "+"
+                reference <mul>
+
+rule `mul`
+    sequence
+        reference <prim>
+        zero-or-more
+            sequence
+                rule `'*'`
+                    sequence
+                        reference <_>
+                        match "*"
+                reference <prim>
+
+rule `prim`
+    choice
+        sequence
+            reference <_>
+            one-or-more
+                match "a" .. "z"
+        sequence
+            reference <_>
+            one-or-more
+                match "0" .. "9"
+
+rule `_`
+    zero-or-more
+        reference <space>
+
+rule `space`
+    match " "
+
+rule `'+'`
+    sequence
+        reference <_>
+        match "+"
+
+rule `'*'`
+    sequence
+        reference <_>
+        match "*"

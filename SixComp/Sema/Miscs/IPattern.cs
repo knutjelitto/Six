@@ -1,18 +1,14 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SixComp.Sema
 {
-    public interface IPattern: IReportable
+    public interface IPattern : IReportable
     {
         public static IPattern? MaybeBuild(IScoped outer, ParseTree.IPattern? tree)
         {
-            if (tree == null)
-            {
-                return null;
-            }
-            return Visit(outer, (dynamic)tree);
+            return tree == null ? null : (IPattern)Visit(outer, (dynamic)tree);
         }
 
         public static IPattern Build(IScoped outer, ParseTree.IPattern tree)
@@ -216,7 +212,7 @@ namespace SixComp.Sema
                 : base(outer, tree)
             {
                 Name = BaseName.Maybe(outer, tree.Name?.Name);
-                Pattern = IPattern.Build(Outer, Tree.Pattern);
+                Pattern = Build(Outer, Tree.Pattern);
             }
 
             public BaseName? Name { get; }

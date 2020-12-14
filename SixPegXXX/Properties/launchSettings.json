@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SixPeg": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\SixComp\\Six.peg"
+    }
+  }
+}

@@ -1,0 +1,214 @@
+@namespace SixPeg.Parser
+@classname SixParser
+@using System.Globalization
+@using System.Linq
+@using System.Text.RegularExpressions
+@using SixPeg.Expression
+@using Pegasus.Properties
+
+grammar <GrammarExpression>
+    = rules:rule* EOF                       { new GrammarExpression(rules) }
+
+rulePreamble
+    = equals
+
+rule <RuleExpression>
+    = name:ruleName equals expression:expression semicolon? { new RuleExpression(name, expression) }
+
+ruleName
+    = identifier
+
+expression <AnyExpression>
+    = choice
+
+choice <AnyExpression>
+    = choices:sequence<1,,slash>            { new ChoiceExpression(choices) }
+
+sequence <AnyExpression>
+    = elements:element<0,,_>                { new SequenceExpression(elements) }
+
+element <AnyExpression> -memoize
+    = prefixed
+    / error
+
+prefixed <AnyExpression>
+    = and e:suffix                          { new AndExpression(e) }
+    / not e:suffix                          { new NotExpression(e) }
+    / suffix
+
+suffix <AnyExpression>
+    = expression:primary q:quantifier       { new QuantifiedExpression(expression, q) }
+
+primary <AnyExpression> -memoize
+    = name:ruleName !(rulePreamble)         { new NameExpression(name) }
+    / stringLiteral
+    / spacedLiteral
+    / class
+    / dot                                   { new WildcardExpression() }
+    / lparen expression:expression rparen   { expression }
+
+quantifier <Quantifier> -memoize
+    = question                              { new Quantifier(min: 0, max: 1) }
+    / star                                  { new Quantifier(min: 0, max: null) }
+    / plus                                  { new Quantifier(min: 1, max: null) }
+    /                                       { new Quantifier(min: 1, max: 1)}
+
+any_literal <object>
+    = stringLiteral
+    / integer
+
+integer <object> -memoize -lexical
+    = _ digits:(digit+ "")                      { new Integer(digits) }
+
+error <AnyExpression>
+    = hash _ "error" lparen arguments:any_literal<1,,comma> rparen { new ErrorExpression(arguments) }
+    / hash _ "error" lparen #error{ "error-error-error" }
+    / hash #error{ "error-error" }
+
+hash      -lexical = _ "#"
+equals    -lexical = _ "="
+semicolon -lexical = _ ";"
+slash     -lexical = _ "/"
+and       -lexical = _ "&"
+not       -lexical = _ "!"
+question  -lexical = _ "?"
+star      -lexical = _ "*"
+plus      -lexical = _ "+"
+lparen    -lexical = _ "("
+rparen    -lexical = _ ")"
+dot       -lexical = _ "."
+comma     -lexical = _ ","
+
+lbracket  -lexical = "["
+rbracket  -lexical = "]"
+
+identifier <Identifier> -memoize -lexical
+    = _ name:(!digit (letter / digit / "_" / "$")+) { new Identifier(name) }
+
+spacedLiteral <SpacedExpression> -memoize -lexical
+    = _ "'" chars:singleQuotedCharacter* ("'" / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })
+    { new SpacedExpression(string.Concat(chars)) }
+
+singleQuotedCharacter
+  = !("'" / eolChar) .
+
+stringLiteral <AnyExpression> -lexical
+  = value:string                                { new StringExpression(value) }
+
+string -lexical
+  = _ string:doubleQuotedString { @string }
+
+doubleQuotedString
+  = '"' chars:doubleQuotedCharacter* ('"' / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString }) { string.Concat(chars) }
+
+doubleQuotedCharacter
+  = simpleDoubleQuotedCharacter
+  / simpleEscapeSequence
+  / zeroEscapeSequence
+  / hexEscapeSequence
+  / unicodeEscapeSequence
+  / eolEscapeSequence
+
+simpleDoubleQuotedCharacter
+  = !('"' / "\\" / eolChar) char:. { @char }
+
+class <AnyExpression> -lexical
+    = _ lbracket
+        inverted:"^"? parts:(classCharacterRange / classCharacter)*
+        (rbracket / #error{ "PEG0010:" + Resources.PEG0010_ERROR_PARSER_UnterminatedClass })
+        {
+            new ClassExpression(parts, negated: inverted.SingleOrDefault() == "^")
+        }
+
+classCharacterRange <CharacterRange>
+  = begin:bracketDelimitedCharacter "-" end:bracketDelimitedCharacter {
+        new CharacterRange(begin[0], end[0])
+    }
+
+classCharacter <CharacterRange>
+  = char_:bracketDelimitedCharacter {
+        new CharacterRange(char_[0], char_[0])
+    }
+
+bracketDelimitedCharacter -memoize
+  = simpleBracketDelimitedCharacter
+  / simpleEscapeSequence
+  / zeroEscapeSequence
+  / hexEscapeSequence
+  / unicodeEscapeSequence
+  / eolEscapeSequence
+
+simpleBracketDelimitedCharacter
+  = !("]" / "\\" / eolChar) .
+
+simpleEscapeSequence
+  = "\\" !(digit / "x" / "u" / eolChar) char:. {
+        @char
+            .Replace("b", "\b")
+            .Replace("f", "\f")
+            .Replace("n", "\n")
+            .Replace("r", "\r")
+            .Replace("t", "\t")
+            .Replace("v", "\v")
+    }
+
+zeroEscapeSequence
+  = "\\0" !digit { "\0" }
+
+hexEscapeSequence
+  = "\\x" digits:(hexDigit hexDigit) {
+        ((char)Convert.ToInt32(digits, 16)).ToString()
+    }
+
+unicodeEscapeSequence
+  = "\\u" digits:(hexDigit hexDigit hexDigit hexDigit) {
+        ((char)Convert.ToInt32(digits, 16)).ToString()
+    }
+
+eolEscapeSequence
+  = "\\" eol:eol { eol }
+
+digit
+  = [0-9]
+
+hexDigit
+  = [0-9a-fA-F]
+
+letter
+  = lowerCaseLetter
+  / upperCaseLetter
+
+lowerCaseLetter
+  = [a-z]
+
+upperCaseLetter
+  = [A-Z]
+
+_ -memoize = (whitespace / eol / comment)*
+
+comment -memoize
+  = singleLineComment
+  / multiLineComment
+
+singleLineComment -memoize -lexical
+  = "//" (!eolChar .)*
+
+multiLineComment -lexical
+  = "/*" (!"*/" .)* "*/"
+
+eol -memoize
+  = "\n"
+  / "\r\n"
+  / "\r"
+  / "\u2028"
+  / "\u2029"
+
+eolChar
+  = [\n\r\u2028\u2029]
+
+whitespace -memoize -lexical
+  = [ \t\v\f\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
+
+EOF
+  = _ !.
+  / unexpected:&. #error{ "PEG0008:" + string.Format(CultureInfo.CurrentCulture, Resources.PEG0008_ERROR_PARSER_UnexpectedEndOfInput, unexpected) }

@@ -5,7 +5,7 @@ namespace Six
 {
     internal class Program
     {
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
             var program = new Program();
 
@@ -13,7 +13,7 @@ namespace Six
 
             program.Run();
 
-            Console.ReadKey();
+            _ = Console.ReadKey();
         }
 
         public void Init()
@@ -50,7 +50,7 @@ namespace Six
 
             ptr = VM.EmitAdd(ptr);
 
-            ptr = VM.EmitRet(ptr);
+            _ = VM.EmitRet(ptr);
 
             var result = VM.Execute(builder);
             Console.WriteLine($"result: {result}");

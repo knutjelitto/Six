@@ -3,79 +3,56 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Compiler\CodeGenerator\Assertion.weave" />
-    <None Remove="Compiler\CodeGenerator\ChoiceExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\ClassExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\Code.weave" />
-    <None Remove="Compiler\CodeGenerator\CodeAssertion.weave" />
-    <None Remove="Compiler\CodeGenerator\CodeExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\Grammar.weave" />
-    <None Remove="Compiler\CodeGenerator\LiteralExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\NameExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\PrefixedExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\RepetitionExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\Rule.weave" />
-    <None Remove="Compiler\CodeGenerator\Sequence.weave" />
-    <None Remove="Compiler\CodeGenerator\SequenceExpression.weave" />
-    <None Remove="Compiler\CodeGenerator\WildcardExpression.weave" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
-    <PackageReference Include="System.CodeDom" Version="5.0.0" />
-    <PackageReference Include="Weave" Version="2.0.1-ci0009">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <None Remove="SixPeg.pegasus" />
   </ItemGroup>
 
   <ItemGroup>
-    <WeaveTemplate Include="Compiler\CodeGenerator\Assertion.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\ChoiceExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\ClassExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\Code.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\CodeAssertion.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\CodeExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\Grammar.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\LiteralExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\NameExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\PrefixedExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\RepetitionExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\Rule.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\Sequence.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\SequenceExpression.weave" />
-    <WeaveTemplate Include="Compiler\CodeGenerator\WildcardExpression.weave" />
+    <PackageReference Include="Pegasus" Version="4.2.0-alpha0003" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Parser\CSharpParser.peg.g.cs">
-      <DependentUpon>CSharpParser.peg</DependentUpon>
-    </Compile>
-    <Compile Update="Parser\PegParser.peg.g.cs">
-      <DependentUpon>PegParser.peg</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
+    <PegGrammar Include="SixPeg.pegasus" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Pegasus">
+      <HintPath>C:\Users\knutj\.nuget\packages\pegasus\4.2.0-alpha0003\build\netcoreapp2.0\Pegasus.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Six.Support\Six.Support.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Simple.sixpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Six.sixpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

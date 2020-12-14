@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Compiler\CodeGenerator\Assertion.weave" />
+    <None Remove="Compiler\CodeGenerator\ChoiceExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\ClassExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\Code.weave" />
+    <None Remove="Compiler\CodeGenerator\CodeAssertion.weave" />
+    <None Remove="Compiler\CodeGenerator\CodeExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\Grammar.weave" />
+    <None Remove="Compiler\CodeGenerator\LiteralExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\NameExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\PrefixedExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\RepetitionExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\Rule.weave" />
+    <None Remove="Compiler\CodeGenerator\Sequence.weave" />
+    <None Remove="Compiler\CodeGenerator\SequenceExpression.weave" />
+    <None Remove="Compiler\CodeGenerator\WildcardExpression.weave" />
+    <None Remove="Parser\CSharpParser.peg" />
+    <None Remove="Parser\PegParser.peg" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Pegasus" Version="4.2.0-alpha0003" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="Weave" Version="2.0.1-ci0009">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PegGrammar Include="Parser\CSharpParser.peg" />
+    <PegGrammar Include="Parser\PegParser.peg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WeaveTemplate Include="Compiler\CodeGenerator\Assertion.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\ChoiceExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\ClassExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\Code.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\CodeAssertion.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\CodeExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\Grammar.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\LiteralExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\NameExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\PrefixedExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\RepetitionExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\Rule.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\Sequence.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\SequenceExpression.weave" />
+    <WeaveTemplate Include="Compiler\CodeGenerator\WildcardExpression.weave" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+</Project>

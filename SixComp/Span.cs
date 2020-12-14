@@ -1,13 +1,13 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 
 namespace SixComp
 {
-    public struct Span
+    public struct Span : ISpan
     {
         public readonly Context Context;
-        public readonly int Before;
-        public readonly int Start;
-        public readonly int End;
+        public int Before { get; }
+        public int Start { get; }
+        public int End { get; }
 
         public Span(Context context, int before, int start, int end)
         {

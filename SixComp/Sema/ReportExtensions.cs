@@ -1,4 +1,4 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ namespace SixComp.Sema
     public static class ReportExtensions
     {
         private const int width = 16;
-        
+
         public static void Report(this IReportable? reportable, IWriter writer, string label, bool maybeEmpty = false)
         {
             if (reportable != null)
@@ -102,12 +102,6 @@ namespace SixComp.Sema
         {
             var value = Enum.GetName(reportable.GetType(), reportable)!.ToLower();
             value.Report(writer, label);
-        }
-
-        public static IDisposable Indent(this IWriter writer, string label)
-        {
-            writer.WriteLine(label);
-            return writer.Indent();
         }
     }
 }

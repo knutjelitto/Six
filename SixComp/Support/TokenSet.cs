@@ -26,15 +26,9 @@ namespace SixComp.Support
             }
         }
 
-        public bool Contains(ToKind kind)
-        {
-            return bits.Get((int)kind);
-        }
+        public bool Contains(ToKind kind) => bits.Get((int)kind);
 
-        public void Add(ToKind kind)
-        {
-            bits.Set((int)kind, true);
-        }
+        public void Add(ToKind kind) => bits.Set((int)kind, true);
 
         private IEnumerable<ToKind> GetKinds()
         {

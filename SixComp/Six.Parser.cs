@@ -1,4 +1,5 @@
-﻿using Pegasus.Common;
+﻿#if false
+using SixPeg.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -247,4 +248,4 @@ namespace SixComp.Peg
         }
     }
 }
-
+#endif

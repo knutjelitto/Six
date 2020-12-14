@@ -1,4 +1,4 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
 
 namespace SixComp
 {
@@ -22,7 +22,7 @@ namespace SixComp
         public bool NewlineBefore { get; }
         public ToFlags Flags { get; set; }
         public ToData? Data { get; }
-        public string Text => text ?? (text = Span.ToString());
+        public string Text => text ??= Span.ToString();
 
         public bool IsDollar => Kind == ToKind.Name && Span.IsDollar;
         public bool IsImmediateDot => !Span.HasSpacing && Span.FirstChar == '.';
@@ -33,24 +33,12 @@ namespace SixComp
         public int Length => Span.Length;
         public char First => Span.FirstChar;
 
-        public void Error(IWriter writer, string error)
-        {
-            Span.Context.Error.Report(writer, error, this);
-        }
+        public void Error(IWriter writer, string error) => Span.Context.Error.Report(writer, error, this);
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Token other && other.Kind == Kind;
-        }
+        public override bool Equals(object? obj) => obj is Token other && other.Kind == Kind;
 
-        public override int GetHashCode()
-        {
-            return Kind.GetHashCode();
-        }
+        public override int GetHashCode() => Kind.GetHashCode();
 
-        public override string ToString()
-        {
-            return $"{Span}";
-        }
+        public override string ToString() => $"{Span}";
     }
 }

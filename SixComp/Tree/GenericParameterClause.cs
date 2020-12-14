@@ -1,4 +1,5 @@
-﻿using SixComp.Support;
+﻿using Six.Support;
+using SixComp.Support;
 
 namespace SixComp
 {

@@ -1,50 +1,71 @@
-﻿// Copyright © John Gietzen. All Rights Reserved. This source is subject to the MIT license. Please see license.md for more information.
+﻿using Pegasus.Common;
+using Six.Support;
+using System;
+using System.IO;
 
 namespace SixPeg
 {
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Collections.Generic;
-    using SixPeg.Properties;
-
     internal class Program
     {
-        public static int Main(string[] args)
+        internal static void Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                ShowUsage();
-                return -1;
-            }
+            bool ok = false;
 
-            var errorCount = 0;
             foreach (var arg in args)
             {
-                var errors = new List<CompilerError>();
-                CompileManager.CompileFile(arg, null, errors.Add);
-                ShowErrors(errors);
-                errorCount += errors.Count;
+                Console.WriteLine($"{arg}");
             }
 
-            return errorCount;
-        }
+            var parser = new Parser.SixParser();
 
-        private static void ShowErrors(List<CompilerError> errors)
-        {
-            var startingColor = Console.ForegroundColor;
+            var file = "Simple.sixpeg";
 
-            foreach (var e in errors)
+            var text = File.ReadAllText(file);
+
+            try
             {
-                Console.ForegroundColor = e.IsWarning ? ConsoleColor.Yellow : ConsoleColor.Red;
-                Console.WriteLine(e);
+                var result = parser.Parse(text, file);
+
+                using var writer = new FileWriter("../../../../Six.dump");
+
+                result.Resolve(writer);
+
+                writer.WriteLine();
+                result.ReportMatchers(writer);
+
+                if (!result.Error)
+                {
+                    var subject = "1 + 2 * 3 + 1";
+                    var cursor = 0;
+
+                    ok = result.Matcher.Match(subject, ref cursor);
+                }
+                else
+                {
+
+                }
+
+                //result.Write(writer);
+            }
+            catch (FormatException ex)
+            {
+                var cursor = (Cursor)ex.Data["cursor"];
+
+                Console.WriteLine($"{cursor.FileName}[{cursor.Line},{cursor.Column}]: {ex.Message}");
+                Console.WriteLine();
+                Console.WriteLine(ex);
             }
 
-            Console.ForegroundColor = startingColor;
-        }
-
-        private static void ShowUsage()
-        {
-            Console.WriteLine(Resources.Usage);
+            if (ok)
+            {
+                Console.WriteLine("OK");
+            }
+            else
+            {
+                Console.WriteLine("FAIL");
+            }
+            Console.Write("done ... ");
+            _ = Console.ReadKey(true);
         }
     }
 }
