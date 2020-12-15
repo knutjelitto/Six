@@ -13,16 +13,16 @@ namespace SixPeg.Expression
 
         public IReadOnlyList<AnyExpression> Expressions { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return MatchSequence.From(spaced, Expressions.Select(e => e.GetMatcher(false)));
+            return MatchSequence.From(Expressions.Select(e => e.GetMatcher()));
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
             foreach (var expression in Expressions)
             {
-                expression.Resolve(grammar);
+                expression.Resolve(Grammar);
             }
         }
     }

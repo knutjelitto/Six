@@ -4,8 +4,7 @@ namespace SixPeg.Matchers
 {
     public class MatchPrefixed : AnyMatcher
     {
-        public MatchPrefixed(bool spaced, IMatcher prefix, IMatcher matcher)
-            : base(spaced)
+        public MatchPrefixed(IMatcher prefix, IMatcher matcher)
         {
             Prefix = prefix;
             Matcher = matcher;
@@ -14,7 +13,7 @@ namespace SixPeg.Matchers
         public IMatcher Prefix { get; private set; }
         public IMatcher Matcher { get; private set; }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             var start = cursor;
             if (Prefix.Match(subject, ref cursor))
@@ -33,7 +32,7 @@ namespace SixPeg.Matchers
             Matcher.Write(writer);
             using (writer.Indent())
             {
-                using (writer.Indent("prefixed-by"))
+                using (writer.Indent("{SpacePrefix}prefixed-by"))
                 {
                     Prefix.Write(writer);
                 }

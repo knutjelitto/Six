@@ -2,12 +2,12 @@
 {
     public class MatchOneOrMore : BaseMatcher
     {
-        public MatchOneOrMore(bool spaced, IMatcher matcher)
-            : base("one-or-more", spaced, matcher)
+        public MatchOneOrMore(IMatcher matcher)
+            : base("one-or-more", matcher)
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             var matched = false;
             while (Matcher.Match(subject, ref cursor))

@@ -18,7 +18,9 @@ namespace SixPeg
 
             var parser = new Parser.SixParser();
 
-            var file = "SwiftExpression.sixpeg";
+            //var file = "SwiftExpression.sixpeg";
+            var file = "SixPeg.sixpeg";
+            var test = "SixPegTry.sixpeg";
 
             var text = File.ReadAllText(file);
 
@@ -35,7 +37,7 @@ namespace SixPeg
 
                 if (!result.Error)
                 {
-                    var subject = "1 + 2 * 3 + 1";
+                    var subject = File.ReadAllText(test);
                     var cursor = 0;
 
                     ok = result.Matcher.Match(subject, ref cursor);

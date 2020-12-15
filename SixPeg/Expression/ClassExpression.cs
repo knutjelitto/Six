@@ -15,14 +15,14 @@ namespace SixPeg.Expression
         public IList<CharacterRange> Ranges { get; }
         public bool Negated { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
             return Ranges.Count == 1
-                ? Ranges[0].GetMatcher(spaced)
-                : new MatchChoice(spaced, Ranges.Select(r => r.GetMatcher(false)));
+                ? Ranges[0].GetMatcher()
+                : new MatchChoice(Ranges.Select(r => r.GetMatcher()));
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
         }
     }

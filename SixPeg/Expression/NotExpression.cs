@@ -11,14 +11,14 @@ namespace SixPeg.Expression
 
         public AnyExpression Expression { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return new MatchNot(spaced, Expression.GetMatcher(false));
+            return new MatchNot(Expression.GetMatcher());
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
-            Expression.Resolve(grammar);
+            Expression.Resolve(Grammar);
         }
     }
 }

@@ -2,12 +2,12 @@
 {
     public class MatchZeroOrMore : BaseMatcher
     {
-        public MatchZeroOrMore(bool spaced, IMatcher matcher)
-            : base("zero-or-more", spaced, matcher)
+        public MatchZeroOrMore(IMatcher matcher)
+            : base("zero-or-more", matcher)
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             while (Matcher.Match(subject, ref cursor))
             {

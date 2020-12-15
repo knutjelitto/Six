@@ -25,13 +25,17 @@ namespace SixPeg.Expression
 
         private IWriter writer = null;
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return Start.GetMatcher(spaced);
+            return Start.GetMatcher();
         }
 
         public void ReportMatchers(IWriter writer)
         {
+            if (Error)
+            {
+                return;
+            }
             bool more = false;
             foreach (var rule in Rules)
             {
@@ -41,7 +45,7 @@ namespace SixPeg.Expression
                 }
                 using (writer.Indent($"rule {rule.Name}"))
                 {
-                    rule.GetMatcher(false).Write(writer);
+                    rule.GetMatcher().Write(writer);
                 }
                 more = true;
             }
@@ -50,11 +54,11 @@ namespace SixPeg.Expression
         public void Resolve(IWriter writer)
         {
             this.writer = writer;
-            Resolve(this);
+            _ = Resolve(this);
             this.writer = null;
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
             Start = null;
 
@@ -96,17 +100,20 @@ namespace SixPeg.Expression
             var i = 0;
             while (i < Rules.Count)
             {
-                Rules[i].Resolve(this);
+                _ = Rules[i].Resolve(this);
                 i += 1;
             }
 
-            Matcher = GetMatcher(false);
-
-            foreach (var rule in Rules)
+            if (!Error)
             {
-                if (!rule.Used)
+                Matcher = GetMatcher();
+
+                foreach (var rule in Rules)
                 {
-                    writer.WriteLine($"unused rule: {rule.Name}");
+                    if (!rule.Used)
+                    {
+                        writer.WriteLine($"unused rule: {rule.Name}");
+                    }
                 }
             }
         }
@@ -126,20 +133,19 @@ namespace SixPeg.Expression
             }
         }
 
-        public RuleExpression AddSpaced(SpacedExpression spaced)
+        public AnyExpression AddSpaced(SpacedExpression spaced)
         {
-            var name = $"'{spaced.Text}'";
-            var identifier = new Identifier(name);
+            var identifier = new Identifier($"'{spaced.Text}'");
 
-            if (!Indexed.TryGetValue(identifier, out var rule))
+            if (!Indexed.TryGetValue(identifier, out var _))
             {
-                var sequence = new SequenceExpression(new List<AnyExpression> { new NameExpression(Space.Name), new StringExpression(spaced.Text) });
-                rule = new RuleExpression(identifier, sequence);
+                var expression = new StringExpression(spaced.Text) { Spaced = true };
+                var rule = new RuleExpression(identifier, expression);
                 Indexed.Add(identifier, rule);
                 Rules.Add(rule);
             }
 
-            return rule;
+            return new ReferenceExpression(identifier).Resolve(Grammar);
         }
     }
 }

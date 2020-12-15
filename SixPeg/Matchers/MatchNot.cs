@@ -2,12 +2,12 @@
 {
     public class MatchNot : BaseMatcher
     {
-        public MatchNot(bool spaced, IMatcher matcher)
-            : base("not", spaced, matcher)
+        public MatchNot(IMatcher matcher)
+            : base("not", matcher)
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             var start = cursor;
             if (Matcher.Match(subject, ref cursor))

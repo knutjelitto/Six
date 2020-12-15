@@ -1,16 +1,30 @@
 ﻿using Six.Support;
+using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
+    [DebuggerDisplay("{DLong}")]
     public abstract class AnyMatcher : IMatcher
     {
-        public AnyMatcher(bool spaced)
+        public IMatcher Space { get; set; } = null;
+        protected abstract bool InnerMatch(string subject, ref int cursor);
+        public abstract void Write(IWriter writer);
+
+        public bool Match(string subject, ref int cursor)
         {
-            Spaced = spaced;
+            if (Space != null)
+            {
+                Debug.Assert(true);
+                _ = Space.Match(subject, ref cursor);
+            }
+            var match = InnerMatch(subject, ref cursor);
+
+            return match;
         }
 
-        protected bool Spaced { get; }
-        public abstract bool Match(string subject, ref int cursor);
-        public abstract void Write(IWriter writer);
+        protected string SpacePrefix => Space == null ? string.Empty : "_ ";
+
+        public virtual string DShort => ToString();
+        public virtual string DLong => DShort;
     }
 }

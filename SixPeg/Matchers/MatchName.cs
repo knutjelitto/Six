@@ -1,12 +1,12 @@
 ﻿using Six.Support;
 using SixPeg.Expression;
+using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
     public class MatchName : AnyMatcher
     {
-        public MatchName(Identifier name, bool spaced, IMatcher matcher)
-            : base(spaced)
+        public MatchName(Identifier name, IMatcher matcher)
         {
             Name = name;
             Matcher = matcher;
@@ -15,19 +15,25 @@ namespace SixPeg.Matchers
         public Identifier Name { get; }
         public IMatcher Matcher { get; }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
+            if (Name.Text == "identifier")
+            {
+                Debug.Assert(true);
+            }
             return Matcher.Match(subject, ref cursor);
         }
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"reference <{Name}>");
+            writer.WriteLine($"{SpacePrefix}ref {Name}");
         }
 
         public override string ToString()
         {
             return $"{Name}";
         }
+
+        public override string DShort => $"{Name}";
     }
 }

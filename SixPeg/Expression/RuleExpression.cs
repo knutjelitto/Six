@@ -15,14 +15,14 @@ namespace SixPeg.Expression
         public AnyExpression Expression { get; }
         public bool Used { get; set; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return Expression.GetMatcher(spaced);
+            return Expression.GetMatcher();
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
-            Expression.Resolve(grammar);
+            Expression.Resolve(Grammar);
         }
 
         public override string ToString()

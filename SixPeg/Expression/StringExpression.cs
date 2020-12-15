@@ -11,12 +11,12 @@ namespace SixPeg.Expression
 
         public string Text { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return new MatchCharacterSequence(spaced, Text);
+            return new MatchCharacterSequence(Text);
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
         }
     }

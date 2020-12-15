@@ -13,21 +13,21 @@ namespace SixPeg.Expression
         public AnyExpression Expression { get; }
         public Quantifier Quantifier { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
             return (Quantifier.Min, Quantifier.Max) switch
             {
-                (1, 1) => Expression.GetMatcher(spaced),
-                (0, 1) => new MatchZeroOrOne(spaced, Expression.GetMatcher(false)),
-                (0, null) => new MatchZeroOrMore(spaced, Expression.GetMatcher(false)),
-                (1, null) => new MatchOneOrMore(spaced, Expression.GetMatcher(false)),
+                (1, 1) => Expression.GetMatcher(),
+                (0, 1) => new MatchZeroOrOne(Expression.GetMatcher()),
+                (0, null) => new MatchZeroOrMore(Expression.GetMatcher()),
+                (1, null) => new MatchOneOrMore(Expression.GetMatcher()),
                 _ => throw new System.NotImplementedException(),
             };
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
-            Expression.Resolve(grammar);
+            Expression.Resolve(Grammar);
         }
     }
 }

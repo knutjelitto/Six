@@ -2,12 +2,12 @@
 {
     public class MatchAnd : BaseMatcher
     {
-        public MatchAnd(bool spaced, IMatcher matcher)
-            : base("and", spaced, matcher)
+        public MatchAnd(IMatcher matcher)
+            : base("and", matcher)
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             var start = cursor;
             if (Matcher.Match(subject, ref cursor))

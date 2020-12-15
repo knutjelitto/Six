@@ -11,17 +11,17 @@ namespace SixPeg.Expression
         }
 
         public string Text { get; }
-        public RuleExpression Rule { get; private set; }
+        public AnyExpression Expression { get; private set; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            Debug.Assert(Rule != null);
-            return Rule.GetMatcher(spaced);
+            Debug.Assert(Expression != null);
+            return Expression.GetMatcher();
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
-            Rule = grammar.AddSpaced(this);
+            Expression = Grammar.AddSpaced(this);
         }
     }
 }

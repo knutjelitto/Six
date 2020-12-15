@@ -4,15 +4,14 @@ namespace SixPeg.Matchers
 {
     public class MatchSingleCharacter : AnyMatcher
     {
-        public MatchSingleCharacter(bool spaced, char character)
-            : base(spaced)
+        public MatchSingleCharacter(char character)
         {
             Character = character;
         }
 
         public char Character { get; }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             if (cursor < subject.Length && subject[cursor] == Character)
             {
@@ -24,7 +23,9 @@ namespace SixPeg.Matchers
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"match \"{Character}\"");
+            writer.WriteLine($"{SpacePrefix}match \"{Character}\"");
         }
+
+        public override string DShort => $"single(\"{Character}\")";
     }
 }

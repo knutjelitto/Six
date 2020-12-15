@@ -5,17 +5,16 @@ namespace SixPeg.Matchers
 {
     public class MatchCharacterSequence : AnyMatcher
     {
-        public MatchCharacterSequence(bool spaced, string text)
-            : base(spaced)
+        public MatchCharacterSequence(string text)
         {
             Text = text;
         }
 
         public string Text { get; }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
-            if (cursor + Text.Length < subject.Length && MemoryExtensions.Equals(Text.AsSpan(), subject.AsSpan(cursor, Text.Length), StringComparison.Ordinal))
+            if (cursor + Text.Length <= subject.Length && MemoryExtensions.Equals(Text.AsSpan(), subject.AsSpan(cursor, Text.Length), StringComparison.Ordinal))
             {
                 cursor += Text.Length;
                 return true;
@@ -26,7 +25,9 @@ namespace SixPeg.Matchers
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"match \"{Text}\"");
+            writer.WriteLine($"{SpacePrefix}match \"{Text}\"");
         }
+
+        public override string DShort => $"string(\"{Text}\")";
     }
 }

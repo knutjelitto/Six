@@ -4,19 +4,18 @@ namespace SixPeg.Matchers
 {
     public class MatchError : AnyMatcher
     {
-        public MatchError(bool spaced)
-            : base(spaced)
+        public MatchError()
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             throw new System.NotImplementedException();
         }
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"#error(...)");
+            writer.WriteLine($"{SpacePrefix}#error(...)");
         }
     }
 }

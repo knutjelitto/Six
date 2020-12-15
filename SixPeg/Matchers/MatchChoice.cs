@@ -4,12 +4,12 @@ namespace SixPeg.Matchers
 {
     public class MatchChoice : BaseMatchers
     {
-        public MatchChoice(bool spaced, IEnumerable<IMatcher> matchers)
-            : base("choice", spaced, matchers)
+        public MatchChoice(IEnumerable<IMatcher> matchers)
+            : base("choice", matchers)
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             var start = cursor;
             foreach (var matcher in Matchers)

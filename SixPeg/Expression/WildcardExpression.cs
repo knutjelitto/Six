@@ -8,12 +8,12 @@ namespace SixPeg.Expression
         {
         }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return new MatchAnyCharacter(spaced);
+            return new MatchAnyCharacter();
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
         }
     }

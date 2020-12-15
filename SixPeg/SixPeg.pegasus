@@ -39,7 +39,7 @@ suffix <AnyExpression>
     = expression:primary q:quantifier       { new QuantifiedExpression(expression, q) }
 
 primary <AnyExpression> -memoize
-    = name:ruleName !(rulePreamble)         { new NameExpression(name) }
+    = name:ruleName !(rulePreamble)         { new ReferenceExpression(name) }
     / stringLiteral
     / spacedLiteral
     / class

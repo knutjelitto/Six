@@ -4,8 +4,7 @@ namespace SixPeg.Matchers
 {
     public abstract class BaseMatcher : AnyMatcher
     {
-        public BaseMatcher(string kind, bool spaced, IMatcher matcher)
-            : base(spaced)
+        public BaseMatcher(string kind, IMatcher matcher)
         {
             Kind = kind;
             Matcher = matcher;
@@ -16,11 +15,12 @@ namespace SixPeg.Matchers
 
         public sealed override void Write(IWriter writer)
         {
-            using (writer.Indent(Kind))
+            using (writer.Indent(SpacePrefix + Kind))
             {
                 Matcher.Write(writer);
             }
         }
 
+        public override string DShort => $"{Kind}({Matcher.DShort})";
     }
 }

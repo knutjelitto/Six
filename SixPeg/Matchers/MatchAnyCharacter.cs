@@ -4,12 +4,11 @@ namespace SixPeg.Matchers
 {
     public class MatchAnyCharacter : AnyMatcher
     {
-        public MatchAnyCharacter(bool spaced)
-            : base(spaced)
+        public MatchAnyCharacter()
         {
         }
 
-        public override bool Match(string subject, ref int cursor)
+        protected override bool InnerMatch(string subject, ref int cursor)
         {
             if (cursor < subject.Length)
             {
@@ -21,7 +20,9 @@ namespace SixPeg.Matchers
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"any-character");
+            writer.WriteLine($"{SpacePrefix}any-character");
         }
+
+        public override string DShort => $"any(.)";
     }
 }

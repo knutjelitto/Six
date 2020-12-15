@@ -14,12 +14,12 @@ namespace SixPeg.Expression
         public int Code { get; }
         public IList<object> Arguments { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
-            return new MatchError(spaced);
+            return new MatchError();
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
         }
     }

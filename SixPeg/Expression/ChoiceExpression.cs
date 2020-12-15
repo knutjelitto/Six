@@ -13,18 +13,18 @@ namespace SixPeg.Expression
 
         public IList<AnyExpression> Expressions { get; }
 
-        public override IMatcher GetMatcher(bool spaced)
+        protected override IMatcher MakeMatcher()
         {
             return Expressions.Count == 1
-                ? Expressions[0].GetMatcher(spaced)
-                : new MatchChoice(spaced, Expressions.Select(e => e.GetMatcher(false)));
+                ? Expressions[0].GetMatcher()
+                : new MatchChoice(Expressions.Select(e => e.GetMatcher()));
         }
 
-        public override void Resolve(GrammarExpression grammar)
+        protected override void InnerResolve()
         {
             foreach (var expression in Expressions)
             {
-                expression.Resolve(grammar);
+                expression.Resolve(Grammar);
             }
         }
     }

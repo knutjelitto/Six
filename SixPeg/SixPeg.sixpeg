@@ -1,0 +1,80 @@
+﻿grammar
+	= rule* EOF
+
+EOF = _ !.
+
+rule
+	= identifier '=' expression
+	/ identifier #error(11)
+
+expression
+	= choice-expression
+
+choice-expression
+	= sequence-expression ('/' sequence-expression)*
+
+sequence-expression
+	= element*
+
+element
+	= prefixed
+	/ '#' 'error' '(' integer ')'
+
+prefixed
+	= '&' suffixed
+	/ '!' suffixed
+	/ suffixed
+
+suffixed
+	= primary ('?' / '*' / '+')?
+
+primary
+	= class
+	/ identifier !'='
+	/ implicit-spaced-rule
+	/ '.'
+	/ '(' expression ')'
+	/ exact
+
+identifier
+	= _ identifier-head identifier-tail*
+	/ _ '_'
+
+identifier-head
+	= letter (letter / digit)*
+
+identifier-tail
+	= "-" (letter / digit)+
+
+implicit-spaced-rule
+	= _ "'" (!"'" .)* "'"
+
+exact
+	= _ ["] (!["] .)* ["]
+
+class
+	= '[' (range / single)+ ']'
+
+range
+	= single '..' single
+
+single
+	= verbatim
+	/ simple-escape
+
+simple-escape
+	= '\' ( "t" / "n" / "r" )
+
+verbatim
+	= !']' _ .
+
+integer
+	= digit+
+
+letter
+	= [ a .. z ] / [ A .. Z ]
+
+digit
+	= [ 0-9]
+
+_	= [ \t\r\n]*
