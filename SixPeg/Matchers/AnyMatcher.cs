@@ -12,14 +12,20 @@ namespace SixPeg.Matchers
 
         public bool Match(string subject, ref int cursor)
         {
+            ConsumeSpace(subject, ref cursor);
+            var match = InnerMatch(subject, ref cursor);
+
+            return match;
+        }
+
+        [DebuggerStepThrough]
+        private void ConsumeSpace(string subject, ref int cursor)
+        {
             if (Space != null)
             {
                 Debug.Assert(true);
                 _ = Space.Match(subject, ref cursor);
             }
-            var match = InnerMatch(subject, ref cursor);
-
-            return match;
         }
 
         protected string SpacePrefix => Space == null ? string.Empty : "_ ";

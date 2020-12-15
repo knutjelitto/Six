@@ -1,0 +1,230 @@
+
+rule grammar
+    sequence
+        zero-or-more
+            ref rule
+        ref EOF
+
+rule EOF
+    _ not
+        any-character
+
+rule rule
+    choice
+        sequence
+            ref identifier
+            ref '='
+            ref expression
+        sequence
+            ref identifier
+            #error(...)
+
+rule expression
+    ref choice-expression
+
+rule choice-expression
+    sequence
+        ref sequence-expression
+        zero-or-more
+            sequence
+                ref '/'
+                ref sequence-expression
+
+rule sequence-expression
+    zero-or-more
+        ref element
+
+rule element
+    choice
+        ref prefixed
+        sequence
+            ref '#'
+            ref 'error'
+            ref '('
+            ref integer
+            ref ')'
+
+rule prefixed
+    choice
+        sequence
+            ref '&'
+            ref suffixed
+        sequence
+            ref '!'
+            ref suffixed
+        ref suffixed
+
+rule suffixed
+    sequence
+        ref primary
+        zero-or-one
+            choice
+                ref '?'
+                ref '*'
+                ref '+'
+
+rule primary
+    choice
+        ref class
+        sequence
+            ref identifier
+            not
+                ref '='
+        ref implicit-spaced-rule
+        ref '.'
+        sequence
+            ref '('
+            ref expression
+            ref ')'
+        ref exact
+
+rule identifier
+    choice
+        _ sequence
+            ref identifier-head
+            zero-or-more
+                ref identifier-tail
+        _ ref '_'
+
+rule identifier-head
+    sequence
+        ref letter
+        zero-or-more
+            choice
+                ref letter
+                ref digit
+
+rule identifier-tail
+    sequence
+        match "-"
+        one-or-more
+            choice
+                ref letter
+                ref digit
+
+rule implicit-spaced-rule
+    _ sequence
+        match "'"
+        zero-or-more
+            sequence
+                not
+                    match "'"
+                any-character
+        match "'"
+
+rule exact
+    _ sequence
+        match """
+        zero-or-more
+            sequence
+                not
+                    match """
+                any-character
+        match """
+
+rule class
+    sequence
+        ref '['
+        one-or-more
+            choice
+                ref range
+                ref single
+        ref ']'
+
+rule range
+    sequence
+        ref single
+        ref '..'
+        ref single
+
+rule single
+    choice
+        ref verbatim
+        ref simple-escape
+
+rule simple-escape
+    sequence
+        ref '\'
+        choice
+            match "t"
+            match "n"
+            match "r"
+
+rule verbatim
+    sequence
+        not
+            ref ']'
+        ref _
+        any-character
+
+rule integer
+    one-or-more
+        ref digit
+
+rule letter
+    choice
+        match "a" .. "z"
+        match "A" .. "Z"
+
+rule digit
+    match "0" .. "9"
+
+rule _
+    zero-or-more
+        choice
+            match " "
+            match "	"
+            match ""
+            match "
+"
+
+rule '='
+    _ match "="
+
+rule '/'
+    _ match "/"
+
+rule '#'
+    _ match "#"
+
+rule 'error'
+    _ match "error"
+
+rule '('
+    _ match "("
+
+rule ')'
+    _ match ")"
+
+rule '&'
+    _ match "&"
+
+rule '!'
+    _ match "!"
+
+rule '?'
+    _ match "?"
+
+rule '*'
+    _ match "*"
+
+rule '+'
+    _ match "+"
+
+rule '.'
+    _ match "."
+
+rule '_'
+    _ match "_"
+
+rule '['
+    _ match "["
+
+rule ']'
+    _ match "]"
+
+rule '..'
+    _ match ".."
+
+rule '\'
+    _ match "\"

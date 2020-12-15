@@ -1,5 +1,6 @@
 ﻿using Pegasus.Common;
 using SixPeg.Matchers;
+using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
@@ -21,6 +22,7 @@ namespace SixPeg.Expression
             return this;
         }
 
+        [DebuggerStepThrough]
         public IMatcher GetMatcher()
         {
             if (matcher == null)

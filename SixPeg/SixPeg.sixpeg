@@ -72,9 +72,9 @@ integer
 	= digit+
 
 letter
-	= [ a .. z ] / [ A .. Z ]
+	= [a-z] / [A-Z]
 
 digit
-	= [ 0-9]
+	= [0-9]
 
 _	= [ \t\r\n]*
