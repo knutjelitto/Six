@@ -1,13 +1,13 @@
 ﻿namespace SixPeg.Matchers
 {
-    public class MatchZeroOrMore : BaseMatcher
+    public sealed class MatchZeroOrMore : BaseMatcher
     {
         public MatchZeroOrMore(IMatcher matcher)
             : base("zero-or-more", matcher)
         {
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             while (Matcher.Match(subject, ref cursor))
             {

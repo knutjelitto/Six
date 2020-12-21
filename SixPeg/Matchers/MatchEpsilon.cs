@@ -8,14 +8,14 @@ namespace SixPeg.Matchers
         {
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             return true;
         }
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"{SpacePrefix}epsilon");
+            writer.WriteLine($"{SpacePrefix}ε");
         }
     }
 }

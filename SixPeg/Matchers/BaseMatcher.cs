@@ -21,6 +21,7 @@ namespace SixPeg.Matchers
             }
         }
 
-        public override string DShort => $"{Kind}({Matcher.DShort})";
+        public override string DDShort => $"{Kind}({Matcher.DDShort})";
+        public override string DDLong => $"{Kind}({Matcher.DDLong})";
     }
 }

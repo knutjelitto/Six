@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -21,10 +21,6 @@
     <Reference Include="Pegasus">
       <HintPath>C:\Users\knutj\.nuget\packages\pegasus\4.2.0-alpha0003\build\netcoreapp2.0\Pegasus.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,9 +55,12 @@
     <None Update="SixPeg.sixpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SwiftStuff.sixpeg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Grammars\Go\" />
+    <Folder Include="Reports\" />
+    <Folder Include="Support\" />
   </ItemGroup>
 
 </Project>

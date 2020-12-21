@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Six.Support
+﻿namespace Six.Support
 {
     public interface ISpan
     {

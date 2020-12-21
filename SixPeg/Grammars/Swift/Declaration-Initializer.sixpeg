@@ -1,0 +1,12 @@
+﻿// ------------------------------------
+// 'init' declaration
+// ------------------------------------
+initializer-declaration
+    = initializer-head generic-parameter-clause? parameter-clause maythrow? generic-where-clause? initializer-body?
+
+initializer-head
+    = full-prefix 'init' !more ('?'/'!')?
+    / full-prefix 'init' !more #error("initializer-head")
+
+initializer-body
+    = code-block

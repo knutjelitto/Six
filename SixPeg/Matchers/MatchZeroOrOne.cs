@@ -7,7 +7,7 @@
         {
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             return Matcher.Match(subject, ref cursor) || true;
         }

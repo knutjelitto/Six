@@ -5,9 +5,15 @@ namespace SixPeg.Matchers
     public interface IMatcher : IWritable
     {
         IMatcher Space { get; set; }
-        bool Match(string subject, ref int cursor);
+        bool Match(Context subject, ref int cursor);
 
-        string DShort { get; }
-        string DLong { get; }
+        /// <summary>
+        /// true, if this matches a single character
+        /// </summary>
+        bool IsClassy { get; }
+        bool IsPredicate { get; }
+
+        string DDShort { get; }
+        string DDLong { get; }
     }
 }

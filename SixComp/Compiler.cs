@@ -6,12 +6,12 @@ namespace SixComp
 {
     public class Compiler
     {
-        public Compiler(Navi navi)
+        public Compiler(CompNavi navi)
         {
             Navi = navi;
         }
 
-        public Navi Navi { get; }
+        public CompNavi Navi { get; }
 
         public ParseTree.CompilationUnit? Parse(IWriter writer, Context context)
         {
@@ -24,7 +24,7 @@ namespace SixComp
             }
             catch (ParserException parserError)
             {
-                context.Error.Report(writer, parserError.Message, parserError.Token);
+                context.Error.Report(writer, parserError.Message, parserError.Token.Span);
 
                 return null;
 
@@ -38,7 +38,7 @@ namespace SixComp
             catch (InvalidOperationException invalid)
             {
                 Console.WriteLine(invalid.ToString());
-                context.Error.Report(writer, $"internal error - {invalid.Message}", parser.CurrentToken);
+                context.Error.Report(writer, $"internal error - {invalid.Message}", parser.CurrentToken.Span);
 
                 return null;
             }

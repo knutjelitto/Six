@@ -1,0 +1,61 @@
+﻿// ------------------------------------
+// function-declaration
+// ------------------------------------
+function-declaration
+    = function-head function-name generic-parameter-clause? function-signature generic-where-clause? function-body
+    / function-head #error("function-declaration")
+
+function-head
+    = full-prefix 'func'
+
+function-signature
+    = parameter-clause maythrow? function-result?
+
+maythrow
+    = ('throws' / 'rethrows')
+
+function-name
+    = name
+    / operator
+    / #error(11, "function-name")
+
+parameter-clause
+    = '(' ')'
+    / '(' parameter-list ')'
+    / #error( "parameter-clause" )
+
+parameter-list
+    = parameter (',' parameter)*
+
+parameter
+    = attributes? external-name local-name type-annotation default-argument-clause
+    / attributes? external-name local-name type-annotation '...'
+    / attributes? external-name local-name type-annotation
+    / attributes? external-name local-name #error("parameter-1")
+    / attributes? local-name type-annotation default-argument-clause
+    / attributes? local-name type-annotation '...'
+    / attributes? local-name type-annotation
+    / #error("parameter")
+
+function-result
+    = '->' attributes? type
+    / '->' #error( "function-result" )
+
+external-name
+    = name
+
+local-name
+    = name
+
+default-argument-clause
+    = '=' expression
+
+type-annotation
+    = ':' attributes? '__owned'? 'inout'? type
+    / ':' attributes? '__owned'? 'inout'? #error("type-annotation-1")
+    / ':' #error("type-annotation-2")
+
+function-body
+    = code-block
+    /
+

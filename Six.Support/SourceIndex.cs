@@ -22,7 +22,7 @@ namespace Six.Support
             var start = offset;
             while (offset < source.Length)
             {
-                if (source.Content[offset] == '\n')
+                if (source.Text[offset] == '\n')
                 {
                     index.Add(start);
                     start = offset + 1;
@@ -45,7 +45,7 @@ namespace Six.Support
             var start = Index[lineNo];
             var end = lineNo + 1 < Index.Count ? Index[lineNo + 1] : Source.Length;
 
-            return (lineNo + 1, offset - start + 1, Source.Content.Substring(start, end - start).TrimEnd());
+            return (lineNo + 1, offset - start + 1, Source.Text[start..end].TrimEnd());
         }
 
         public string? GetLine(int lineIndex)

@@ -1,0 +1,12 @@
+﻿// ------------------------------------
+// subscript-declaration
+// ------------------------------------
+subscript-declaration
+    = subscript-head subscript-result generic-where-clause? getter-setter-block
+    / subscript-head subscript-result generic-where-clause? getter-setter-keyword-block
+
+subscript-head
+    = full-prefix 'subscript' generic-parameter-clause? parameter-clause
+
+subscript-result
+    = '->' attributes? type

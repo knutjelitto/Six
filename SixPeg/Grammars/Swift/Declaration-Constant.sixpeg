@@ -1,0 +1,16 @@
+﻿// ------------------------------------
+// constant-declaration
+// ------------------------------------
+constant-declaration
+    = full-prefix 'let' pattern-initializer-list
+    / full-prefix 'let' #error("constant-declaration")
+
+pattern-initializer-list
+    = pattern-initializer (',' pattern-initializer)*
+
+pattern-initializer
+    = pattern type-annotation? initializer?
+
+initializer
+    = '=' expression
+    / '=' #error("initializer")

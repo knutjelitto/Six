@@ -1,0 +1,25 @@
+﻿precedence-group-declaration
+	= 'precedencegroup' precedence-group-name precedence-group-body
+
+precedence-group-body
+	= '{' precedence-group-attribute* '}'
+
+precedence-group-attribute
+	= precedence-group-relation
+	/ precedence-group-assignment
+	/ precedence-group-associativity
+
+precedence-group-relation
+	= ('higherThan' / 'lowerThan') ':' precedence-group-names
+
+precedence-group-assignment
+	= 'assignment' ':' boolean-literal
+
+precedence-group-associativity
+	= 'associativity' ':' ('left' / 'right' / 'none')
+
+precedence-group-names
+	= precedence-group-name (',' precedence-group-name)*
+
+precedence-group-name
+	= name

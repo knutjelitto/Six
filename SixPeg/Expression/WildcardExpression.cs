@@ -10,11 +10,12 @@ namespace SixPeg.Expression
 
         protected override IMatcher MakeMatcher()
         {
-            return new MatchAnyCharacter();
+            return new MatchCharacterAny();
         }
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
+            return visitor.Visit(this);
         }
     }
 }

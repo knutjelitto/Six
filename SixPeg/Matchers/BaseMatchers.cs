@@ -26,8 +26,7 @@ namespace SixPeg.Matchers
             }
         }
 
-        public override string DShort => $"{Kind}(...)";
-
-        public override string DLong => $"{Kind}({string.Join(",", Matchers.Select(m => m.DShort))})";
+        public override string DDShort => $"{Kind}(...)";
+        public override string DDLong => $"{Kind}({string.Join(",", Matchers.Select(m => m.DDShort))})";
     }
 }

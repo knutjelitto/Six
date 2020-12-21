@@ -1,1 +1,0 @@
-for value in rest where value < minValue  { minValue = value }

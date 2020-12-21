@@ -1,0 +1,18 @@
+﻿// ------------------------------------
+// 'extension' declaration
+// ------------------------------------
+
+extension-declaration
+    = access-prefix 'extension' type-identifier type-inheritance-clause? generic-where-clause? extension-body
+    / access-prefix 'extension' type-identifier #error("extension-declaration")
+    / access-prefix 'extension' #error("extension-declaration - type-identifier")
+
+extension-body
+    = '{' '}'
+    / '{' extension-member+ '}'
+    / '{' #error("extension-body")
+
+extension-member
+    = declaration
+    / compiler-control-statement
+

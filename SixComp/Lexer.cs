@@ -37,7 +37,7 @@ namespace SixComp
 
         public Context Context { get; }
         public Source Source => Context.Source;
-        public string Text => Source.Content;
+        public string Text => Source.Text;
         public Tokens Tokens => Context.Tokens;
 
         public bool Done { get; private set; } = false;
@@ -74,7 +74,7 @@ namespace SixComp
             var lb = Math.Min(Index, 15);
             var la = Math.Max(Index - Source.Length, 15);
 
-            return Source.Content.Substring(Index - lb, lb) + "•" + Source.Content.Substring(Index, la);
+            return Source.Text.Substring(Index - lb, lb) + "•" + Source.Text.Substring(Index, la);
         }
 
         public Token GetNext()
@@ -673,7 +673,7 @@ namespace SixComp
 
         private string CurrentText()
         {
-            return Source.Content[Start..Index];
+            return Source.Text[Start..Index];
         }
     }
 }

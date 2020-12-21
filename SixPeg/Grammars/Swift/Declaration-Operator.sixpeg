@@ -1,0 +1,22 @@
+﻿operator-declaration
+	= prefix-operator-declaration
+	/ postfix-operator-declaration
+	/ infix-operator-declaration
+
+prefix-operator-declaration
+	= 'prefix' 'operator' _ operator (':' operator-restrictions)?
+
+postfix-operator-declaration
+	= 'postfix' 'operator' _ operator (':' operator-restrictions)?
+
+infix-operator-declaration
+	= 'infix' 'operator' _ operator infix-operator-group?
+
+infix-operator-group
+	= ':' precedence-group-name (',' operator-restrictions)?
+
+operator-restrictions
+	= operator-restriction (',' operator-restriction)*
+
+operator-restriction
+	= type-identifier

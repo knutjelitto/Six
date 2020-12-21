@@ -1,0 +1,41 @@
+﻿condition-list
+    = condition (',' condition)*
+
+condition
+    = available-condition
+    / case-condition
+    / optional-binding-condition
+    / expression
+
+case-condition
+    = 'case' pattern initializer
+
+optional-binding-condition
+    = 'let' pattern type-annotation? initializer
+    / 'var' pattern type-annotation? initializer
+
+// ------------------------------------
+// Availability Condition
+// ------------------------------------
+
+available-condition
+    = '#available' '(' availability-arguments ')'
+
+availability-arguments
+    = availability-argument (',' availability-argument)*
+
+availability-argument
+    = platform-name platform-version
+    / '*'
+
+platform-name
+    = 'iOS' / 'iOSApplicationExtension'
+    / 'macOS' / 'macOSApplicationExtension'
+    / 'macCatalyst' / 'macCatalystApplicationExtension'
+    / 'watchOS'
+    / 'tvOS'
+
+platform-version
+    = decimal-digits ('.' decimal-digits ('.' decimal-digits)? )?
+
+

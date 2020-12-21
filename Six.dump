@@ -1,230 +1,355 @@
-
-rule grammar
+unit::
     sequence
         zero-or-more
-            ref rule
+            ref statement
         ref EOF
 
-rule EOF
+EOF::
     _ not
-        any-character
+        match any
 
-rule rule
+statement::
+    ref declaration-statement
+
+declaration-statement::
+    ref declaration
+
+declaration::
+    ref function-declaration
+
+function-declaration::
+    sequence
+        ref prefix
+        ref 'func'
+        ref function-name
+        ref generic-parameter-clause
+        ref function-parameter-clause
+        ref maythrow
+        ref function-result
+        zero-or-more
+            match any
+
+maythrow::
+    zero-or-one
+        choice
+            ref 'throws'
+            ref 'rethrows'
+
+function-name::
+    choice
+        ref name
+        #error(...)
+
+function-parameter-clause::
     choice
         sequence
-            ref identifier
-            ref '='
-            ref expression
+            ref '('
+            zero-or-one
+                ref function-parameters
+            ref ')'
+        #error(...)
+
+function-parameters::
+    sequence
+        ref function-parameter
+        zero-or-more
+            sequence
+                ref ','
+                ref function-parameter
+
+function-parameter::
+    choice
         sequence
-            ref identifier
+            ref external-name
+            ref local-name
+            ref type-annotation
+            ref default-argument
+        sequence
+            ref external-name
+            ref local-name
+            ref type-annotation
+            ref '...'
+        sequence
+            ref external-name
+            ref local-name
+            ref type-annotation
+        sequence
+            ref local-name
+            ref type-annotation
+            ref default-argument
+        sequence
+            ref local-name
+            ref type-annotation
+            ref '...'
+        sequence
+            ref local-name
+            ref type-annotation
+
+function-result::
+    choice
+        sequence
+            ref '->'
+            ref attributes
+            ref type
+        sequence
+            ref '->'
             #error(...)
 
-rule expression
-    ref choice-expression
+external-name::
+    ref name
 
-rule choice-expression
+local-name::
+    ref name
+
+default-argument::
+    _ sequence
+        ref '='
+        ref expression
+
+type-annotation::
     sequence
-        ref sequence-expression
+        ref ':'
         zero-or-more
-            sequence
-                ref '/'
-                ref sequence-expression
-
-rule sequence-expression
-    zero-or-more
-        ref element
-
-rule element
-    choice
-        ref prefixed
-        sequence
-            ref '#'
-            ref 'error'
-            ref '('
-            ref integer
-            ref ')'
-
-rule prefixed
-    choice
-        sequence
-            ref '&'
-            ref suffixed
-        sequence
-            ref '!'
-            ref suffixed
-        ref suffixed
-
-rule suffixed
-    sequence
-        ref primary
+            ref attribute
         zero-or-one
-            choice
-                ref '?'
-                ref '*'
-                ref '+'
+            ref 'inout'
+        ref type
 
-rule primary
+generic-parameter-clause::
     choice
-        ref class
         sequence
-            ref identifier
-            not
-                ref '='
-        ref implicit-spaced-rule
-        ref '.'
+            ref '<'
+            ref generic-parameters
+            ref '>'
         sequence
-            ref '('
-            ref expression
-            ref ')'
-        ref exact
+            ref '<'
+            #error(...)
+        epsilon
 
-rule identifier
-    choice
-        _ sequence
-            ref identifier-head
-            zero-or-more
-                ref identifier-tail
-        _ ref '_'
-
-rule identifier-head
+generic-parameters::
     sequence
-        ref letter
-        zero-or-more
-            choice
-                ref letter
-                ref digit
-
-rule identifier-tail
-    sequence
-        match "-"
-        one-or-more
-            choice
-                ref letter
-                ref digit
-
-rule implicit-spaced-rule
-    _ sequence
-        match "'"
+        ref generic-parameter
         zero-or-more
             sequence
-                not
-                    match "'"
-                any-character
-        match "'"
+                ref ','
+                ref generic-parameter
 
-rule exact
-    _ sequence
-        match """
+generic-parameter::
+    choice
+        sequence
+            ref type-name
+            ref ':'
+            ref protocol-composition-type
+        sequence
+            ref type-name
+            ref ':'
+            ref type-identifier
+        ref type-name
+        #error(...)
+
+generic-argument-clause::
+    choice
+        sequence
+            ref '<'
+            ref generic-arguments
+            ref '>'
+        sequence
+            ref '<'
+            #error(...)
+        epsilon
+
+generic-arguments::
+    sequence
+        ref generic-argument
         zero-or-more
             sequence
-                not
-                    match """
-                any-character
-        match """
+                ref ','
+                ref generic-argument
 
-rule class
+generic-argument::
+    ref type
+
+prefix::
     sequence
-        ref '['
-        one-or-more
-            choice
-                ref range
-                ref single
-        ref ']'
+        ref attributes
+        ref modifiers
 
-rule range
-    sequence
-        ref single
-        ref '..'
-        ref single
+attributes::
+    zero-or-more
+        ref attribute
 
-rule single
+attribute::
     choice
-        ref verbatim
-        ref simple-escape
+        sequence
+            ref '@'
+            ref name
+        sequence
+            ref '@'
+            #error(...)
 
-rule simple-escape
+modifiers::
+    zero-or-more
+        ref modifier
+
+modifier::
+    _ ref modifier-token
+
+modifier-token::
+    choice
+        ref 'private'
+        ref 'public'
+        ref 'internal'
+
+expression::
+    ref name
+
+type::
+    choice
+        ref type-identifier
+        ref protocol-composition-type
+
+type-name::
+    ref name
+
+type-identifier::
     sequence
-        ref '\'
+        ref type-identifier-part
+        zero-or-more
+            sequence
+                ref '.'
+                ref type-identifier-part
+
+type-identifier-part::
+    sequence
+        ref type-name
+        ref generic-argument-clause
+
+protocol-composition-type::
+    sequence
+        ref type-identifier
+        one-or-more
+            sequence
+                ref '&'
+                ref type-identifier
+
+name::
+    _ sequence
         choice
-            match "t"
-            match "n"
-            match "r"
+            match "a" .. "z"
+            match "A" .. "Z"
+            match "_"
+        zero-or-more
+            choice
+                match "a" .. "z"
+                match "A" .. "Z"
+                match "0" .. "9"
+                match "_"
 
-rule verbatim
+_::
+    zero-or-more
+        ref space
+
+space::
+    one-or-more
+        choice
+            ref single-line-comment
+            ref multi-line-comment
+            ref whitespace
+
+single-line-comment::
+    sequence
+        match "//"
+        zero-or-more
+            sequence
+                not
+                    choice
+                        match "\n"
+                        match "\r"
+                match any
+
+multi-line-comment::
+    sequence
+        ref start-comment
+        zero-or-more
+            choice
+                ref not-comment
+                ref multi-line-comment
+        ref stop-comment
+
+not-comment::
     sequence
         not
-            ref ']'
-        ref _
-        any-character
+            ref start-comment
+        not
+            ref stop-comment
+        match any
 
-rule integer
-    one-or-more
-        ref digit
+start-comment::
+    match "/*"
 
-rule letter
+stop-comment::
+    match "*/"
+
+whitespace::
     choice
-        match "a" .. "z"
-        match "A" .. "Z"
+        match "\n"
+        match "\r"
+        match "\t"
+        match " "
 
-rule digit
-    match "0" .. "9"
+'func'::
+    _ match "func"
 
-rule _
-    zero-or-more
-        choice
-            match " "
-            match "	"
-            match ""
-            match "
-"
+'throws'::
+    _ match "throws"
 
-rule '='
-    _ match "="
+'rethrows'::
+    _ match "rethrows"
 
-rule '/'
-    _ match "/"
-
-rule '#'
-    _ match "#"
-
-rule 'error'
-    _ match "error"
-
-rule '('
+'('::
     _ match "("
 
-rule ')'
+')'::
     _ match ")"
 
-rule '&'
-    _ match "&"
+','::
+    _ match ","
 
-rule '!'
-    _ match "!"
+'...'::
+    _ match "..."
 
-rule '?'
-    _ match "?"
+'->'::
+    _ match "->"
 
-rule '*'
-    _ match "*"
+'='::
+    _ match "="
 
-rule '+'
-    _ match "+"
+':'::
+    _ match ":"
 
-rule '.'
+'inout'::
+    _ match "inout"
+
+'<'::
+    _ match "<"
+
+'>'::
+    _ match ">"
+
+'@'::
+    _ match "@"
+
+'private'::
+    _ match "private"
+
+'public'::
+    _ match "public"
+
+'internal'::
+    _ match "internal"
+
+'.'::
     _ match "."
 
-rule '_'
-    _ match "_"
-
-rule '['
-    _ match "["
-
-rule ']'
-    _ match "]"
-
-rule '..'
-    _ match ".."
-
-rule '\'
-    _ match "\"
+'&'::
+    _ match "&"

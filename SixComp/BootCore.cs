@@ -9,7 +9,7 @@ namespace SixComp
 {
     public class BootCore
     {
-        public BootCore(Navi navi, DirectoryInfo sources)
+        public BootCore(CompNavi navi, DirectoryInfo sources)
         {
             Navi = navi;
             Sources = sources;
@@ -17,7 +17,7 @@ namespace SixComp
             Temp.Create();
         }
 
-        public Navi Navi { get; }
+        public CompNavi Navi { get; }
         public DirectoryInfo Sources { get; }
         public DirectoryInfo Temp { get; }
 

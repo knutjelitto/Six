@@ -8,7 +8,7 @@ namespace SixComp
     {
         static void Main(string[] args)
         {
-            var navi = new Navi();
+            var navi = new CompNavi();
             new BootCore(navi, navi.SixCore).Compile("Swift");
             //new BootCore(navi, navi.SixTests).Compile("Tests");
             Console.Write("(almost) any key ... ");

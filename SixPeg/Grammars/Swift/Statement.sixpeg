@@ -1,0 +1,64 @@
+﻿// ====================================
+// == Statement
+// ====================================
+
+statement 
+    = control-transfer-statement ';'?
+    / compiler-control-statement
+    / loop-statement ';'?
+    / branch-statement ';'?
+    / do-statement ';'?
+    / defer-statement ';'?
+    / labeled-statement ';'?
+    / declaration ';'?
+    / !('case' !more / 'default' !more) expression ';'? // follow in switch/case
+    / '{' #error("statement")
+
+code-block
+    = '{' statements? '}'
+    / '{' #error("code-block")
+
+statements
+    = statement+
+
+control-transfer-statement
+    = break-statement
+    / continue-statement
+    / fallthrough-statement
+    / return-statement
+    / throw-statement
+
+fallthrough-statement
+    = 'fallthrough'
+
+throw-statement
+    = 'throw' expression
+    / 'throw' #error("throw-statement")
+
+loop-statement
+    = for-in-statement
+    / while-statement
+    / repeat-while-statement
+
+for-in-statement
+    = 'for' 'case'? pattern 'in' expression where-clause? code-block
+
+repeat-while-statement
+    = 'repeat' code-block 'while' expression
+
+branch-statement
+    = if-statement
+    / guard-statement
+    / switch-statement
+
+
+// ------------------------------------
+// Misc
+// ------------------------------------
+where-clause
+    = 'where' where-expression
+
+where-expression
+    = expression
+
+

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
-    public abstract class AnyExpression : ILexical
+    public abstract class AnyExpression : IVisitable, ILexical
     {
         private IMatcher matcher;
 
@@ -13,14 +13,6 @@ namespace SixPeg.Expression
 
         public GrammarExpression Grammar { get; set; }
         public bool Spaced { get; set; } = false;
-
-
-        public AnyExpression Resolve(GrammarExpression grammar)
-        {
-            Grammar = grammar;
-            InnerResolve();
-            return this;
-        }
 
         [DebuggerStepThrough]
         public IMatcher GetMatcher()
@@ -36,7 +28,7 @@ namespace SixPeg.Expression
             return matcher;
         }
 
-        protected abstract void InnerResolve();
         protected abstract IMatcher MakeMatcher();
+        public abstract T Accept<T>(IVisitor<T> visitor);
     }
 }

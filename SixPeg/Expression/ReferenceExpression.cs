@@ -5,28 +5,30 @@ namespace SixPeg.Expression
 {
     public class ReferenceExpression : AnyExpression
     {
-        public ReferenceExpression(Identifier name)
+        public ReferenceExpression(Symbol name)
         {
             Name = name;
         }
 
-        public Identifier Name { get; }
-        public RuleExpression Rule { get; private set; }
+        public Symbol Name { get; }
+        public RuleExpression Rule { get; internal set; }
 
         protected override IMatcher MakeMatcher()
         {
             Debug.Assert(Rule != null);
-            return new MatchName(Rule.Name, Rule.GetMatcher());
-        }
-
-        protected override void InnerResolve()
-        {
-            Rule = Grammar.FindRule(Name);
+            return Rule == Grammar.Space
+                ? new MatchSpace(Rule.Name, Grammar.Caches[Rule.Name], () => Rule.GetMatcher())
+                : new MatchName(Rule.Name, Grammar.Caches[Rule.Name], () => Rule.GetMatcher());
         }
 
         public override string ToString()
         {
             return $"ref {Name}";
+        }
+
+        public override T Accept<T>(IVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

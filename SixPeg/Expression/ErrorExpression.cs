@@ -1,26 +1,26 @@
 ﻿using SixPeg.Matchers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SixPeg.Expression
 {
     public class ErrorExpression : AnyExpression
     {
-        public ErrorExpression(IList<object> arguments)
+        public ErrorExpression(IEnumerable<object> arguments)
         {
-            Code = 11;
-            Arguments = arguments;
+            Arguments = arguments.ToArray();
         }
 
-        public int Code { get; }
-        public IList<object> Arguments { get; }
+        public IReadOnlyList<object> Arguments { get; }
 
         protected override IMatcher MakeMatcher()
         {
-            return new MatchError();
+            return new MatchError(Arguments);
         }
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
+            return visitor.Visit(this);
         }
     }
 }

@@ -7,7 +7,9 @@
         {
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        public override bool IsPredicate => true;
+
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             var start = cursor;
             if (Matcher.Match(subject, ref cursor))

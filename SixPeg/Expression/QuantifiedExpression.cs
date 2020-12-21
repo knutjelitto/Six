@@ -25,9 +25,9 @@ namespace SixPeg.Expression
             };
         }
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
-            Expression.Resolve(Grammar);
+            return visitor.Visit(this);
         }
     }
 }

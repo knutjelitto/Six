@@ -3,6 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+SixPeg/Reports/
+Six.Source/Reports/
+Six.Source/CoreFull/out/
+
+
 # User-specific files
 *.rsuser
 *.suo
@@ -31,8 +36,6 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-Six.Source/Reports/
-Six.Source/CoreFull/out/
  
 
 # Visual Studio 2015/2017 cache/options directory

@@ -1,16 +1,24 @@
 ﻿using Six.Support;
+using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
     public class MatchError : AnyMatcher
     {
-        public MatchError()
+        public MatchError(IReadOnlyList<object> arguments)
         {
+            Arguments = arguments;
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        public IReadOnlyList<object> Arguments { get; }
+
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
-            throw new System.NotImplementedException();
+            var message = string.Join(" ", Arguments);
+
+            new Error(subject).Report(message, furthestSuccess);
+
+            throw new System.NotImplementedException(message);
         }
 
         public override void Write(IWriter writer)

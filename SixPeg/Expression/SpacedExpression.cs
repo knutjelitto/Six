@@ -11,7 +11,7 @@ namespace SixPeg.Expression
         }
 
         public string Text { get; }
-        public AnyExpression Expression { get; private set; }
+        public AnyExpression Expression { get; internal set; }
 
         protected override IMatcher MakeMatcher()
         {
@@ -19,9 +19,9 @@ namespace SixPeg.Expression
             return Expression.GetMatcher();
         }
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
-            Expression = Grammar.AddSpaced(this);
+            return visitor.Visit(this);
         }
     }
 }

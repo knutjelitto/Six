@@ -33,7 +33,7 @@ namespace SixComp
         public int Length => Span.Length;
         public char First => Span.FirstChar;
 
-        public void Error(IWriter writer, string error) => Span.Context.Error.Report(writer, error, this);
+        public void Error(IWriter writer, string error) => Span.Context.Error.Report(writer, error, Span);
 
         public override bool Equals(object? obj) => obj is Token other && other.Kind == Kind;
 

@@ -1,0 +1,55 @@
+﻿// ------------------------------------
+// variable-declaration
+// ------------------------------------
+variable-declaration
+    = variable-declaration-head variable-name type-annotation getter-setter-block
+    / variable-declaration-head variable-name type-annotation getter-setter-keyword-block
+    / variable-declaration-head variable-name type-annotation initializer willSet-didSet-block
+    / variable-declaration-head variable-name type-annotation willSet-didSet-block
+    / variable-declaration-head variable-name initializer willSet-didSet-block
+    / variable-declaration-head pattern-initializer-list
+    / variable-declaration-head #error("variable-declaration")
+
+variable-declaration-head
+    = full-prefix 'var'
+
+variable-name
+    = name
+
+getter-setter-block
+    = '{' getter-clause setter-clause? special-modify-clause? '}'
+    / '{' setter-clause getter-clause  '}'
+    / code-block
+
+getter-clause
+    = mutation-prefix 'get' code-block?
+
+special-modify-clause
+    = mutation-prefix '_modify' code-block?
+
+setter-clause
+    = mutation-prefix 'set' setter-name? code-block?
+
+setter-name
+    = '(' name ')'
+
+getter-setter-keyword-block
+    = '{' getter-keyword-clause setter-keyword-clause? '}'
+    / '{' setter-keyword-clause getter-keyword-clause  '}'
+
+getter-keyword-clause
+    = mutation-prefix 'get'
+
+setter-keyword-clause
+    = mutation-prefix 'set'
+
+willSet-didSet-block
+    = '{' willSet-clause didSet-clause? '}'
+    / '{' didSet-clause willSet-clause? '}'
+
+willSet-clause
+    = attributes? 'willSet' setter-name? code-block
+
+didSet-clause
+    = attributes? 'didSet' setter-name? code-block
+

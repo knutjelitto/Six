@@ -1,0 +1,62 @@
+﻿// ------------------------------------
+// enum-declaration
+// ------------------------------------
+
+enum-declaration
+    = access-prefix union-style-enum
+    / access-prefix raw-value-style-enum
+
+union-style-enum
+    = 'indirect'? 'enum' !more enum-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? union-style-enum-body
+
+union-style-enum-body
+    = '{' union-style-enum-member* '}'
+
+union-style-enum-member
+    = union-style-enum-case-clause
+    / declaration
+    / compiler-control-statement
+
+union-style-enum-case-clause
+    = attributes? 'indirect'? 'case' !more union-style-enum-case-list
+
+union-style-enum-case-list
+    = union-style-enum-case (',' union-style-enum-case)*
+
+union-style-enum-case
+    = enum-case-name enum-tuple-type?
+
+raw-value-style-enum
+    = 'enum' !more enum-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? raw-value-style-enum-body
+
+raw-value-style-enum-body
+    = '{' raw-value-style-enum-member+ '}'
+
+raw-value-style-enum-member
+    = raw-value-style-enum-case-clause
+    / declaration
+    / compiler-control-statement
+
+raw-value-style-enum-case-clause
+    = attributes? 'case' !more raw-value-style-enum-case-list
+
+raw-value-style-enum-case-list
+    = raw-value-style-enum-case (',' raw-value-style-enum-case)*
+
+raw-value-style-enum-case
+    = enum-case-name raw-value-assignment?
+
+raw-value-assignment
+    = '=' raw-value-literal
+
+raw-value-literal
+    = numeric-literal
+    / static-string-literal
+    / boolean-literal
+
+enum-name
+    = name
+
+enum-case-name
+    = name
+

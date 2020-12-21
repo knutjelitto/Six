@@ -1,0 +1,14 @@
+﻿// ------------------------------------
+// 'if' statement
+// ------------------------------------
+
+if-statement
+    = 'if' condition-list code-block else-clause?
+    / 'if' condition-list #error("if-statement - code-block")
+    / 'if' #error("if-statement - condition-list")
+
+else-clause
+    = 'else' code-block
+    / 'else' if-statement
+    / &'else' #error("else-clause")
+

@@ -1,0 +1,22 @@
+﻿// ------------------------------------
+// tuple-type
+// ------------------------------------
+tuple-type
+    = '(' ')'
+    / '(' tuple-type-element-list ')'
+
+tuple-type-element-list
+    = tuple-type-element (',' tuple-type-element)+
+    / tuple-type-element ',' #error("tuple-type-element-list - tuple-type-element")
+
+tuple-type-element
+    = element-name type-annotation
+    / type
+
+element-name
+    = name
+
+enum-tuple-type
+    = tuple-type
+    / '(' tuple-type-element ')'
+

@@ -1,0 +1,110 @@
+﻿// ====================================
+// == TYPE
+// ====================================
+
+type
+    = primary-type type-postfix*
+
+primary-type
+    = protocol-composition-type
+    / type-identifier
+    / function-type
+    / array-type
+    / dictionary-type
+    / any-type
+    / self-type
+    / opaque-type
+    / tuple-type
+    / '(' type ')'
+
+type-postfix
+    = type-optional
+    / type-unwrap
+    / type-metatype
+
+type-optional
+    = [?]
+
+type-unwrap
+    = [!]
+
+type-metatype
+    = '.' ('Type' !more / 'Protocol' !more)
+
+// ------------------------------------
+// function-type
+// ------------------------------------
+function-type
+    = attributes? function-type-argument-clause 'throws'? '->' type
+
+function-type-argument-clause
+    = '(' ')'
+    / '(' function-type-argument-list '...'? ')'
+
+function-type-argument-list
+    = function-type-argument (',' function-type-argument)*
+
+function-type-argument
+    = name argument-label type-annotation
+    / argument-label type-annotation
+    / attributes? 'inout'? type
+
+argument-label
+    = name
+
+// ------------------------------------
+// array-type
+// ------------------------------------
+array-type
+    = '[' type ']'
+
+// ------------------------------------
+// dictionary-type
+// ------------------------------------
+dictionary-type
+    = '[' type ':' type ']'
+
+// ------------------------------------
+// type-identifier
+// ------------------------------------
+type-identifier
+    = type-identifier-part ('.' type-identifier-part)*
+
+type-identifier-part
+    = type-name generic-argument-clause?
+
+// ------------------------------------
+// protocol-composition-type
+// ------------------------------------
+protocol-composition-type
+    = type-identifier ('&' !operator-character type-identifier)+
+
+// ------------------------------------
+// opaque-type
+// ------------------------------------
+opaque-type
+    = 'some' !more type
+
+// ------------------------------------
+// any-type
+// ------------------------------------
+any-type
+    = 'Any' !more
+
+// ------------------------------------
+// self-type
+// ------------------------------------
+self-type
+    = 'Self' !more
+    
+// ------------------------------------
+
+type-name
+    = name
+
+type-inheritance-clause
+    = ':' type-inheritance-list
+
+type-inheritance-list
+    = type-identifier (',' type-identifier)*
+

@@ -1,0 +1,14 @@
+﻿// ------------------------------------
+// typealias-declaration
+// ------------------------------------
+
+typealias-declaration
+    = access-prefix 'typealias' typealias-name generic-parameter-clause? typealias-assignment generic-where-clause?
+    / access-prefix 'typealias' #error("typealias-declaration")
+
+typealias-name
+    = name
+
+typealias-assignment
+    = '=' type
+

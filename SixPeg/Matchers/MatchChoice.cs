@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SixPeg.Matchers
 {
@@ -9,7 +10,9 @@ namespace SixPeg.Matchers
         {
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        public override bool IsClassy => Matchers.All(m => m.IsClassy);
+
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             var start = cursor;
             foreach (var matcher in Matchers)

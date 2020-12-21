@@ -12,30 +12,31 @@ namespace SixPeg.Matchers
 
         public static IMatcher From(IEnumerable<IMatcher> ms)
         {
-            var mss = ms.ToList();
+            var matchers = ms.ToList();
 
-            if (mss.Count == 0)
+            if (matchers.Count == 0)
             {
                 return new MatchEpsilon();
             }
-            if (mss.Count == 1)
+            if (matchers.Count == 1)
             {
-                return mss[0];
+                return matchers[0];
             }
 
-            var first = mss.First();
+            var first = matchers.First();
 
-            if (first is MatchName name && name.Name.Text == "_")
+            if (first is MatchSpace space)
             {
-                var rest = From(mss.Skip(1));
-                rest.Space = name.Matcher;
+                var rest = From(matchers.Skip(1));
+                //Debug.Assert(!rest.IsPredicate);
+                rest.Space = space.Matcher;
                 return rest;
             }
 
-            return new MatchSequence(mss);
+            return new MatchSequence(matchers);
         }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
             var start = cursor;
             foreach (var matcher in Matchers)

@@ -1,0 +1,44 @@
+﻿// ------------------------------------
+// protocol-declaration
+// ------------------------------------
+protocol-declaration
+    = access-prefix 'protocol' protocol-name type-inheritance-clause? generic-where-clause? protocol-body
+
+protocol-name
+    = name
+
+protocol-body
+    = '{' protocol-members? '}'
+    / '{' #error("protocol-body")
+
+protocol-members
+    = protocol-member+
+
+protocol-member
+    = protocol-member-declaration
+    / compiler-control-statement
+
+protocol-member-declaration
+    = protocol-property-declaration
+    / protocol-method-declaration
+    / protocol-initializer-declaration
+    / protocol-subscript-declaration
+    / protocol-associated-type-declaration
+    / typealias-declaration
+
+protocol-property-declaration
+    = variable-declaration-head variable-name type-annotation getter-setter-keyword-block
+
+protocol-method-declaration
+    = function-head function-name generic-parameter-clause? function-signature generic-where-clause?
+
+protocol-initializer-declaration
+    = initializer-head generic-parameter-clause? parameter-clause maythrow? generic-where-clause?
+
+protocol-subscript-declaration
+    = subscript-head subscript-result generic-where-clause? getter-setter-keyword-block
+
+protocol-associated-type-declaration
+    = access-prefix 'override'? 'associatedtype' typealias-name type-inheritance-clause? typealias-assignment? generic-where-clause?
+
+

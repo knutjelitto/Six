@@ -1,20 +1,27 @@
-@namespace SixPeg.Parser
+@namespace SixPeg
 @classname SixParser
 @using System.Globalization
 @using System.Linq
 @using System.Text.RegularExpressions
 @using SixPeg.Expression
 
-grammar <GrammarExpression>
-    = rules:rule* EOF                       { new GrammarExpression(rules) }
+grammar <IEnumerable<RuleExpression>>
+    = rules:rule* EOF                       { rules }
 
 rulePreamble
     = equals
 
 rule <RuleExpression>
-    = name:ruleName equals expression:expression semicolon? { new RuleExpression(name, expression) }
+    = name:ruleName names:ruleParameters equals expression:expression semicolon? { new RuleExpression(name, names, expression) }
 
 ruleName
+    = identifier
+
+ruleParameters <IEnumerable<Symbol>>
+    = lparen names:ruleParameterName+ rparen    { names }
+    /                                           { Enumerable.Empty<Symbol>() }
+
+ruleParameterName <Symbol>
     = identifier
 
 expression <AnyExpression>
@@ -31,12 +38,19 @@ element <AnyExpression> -memoize
     / error
 
 prefixed <AnyExpression>
-    = and e:suffix                          { new AndExpression(e) }
-    / not e:suffix                          { new NotExpression(e) }
-    / suffix
+    = and e:suffixed                        { new AndExpression(e) }
+    / not e:suffixed                        { new NotExpression(e) }
+    / before e:suffixed                     { new BeforeExpression(e) }
+    / suffixed
 
-suffix <AnyExpression>
+suffixed <AnyExpression>
     = expression:primary q:quantifier       { new QuantifiedExpression(expression, q) }
+    / expression:primary                    { expression }
+
+quantifier <Quantifier> -memoize
+    = question                              { new Quantifier(min: 0, max: 1) }
+    / star                                  { new Quantifier(min: 0, max: null) }
+    / plus                                  { new Quantifier(min: 1, max: null) }
 
 primary <AnyExpression> -memoize
     = name:ruleName !(rulePreamble)         { new ReferenceExpression(name) }
@@ -45,12 +59,6 @@ primary <AnyExpression> -memoize
     / class
     / dot                                   { new WildcardExpression() }
     / lparen expression:expression rparen   { expression }
-
-quantifier <Quantifier> -memoize
-    = question                              { new Quantifier(min: 0, max: 1) }
-    / star                                  { new Quantifier(min: 0, max: null) }
-    / plus                                  { new Quantifier(min: 1, max: null) }
-    /                                       { new Quantifier(min: 1, max: 1)}
 
 any_literal <object>
     = stringLiteral
@@ -70,6 +78,7 @@ semicolon -lexical = _ ";"
 slash     -lexical = _ "/"
 and       -lexical = _ "&"
 not       -lexical = _ "!"
+before    -lexical = _ "<"
 question  -lexical = _ "?"
 star      -lexical = _ "*"
 plus      -lexical = _ "+"
@@ -81,12 +90,9 @@ comma     -lexical = _ ","
 lbracket  -lexical = "["
 rbracket  -lexical = "]"
 
-//identifierX <Identifier> -memoize -lexical
-//    = _ name:(!digit (letter / digit / "_" / "$")+) { new Identifier(name) }
-
-identifier <Identifier> -memoize -lexical
-    = _ name:(identifier_head identifier_tail*) { new Identifier(name) }
-    / _ name:'_'  { new Identifier(name) }
+identifier <Symbol> -memoize -lexical
+    = _ name:(identifier_head identifier_tail*) { new Symbol(name) }
+    / _ name:'_'  { new Symbol(name) }
 
 identifier_head
     = _ start:(letter (letter / digit)*) { start }
@@ -102,7 +108,7 @@ singleQuotedCharacter
   = !("'" / eolChar) .
 
 stringLiteral <AnyExpression> -lexical
-  = value:string                                { new StringExpression(value) }
+  = value:string                                { new CharacterSequenceExpression(value) }
 
 string -lexical
   = _ string:doubleQuotedString { @string }
@@ -126,17 +132,17 @@ class <AnyExpression> -lexical
         inverted:"^"? parts:(classCharacterRange / classCharacter)*
         (rbracket / #error{ "PEG0010:" + Resources.PEG0010_ERROR_PARSER_UnterminatedClass })
         {
-            new ClassExpression(parts, negated: inverted.SingleOrDefault() == "^")
+            new CharacterClassExpression(parts, negated: inverted.SingleOrDefault() == "^")
         }
 
-classCharacterRange <CharacterRange>
+classCharacterRange <CharacterRangeExpression>
   = begin:bracketDelimitedCharacter "-" end:bracketDelimitedCharacter {
-        new CharacterRange(begin[0], end[0])
+        new CharacterRangeExpression(begin[0], end[0])
     }
 
-classCharacter <CharacterRange>
+classCharacter <CharacterRangeExpression>
   = char_:bracketDelimitedCharacter {
-        new CharacterRange(char_[0], char_[0])
+        new CharacterRangeExpression(char_[0], char_[0])
     }
 
 bracketDelimitedCharacter -memoize
@@ -151,8 +157,8 @@ simpleBracketDelimitedCharacter
   = !("]" / "\\" / eolChar) .
 
 simpleEscapeSequence
-  = "\\" !(digit / "x" / "u" / eolChar) char:. {
-        @char
+  = "\\" !(digit / "x" / "u" / eolChar) character:. {
+        character
             .Replace("b", "\b")
             .Replace("f", "\f")
             .Replace("n", "\n")

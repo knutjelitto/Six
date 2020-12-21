@@ -1,0 +1,5 @@
+﻿while-statement
+    = 'while' condition-list code-block
+    / 'while' condition-list #error("while-statement-1")
+    / 'while' #error("while-statement-2")
+

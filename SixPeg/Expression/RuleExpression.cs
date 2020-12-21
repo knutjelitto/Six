@@ -1,17 +1,21 @@
 ﻿using SixPeg.Matchers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SixPeg.Expression
 {
     public class RuleExpression : AnyExpression
     {
-        public RuleExpression(Identifier name, AnyExpression expression)
+        public RuleExpression(Symbol name, IEnumerable<Symbol> flags, AnyExpression expression)
         {
             Name = name;
+            Flags = flags.ToArray();
             Expression = expression;
             Used = false;
         }
 
-        public Identifier Name { get; }
+        public Symbol Name { get; }
+        public IReadOnlyList<Symbol> Flags { get; }
         public AnyExpression Expression { get; }
         public bool Used { get; set; }
 
@@ -20,9 +24,9 @@ namespace SixPeg.Expression
             return Expression.GetMatcher();
         }
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
-            Expression.Resolve(Grammar);
+            return visitor.Visit(this);
         }
 
         public override string ToString()

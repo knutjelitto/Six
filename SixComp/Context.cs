@@ -10,18 +10,17 @@ namespace SixComp
             File = file;
             Temp = temp;
             Source = new Source(file.FullName, content);
-            Index = new SourceIndex(Source);
             Tokens = new Tokens(this);
             Lexer = new Lexer(this);
             Parser = new Parser(this);
-            Error = new Error(this);
+            Error = new Error(Source);
         }
 
         public FileInfo File { get; }
         public DirectoryInfo Temp { get; }
 
         public Source Source { get; }
-        public SourceIndex Index { get; }
+        public SourceIndex Index => Source.Index;
         public Lexer Lexer { get; }
         public Tokens Tokens { get; }
         public Parser Parser { get; }

@@ -1,0 +1,71 @@
+﻿// ====================================
+// == DECLARATION
+// ====================================
+
+declaration
+    = import-declaration
+    / constant-declaration
+    / variable-declaration
+    / typealias-declaration
+    / function-declaration
+    / enum-declaration
+    / struct-declaration
+    / class-declaration
+    / protocol-declaration
+    / initializer-declaration
+    / deinitializer-declaration
+    / extension-declaration
+    / subscript-declaration
+    / operator-declaration
+    / precedence-group-declaration
+
+
+// ------------------------------------
+// import-declaration
+// ------------------------------------
+import-declaration
+    = attributes? 'import' import-kind? import-path
+
+import-kind
+    = 'typealias' / 'struct' / 'class' / 'enum' / 'protocol' / 'let' / 'var' / 'func'
+
+import-path
+    = import-path-identifier ('.' import-path-identifier)*
+
+import-path-identifier
+    = name
+    / operator
+
+
+// ------------------------------------
+// class-declaration
+// ------------------------------------
+class-declaration
+    = class-head class-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? class-body
+
+class-head
+    = attributes? access-level-modifier? 'final'? 'class'
+    / attributes? 'final' access-level-modifier? 'class'
+
+class-name
+    = name
+
+class-body
+    = '{' class-members? '}'
+
+class-members
+    = class-member+
+
+class-member
+    = declaration
+    / compiler-control-statement
+
+
+// ------------------------------------
+// deinitializer-declaration
+// ------------------------------------
+deinitializer-declaration
+    = attributes? 'deinit' code-block
+
+
+

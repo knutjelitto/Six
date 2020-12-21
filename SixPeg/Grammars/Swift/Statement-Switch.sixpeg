@@ -1,0 +1,49 @@
+﻿// ------------------------------------
+// 'switch' statement
+// ------------------------------------
+
+switch-statement
+    = 'switch' expression switch-body
+
+switch-body
+    = '{' '}'
+    / '{' switch-cases '}'
+    / '{' #error("switch-body")
+
+switch-cases
+    = switch-case+
+
+switch-case
+    = case-label statements
+    / default-label statements
+    / conditional-switch-case
+
+case-label
+    = attributes? 'case' case-item-list ':'
+    / attributes? 'case' #error("case-label")
+
+case-item-list
+    = case-item (',' case-item)* &':'
+    / case-item (',' case-item)+ !':' #error("case-item-list")
+    / case-item #error("case-item-list: expected `,`")
+
+case-item
+    = pattern where-clause?
+
+default-label
+    = attributes? 'default' ':'
+
+conditional-switch-case
+    = switch-if-directive-clause switch-elseif-directive-clauses? switch-else-directive-clause? endif-directive
+
+switch-if-directive-clause
+    = if-directive compilation-condition switch-cases?
+
+switch-elseif-directive-clauses
+    = elseif-directive-clause switch-elseif-directive-clauses?
+
+switch-elseif-directive-clause
+    = elseif-directive compilation-condition switch-cases?
+
+switch-else-directive-clause
+    = else-directive switch-cases?

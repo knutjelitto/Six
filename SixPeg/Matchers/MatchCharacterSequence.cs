@@ -1,5 +1,6 @@
 ﻿using Six.Support;
 using System;
+using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
@@ -7,14 +8,15 @@ namespace SixPeg.Matchers
     {
         public MatchCharacterSequence(string text)
         {
+            Debug.Assert(text.Length >= 2);
             Text = text;
         }
 
         public string Text { get; }
 
-        protected override bool InnerMatch(string subject, ref int cursor)
+        protected override bool InnerMatch(Context subject, ref int cursor)
         {
-            if (cursor + Text.Length <= subject.Length && MemoryExtensions.Equals(Text.AsSpan(), subject.AsSpan(cursor, Text.Length), StringComparison.Ordinal))
+            if (cursor + Text.Length <= subject.Length && MemoryExtensions.Equals(Text.AsSpan(), subject.Text.AsSpan(cursor, Text.Length), StringComparison.Ordinal))
             {
                 cursor += Text.Length;
                 return true;
@@ -25,9 +27,9 @@ namespace SixPeg.Matchers
 
         public override void Write(IWriter writer)
         {
-            writer.WriteLine($"{SpacePrefix}match \"{Text}\"");
+            writer.WriteLine($"{SpacePrefix}match \"{Text.Escape()}\"");
         }
 
-        public override string DShort => $"string(\"{Text}\")";
+        public override string DDShort => $"string(\"{Text.Escape()}\")";
     }
 }

@@ -20,8 +20,8 @@ namespace SixComp
         public Source Source => Context.Source;
         public int Length => End - Start;
         public bool HasSpacing => Before < Start;
-        public bool IsDollar => End > Start && Source.Content[Start] == '$';
-        public char FirstChar => Source.Content[Start];
+        public bool IsDollar => End > Start && Source.Text[Start] == '$';
+        public char FirstChar => Source.Text[Start];
 
         public override string ToString()
         {

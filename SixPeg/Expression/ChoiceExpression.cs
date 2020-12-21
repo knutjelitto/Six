@@ -4,25 +4,20 @@ using System.Linq;
 
 namespace SixPeg.Expression
 {
-    public class ChoiceExpression : AnyExpression
+    public class ChoiceExpression : AnyExpressions
     {
         public ChoiceExpression(IList<AnyExpression> expressions)
+            : base(expressions)
         {
-            Expressions = expressions;
         }
-
-        public IList<AnyExpression> Expressions { get; }
 
         protected override IMatcher MakeMatcher() => Expressions.Count == 1
                 ? Expressions[0].GetMatcher()
                 : new MatchChoice(Expressions.Select(e => e.GetMatcher()));
 
-        protected override void InnerResolve()
+        public override T Accept<T>(IVisitor<T> visitor)
         {
-            foreach (var expression in Expressions)
-            {
-                _ = expression.Resolve(Grammar);
-            }
+            return visitor.Visit(this);
         }
     }
 }
