@@ -58,7 +58,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Grammars\Go\" />
     <Folder Include="Reports\" />
     <Folder Include="Support\" />
   </ItemGroup>

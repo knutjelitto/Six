@@ -42,7 +42,14 @@ namespace SixPeg
 
         public List<string> AllTestFiles()
         {
-            return Navi.SixCoreFull.EnumerateFiles("*.swift").Where(f => !f.Name.StartsWith('_')).Select(f => f.FullName).ToList();
+            return Navi.SwiftCoreFull.EnumerateFiles("*.swift").Where(f => !f.Name.StartsWith('_')).Select(f => f.FullName).ToList();
+        }
+
+        public IEnumerable<string> ManyGoFiles()
+        {
+            var go = new DirectoryInfo(Path.Combine(Navi.Projects.FullName, "Languages", "go", "go", "src"));
+
+            return go.EnumerateFiles("*.go", SearchOption.AllDirectories).Select(f => f.FullName);
         }
 
         public GrammarExpression CreateGrammar()
@@ -72,7 +79,9 @@ namespace SixPeg
 
             var grammar = new GrammarExpression(rules.ToList());
 
-            using var writer = new FileWriter("../../../Reports/Matchers.txt");
+            var tempFolder = Navi.TempFor(Navi.Project).FullName;
+
+            using var writer = new FileWriter($"{tempFolder}/Matchers.txt");
 
             new ResolveVisitor(grammar, writer).Resolve();
 
@@ -94,11 +103,16 @@ namespace SixPeg
                 {
                     grammar.Clear();
                     ok = grammar.GetMatcher().Match(subject, ref cursor);
+
+                    if (!ok)
+                    {
+                        new Error(subject).Report("parse failed", cursor);
+                    }
                 }
                 catch
                 {
                     ok = false;
-                }
+                }   
 
                 if (!ok)
                 {

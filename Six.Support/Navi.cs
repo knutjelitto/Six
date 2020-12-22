@@ -5,32 +5,37 @@ namespace Six.Support
 {
     public class Navi
     {
-        protected Navi(DirectoryInfo root, DirectoryInfo project)
+        protected Navi(DirectoryInfo project)
         {
-            Workspace = root;
             Project = project;
-            Temp = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Reports"));
-            SixCore = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Core"));
-            SixCoreFull = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "CoreFull"));
-            SixTests = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Tests"));
+
+            Temp = new DirectoryInfo(Path.Combine(Projects.FullName, "Temp"));
+
+            SwiftCore = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Swift", "Core"));
+            SwiftCoreFull = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Swift", "CoreFull"));
+            SwiftTests = new DirectoryInfo(Path.Combine(Workspace.FullName, "Six.Source", "Swift", "Tests"));
         }
-        protected Navi(string root, string project) : this(new DirectoryInfo(root), new DirectoryInfo(project)) { }
+        protected Navi(string project) : this(new DirectoryInfo(project)) { }
 
-        public Navi() : this("../../../..", "../../..") { }
+        public Navi() : this("../../..") { }
 
-        public DirectoryInfo Workspace { get; }
         public DirectoryInfo Project { get; }
+
+        public DirectoryInfo Workspace => Project.Parent;
+        public DirectoryInfo Projects => Workspace.Parent;
         public DirectoryInfo Temp { get; }
-        public DirectoryInfo SixCore { get; }
-        public DirectoryInfo SixCoreFull { get; }
-        public DirectoryInfo SixTests { get; }
+        public DirectoryInfo SwiftCore { get; }
+        public DirectoryInfo SwiftCoreFull { get; }
+        public DirectoryInfo SwiftTests { get; }
 
 
         public DirectoryInfo TempFor(DirectoryInfo work)
         {
-            if (work.FullName.StartsWith(Workspace.FullName))
+            if (work.FullName.StartsWith(Projects.FullName))
             {
-                return new DirectoryInfo(Path.Combine(Temp.FullName, work.FullName[(Workspace.FullName.Length + 1)..]));
+                var directory = new DirectoryInfo(Path.Combine(Temp.FullName, work.FullName[(Projects.FullName.Length + 1)..]));
+                directory.Create();
+                return directory;
             }
             throw new ArgumentOutOfRangeException(nameof(work));
         }

@@ -16,6 +16,7 @@ rule <RuleExpression>
 
 ruleName
     = identifier
+    / spacedName
 
 ruleParameters <IEnumerable<Symbol>>
     = lparen names:ruleParameterName+ rparen    { names }
@@ -53,9 +54,9 @@ quantifier <Quantifier> -memoize
     / plus                                  { new Quantifier(min: 1, max: null) }
 
 primary <AnyExpression> -memoize
-    = name:ruleName !(rulePreamble)         { new ReferenceExpression(name) }
+    = name:identifier !(rulePreamble)       { new ReferenceExpression(name) }
+    / spaced:spacedName !(rulePreamble)     { new SpacedExpression(spaced) }
     / stringLiteral
-    / spacedLiteral
     / class
     / dot                                   { new WildcardExpression() }
     / lparen expression:expression rparen   { expression }
@@ -92,17 +93,17 @@ rbracket  -lexical = "]"
 
 identifier <Symbol> -memoize -lexical
     = _ name:(identifier_head identifier_tail*) { new Symbol(name) }
-    / _ name:'_'  { new Symbol(name) }
+    / _ name:'_'  { new Symbol(name, false) }
 
 identifier_head
     = _ start:(letter (letter / digit)*) { start }
 
 identifier_tail
-    = tail:('-' (letter / digit)+) { tail }
+    = tail:(('-'/'_') (letter / digit)+) { tail }
 
-spacedLiteral <SpacedExpression> -memoize -lexical
+spacedName <Symbol> -memoize -lexical
     = _ "'" chars:singleQuotedCharacter* ("'" / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })
-    { new SpacedExpression(string.Concat(chars)) }
+    { new Symbol(string.Join("", chars), true) }
 
 singleQuotedCharacter
   = !("'" / eolChar) .

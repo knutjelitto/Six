@@ -5,12 +5,12 @@ namespace SixPeg.Expression
 {
     public class SpacedExpression : AnyExpression
     {
-        public SpacedExpression(string text)
+        public SpacedExpression(Symbol name)
         {
-            Text = text;
+            Name = name;
         }
 
-        public string Text { get; }
+        public Symbol Name { get; }
         public AnyExpression Expression { get; internal set; }
 
         protected override IMatcher MakeMatcher()

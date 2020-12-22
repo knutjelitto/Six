@@ -1,0 +1,30 @@
+﻿SourceFile
+    = PackageClause ';?' (ImportDecl ';?')* (TopLevelDecl ';?')* EOF
+    / PackageClause #error("expected `;`")
+
+PackageClause
+    = 'package' PackageName
+
+PackageName
+    = identifier
+
+ImportDecl
+    = 'import' ( ImportSpec / '(' (ImportSpec ';?')* ')' )
+
+ImportSpec
+    = ('.' / PackageName)? ImportPath
+
+ImportPath
+    = _ string_lit
+
+EOF
+    = _ !.
+    / #error("EOF")
+
+_
+    = whitespace*
+
+// imaginary ';' (maybe ';')
+';?' = _ [;]
+    / single-whitespace* (line-break / comment)
+    / _ &[)}]

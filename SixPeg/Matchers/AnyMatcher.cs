@@ -29,8 +29,11 @@ namespace SixPeg.Matchers
         {
             var start = cursor;
             ConsumeSpace(subject, ref cursor);
-            //Debug.Assert(!IsPredicate || cursor == start);
             var match = InnerMatch(subject, ref cursor);
+            if (!match)
+            {
+                cursor = start;
+            }
 
             if (cursor > furthestCursor)
             {

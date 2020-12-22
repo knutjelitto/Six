@@ -1,0 +1,190 @@
+﻿// ------------------------------------
+// expression
+// ------------------------------------
+
+Expression
+	= PrefixExpr (binary_op Expression)*
+
+Expression2
+	= PrefixExpr2 (binary_op Expression2)*
+
+ExpressionList
+	= Expression (',' Expression)*
+	/ Expression ',' !')' #error("expression list: bad expression")
+
+PrefixExpr
+	= prefix_op PrefixExpr
+	/ PostfixExpr
+
+PrefixExpr2
+	= prefix_op PrefixExpr2
+	/ PostfixExpr2
+
+binary_op
+	= '||'
+	/ '&&'
+	/ rel_op
+	/ add_op
+	/ mul_op
+
+rel_op
+	= '=='
+	/ '!='
+	/ '<='
+	/ '<' ![<-]
+	/ '>='
+	/ '>' ![>]
+
+add_op
+	= '+' ![+]
+	/ '-' ![-]
+	/ '|'
+	/ '^'
+
+mul_op
+	= '*'
+	/ '/'
+	/ '%'
+	/ '<<'
+	/ '>>'
+	/ '&^'
+	/ '&'
+
+prefix_op
+	= '+'
+	/ '-'
+	/ '!'
+	/ '^'
+	/ '*'
+	/ '&'
+	/ '<-'
+
+// ------------------------------------
+// primary-expression
+// ------------------------------------
+PostfixExpr
+	= PrimaryExpr Postfix*
+
+PostfixExpr2
+	= PrimaryExpr2 Postfix*
+
+PrimaryExpr
+	= Operand
+	/ Conversion
+	/ MethodExpr
+
+PrimaryExpr2
+	= Operand2
+	/ Conversion
+	/ MethodExpr
+
+Postfix
+	= !('.' '(' 'type' ')') Selector
+	/ Index
+	/ Slice
+	/ TypeAssertion
+	/ Arguments
+
+Selector
+	= '.' identifier
+
+Index
+	= '[' Expression ']'
+
+Slice
+	= '[' Expression? ':' Expression? ']'
+	/ '[' Expression? ':' Expression ':' Expression ']'
+
+TypeAssertion
+	= '.' '(' !('type' !more) Type ')'
+
+Arguments
+	= '(' ( (ExpressionList / Type (',' ExpressionList)? ) '...'? ','? )?')'
+	/ '(' #error("function call arguments")
+
+// ------------------------------------
+// operand
+// ------------------------------------
+Operand
+	= BasicLit
+	/ FunctionLit
+	/ CompositeLit
+	/ OperandName
+	/ '(' Expression ')'
+
+Operand2
+	= BasicLit
+	/ FunctionLit
+	/ OperandName
+	/ '(' Expression ')'
+
+Literal
+	= BasicLit
+	/ FunctionLit
+	/ CompositeLit
+
+BasicLit
+	= _ float_lit
+	/ _ int_lit
+	/ _ imaginary_lit
+	/ _ rune_lit
+	/ _ string_lit
+
+OperandName
+	= identifier
+	/ QualifiedIdent
+
+QualifiedIdent
+	= PackageName '.' identifier
+
+CompositeLit
+	= LiteralType LiteralValue
+
+LiteralType
+	= StructType
+	/ ArrayType
+	/ '[' '...' ']' ElementType
+	/ SliceType
+	/ MapType
+	/ TypeName
+
+LiteralValue
+	= '{' (ElementList ','?)? '}'
+
+ElementList
+	= KeyedElement (',' KeyedElement)*
+
+KeyedElement
+	= (Key ':')? Element
+
+Key
+	= FieldName
+	/ Expression
+	/ LiteralValue
+
+FieldName
+	= identifier
+
+Element
+	= Expression
+	/ LiteralValue
+
+FunctionLit
+	= 'func' !more Signature FunctionBody
+	/ 'func' !more Signature #error("function literal: bad function body")
+	/ 'func' !more #error("function literal: bad signature")
+
+// ------------------------------------
+// conversion
+// ------------------------------------
+Conversion
+	= Type '(' Expression ','? ')'
+
+// ------------------------------------
+// method-expression
+// ------------------------------------
+MethodExpr
+	= ReceiverType '.' MethodName
+
+ReceiverType
+	= Type

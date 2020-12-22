@@ -1,5 +1,4 @@
 ﻿using Six.Support;
-using System.IO;
 
 namespace SixComp
 {

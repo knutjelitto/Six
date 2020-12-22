@@ -25,7 +25,7 @@ namespace SixPeg.Matchers
 
         protected override bool InnerMatch(Context subject, ref int cursor)
         {
-            if (Name.Text == "expression")
+            if (Name.Text == "TypeSwitchGuard")
             {
                 new Error(subject).Report($"{Name.Text}", cursor);
                 Debug.Assert(true);

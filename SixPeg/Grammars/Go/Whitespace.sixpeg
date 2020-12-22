@@ -1,0 +1,43 @@
+﻿whitespace
+    = whitespace-item
+
+whitespace-item
+    = line-break
+    / single-whitespace
+    / comment
+    / multiline-comment
+    / [\u0000]
+    / [\u000B]
+    / [\u000C]
+
+single-whitespace
+    = [\u0009] 
+    / [\u0020]
+
+line-break
+	= [\u000A]
+	/ [\u000D][\u000A]
+	/ [\u000D]
+
+line-break-character
+	= [\u000A]
+	/ [\u000D]
+
+comment
+    = [/][/] comment-text line-break
+    / [/][/] #error("comment")
+
+comment-text
+    = comment-text-item*
+
+comment-text-item
+    = !line-break-character .
+
+multiline-comment
+    = [/][*] multiline-comment-text [*][/]
+
+multiline-comment-text
+    = multiline-comment-text-item*
+
+multiline-comment-text-item
+    = !( [*][/] ) .

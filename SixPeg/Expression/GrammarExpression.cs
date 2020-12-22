@@ -77,11 +77,11 @@ namespace SixPeg.Expression
 
         public AnyExpression AddSpaced(SpacedExpression spaced)
         {
-            var identifier = new Symbol($"'{spaced.Text}'");
+            var identifier = spaced.Name;
 
             if (!Indexed.TryGetValue(identifier, out var _))
             {
-                var expression = new CharacterSequenceExpression(spaced.Text) { Spaced = true };
+                var expression = new CharacterSequenceExpression(spaced.Name.Text[1..^1]) { Spaced = true };
                 var rule = new RuleExpression(identifier, Enumerable.Empty<Symbol>(), expression);
                 Indexed.Add(identifier, rule);
                 Rules.Add(rule);

@@ -1,0 +1,132 @@
+﻿// ------------------------------------
+// type
+// ------------------------------------
+
+Type
+	= TypeLit
+	/ TypeName
+	/ '(' Type ')'
+
+TypeName
+	= QualifiedIdent
+	/ !('chan' !more) identifier 
+
+TypeLit
+	= ArrayType
+	/ StructType
+	/ PointerType
+	/ FunctionType
+	/ InterfaceType
+	/ SliceType
+	/ MapType
+	/ ChannelType
+
+// ------------------------------------
+// helpers
+// ------------------------------------
+TypeList
+	= Type (',' Type)*
+
+ElementType
+	= Type
+
+// ------------------------------------
+// array-type
+// ------------------------------------
+ArrayType
+	= '[' ArrayLength ']' ElementType
+
+ArrayLength
+	= Expression
+
+
+// ------------------------------------
+// struct-type
+// ------------------------------------
+StructType
+	= 'struct' '{' (FieldDecl ';?')* '}'
+
+FieldDecl
+	= (IdentifierList Type / EmbeddedField) Tag?
+
+EmbeddedField
+	= '*'? TypeName
+
+Tag = string_lit
+
+// ------------------------------------
+// pointer-type
+// ------------------------------------
+PointerType
+	= '*' BaseType
+
+BaseType
+	= Type
+
+// ------------------------------------
+// function-type
+// ------------------------------------
+FunctionType
+	= 'func' Signature
+
+Signature
+	= Parameters !';?' Result?
+	/ Parameters
+
+Result
+	= Parameters
+	/ Type
+
+Parameters
+	= '(' ')'
+	/ '(' ParameterList ','? ')'
+	/ '(' #error("function parameter: bad parameter list")
+
+ParameterList
+	= ParameterDecl (',' ParameterDecl)*
+
+ParameterDecl
+	= IdentifierList '...' Type 
+	/ IdentifierList Type 
+	/ '...' Type 
+	/ Type 
+
+// ------------------------------------
+// interface-type
+// ------------------------------------
+InterfaceType
+	= 'interface' '{' ( InterfaceMember ';?' )* '}'
+	/ 'interface' '{' #error("interface type: bad interface member")
+	/ 'interface' #error("interface type: bad interface body")
+
+InterfaceMember
+	= MethodName Signature
+	/ TypeName
+	/ identifier
+
+MethodName
+	= identifier
+
+// ------------------------------------
+// slice-type
+// ------------------------------------
+SliceType
+	= '[' ']' ElementType
+
+// ------------------------------------
+// map-type
+// ------------------------------------
+MapType
+	= 'map' '[' KeyType ']' ElementType
+
+KeyType
+	= Type
+
+// ------------------------------------
+// channel-type
+// ------------------------------------
+ChannelType
+	= 'chan' '<-' ElementType
+	/ 'chan' ElementType
+	/ '<-' 'chan' ElementType
+	/ 'chan' #error("channel type: bad element type")

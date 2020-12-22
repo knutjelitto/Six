@@ -1,33 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SixPeg
 {
     internal class Program
     {
-        internal static void Main(string[] args)
+        internal static void Test(Engine engine, IEnumerable<string> testFiles)
         {
-            foreach (var arg in args) { Console.WriteLine($"{arg}"); }
-
-            var engine = new Engine("Swift");
-
             var grammar = engine.CreateGrammar();
-
-
-            //var test = ;
-            var tests = new List<string>
-            {
-                //"../../../../Six.Source/Tests/Literals.swift",
-                "../../../../Six.Source/Tests/ERROR.swift",
-            };
-            tests.AddRange(engine.AllTestFiles());
 
             bool ok = false;
 
             if (grammar != null && !grammar.Error)
             {
-                ok = engine.Test(grammar, tests);
+                ok = engine.Test(grammar, testFiles);
             }
 
             if (ok)
@@ -38,6 +24,43 @@ namespace SixPeg
             {
                 Console.WriteLine("FAIL");
             }
+        }
+
+        internal static void TestSwift()
+        {
+            var engine = new Engine("Swift");
+
+            var tests = new List<string>
+            {
+                //"../../../../Six.Source/Swift/Tests/Literals.swift",
+                "../../../../Six.Source/Swift/Tests/ERROR.swift",
+            };
+            tests.AddRange(engine.AllTestFiles());
+
+            Test(engine, tests);
+        }
+
+
+        internal static void TestGo()
+        {
+            var engine = new Engine("Go");
+
+            var tests = new List<string>
+            {
+                "../../../../Six.Source/Go/Tests/ERROR.go",
+            };
+            tests.AddRange(engine.ManyGoFiles());
+
+            Test(engine, tests);
+        }
+
+
+        internal static void Main(string[] args)
+        {
+            foreach (var arg in args) { Console.WriteLine($"{arg}"); }
+
+            TestGo();
+
             Console.Write("done ... ");
             _ = Console.ReadKey(true);
         }

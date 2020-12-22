@@ -1,0 +1,77 @@
+﻿// ------------------------------------
+// declaration
+// ------------------------------------
+Declaration
+	= ConstDecl
+	/ VarDecl
+	/ TypeDecl
+
+TopLevelDecl
+	= Declaration
+	/ FunctionDecl
+	/ MethodDecl
+
+
+IdentifierList
+	= identifier (',' identifier)*
+
+
+// ------------------------------------
+// const-declaration
+// ------------------------------------
+ConstDecl
+	= 'const' !more ( ConstSpec / '(' (ConstSpec ';?')* ')' )
+
+ConstSpec
+	= IdentifierList ( Type? '=' ExpressionList )?
+
+// ------------------------------------
+// var-declaration
+// ------------------------------------
+VarDecl
+	= 'var' !more ( VarSpec / '(' (VarSpec ';?')* ')' )
+	/ 'var' !more #error("variable-declaration: bad variable-specification")
+
+VarSpec
+	= IdentifierList ( Type ('=' ExpressionList)? / '=' ExpressionList )?
+
+
+// ------------------------------------
+// type-declaration
+// ------------------------------------
+TypeDecl
+	= 'type' !more ( TypeSpec / '(' (TypeSpec ';?')* ')' )
+	/ 'type' !more #error("type declaration: bad type specification")
+
+TypeSpec
+	= AliasDecl
+	/ TypeDef
+
+AliasDecl
+	= identifier '=' Type
+
+TypeDef
+	= identifier Type
+
+// ------------------------------------
+// function-declaration
+// ------------------------------------
+FunctionDecl
+	= 'func' !more FunctionName Signature FunctionBody?
+	/ 'func' !more FunctionName Signature #error("function declaration: bad function body")
+	/ 'func' !more FunctionName #error("function declaration: bad signature")
+
+FunctionName
+	= identifier
+
+FunctionBody
+	= Block
+
+// ------------------------------------
+// method-declaration
+// ------------------------------------
+MethodDecl
+	= 'func' Receiver MethodName Signature FunctionBody
+
+Receiver
+	= Parameters
