@@ -1,156 +1,176 @@
-﻿// ------------------------------------
-// identifier
-// ------------------------------------
+﻿grammar Go
+{
+    rules
+    {
+        // ------------------------------------
+        // integer literal
+        // ------------------------------------
+        int_lit
+            = _ decimal_lit
+            / _ binary_lit
+            / _ octal_lit
+            / _ hex_lit
 
-identifier
-    = !('chan' !more) _ name
+        // ------------------------------------
+        // float literal
+        // ------------------------------------
+        float_lit
+            = _ decimal_float_lit
+            / _ hex_float_lit
 
-name
-    = name-head name-character*
+        // ------------------------------------
+        // imaginary literal
+        // ------------------------------------
+        imaginary_lit
+            = (int_lit / float_lit)[i]
 
-name-head
-    = [a-zA-Z_]
+        // ------------------------------------
+        // rune literal
+        // ------------------------------------
+        rune_lit
+            = _ ['] (unicode_value / byte_value) [']
 
-name-character
-    = name-head
-    / [0-9]
+        // ------------------------------------
+        // string literal
+        // ------------------------------------
+        string_lit
+            = _ raw_string_lit
+            / _ interpreted_string_lit
+    }
+    terminals
+    {
+        // ------------------------------------
+        // identifier
+        // ------------------------------------
 
-more
-    = name-character
+        identifier
+            = !('chan' !more) _ name
 
-// ------------------------------------
-// char / letters / digits
-// ------------------------------------
-unicode_char
-    = !line-break-character .
+        name
+            = name-head name-character*
 
-unicode_letter
-    = [a-zA-Z]
+        name-head
+            = [a-zA-Z_]
 
-unicode_digit
-    = [0-9]
+        name-character
+            = name-head
+            / [0-9]
 
-letter
-    = unicode_letter / [_]
+        more
+            = name-character
 
-decimal_digit
-    = [0-9]
+        // ------------------------------------
+        // char / letters / digits
+        // ------------------------------------
+        unicode_char
+            = !line-break-character .
 
-binary_digit
-    = [01]
+        unicode_letter
+            = [a-zA-Z]
 
-octal_digit
-    = [0-7]
+        unicode_digit
+            = [0-9]
 
-hex_digit
-    = [0-9a-fA-F]
+        letter
+            = unicode_letter / [_]
 
-// ------------------------------------
-// integer literal
-// ------------------------------------
-int_lit
-    = decimal_lit
-    / binary_lit
-    / octal_lit
-    / hex_lit
+        decimal_digit
+            = [0-9]
 
-decimal_lit
-    = [0] ![bBoOxX]
-    / [1-9] ([_]? decimal_digits)?
+        binary_digit
+            = [01]
 
-binary_lit
-    = [0][bB] [_]? binary_digits
+        octal_digit
+            = [0-7]
 
-octal_lit
-    = [0][oO] [_]? octal_digits
+        hex_digit
+            = [0-9a-fA-F]
 
-hex_lit
-    = [0][xX] '_'? hex_digits
 
-decimal_digits
-    = decimal_digit ([_]? decimal_digit)*
+        // ------------------------------------
+        // integer literal
+        // ------------------------------------
+        decimal_lit
+            = [0] ![bBoOxX]
+            / [1-9] ([_]? decimal_digits)?
 
-binary_digits
-    = binary_digit ([_]? binary_digit)*
+        binary_lit
+            = [0][bB] [_]? binary_digits
 
-octal_digits
-    = octal_digit ([_]? octal_digit)*
+        octal_lit
+            = [0][oO] [_]? octal_digits
 
-hex_digits
-    = hex_digit ([_]? hex_digit)*
+        hex_lit
+            = [0][xX] '_'? hex_digits
 
-// ------------------------------------
-// float literal
-// ------------------------------------
-float_lit
-    = decimal_float_lit
-    / hex_float_lit
+        decimal_digits
+            = decimal_digit ([_]? decimal_digit)*
 
-decimal_float_lit
-    = decimal_digits [.] decimal_digits? decimal_exponent?
-    / decimal_digits decimal_exponent
-    / [.] decimal_digits decimal_exponent?
+        binary_digits
+            = binary_digit ([_]? binary_digit)*
 
-decimal_exponent
-    = [eE] [+-]? decimal_digits
+        octal_digits
+            = octal_digit ([_]? octal_digit)*
 
-hex_float_lit
-    = [0][xX] hex_mantissa hex_exponent
+        hex_digits
+            = hex_digit ([_]? hex_digit)*
 
-hex_mantissa
-    = [_]? hex_digits '.' hex_digits?
-    / [_]? hex_digits
-    / [.] hex_digits
+        // ------------------------------------
+        // float literal
+        // ------------------------------------
 
-hex_exponent
-    = [pP] [+-]? decimal_digits
+        decimal_float_lit
+            = decimal_digits [.] decimal_digits? decimal_exponent?
+            / decimal_digits decimal_exponent
+            / [.] decimal_digits decimal_exponent?
 
-// ------------------------------------
-// imaginary literal
-// ------------------------------------
-imaginary_lit
-    = (decimal_digits / int_lit / float_lit)[i]
+        decimal_exponent
+            = [eE] [+-]? decimal_digits
 
-// ------------------------------------
-// rune literal
-// ------------------------------------
-rune_lit
-    = ['] (unicode_value / byte_value) [']
+        hex_float_lit
+            = [0][xX] hex_mantissa hex_exponent
 
-// ------------------------------------
-// string literal
-// ------------------------------------
-string_lit
-    = raw_string_lit
-    / interpreted_string_lit
+        hex_mantissa
+            = [_]? hex_digits '.' hex_digits?
+            / [_]? hex_digits
+            / [.] hex_digits
 
-raw_string_lit
-    = [`] (![`] .)* [`]
+        hex_exponent
+            = [pP] [+-]? decimal_digits
 
-interpreted_string_lit
-    = ["] (!["] (unicode_value / byte_value))* ["]
+        // ------------------------------------
+        // string literal
+        // ------------------------------------
 
-unicode_value
-    = little_u_value
-    / big_u_value
-    / escaped_char
-    / unicode_char
+        raw_string_lit
+            = [`] (![`] .)* [`]
 
-byte_value
-    = octal_byte_value
-    / hex_byte_value
+        interpreted_string_lit
+            = ["] (!["] (unicode_value / byte_value))* ["]
 
-octal_byte_value
-    = [\\] octal_digit octal_digit octal_digit
+        unicode_value
+            = little_u_value
+            / big_u_value
+            / escaped_char
+            / unicode_char
 
-hex_byte_value
-    = [\\][x] hex_digit hex_digit
+        byte_value
+            = octal_byte_value
+            / hex_byte_value
 
-little_u_value
-    = [\\][u] hex_digit hex_digit hex_digit hex_digit
+        octal_byte_value
+            = [\\] octal_digit octal_digit octal_digit
 
-big_u_value
-    = [\\][U] hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit
+        hex_byte_value
+            = [\\][x] hex_digit hex_digit
 
-escaped_char
-    = [\\] ([abfnrtv] / [\\] / ["] / ['])
+        little_u_value
+            = [\\][u] hex_digit hex_digit hex_digit hex_digit
+
+        big_u_value
+            = [\\][U] hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit hex_digit
+
+        escaped_char
+            = [\\] ([abfnrtv] / [\\] / ["] / ['])
+    }
+}

@@ -1,190 +1,162 @@
-﻿// ------------------------------------
-// expression
-// ------------------------------------
+﻿grammar Go
+{
+	rules
+	{
+		// ------------------------------------
+		// expression
+		// ------------------------------------
 
-Expression
-	= PrefixExpr (binary_op Expression)*
+		Expression
+			= PrefixExpr (binary_op Expression)*
 
-Expression2
-	= PrefixExpr2 (binary_op Expression2)*
+		ExpressionList
+			= Expression (',' Expression)*
 
-ExpressionList
-	= Expression (',' Expression)*
-	/ Expression ',' !')' #error("expression list: bad expression")
+		PrefixExpr
+			= prefix_op PrefixExpr
+			/ PostfixExpr
 
-PrefixExpr
-	= prefix_op PrefixExpr
-	/ PostfixExpr
+		// ------------------------------------
+		// primary-expression
+		// ------------------------------------
+		PostfixExpr
+			= PrimaryExpr Postfix*
 
-PrefixExpr2
-	= prefix_op PrefixExpr2
-	/ PostfixExpr2
+		PrimaryExpr
+			= Operand
+			/ Conversion
 
-binary_op
-	= '||'
-	/ '&&'
-	/ rel_op
-	/ add_op
-	/ mul_op
+		Postfix
+			= Selector
+			/ Index
+			/ Slice
+			/ TypeAssertion
+			/ Arguments
 
-rel_op
-	= '=='
-	/ '!='
-	/ '<='
-	/ '<' ![<-]
-	/ '>='
-	/ '>' ![>]
+		Selector
+			= '.' identifier
 
-add_op
-	= '+' ![+]
-	/ '-' ![-]
-	/ '|'
-	/ '^'
+		Index
+			= '[' Expression ']'
 
-mul_op
-	= '*'
-	/ '/'
-	/ '%'
-	/ '<<'
-	/ '>>'
-	/ '&^'
-	/ '&'
+		Slice
+			= '[' Expression? ':' Expression? ']'
+			/ '[' Expression? ':' Expression ':' Expression ']'
 
-prefix_op
-	= '+'
-	/ '-'
-	/ '!'
-	/ '^'
-	/ '*'
-	/ '&'
-	/ '<-'
+		TypeAssertion
+			= '.' '(' !('type' !more) Type ')'
 
-// ------------------------------------
-// primary-expression
-// ------------------------------------
-PostfixExpr
-	= PrimaryExpr Postfix*
+		Arguments
+			= '(' ( (ExpressionList / UType (',' ExpressionList)? ) '...'? ','? )?')'
 
-PostfixExpr2
-	= PrimaryExpr2 Postfix*
+		// ------------------------------------
+		// operand
+		// ------------------------------------
+		Conversion
+			= UType '(' Expression ','? ')'
 
-PrimaryExpr
-	= Operand
-	/ Conversion
-	/ MethodExpr
+		// ------------------------------------
+		// operand
+		// ------------------------------------
+		Operand
+			= BasicLit
+			/ FunctionLit
+			/ CompositeLit
+			/ OperandName
+			/ '(' Expression ')'
 
-PrimaryExpr2
-	= Operand2
-	/ Conversion
-	/ MethodExpr
+		Literal
+			= BasicLit
+			/ FunctionLit
+			/ CompositeLit
 
-Postfix
-	= !('.' '(' 'type' ')') Selector
-	/ Index
-	/ Slice
-	/ TypeAssertion
-	/ Arguments
+		BasicLit
+			= float_lit
+			/ int_lit
+			/ imaginary_lit
+			/ rune_lit
+			/ string_lit
 
-Selector
-	= '.' identifier
+		OperandName
+			= identifier
 
-Index
-	= '[' Expression ']'
+		QualifiedIdent
+			= PackageName '.' identifier
 
-Slice
-	= '[' Expression? ':' Expression? ']'
-	/ '[' Expression? ':' Expression ':' Expression ']'
+		CompositeLit
+			= LiteralType LiteralValue
 
-TypeAssertion
-	= '.' '(' !('type' !more) Type ')'
+		LiteralType
+			= StructType
+			/ ArrayType
+			/ '[' '...' ']' ElementType
+			/ SliceType
+			/ MapType
+			/ TypeName
 
-Arguments
-	= '(' ( (ExpressionList / Type (',' ExpressionList)? ) '...'? ','? )?')'
-	/ '(' #error("function call arguments")
+		LiteralValue
+			= '{' (ElementList ','?)? '}'
 
-// ------------------------------------
-// operand
-// ------------------------------------
-Operand
-	= BasicLit
-	/ FunctionLit
-	/ CompositeLit
-	/ OperandName
-	/ '(' Expression ')'
+		ElementList
+			= KeyedElement (',' KeyedElement)*
 
-Operand2
-	= BasicLit
-	/ FunctionLit
-	/ OperandName
-	/ '(' Expression ')'
+		KeyedElement
+			= (Key ':')? Element
 
-Literal
-	= BasicLit
-	/ FunctionLit
-	/ CompositeLit
+		Key
+			= Expression
+			/ LiteralValue
 
-BasicLit
-	= _ float_lit
-	/ _ int_lit
-	/ _ imaginary_lit
-	/ _ rune_lit
-	/ _ string_lit
+		FieldName
+			= identifier
 
-OperandName
-	= identifier
-	/ QualifiedIdent
+		Element
+			= Expression
+			/ LiteralValue
 
-QualifiedIdent
-	= PackageName '.' identifier
+		FunctionLit
+			= 'func' !more Signature FunctionBody
+	}
 
-CompositeLit
-	= LiteralType LiteralValue
+	terminals
+	{
+		binary_op
+			= '||'
+			/ '&&'
+			/ rel_op
+			/ add_op
+			/ mul_op
 
-LiteralType
-	= StructType
-	/ ArrayType
-	/ '[' '...' ']' ElementType
-	/ SliceType
-	/ MapType
-	/ TypeName
+		rel_op
+			= '=='
+			/ '!='
+			/ '<='
+			/ '<' ![<-]
+			/ '>='
+			/ '>' ![>]
 
-LiteralValue
-	= '{' (ElementList ','?)? '}'
+		add_op
+			= '+' ![+]
+			/ '-' ![-]
+			/ '|' ![|]
+			/ '^'
 
-ElementList
-	= KeyedElement (',' KeyedElement)*
+		mul_op
+			= '*'
+			/ '/'
+			/ '%'
+			/ '<<'
+			/ '>>'
+			/ '&^'
+			/ '&' ![&]
 
-KeyedElement
-	= (Key ':')? Element
-
-Key
-	= FieldName
-	/ Expression
-	/ LiteralValue
-
-FieldName
-	= identifier
-
-Element
-	= Expression
-	/ LiteralValue
-
-FunctionLit
-	= 'func' !more Signature FunctionBody
-	/ 'func' !more Signature #error("function literal: bad function body")
-	/ 'func' !more #error("function literal: bad signature")
-
-// ------------------------------------
-// conversion
-// ------------------------------------
-Conversion
-	= Type '(' Expression ','? ')'
-
-// ------------------------------------
-// method-expression
-// ------------------------------------
-MethodExpr
-	= ReceiverType '.' MethodName
-
-ReceiverType
-	= Type
+		prefix_op
+			= '+'
+			/ '-'
+			/ '!'
+			/ '^'
+			/ '*'
+			/ '&' ![&]
+			/ '<-'
+	}
+}

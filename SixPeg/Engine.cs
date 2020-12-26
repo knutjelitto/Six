@@ -1,8 +1,11 @@
 ﻿using Pegasus.Common;
 using Six.Support;
 using SixPeg.Expression;
+using SixPeg.Matchers;
+using SixPeg.Matches;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -52,11 +55,11 @@ namespace SixPeg
             return go.EnumerateFiles("*.go", SearchOption.AllDirectories).Select(f => f.FullName);
         }
 
-        public GrammarExpression CreateGrammar()
+        public Grammar CreateGrammar()
         {
             var parser = new SixParser();
 
-            var rules = new List<RuleExpression>();
+            var rules = new List<AnyRule>();
 
             foreach (var grammarFile in GrammarFiles())
             {
@@ -64,8 +67,9 @@ namespace SixPeg
 
                 try
                 {
-                    rules.AddRange(parser.Parse(source));
-
+                    var part = parser.Parse(source);
+                    rules.AddRange(part.Grules.OfType<Rules>().SelectMany(rs => rs.Cast<RuleExpression>()));
+                    rules.AddRange(part.Grules.OfType<Terminals>().SelectMany(rs => rs.Cast<TerminalExpression>()));
                 }
                 catch (FormatException ex)
                 {
@@ -77,7 +81,7 @@ namespace SixPeg
                 }
             }
 
-            var grammar = new GrammarExpression(rules.ToList());
+            var grammar = new Grammar(rules.ToList());
 
             var tempFolder = Navi.TempFor(Navi.Project).FullName;
 
@@ -85,34 +89,77 @@ namespace SixPeg
 
             new ResolveVisitor(grammar, writer).Resolve();
 
+            grammar.ResolveReferences();
             grammar.ReportMatchers(writer);
 
             return grammar;
         }
 
-        public bool Test(GrammarExpression grammar, IEnumerable<string> testFiles)
+        public bool Test(Grammar grammar, IEnumerable<string> testFiles)
         {
             bool ok = false;
 
             foreach (var test in testFiles)
             {
+                Console.WriteLine($"{test}");
+
+                ok = false;
+
                 var subject = new Context(test);
-                var cursor = 0;
+                int cursor;
 
                 try
                 {
-                    grammar.Clear();
-                    ok = grammar.GetMatcher().Match(subject, ref cursor);
-
-                    if (!ok)
+                    if (ok)
                     {
-                        new Error(subject).Report("parse failed", cursor);
+                        cursor = 0;
+                        grammar.Clear();
+                        ok = grammar.GetMatcher().Match(subject, ref cursor);
+
+                        if (!ok)
+                        {
+                            new Error(subject).Report("parse failed", cursor);
+                        }
                     }
                 }
                 catch
                 {
                     ok = false;
-                }   
+                }
+
+                if (!ok)
+                {
+                    try
+                    {
+                        cursor = 0;
+                        grammar.Clear();
+                        var trees = grammar.GetMatcher().Matches(subject, cursor).ToList();
+                        ok = trees.Count == 1;
+
+                        if (!ok)
+                        {
+                            if (trees.Count > 1)
+                            {
+                                bool differ = IMatch.Differ(trees[0], trees[1]);
+
+                                new Error(subject).Report($"far too many trees (#{trees.Count}) (differ:{differ})", subject.Length);
+                            }
+                            else
+                            {
+                                new Error(subject).Report("parse failed", AnyMatcher.furthestCursor);
+                            }
+                        }
+                        else
+                        {
+                            Debug.Assert(true);
+                        }
+                    }
+                    catch
+                    {
+                        ok = false;
+                    }
+
+                }
 
                 if (!ok)
                 {

@@ -11,7 +11,7 @@ namespace SixPeg.Expression
         public Cursor EndCursor { get; set; }
         public Cursor StartCursor { get; set; }
 
-        public GrammarExpression Grammar { get; set; }
+        public Grammar Grammar { get; set; }
         public bool Spaced { get; set; } = false;
 
         [DebuggerStepThrough]

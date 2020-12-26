@@ -1,9 +1,9 @@
 ﻿namespace SixPeg.Expression
 {
-    public class RuleExpression : AnyRule
+    public class TerminalExpression : AnyRule
     {
-        public RuleExpression(Symbol name, AnyExpression expression)
-            : base(name, expression, false)
+        public TerminalExpression(Symbol name, AnyExpression expression)
+            : base(name, expression, true)
         {
         }
 

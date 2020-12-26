@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SixPeg.Matches;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SixPeg.Matchers
@@ -6,7 +7,7 @@ namespace SixPeg.Matchers
     public class MatchSequence : BaseMatchers
     {
         private MatchSequence(IEnumerable<IMatcher> matchers)
-            : base("sequence", matchers)
+            : base("_", "sequence", matchers)
         {
         }
 
@@ -28,12 +29,43 @@ namespace SixPeg.Matchers
             if (first is MatchSpace space)
             {
                 var rest = From(matchers.Skip(1));
-                //Debug.Assert(!rest.IsPredicate);
-                rest.Space = space.Matcher;
+                //Debug.Assert(space.Matcher != null);
+                rest.Space = space;
                 return rest;
             }
 
             return new MatchSequence(matchers);
+        }
+
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            var matches = new IMatch[Matchers.Count];
+
+            foreach (var match in InDepth(0, start).Materialize())
+            {
+                yield return match;
+            }
+
+            IEnumerable<IMatch> InDepth(int depth, int next)
+            {
+                var matcher = Matchers[depth];
+
+                foreach (var match in matcher.Matches(subject, next).Materialize())
+                {
+                    matches[depth] = match;
+                    if (depth == Matchers.Count - 1)
+                    {
+                        yield return IMatch.Success(this, before, start, match.Next, new List<IMatch>(matches));
+                    }
+                    else
+                    {
+                        foreach (var inner in InDepth(depth + 1, match.Next).Materialize())
+                        {
+                            yield return inner;
+                        }
+                    }
+                }
+            }
         }
 
         protected override bool InnerMatch(Context subject, ref int cursor)

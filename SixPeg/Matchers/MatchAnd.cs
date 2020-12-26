@@ -1,13 +1,27 @@
-﻿namespace SixPeg.Matchers
+﻿using SixPeg.Matches;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SixPeg.Matchers
 {
     public class MatchAnd : BaseMatcher
     {
         public MatchAnd(IMatcher matcher)
-            : base("and", matcher)
+            : base("&", "and", matcher)
         {
         }
 
-        public override bool IsPredicate => true;
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            if (Matcher.Matches(subject, start).Materialize().Any())
+            {
+                yield return IMatch.Success(this, before, start);
+            }
+            else
+            {
+                yield break;
+            }
+        }
 
         protected override bool InnerMatch(Context subject, ref int cursor)
         {

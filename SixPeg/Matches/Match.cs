@@ -1,19 +1,30 @@
-﻿using System;
+﻿using SixPeg.Matchers;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixPeg.Matches
 {
     public class Match : IMatch
     {
-        public static readonly IMatch None = new Match();
-
-        public static IMatch Success(int space, int start, int next)
+        [DebuggerStepThrough]
+        public Match(IMatcher matcher, int before, int start, int next, IReadOnlyList<IMatch> matches)
         {
-            throw new NotImplementedException();
+            Matcher = matcher;
+            Before = before;
+            Start = start;
+            Next = next;
+            Matches = matches;
         }
 
-        public static IMatch Fail(int start)
+        public IMatcher Matcher { get; }
+        public int Before { get; }
+        public int Start { get; }
+        public int Next { get; }
+        public IReadOnlyList<IMatch> Matches { get; }
+
+        public override string ToString()
         {
-            throw new NotImplementedException();
+            return $"{Matcher.Marker} {Before},{Start},{Next} <<{Matches.Count}>>";
         }
     }
 }

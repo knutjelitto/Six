@@ -1,15 +1,21 @@
 ﻿using Six.Support;
+using System;
 
 namespace SixPeg.Matchers
 {
     public abstract class BaseMatcher : AnyMatcher
     {
-        public BaseMatcher(string kind, IMatcher matcher)
+        private readonly Lazy<bool> isTerminal;
+
+        public BaseMatcher(string marker, string kind, IMatcher matcher)
         {
+            Marker = marker;
             Kind = kind;
             Matcher = matcher;
+            isTerminal = new Lazy<bool>(() => Matcher.IsTerminal);
         }
 
+        public override string Marker { get; }
         public string Kind { get; }
         public IMatcher Matcher { get; }
 
@@ -21,7 +27,6 @@ namespace SixPeg.Matchers
             }
         }
 
-        public override string DDShort => $"{Kind}({Matcher.DDShort})";
         public override string DDLong => $"{Kind}({Matcher.DDLong})";
     }
 }

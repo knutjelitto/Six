@@ -5,10 +5,10 @@ namespace SixPeg.Expression
 {
     public class ResolveVisitor : IVisitor<bool>
     {
-        private readonly GrammarExpression grammar;
+        private readonly Grammar grammar;
         private readonly IWriter writer;
 
-        public ResolveVisitor(GrammarExpression grammar, IWriter writer)
+        public ResolveVisitor(Grammar grammar, IWriter writer)
         {
             this.grammar = grammar;
             this.writer = writer;
@@ -19,10 +19,8 @@ namespace SixPeg.Expression
             _ = Visit(grammar);
         }
 
-        public bool Visit(GrammarExpression expr)
+        public bool Visit(Grammar expr)
         {
-            expr.Grammar = grammar;
-
             grammar.Space = null;
             grammar.Start = null;
             grammar.Indexed.Clear();
@@ -55,7 +53,8 @@ namespace SixPeg.Expression
             {
                 var rule = grammar.Rules[index];
                 _ = rule.Accept(this);
-                grammar.Caches.Add(rule.Name, new MatchCache(rule.Name));
+                grammar.CachedMatch.Add(rule.Name, new MatchCache(rule.Name));
+                grammar.CachedMatches.Add(rule.Name, new MatchesCache(rule.Name));
                 index += 1;
             }
 
@@ -110,6 +109,12 @@ namespace SixPeg.Expression
         }
 
         public bool Visit(RuleExpression expr)
+        {
+            expr.Grammar = grammar;
+            return expr.Expression.Accept(this);
+        }
+
+        public bool Visit(TerminalExpression expr)
         {
             expr.Grammar = grammar;
             return expr.Expression.Accept(this);

@@ -1,16 +1,28 @@
-﻿using System.Diagnostics;
+﻿using SixPeg.Matches;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
     public class MatchBefore : BaseMatcher
     {
         public MatchBefore(IMatcher matcher)
-            : base("before", matcher)
+            : base("<", "before", matcher)
         {
             Debug.Assert(matcher.IsClassy);
         }
 
-        public override bool IsPredicate => true;
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            if (InnerMatch(subject, ref start))
+            {
+                yield return IMatch.Success(this, before, start);
+            }
+            else
+            {
+                yield break;
+            }
+        }
 
         protected override bool InnerMatch(Context subject, ref int cursor)
         {

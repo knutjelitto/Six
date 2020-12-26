@@ -1,216 +1,212 @@
-﻿// ------------------------------------
-// statement
-// ------------------------------------
+﻿grammar Go
+{
+	rules
+	{
+		// ------------------------------------
+		// statement
+		// ------------------------------------
 
-Block
-	= '{' StatementList '}'
+		Block
+			= '{' StatementList '}'
 
-StatementList
-	= ( Statement ';?' )*
+		StatementList
+			= ( Statement ';?' )*
 
-Statement
-	= Declaration
-	/ LabeledStmt
-	/ GoStmt
-	/ ReturnStmt
-	/ BreakStmt
-	/ ContinueStmt
-	/ GotoStmt
-	/ FallthroughStmt
-	/ Block
-	/ IfStmt
-	/ SwitchStmt
-	/ SelectStmt
-	/ ForStmt
-	/ DeferStmt
-	/ SimpleStmt
+		Statement
+			= Declaration
+			/ LabeledStmt
+			/ GoStmt
+			/ ReturnStmt
+			/ BreakStmt
+			/ ContinueStmt
+			/ GotoStmt
+			/ FallthroughStmt
+			/ Block
+			/ IfStmt
+			/ SwitchStmt
+			/ SelectStmt
+			/ ForStmt
+			/ DeferStmt
+			/ SimpleStmt
 
-// ------------------------------------
-// simple-statement
-// ------------------------------------
-SimpleStmt
-	= IncDecStmt
-	/ Assignment
-	/ SendStmt
-	/ ShortVarDecl
-	/ ExpressionStmt
-	/// EmptyStmt
+		// ------------------------------------
+		// simple-statement
+		// ------------------------------------
+		SimpleStmt
+			= IncDecStmt
+			/ Assignment
+			/ SendStmt
+			/ ShortVarDecl
+			/ ExpressionStmt
 
-// ------------------------------------
-// labeled-statement
-// ------------------------------------
-LabeledStmt
-	= Label ':' ![=] Statement
+		// ------------------------------------
+		// labeled-statement
+		// ------------------------------------
+		LabeledStmt
+			= Label ':' ![=] Statement
 
-Label
-	= identifier
+		Label
+			= identifier
 
-// ------------------------------------
-// go-statement
-// ------------------------------------
-GoStmt
-	= 'go' !more Expression
-	/ 'go' !more #error("go statement: bad expression")
+		// ------------------------------------
+		// go-statement
+		// ------------------------------------
+		GoStmt
+			= 'go' !more Expression
 
-// ------------------------------------
-// return-statement
-// ------------------------------------
-ReturnStmt
-	= 'return' ExpressionList?
+		// ------------------------------------
+		// return-statement
+		// ------------------------------------
+		ReturnStmt
+			= 'return' ExpressionList?
 
-// ------------------------------------
-// break-statement
-// ------------------------------------
-BreakStmt
-	= 'break' Label?
+		// ------------------------------------
+		// break-statement
+		// ------------------------------------
+		BreakStmt
+			= 'break' Label?
 
-// ------------------------------------
-// continue-statement
-// ------------------------------------
-ContinueStmt
-	= 'continue' Label?
+		// ------------------------------------
+		// continue-statement
+		// ------------------------------------
+		ContinueStmt
+			= 'continue' Label?
 
-// ------------------------------------
-// goto-statement
-// ------------------------------------
-GotoStmt
-	= 'goto' Label?
+		// ------------------------------------
+		// goto-statement
+		// ------------------------------------
+		GotoStmt
+			= 'goto' Label?
 
-// ------------------------------------
-// fallthrough-statement
-// ------------------------------------
-FallthroughStmt
-	= 'fallthrough'
+		// ------------------------------------
+		// fallthrough-statement
+		// ------------------------------------
+		FallthroughStmt
+			= 'fallthrough'
 
-// ------------------------------------
-// if-statement
-// ------------------------------------
-IfStmt
-	= 'if' (SimpleStmt ';')? Expression2 Block ('else' (IfStmt / Block))?
-	/ 'if' (SimpleStmt ';')? Expression2 #error("if statement: bad block")
+		// ------------------------------------
+		// if-statement
+		// ------------------------------------
+		IfStmt
+			= 'if' (SimpleStmt ';')? Expression Block ('else' (IfStmt / Block))?
 
-// ------------------------------------
-// switch-statement
-// ------------------------------------
-SwitchStmt
-	= ExprSwitchStmt
-	/ TypeSwitchStmt
+		// ------------------------------------
+		// switch-statement
+		// ------------------------------------
+		SwitchStmt
+			= ExprSwitchStmt
+			/ TypeSwitchStmt
 
-ExprSwitchStmt
-	= 'switch' (SimpleStmt ';')? Expression? '{' ExprCaseClause* '}'
+		ExprSwitchStmt
+			= 'switch' (SimpleStmt ';')? Expression? '{' ExprCaseClause* '}'
 
-ExprCaseClause
-	= ExprSwitchCase ':' StatementList
+		ExprCaseClause
+			= ExprSwitchCase ':' StatementList
 
-ExprSwitchCase
-	= 'case' ExpressionList
-	/ 'default'
+		ExprSwitchCase
+			= 'case' ExpressionList
+			/ 'default'
 
-TypeSwitchStmt
-	= 'switch' (SimpleStmt ';')? TypeSwitchGuard '{' TypeCaseClause* '}'
+		TypeSwitchStmt
+			= 'switch' (SimpleStmt ';')? TypeSwitchGuard '{' TypeCaseClause* '}'
 
-TypeSwitchGuard
-	= (identifier ':=')? PostfixExpr '.' '(' 'type' ')'
+		TypeSwitchGuard
+			= (identifier ':=')? PostfixExpr '.' '(' 'type' ')'
 
-TypeCaseClause
-	= TypeSwitchCase ':' StatementList
+		TypeCaseClause
+			= TypeSwitchCase ':' StatementList
 
-TypeSwitchCase
-	= 'case' TypeList
-	/ 'default'
+		TypeSwitchCase
+			= 'case' TypeList
+			/ 'default'
 
 
-// ------------------------------------
-// select-statement
-// ------------------------------------
-SelectStmt
-	= 'select' '{' CommClause* '}'
+		// ------------------------------------
+		// select-statement
+		// ------------------------------------
+		SelectStmt
+			= 'select' '{' CommClause* '}'
 
-CommClause
-	= CommCase ':' StatementList
+		CommClause
+			= CommCase ':' StatementList
 
-CommCase
-	= 'case' (SendStmt / RecvStmt)
-	/ 'default'
+		CommCase
+			= 'case' (SendStmt / RecvStmt)
+			/ 'default'
 
-RecvStmt
-	= (ExpressionList '=' / IdentifierList ':=')? RecvExpr
+		RecvStmt
+			= (ExpressionList '=' / IdentifierList ':=')? RecvExpr
 
-RecvExpr
-	= Expression
+		RecvExpr
+			= Expression
 
-// ------------------------------------
-// for-statement
-// ------------------------------------
-ForStmt
-	= 'for' !more (ForClause / RangeClause / Condition2)? Block
-	/ 'for' !more (ForClause / RangeClause / Condition2)? #error("for statement: bad-block")
-	/ 'for' !more #error("for statement: bad head")
+		// ------------------------------------
+		// for-statement
+		// ------------------------------------
+		ForStmt
+			= 'for' !more (ForClause / RangeClause / Condition)? Block
 
-Condition
-	= Expression
+		Condition
+			= Expression
 
-Condition2
-	= Expression2
+		ForClause
+			= InitStmt? ';' Condition? ';' PostStmt?
 
-ForClause
-	= InitStmt? ';' Condition? ';' PostStmt?
+		InitStmt
+			= SimpleStmt
 
-InitStmt
-	= SimpleStmt
+		PostStmt
+			= SimpleStmt
 
-PostStmt
-	= SimpleStmt
+		RangeClause
+			= (ExpressionList '=' / IdentifierList ':=')? 'range' Expression
 
-RangeClause
-	= (ExpressionList '=' / IdentifierList ':=')? 'range' Expression2
+		// ------------------------------------
+		// defer-statement
+		// ------------------------------------
+		DeferStmt
+			= 'defer' Expression
 
-// ------------------------------------
-// defer-statement
-// ------------------------------------
-DeferStmt
-	= 'defer' Expression
+		// ------------------------------------
+		// empty-statement
+		// ------------------------------------
+		EmptyStmt
+			=
 
-// ------------------------------------
-// empty-statement
-// ------------------------------------
-EmptyStmt
-	=
+		// ------------------------------------
+		// ExpressionStmt-statement
+		// ------------------------------------
+		ExpressionStmt
+			= !(('break'/'return') !more) Expression
 
-// ------------------------------------
-// ExpressionStmt-statement
-// ------------------------------------
-ExpressionStmt
-	= Expression
+		// ------------------------------------
+		// send-statement
+		// ------------------------------------
+		SendStmt
+			= Channel '<-' Expression
 
-// ------------------------------------
-// send-statement
-// ------------------------------------
-SendStmt
-	= Channel '<-' Expression
+		Channel
+			= Expression
 
-Channel
-	= Expression
+		// ------------------------------------
+		// inc/dec-statement
+		// ------------------------------------
+		IncDecStmt
+			= Expression ('++'/'--')
 
-// ------------------------------------
-// inc/dec-statement
-// ------------------------------------
-IncDecStmt
-	= Expression ('++'/'--')
+		// ------------------------------------
+		// assignment-statement
+		// ------------------------------------
+		Assignment
+			= ExpressionList assign_op ExpressionList
 
-// ------------------------------------
-// assignment-statement
-// ------------------------------------
-Assignment
-	= ExpressionList assign_op ExpressionList
+		assign_op
+			= (add_op / mul_op / _)? [=]
 
-assign_op
-	= (add_op / mul_op)? '='
-
-// ------------------------------------
-// short var declaration
-// ------------------------------------
-ShortVarDecl
-	= IdentifierList ':=' ExpressionList
-	/ IdentifierList ':=' #error("short variable declaration: bad expression list")
-
+		// ------------------------------------
+		// short var declaration
+		// ------------------------------------
+		ShortVarDecl
+			= IdentifierList ':=' ExpressionList
+	}
+}

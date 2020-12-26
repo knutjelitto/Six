@@ -2,40 +2,84 @@
 using SixPeg.Expression;
 using SixPeg.Matches;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
     public class MatchName : AnyMatcher
     {
-        private IMatcher matcher = null;
+        private readonly Lazy<bool> isTerminal;
 
-        public MatchName(Symbol name, MatchCache cache, Func<IMatcher> makeMatcher)
+        public MatchName(Symbol name, MatchCache matchCache, MatchesCache matchesCache)
         {
             Name = name;
-            Cache = cache;
-            MakeMatcher = makeMatcher;
+            MatchCache = matchCache;
+            MatchesCache = matchesCache;
+            isTerminal = new Lazy<bool>(() => Matcher.IsTerminal);
         }
 
         public Symbol Name { get; }
-        public MatchCache Cache { get; }
-        public Func<IMatcher> MakeMatcher { get; }
-        public IMatcher Matcher => matcher ??= MakeMatcher();
-        public override bool IsClassy => Matcher.IsClassy;
+        public MatchCache MatchCache { get; }
+        public MatchesCache MatchesCache { get; }
 
-        protected override bool InnerMatch(Context subject, ref int cursor)
+        public IMatcher Matcher { get; private set; } = null;
+        public override bool IsClassy => Matcher.IsClassy;
+        public override string Marker => $"<{Name.Text}>";
+
+        public void SetMatcher(IMatcher matcher)
         {
-            if (Name.Text == "TypeSwitchGuard")
+            Debug.Assert(matcher != null);
+            Matcher = matcher;
+        }
+
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            if (Name.Text == "FunctionType")
             {
-                new Error(subject).Report($"{Name.Text}", cursor);
+                //new Error(subject).Report($"{Name.Text}", start);
                 Debug.Assert(true);
 
             }
-            if (!Cache.Already(cursor, out var cached))
+            if (before == 505)
+            {
+                Debug.Assert(true);
+            }
+            if (!MatchesCache.Already(start, out var cached))
+            {
+                var matches = new List<IMatch>();
+                foreach (var match in Matcher.Matches(subject, start).Materialize())
+                {
+                    var named = IMatch.Success(this, before, start, match);
+                    matches.Add(named);
+                    yield return named;
+
+                    if (IsTerminal)
+                    {
+                        Console.Write($".{Name.Text}");
+                        break;
+                    }
+                }
+
+                MatchesCache.Cache(start, matches);
+            }
+            else
+            {
+                foreach (var match in cached)
+                {
+                    Debug.Assert(match.Before == before);
+                    yield return match;
+                }
+            }
+        }
+
+        protected override bool InnerMatch(Context subject, ref int cursor)
+        {
+            if (!MatchCache.Already(cursor, out var cached))
             {
                 var start = cursor;
                 var result = Matcher.Match(subject, ref cursor);
-                Cache.Cache(start, (result, cursor));
+                MatchCache.Cache(start, (result, cursor));
                 return result;
             }
             else
@@ -55,6 +99,6 @@ namespace SixPeg.Matchers
             return $"{Name}";
         }
 
-        public override string DDShort => $"{Name}";
+        public override string DDLong => $"{Name}";
     }
 }

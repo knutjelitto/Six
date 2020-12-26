@@ -11,9 +11,12 @@ namespace SixPeg.Expression
         {
         }
 
-        protected override IMatcher MakeMatcher() => Expressions.Count == 1
+        protected override IMatcher MakeMatcher()
+        {
+            return Expressions.Count == 1
                 ? Expressions[0].GetMatcher()
                 : new MatchChoice(Expressions.Select(e => e.GetMatcher()));
+        }
 
         public override T Accept<T>(IVisitor<T> visitor)
         {

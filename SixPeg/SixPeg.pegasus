@@ -5,61 +5,93 @@
 @using System.Text.RegularExpressions
 @using SixPeg.Expression
 
-grammar <IEnumerable<RuleExpression>>
-    = rules:rule* EOF                       { rules }
+axiom <GrammarPart>
+    = grammar:grammar EOF                       { grammar }
+
+grammar <GrammarPart>
+    = extended:extendedGrammar                  { extended }
+    / rules:simpleGrammar                       { new GrammarPart(rules) }
+
+simpleGrammar  <Rules>
+    = rules:rule*                               { new Rules(rules) }
+
+extendedGrammar <GrammarPart>
+    = _ "grammar" name:grammarName lbrace parts:grammarPart* rbrace
+                                                { new GrammarPart(name, parts) }
+
+grammarName
+    = identifier
+
+grammarPart <IGrules>
+    = options
+    / rules
+    / terminals
+
+options <Options>
+    = _ "options" lbrace options:option* rbrace { new Options(options) }
+
+rules <Rules>
+    = _ "rules" lbrace rules:rule* rbrace       { new Rules(rules) }
+
+terminals <Terminals>
+    = _ "terminals" lbrace terminals:terminal* rbrace   { new Terminals(terminals) }
+
+option <OptionExpression>
+    = name:identifier equals value:(<object>identifier / string)
+                                                { new OptionExpression(name, value)}
 
 rulePreamble
     = equals
 
 rule <RuleExpression>
-    = name:ruleName names:ruleParameters equals expression:expression semicolon? { new RuleExpression(name, names, expression) }
+    = name:ruleName equals expression:expression semicolon? { new RuleExpression(name, expression) }
 
 ruleName
     = identifier
     / spacedName
 
-ruleParameters <IEnumerable<Symbol>>
-    = lparen names:ruleParameterName+ rparen    { names }
-    /                                           { Enumerable.Empty<Symbol>() }
+terminal <TerminalExpression>
+    = name:terminalName equals expression:expression semicolon? { new TerminalExpression(name, expression) }
 
-ruleParameterName <Symbol>
+terminalName
     = identifier
+    / spacedName
 
 expression <AnyExpression>
     = choice
 
 choice <AnyExpression>
-    = choices:sequence<1,,slash>            { new ChoiceExpression(choices) }
+    = choices:sequence<1,,slash>                { new ChoiceExpression(choices) }
 
 sequence <AnyExpression>
-    = elements:element<0,,_>                { new SequenceExpression(elements) }
+    = elements:element<0,,_>                    { new SequenceExpression(elements) }
 
 element <AnyExpression> -memoize
     = prefixed
     / error
 
 prefixed <AnyExpression>
-    = and e:suffixed                        { new AndExpression(e) }
-    / not e:suffixed                        { new NotExpression(e) }
-    / before e:suffixed                     { new BeforeExpression(e) }
+    = and e:suffixed                            { new AndExpression(e) }
+    / not e:suffixed                            { new NotExpression(e) }
+    / before e:suffixed                         { new BeforeExpression(e) }
     / suffixed
 
 suffixed <AnyExpression>
-    = expression:primary q:quantifier       { new QuantifiedExpression(expression, q) }
-    / expression:primary                    { expression }
+    = expression:primary q:quantifier           { new QuantifiedExpression(expression, q) }
+    / expression:primary                        { expression }
 
 quantifier <Quantifier> -memoize
-    = question                              { new Quantifier(min: 0, max: 1) }
-    / star                                  { new Quantifier(min: 0, max: null) }
-    / plus                                  { new Quantifier(min: 1, max: null) }
+    = question                                  { new Quantifier(min: 0, max: 1) }
+    / star                                      { new Quantifier(min: 0, max: null) }
+    / plus                                      { new Quantifier(min: 1, max: null) }
 
 primary <AnyExpression> -memoize
-    = name:identifier !(rulePreamble)       { new ReferenceExpression(name) }
-    / spaced:spacedName !(rulePreamble)     { new SpacedExpression(spaced) }
+    = name:identifier !(rulePreamble)           { new ReferenceExpression(name) }
+    / spaced:spacedName !(rulePreamble)         { new SpacedExpression(spaced) }
     / stringLiteral
     / class
-    / dot                                   { new WildcardExpression() }
-    / lparen expression:expression rparen   { expression }
+    / dot                                       { new WildcardExpression() }
+    / lparen expression:expression rparen       { expression }
 
 any_literal <object>
     = stringLiteral
@@ -85,6 +117,8 @@ star      -lexical = _ "*"
 plus      -lexical = _ "+"
 lparen    -lexical = _ "("
 rparen    -lexical = _ ")"
+lbrace    -lexical = _ "{"
+rbrace    -lexical = _ "}"
 dot       -lexical = _ "."
 comma     -lexical = _ ","
 
@@ -96,10 +130,10 @@ identifier <Symbol> -memoize -lexical
     / _ name:'_'  { new Symbol(name, false) }
 
 identifier_head
-    = _ start:(letter (letter / digit)*) { start }
+    = _ start:(letter (letter / digit)*)        { start }
 
 identifier_tail
-    = tail:(('-'/'_') (letter / digit)+) { tail }
+    = tail:(('-'/'_') (letter / digit)+)        { tail }
 
 spacedName <Symbol> -memoize -lexical
     = _ "'" chars:singleQuotedCharacter* ("'" / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })
@@ -112,10 +146,11 @@ stringLiteral <AnyExpression> -lexical
   = value:string                                { new CharacterSequenceExpression(value) }
 
 string -lexical
-  = _ string:doubleQuotedString { @string }
+  = _ string:doubleQuotedString                 { @string }
 
 doubleQuotedString
-  = '"' chars:doubleQuotedCharacter* ('"' / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString }) { string.Concat(chars) }
+  = '"' chars:doubleQuotedCharacter* ('"' / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })
+                                                { string.Concat(chars) }
 
 doubleQuotedCharacter
   = simpleDoubleQuotedCharacter

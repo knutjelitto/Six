@@ -1,13 +1,27 @@
-﻿namespace SixPeg.Matchers
+﻿using SixPeg.Matches;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SixPeg.Matchers
 {
     public class MatchNot : BaseMatcher
     {
         public MatchNot(IMatcher matcher)
-            : base("not", matcher)
+            : base("!", "not", matcher)
         {
         }
 
-        public override bool IsPredicate => true;
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            if (Matcher.Matches(subject, start).Materialize().Any())
+            {
+                yield break;
+            }
+            else
+            {
+                yield return IMatch.Success(this, before, start);
+            }
+        }
 
         protected override bool InnerMatch(Context subject, ref int cursor)
         {

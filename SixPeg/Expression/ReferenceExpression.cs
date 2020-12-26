@@ -11,14 +11,17 @@ namespace SixPeg.Expression
         }
 
         public Symbol Name { get; }
-        public RuleExpression Rule { get; internal set; }
+        public AnyRule Rule { get; internal set; }
 
         protected override IMatcher MakeMatcher()
         {
             Debug.Assert(Rule != null);
-            return Rule == Grammar.Space
-                ? new MatchSpace(Rule.Name, Grammar.Caches[Rule.Name], () => Rule.GetMatcher())
-                : new MatchName(Rule.Name, Grammar.Caches[Rule.Name], () => Rule.GetMatcher());
+            var matcher = Rule == Grammar.Space
+                ? new MatchSpace(Rule.Name, Grammar.CachedMatch[Rule.Name], Grammar.CachedMatches[Rule.Name])
+                : new MatchName(Rule.Name, Grammar.CachedMatch[Rule.Name], Grammar.CachedMatches[Rule.Name]);
+
+            Grammar.ReferencesToResolve.Add(matcher);
+            return matcher;
         }
 
         public override string ToString()

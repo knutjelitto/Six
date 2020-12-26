@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using System;
 
 namespace SixPeg.Expression
 {
@@ -21,7 +22,7 @@ namespace SixPeg.Expression
                 (0, 1) => new MatchZeroOrOne(Expression.GetMatcher()),
                 (0, null) => new MatchZeroOrMore(Expression.GetMatcher()),
                 (1, null) => new MatchOneOrMore(Expression.GetMatcher()),
-                _ => throw new System.NotImplementedException(),
+                _ => throw new NotImplementedException(),
             };
         }
 

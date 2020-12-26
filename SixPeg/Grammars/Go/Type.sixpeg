@@ -1,132 +1,137 @@
-﻿// ------------------------------------
-// type
-// ------------------------------------
+﻿grammar Go
+{
+	rules
+	{
+		// ------------------------------------
+		// type
+		// ------------------------------------
 
-Type
-	= TypeLit
-	/ TypeName
-	/ '(' Type ')'
+		Type
+			= TypeLit
+			/ TypeName
+			/ '(' Type ')'
 
-TypeName
-	= QualifiedIdent
-	/ !('chan' !more) identifier 
+		UType
+			= TypeLit
 
-TypeLit
-	= ArrayType
-	/ StructType
-	/ PointerType
-	/ FunctionType
-	/ InterfaceType
-	/ SliceType
-	/ MapType
-	/ ChannelType
+		TypeName
+			= QualifiedIdent
+			/ !('chan' !more) identifier 
 
-// ------------------------------------
-// helpers
-// ------------------------------------
-TypeList
-	= Type (',' Type)*
+		TypeLit
+			= ArrayType
+			/ StructType
+			/ PointerType
+			/ FunctionType
+			/ InterfaceType
+			/ SliceType
+			/ MapType
+			/ ChannelType
 
-ElementType
-	= Type
+		// ------------------------------------
+		// helpers
+		// ------------------------------------
+		TypeList
+			= Type (',' Type)*
 
-// ------------------------------------
-// array-type
-// ------------------------------------
-ArrayType
-	= '[' ArrayLength ']' ElementType
+		ElementType
+			= Type
 
-ArrayLength
-	= Expression
+		// ------------------------------------
+		// array-type
+		// ------------------------------------
+		ArrayType
+			= '[' ArrayLength ']' ElementType
+
+		ArrayLength
+			= Expression
 
 
-// ------------------------------------
-// struct-type
-// ------------------------------------
-StructType
-	= 'struct' '{' (FieldDecl ';?')* '}'
+		// ------------------------------------
+		// struct-type
+		// ------------------------------------
+		StructType
+			= 'struct' '{' (FieldDecl ';?')* '}'
 
-FieldDecl
-	= (IdentifierList Type / EmbeddedField) Tag?
+		FieldDecl
+			= (IdentifierList Type / EmbeddedField) Tag?
 
-EmbeddedField
-	= '*'? TypeName
+		EmbeddedField
+			= '*'? TypeName
 
-Tag = string_lit
+		Tag = string_lit
 
-// ------------------------------------
-// pointer-type
-// ------------------------------------
-PointerType
-	= '*' BaseType
+		// ------------------------------------
+		// pointer-type
+		// ------------------------------------
+		PointerType
+			= '*' BaseType
 
-BaseType
-	= Type
+		BaseType
+			= Type
 
-// ------------------------------------
-// function-type
-// ------------------------------------
-FunctionType
-	= 'func' Signature
+		// ------------------------------------
+		// function-type
+		// ------------------------------------
+		FunctionType
+			= 'func' Signature
 
-Signature
-	= Parameters !';?' Result?
-	/ Parameters
+		Signature
+			= Parameters !';?' Result
+			/ Parameters
 
-Result
-	= Parameters
-	/ Type
+		Result
+			= Parameters
+			/ Type
 
-Parameters
-	= '(' ')'
-	/ '(' ParameterList ','? ')'
-	/ '(' #error("function parameter: bad parameter list")
+		Parameters
+			= '(' ')'
+			/ '(' ParameterList ','? ')'
 
-ParameterList
-	= ParameterDecl (',' ParameterDecl)*
+		ParameterList
+			= ParameterDecl (',' ParameterDecl)*
 
-ParameterDecl
-	= IdentifierList '...' Type 
-	/ IdentifierList Type 
-	/ '...' Type 
-	/ Type 
+		ParameterDecl
+			= IdentifierList '...' Type 
+			/ IdentifierList Type 
+			/ '...' Type 
+			/ Type 
 
-// ------------------------------------
-// interface-type
-// ------------------------------------
-InterfaceType
-	= 'interface' '{' ( InterfaceMember ';?' )* '}'
-	/ 'interface' '{' #error("interface type: bad interface member")
-	/ 'interface' #error("interface type: bad interface body")
+		// ------------------------------------
+		// interface-type
+		// ------------------------------------
+		InterfaceType
+			= 'interface' '{' ( InterfaceMember ';?' )* '}'
 
-InterfaceMember
-	= MethodName Signature
-	/ TypeName
-	/ identifier
+		InterfaceMember
+			= MethodName Signature
+			/ TypeName
+			/ identifier
 
-MethodName
-	= identifier
+		MethodName
+			= identifier
 
-// ------------------------------------
-// slice-type
-// ------------------------------------
-SliceType
-	= '[' ']' ElementType
+		// ------------------------------------
+		// slice-type
+		// ------------------------------------
+		SliceType
+			= '[' ']' ElementType
 
-// ------------------------------------
-// map-type
-// ------------------------------------
-MapType
-	= 'map' '[' KeyType ']' ElementType
+		// ------------------------------------
+		// map-type
+		// ------------------------------------
+		MapType
+			= 'map' '[' KeyType ']' ElementType
 
-KeyType
-	= Type
+		KeyType
+			= Type
 
-// ------------------------------------
-// channel-type
-// ------------------------------------
-ChannelType
-	= 'chan' '<-' ElementType
-	/ 'chan' ElementType
-	/ '<-' 'chan' ElementType
-	/ 'chan' #error("channel type: bad element type")
+		// ------------------------------------
+		// channel-type
+		// ------------------------------------
+		ChannelType
+			= 'chan' '<-' ElementType
+			/ 'chan' ElementType
+			/ '<-' 'chan' ElementType
+	}
+}

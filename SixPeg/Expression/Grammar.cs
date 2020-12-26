@@ -7,36 +7,59 @@ using System.Linq;
 
 namespace SixPeg.Expression
 {
-    public class GrammarExpression : AnyExpression
+    public class Grammar
     {
-        public readonly Dictionary<Symbol, RuleExpression> Indexed = new Dictionary<Symbol, RuleExpression>();
-        public readonly Dictionary<Symbol, MatchCache> Caches = new Dictionary<Symbol, MatchCache>();
+        public readonly Dictionary<Symbol, AnyRule> Indexed = new Dictionary<Symbol, AnyRule>();
+        public readonly Dictionary<Symbol, MatchCache> CachedMatch = new Dictionary<Symbol, MatchCache>();
+        public readonly Dictionary<Symbol, MatchesCache> CachedMatches = new Dictionary<Symbol, MatchesCache>();
+        public readonly List<MatchName> ReferencesToResolve = new List<MatchName>();
 
-        public GrammarExpression(IList<RuleExpression> rules)
+        public Grammar(IList<AnyRule> rules)
         {
             Rules = rules.ToList();
-            Generated = new List<RuleExpression>();
+            Generated = new List<AnyRule>();
         }
 
-        public List<RuleExpression> Rules { get; }
-        public List<RuleExpression> Generated { get; }
-        public RuleExpression Start { get; set; }
-        public RuleExpression Space { get; set; }
+        public List<AnyRule> Rules { get; }
+        public List<AnyRule> Generated { get; }
+        public AnyRule Start { get; set; }
+        public AnyRule Space { get; set; }
         public IMatcher Matcher { get; private set; }
         public bool Error { get; set; } = false;
 
         public void Clear()
         {
-            foreach (var cache in Caches.Values)
+            foreach (var cache in CachedMatch.Values)
+            {
+                cache.Clear();
+            }
+            foreach (var cache in CachedMatches.Values)
             {
                 cache.Clear();
             }
             AnyMatcher.Clear();
         }
 
-        protected override IMatcher MakeMatcher()
+        public IMatcher GetMatcher()
         {
             return Start.GetMatcher();
+        }
+
+        public void ResolveReferences()
+        {
+            if (Error)
+            {
+                return;
+            }
+            foreach (var rule in Rules)
+            {
+                _ = rule.GetMatcher();
+            }
+
+            foreach (var matcher in ReferencesToResolve)
+            {
+                matcher.SetMatcher(Indexed[matcher.Name].GetMatcher());
+            }
         }
 
         public void ReportMatchers(IWriter writer)
@@ -60,7 +83,7 @@ namespace SixPeg.Expression
             }
         }
 
-        public RuleExpression FindRule(Symbol name)
+        public AnyRule FindRule(Symbol name)
         {
             if (Indexed.TryGetValue(name, out var rule))
             {
@@ -82,17 +105,12 @@ namespace SixPeg.Expression
             if (!Indexed.TryGetValue(identifier, out var _))
             {
                 var expression = new CharacterSequenceExpression(spaced.Name.Text[1..^1]) { Spaced = true };
-                var rule = new RuleExpression(identifier, Enumerable.Empty<Symbol>(), expression);
+                var rule = new RuleExpression(identifier, expression);
                 Indexed.Add(identifier, rule);
                 Rules.Add(rule);
             }
 
             return new ReferenceExpression(identifier);
-        }
-
-        public override T Accept<T>(IVisitor<T> visitor)
-        {
-            return visitor.Visit(this);
         }
     }
 }

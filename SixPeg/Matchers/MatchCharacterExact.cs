@@ -1,4 +1,6 @@
 ﻿using Six.Support;
+using SixPeg.Matches;
+using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
@@ -12,6 +14,19 @@ namespace SixPeg.Matchers
         public override bool IsClassy => true;
 
         public char Character { get; }
+
+        protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
+        {
+            var next = start;
+            if (InnerMatch(subject, ref next))
+            {
+                yield return IMatch.Success(this, before, start, next);
+            }
+            else
+            {
+                yield break;
+            }
+        }
 
         protected override bool InnerMatch(Context subject, ref int cursor)
         {
@@ -28,6 +43,8 @@ namespace SixPeg.Matchers
             writer.WriteLine($"{SpacePrefix}match \"{Character.Escape()}\"");
         }
 
-        public override string DDShort => $"single(\"{Character.Escape()}\")";
+        public override string DDLong => $"single(\"{Character.Escape()}\")";
+
+        public override string Marker => "=";
     }
 }

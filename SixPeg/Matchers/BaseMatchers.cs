@@ -1,4 +1,5 @@
 ﻿using Six.Support;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,14 +7,19 @@ namespace SixPeg.Matchers
 {
     public abstract class BaseMatchers : AnyMatcher
     {
-        public BaseMatchers(string kind, IEnumerable<IMatcher> matchers)
+        private readonly Lazy<bool> isTerminal;
+
+        public BaseMatchers(string marker, string kind, IEnumerable<IMatcher> matchers)
         {
+            Marker = marker;
             Kind = kind;
-            Matchers = matchers;
+            Matchers = matchers.ToArray();
+            isTerminal = new Lazy<bool>(() => Matchers.All(m => m.IsTerminal));
         }
 
+        public override string Marker { get; }
         public string Kind { get; }
-        public IEnumerable<IMatcher> Matchers { get; }
+        public IReadOnlyList<IMatcher> Matchers { get; }
 
         public override void Write(IWriter writer)
         {
@@ -26,7 +32,6 @@ namespace SixPeg.Matchers
             }
         }
 
-        public override string DDShort => $"{Kind}(...)";
-        public override string DDLong => $"{Kind}({string.Join(",", Matchers.Select(m => m.DDShort))})";
+        public override string DDLong => $"{Kind}({string.Join(",", Matchers.Select(m => m.DDLong))})";
     }
 }

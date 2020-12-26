@@ -1,4 +1,6 @@
 ﻿using Six.Support;
+using SixPeg.Matches;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixPeg.Matchers
@@ -11,12 +13,11 @@ namespace SixPeg.Matchers
         public static int furthestSuccess = 0;
 
         public IMatcher Space { get; set; } = null;
+        public bool IsTerminal { get; set; } = false;
         protected string SpacePrefix => Space == null ? string.Empty : "_ ";
-        public virtual string DDShort => ToString();
-        public virtual string DDLong => DDShort;
-
+        public virtual string DDLong => ToString();
+        public abstract string Marker { get; }
         public virtual bool IsClassy => false;
-        public virtual bool IsPredicate => false;
 
         public static void Clear()
         {
@@ -24,6 +25,26 @@ namespace SixPeg.Matchers
             furthestFail = 0;
             furthestSuccess = 0;
         }
+
+        public IEnumerable<IMatch> Matches(Context subject, int cursor)
+        {
+            var before = cursor;
+            ConsumeSpace(subject, ref cursor);
+
+            var matches = InnerMatches(subject, before, cursor).Materialize();
+
+            foreach (var match in matches)
+            {
+                if (match.Next > furthestCursor)
+                {
+                    furthestCursor = match.Next;
+                }
+            }
+
+            return matches;
+        }
+
+        protected abstract IEnumerable<IMatch> InnerMatches(Context subject, int before, int start);
 
         public bool Match(Context subject, ref int cursor)
         {

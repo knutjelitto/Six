@@ -1,30 +1,37 @@
-﻿SourceFile
-    = PackageClause ';?' (ImportDecl ';?')* (TopLevelDecl ';?')* EOF
-    / PackageClause #error("expected `;`")
+﻿grammar Go
+{
+    rules
+    {
+        SourceFile
+            = PackageClause ';?' (ImportDecl ';?')* (TopLevelDecl ';?')* EOF
 
-PackageClause
-    = 'package' PackageName
+        PackageClause
+            = 'package' PackageName
 
-PackageName
-    = identifier
+        PackageName
+            = identifier
 
-ImportDecl
-    = 'import' ( ImportSpec / '(' (ImportSpec ';?')* ')' )
+        ImportDecl
+            = 'import' ( ImportSpec / '(' (ImportSpec ';?')* ')' )
 
-ImportSpec
-    = ('.' / PackageName)? ImportPath
+        ImportSpec
+            = ('.' / PackageName)? ImportPath
 
-ImportPath
-    = _ string_lit
+        ImportPath
+            = string_lit
+    }
+    terminals
+    {
+        EOF
+            = _ !.
 
-EOF
-    = _ !.
-    / #error("EOF")
+        _
+            = whitespace*
 
-_
-    = whitespace*
-
-// imaginary ';' (maybe ';')
-';?' = _ [;]
-    / single-whitespace* (line-break / comment)
-    / _ &[)}]
+        // imaginary ';' (maybe ';')
+        ';?' = _ [;]
+            / single-whitespace* (line-break / comment)
+            / _ &[)}]
+            / _ !.
+    }
+}
