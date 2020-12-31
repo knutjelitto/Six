@@ -5,6 +5,7 @@
         start = module
         space = _
         more = more
+        matches = first // unconditionally use first match of any rule
     }
 
     rules
@@ -18,17 +19,26 @@
         use_ffi:
             '@' (ID | STRING) typeargs '(' params? ')' '?'?
 
+        class-kind:
+            'type' | 'interface' | 'trait' | 'primitive' | 'struct' | 'class' | 'actor'
+
         class_def: 
-            ('type' | 'interface' | 'trait' | 'primitive' | 'struct' | 'class' | 'actor') anno? '@'? cap? ID typeparams? ('is' type)? STRING? members
+            class-kind anno? '@'? cap? ID typeparams? ('is' type)? STRING? members
 
         members:
             field* method*
 
+        field-kind:
+            'var' | 'let' | 'embed'
+
         field:
-            ('var' | 'let' | 'embed') ID ':' type ('=' infix)? STRING?
+            field-kind ID ':' type ('=' infix)? STRING?
+
+        method-kind:
+            'fun' | 'be' | 'new'
 
         method:
-            ('fun' | 'be' | 'new') anno? (cap | '@')? ID typeparams? '(' params? ')' (':' type)? '?'? STRING? ('=>' rawseq)?
+            method-kind anno? (cap | '@')? ID typeparams? '(' params? ')' (':' type)? '?'? STRING? ('=>' rawseq)?
 
         anno:
             ('\\' ID (',' ID)* '\\')
@@ -66,13 +76,50 @@
             nextterm antlr_0*
 
         infix:
-            term antlr_1*
+            term antlr_0*
 
         isop:
             ('is' | 'isnt') term
 
+        infix-operator
+            : 'and'
+            | 'or'
+            | 'xor'
+
+            | '+~'
+            | '+'
+            | '-~'
+            | '-'
+            | '*~'
+            | '*'
+            | '/~'
+            | '/'
+            | '%%~'
+            | '%%'
+            | '%~'
+            | '%'
+
+            | '<<~'
+            | '<<'
+            | '<=~'
+            | '<='
+            | '<~'
+            | '<'
+
+            | '>>~'
+            | '>>'
+            | '>=~'
+            | '>='
+            | '>~'
+            | '>'
+
+            | '==~'
+            | '=='
+            | '!=~'
+            | '!='
+
         binop:
-            ('and' | 'or' | 'xor' | '+' | '-' | '*' | '/' | '%' | '%%' | '+~' | '-~' | '*~' | '/~' | '%~' | '%%~' | '<<' | '>>' | '<<~' | '>>~' | '==' | '!=' | '<' | '<=' | '>=' | '>' | '==~' | '!=~' | '<~' | '<=~' | '>=~' | '>~') '?'? term
+            infix-operator '?'? term
 
         @single
         nextterm
@@ -160,10 +207,10 @@
             nextatom antlr_2*
 
         casepostfix:
-            caseatom antlr_3*
+            caseatom antlr_2*
 
         postfix:
-            atom antlr_4*
+            atom antlr_2*
 
         call:
             '(' positional? named? ')' '?'?
@@ -315,10 +362,9 @@
             | isop
             | 'as' type
 
-        antlr_1
-            : binop
-            | isop
-            | 'as' type
+        antlr_5
+            : uniontype
+            | isecttype
 
         antlr_2
             : dot
@@ -326,24 +372,6 @@
             | chain
             | typeargs
             | call
-
-        antlr_3
-            : dot
-            | tilde
-            | chain
-            | typeargs
-            | call
-
-        antlr_4
-            : dot
-            | tilde
-            | chain
-            | typeargs
-            | call
-
-        antlr_5
-            : uniontype
-            | isecttype
     }
 
     terminals
@@ -354,68 +382,68 @@
         _:  (whitespace | line-comment | nested-comment | new-line)*
 
         more:
-            [0-9a-zA-Z_]
+            [0-9a-zA-Z_']
 
         keyword
-            : 'compile_intrinsic' !more
-            | 'use' !more
-            | 'type' !more
-            | 'interface' !more
-            | 'trait' !more
-            | 'primitive' !more
-            | 'struct' !more
-            | 'class' !more
-            | 'actor' !more
-            | 'object' !more
-            | 'as' !more
-            | 'is' !more
-            | 'isnt' !more
-            | 'var' !more
-            | 'let' !more
-            | 'embed' !more
-            | 'new' !more
-            | 'fun' !more
-            | 'be' !more
-            | 'iso' !more
-            | 'trn' !more
-            | 'ref' !more
-            | 'val' !more
-            | 'box' !more
-            | 'tag' !more
-            | 'this' !more
-            | 'return' !more
-            | 'break' !more
-            | 'continue' !more
-            | 'consume' !more
-            | 'recover' !more
-            | 'if' !more
-            | 'ifdef' !more
-            | 'iftype' !more
-            | 'then' !more
-            | 'else' !more
-            | 'elseif' !more
-            | 'end' !more
-            | 'for' !more
-            | 'in' !more
-            | 'while' !more
-            | 'do' !more
-            | 'repeat' !more
-            | 'until' !more
-            | 'match' !more
-            | 'where' !more
-            | 'try' !more
-            | 'with' !more
-            | 'error' !more
-            | 'compile_error' !more
-            | 'not' !more
-            | 'and' !more
-            | 'or' !more
-            | 'xor' !more
-            | 'digestof' !more
-            | 'addressof' !more
-            | '__loc' !more
-            | 'true' !more
-            | 'false' !more
+            : 'compile_intrinsic'
+            | 'use'
+            | 'type'
+            | 'interface'
+            | 'trait'
+            | 'primitive'
+            | 'struct'
+            | 'class'
+            | 'actor'
+            | 'object'
+            | 'as'
+            | 'is'
+            | 'isnt'
+            | 'var'
+            | 'let'
+            | 'embed'
+            | 'new'
+            | 'fun'
+            | 'be'
+            | 'iso'
+            | 'trn'
+            | 'ref'
+            | 'val'
+            | 'box'
+            | 'tag'
+            | 'this'
+            | 'return'
+            | 'break'
+            | 'continue'
+            | 'consume'
+            | 'recover'
+            | 'if'
+            | 'ifdef'
+            | 'iftype'
+            | 'then'
+            | 'else'
+            | 'elseif'
+            | 'end'
+            | 'for'
+            | 'in'
+            | 'while'
+            | 'do'
+            | 'repeat'
+            | 'until'
+            | 'match'
+            | 'where'
+            | 'try'
+            | 'with'
+            | 'error'
+            | 'compile_error'
+            | 'not'
+            | 'and'
+            | 'or'
+            | 'xor'
+            | 'digestof'
+            | 'addressof'
+            | '__loc'
+            | 'true'
+            | 'false'
 
         // tokens
 
@@ -426,13 +454,13 @@
             | _ [_] (LETTER | DIGIT | [_] | ['])*
 
         INT
-            : _ "0x" (HEX | [_])+
-            | _ "0b" (BINARY | [_])+
+            : _ "0b" (BINARY | [_])+
+            | _ "0x" (HEX | [_])+
             | _ DIGIT (DIGIT | [_])*
             | _ ['] CHAR_CHAR* [']
 
         FLOAT:
-            _ DIGIT (DIGIT | [_])* ([.] DIGIT (DIGIT | [_])*)? EXP?
+            _ DIGIT ![bx] (DIGIT | [_])* ([.] DIGIT (DIGIT | [_])*)? EXP?
 
         STRING
             : _ triple-x (!triple-x .)* triple-x ["]*
@@ -494,7 +522,7 @@
             | !("\"" | "\\") .
 
         EXP:
-            [eE][+-] (DIGIT | '_')+
+            [eE][+-]? (DIGIT | '_')+
 
         LETTER:
             [a-zA-Z]

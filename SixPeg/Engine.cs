@@ -108,13 +108,13 @@ namespace SixPeg
                     break;
                 case "Pony":
                     {
-                        var root = Path.Combine(Navi.Projects.FullName, "Languages", "Pony", "ponylang").Replace('\\', '/');
+                        var root = Path.Combine(Navi.Projects.FullName, "Languages", "Pony").Replace('\\', '/');
 
                         var pony = new DirectoryInfo(root);
 
                         root += '/';
 
-                        foreach (var path in pony.EnumerateFiles("*.pony", SearchOption.AllDirectories).Select(f => f.FullName.Replace('\\', '/')).Take(5))
+                        foreach (var path in pony.EnumerateFiles("*.pony", SearchOption.AllDirectories).Select(f => f.FullName.Replace('\\', '/')))
                         {
                             var skip = false;
                             no += 1;

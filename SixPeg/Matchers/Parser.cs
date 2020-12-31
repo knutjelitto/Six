@@ -9,8 +9,8 @@ namespace SixPeg.Matchers
 {
     public class Parser
     {
-        public readonly List<MatchRule> Rules;
-        private readonly Dictionary<Symbol, MatchRule> Index;
+        public List<MatchRule> Rules { get; }
+        public Dictionary<Symbol, MatchRule> Index { get; }
 
         public Parser()
         {
@@ -24,12 +24,15 @@ namespace SixPeg.Matchers
 
         public Parser Build(Grammar grammar)
         {
+            var matchesFlag = GetFlag(grammar, "matches").Text ?? string.Empty;
+            var allSingle = matchesFlag == "first";
+
             foreach (var rule in grammar.Rules)
             {
                 var matcher = new MatchRule(rule.Name)
                 {
                     IsTerminal = rule is TerminalExpression,
-                    IsSingle = rule.Attributes.Symbols.Any(s => s.Text == "single"),
+                    IsSingle = allSingle || rule.Attributes.Symbols.Any(s => s.Text == "single"),
                 };
 
                 if (matcher.IsSingle)
@@ -50,9 +53,9 @@ namespace SixPeg.Matchers
                 }
             }
 
-            Space = Special(grammar, "space") ?? Space;
-            Start = Special(grammar, "start") ?? Start;
-            More = Special(grammar, "more");
+            Space = GetSpecialRule(grammar, "space") ?? Space;
+            Start = GetSpecialRule(grammar, "start") ?? Start;
+            More = GetSpecialRule(grammar, "more");
 
             Debug.Assert(Rules.Count == grammar.Rules.Count);
 
@@ -66,12 +69,22 @@ namespace SixPeg.Matchers
             return this;
         }
 
-        private MatchRule Special(Grammar grammar, string name)
+        private MatchRule GetSpecialRule(Grammar grammar, string name)
         {
             var specialOption = grammar.Options.Where(o => o.Name.Text == name).FirstOrDefault();
             if (specialOption != null && GetRule(specialOption.Value, out var special))
             {
                 return special;
+            }
+            return null;
+        }
+
+        private Symbol GetFlag(Grammar grammar, string name)
+        {
+            var flagOption = grammar.Options.Where(o => o.Name.Text == name).FirstOrDefault();
+            if (flagOption != null)
+            {
+                return flagOption.Value;
             }
             return null;
         }

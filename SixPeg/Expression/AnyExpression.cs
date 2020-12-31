@@ -5,12 +5,9 @@ using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
-    public abstract class AnyExpression : IVisitableExpression, ILexical
+    public abstract class AnyExpression : IVisitableExpression
     {
         private AnyMatcher matcher;
-
-        public Cursor EndCursor { get; set; }
-        public Cursor StartCursor { get; set; }
 
         public Grammar Grammar { get; set; }
         public bool Spaced { get; set; } = false;

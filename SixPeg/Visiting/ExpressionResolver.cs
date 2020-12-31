@@ -125,7 +125,7 @@ namespace SixPeg.Visiting
                     : new MatchCharacterSequence(text);
 
                 var sequence = new List<AnyMatcher> { matchSpace, matchText };
-                if (parser.More != null)
+                if (parser.More != null && text.IsIdentifier())
                 {
                     sequence.Add(new MatchNot(new MatchReference(parser.More)));
                 }
