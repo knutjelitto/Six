@@ -1,13 +1,16 @@
-﻿using Pegasus.Common;
+﻿using Six.Support;
 using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
-    public class Symbol : ILexical
+    public class Symbol
     {
-        public Symbol(string text, bool quoted = false)
+        public Symbol(Source source, string text, int start, int next, bool quoted = false)
         {
+            Source = source;
             Text = text;
+            Start = start;
+            Next = next;
             Quoted = quoted;
 
             if (quoted)
@@ -17,10 +20,12 @@ namespace SixPeg.Expression
             }
         }
 
+        public Source Source { get; }
         public string Text { get; }
+        public int Start { get; }
+        public int Next { get; }
+        public int Length => Next - Start;
         public bool Quoted { get; }
-        public Cursor EndCursor { get; set; }
-        public Cursor StartCursor { get; set; }
 
         public override bool Equals(object obj)
         {

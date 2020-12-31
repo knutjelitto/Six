@@ -1,22 +1,41 @@
 ﻿using Six.Support;
 using SixPeg.Expression;
 using SixPeg.Matches;
-using System;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
-    public class MatchName : AnyMatcher
+    public class MatchRef : AnyMatcher
     {
-        private readonly Lazy<bool> isTerminal;
+        private readonly HashSet<string> terminals = new HashSet<string>
+        {
+            "identifier",
+            "int_lit",
+            "float_lit",
+            "imaginary_lit",
+            "rune_lit",
+            "string_lit",
+            "raw_string_lit",
+            "interpreted_string_lit",
+            "decimal_lit",
+            "binary_lit",
+            "octal_lit",
+            "hex_lit",
+            "decimal_digits",
+            "binary_digits",
+            "octal_digits",
+            "hex_digits",
+            "int_lit",
+            "';?",
+        };
 
-        public MatchName(Symbol name, MatchCache matchCache, MatchesCache matchesCache)
+        public MatchRef(Symbol name, MatchCache matchCache, MatchesCache matchesCache)
         {
             Name = name;
             MatchCache = matchCache;
             MatchesCache = matchesCache;
-            isTerminal = new Lazy<bool>(() => Matcher.IsTerminal);
         }
 
         public Symbol Name { get; }
@@ -24,8 +43,7 @@ namespace SixPeg.Matchers
         public MatchesCache MatchesCache { get; }
 
         public IMatcher Matcher { get; private set; } = null;
-        public override bool IsClassy => Matcher.IsClassy;
-        public override string Marker => $"<{Name.Text}>";
+        public override string Marker => $"{Name}";
 
         public void SetMatcher(IMatcher matcher)
         {
@@ -35,16 +53,6 @@ namespace SixPeg.Matchers
 
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
         {
-            if (Name.Text == "FunctionType")
-            {
-                //new Error(subject).Report($"{Name.Text}", start);
-                Debug.Assert(true);
-
-            }
-            if (before == 505)
-            {
-                Debug.Assert(true);
-            }
             if (!MatchesCache.Already(start, out var cached))
             {
                 var matches = new List<IMatch>();
@@ -54,9 +62,8 @@ namespace SixPeg.Matchers
                     matches.Add(named);
                     yield return named;
 
-                    if (IsTerminal)
+                    if (terminals.Contains(Name.Text))
                     {
-                        Console.Write($".{Name.Text}");
                         break;
                     }
                 }
@@ -94,11 +101,11 @@ namespace SixPeg.Matchers
             writer.WriteLine($"{SpacePrefix}{Name}");
         }
 
-        public override string ToString()
-        {
-            return $"{Name}";
-        }
-
         public override string DDLong => $"{Name}";
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }

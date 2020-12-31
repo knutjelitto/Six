@@ -1,5 +1,6 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
@@ -26,6 +27,11 @@ namespace SixPeg.Matchers
         public override void Write(IWriter writer)
         {
             writer.WriteLine($"{SpacePrefix}ε");
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

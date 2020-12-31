@@ -1,42 +1,5 @@
 ﻿grammar Go
 {
-    rules
-    {
-        // ------------------------------------
-        // integer literal
-        // ------------------------------------
-        int_lit
-            = _ decimal_lit
-            / _ binary_lit
-            / _ octal_lit
-            / _ hex_lit
-
-        // ------------------------------------
-        // float literal
-        // ------------------------------------
-        float_lit
-            = _ decimal_float_lit
-            / _ hex_float_lit
-
-        // ------------------------------------
-        // imaginary literal
-        // ------------------------------------
-        imaginary_lit
-            = (int_lit / float_lit)[i]
-
-        // ------------------------------------
-        // rune literal
-        // ------------------------------------
-        rune_lit
-            = _ ['] (unicode_value / byte_value) [']
-
-        // ------------------------------------
-        // string literal
-        // ------------------------------------
-        string_lit
-            = _ raw_string_lit
-            / _ interpreted_string_lit
-    }
     terminals
     {
         // ------------------------------------
@@ -44,13 +7,13 @@
         // ------------------------------------
 
         identifier
-            = !('chan' !more) _ name
+            = !(('chan'/'interface'/'map'/'case'/'struct'/'func'/'default') !more) _ name
 
         name
             = name-head name-character*
 
         name-head
-            = [a-zA-Z_]
+            = [a-zA-Z_µεÀβŝθχ]
 
         name-character
             = name-head
@@ -90,15 +53,21 @@
         // ------------------------------------
         // integer literal
         // ------------------------------------
+        int_lit
+            = _ decimal_lit
+            / _ binary_lit
+            / _ octal_lit
+            / _ hex_lit
+
         decimal_lit
-            = [0] ![bBoOxX]
+            = [0] ![bBoOxX0-9]
             / [1-9] ([_]? decimal_digits)?
 
         binary_lit
             = [0][bB] [_]? binary_digits
 
         octal_lit
-            = [0][oO] [_]? octal_digits
+            = [0][oO]? [_]? octal_digits
 
         hex_lit
             = [0][xX] '_'? hex_digits
@@ -118,6 +87,9 @@
         // ------------------------------------
         // float literal
         // ------------------------------------
+        float_lit
+            = _ decimal_float_lit
+            / _ hex_float_lit
 
         decimal_float_lit
             = decimal_digits [.] decimal_digits? decimal_exponent?
@@ -139,14 +111,32 @@
             = [pP] [+-]? decimal_digits
 
         // ------------------------------------
+        // imaginary literal
+        // ------------------------------------
+        imaginary_lit
+            = (float_lit / int_lit)[i]
+
+
+        // ------------------------------------
+        // rune literal
+        // ------------------------------------
+        rune_lit
+            = _ ['] (byte_value / unicode_value) [']
+
+
+        // ------------------------------------
         // string literal
         // ------------------------------------
+
+        string_lit
+            = _ raw_string_lit
+            / _ interpreted_string_lit
 
         raw_string_lit
             = [`] (![`] .)* [`]
 
         interpreted_string_lit
-            = ["] (!["] (unicode_value / byte_value))* ["]
+            = ["] (!["] (byte_value / unicode_value))* ["]
 
         unicode_value
             = little_u_value

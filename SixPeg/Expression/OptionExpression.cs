@@ -2,13 +2,13 @@
 {
     public class OptionExpression
     {
-        public OptionExpression(Symbol name, object value)
+        public OptionExpression(Symbol name, Symbol value)
         {
             Name = name;
             Value = value;
         }
 
         public Symbol Name { get; }
-        public object Value { get; }
+        public Symbol Value { get; }
     }
 }

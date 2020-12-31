@@ -1,4 +1,4 @@
-﻿namespace SixPeg.Expression
+﻿namespace Six.Support
 {
     public interface IVisitable
     {

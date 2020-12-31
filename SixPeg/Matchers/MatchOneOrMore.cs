@@ -1,11 +1,12 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
     public class MatchOneOrMore : BaseMatcher
     {
-        public MatchOneOrMore(IMatcher matcher)
+        public MatchOneOrMore(AnyMatcher matcher)
             : base("+", "one-or-more", matcher)
         {
         }
@@ -51,6 +52,11 @@ namespace SixPeg.Matchers
             }
 
             return matched;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

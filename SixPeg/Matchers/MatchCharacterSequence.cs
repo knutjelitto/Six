@@ -1,5 +1,6 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,5 +48,10 @@ namespace SixPeg.Matchers
 
         public override string DDLong => $"string(\"{Text.Escape()}\")";
         public override string Marker => "\"..\"";
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }

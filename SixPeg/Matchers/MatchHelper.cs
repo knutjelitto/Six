@@ -1,7 +1,6 @@
 ﻿using SixPeg.Matches;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace SixPeg.Matchers
 {
@@ -10,7 +9,8 @@ namespace SixPeg.Matchers
         [DebuggerStepThrough]
         public static IEnumerable<IMatch> Materialize(this IEnumerable<IMatch> matches)
         {
-            return matches.ToList();
+            //return matches.ToList();
+            return matches;
         }
     }
 }

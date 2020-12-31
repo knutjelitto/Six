@@ -1,10 +1,11 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
-    public class MatchCharacterRange : AnyMatcher
+    public class MatchCharacterRange : MatchClassy
     {
         public MatchCharacterRange(char minCharacter, char maxCharacter)
         {
@@ -14,8 +15,6 @@ namespace SixPeg.Matchers
 
         public char MinCharacter { get; }
         public char MaxCharacter { get; }
-
-        public override bool IsClassy => true;
 
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
         {
@@ -47,5 +46,10 @@ namespace SixPeg.Matchers
 
         public override string DDLong => $"range(\"{MinCharacter.Escape()}\",\"{MaxCharacter.Escape()}\")";
         public override string Marker => "[..]";
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }

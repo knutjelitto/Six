@@ -1,6 +1,8 @@
-﻿namespace SixPeg.Expression
+﻿using SixPeg.Expression;
+
+namespace SixPeg.Visiting
 {
-    public interface IVisitor<T>
+    public interface IExpressionVisitor<T>
     {
         T Visit(AndExpression expr);
         T Visit(CharacterClassExpression expr);
@@ -8,7 +10,6 @@
         T Visit(CharacterSequenceExpression expr);
         T Visit(ChoiceExpression expr);
         T Visit(ErrorExpression expr);
-        T Visit(Grammar expr);
         T Visit(NotExpression expr);
         T Visit(QuantifiedExpression expr);
         T Visit(ReferenceExpression expr);

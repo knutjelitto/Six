@@ -1,5 +1,6 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
@@ -23,7 +24,7 @@ namespace SixPeg.Matchers
         {
             var message = string.Join(" ", Arguments);
 
-            new Error(subject).Report(message, furthestSuccess);
+            new Error(subject).Report(message, furthestCursor);
 
             throw new System.NotImplementedException(message);
         }
@@ -31,6 +32,11 @@ namespace SixPeg.Matchers
         public override void Write(IWriter writer)
         {
             writer.WriteLine($"{SpacePrefix}#error(...)");
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

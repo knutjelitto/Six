@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,12 +7,12 @@ namespace SixPeg.Matchers
 {
     public class MatchSequence : BaseMatchers
     {
-        private MatchSequence(IEnumerable<IMatcher> matchers)
+        public MatchSequence(IEnumerable<AnyMatcher> matchers)
             : base("_", "sequence", matchers)
         {
         }
 
-        public static IMatcher From(IEnumerable<IMatcher> ms)
+        public static AnyMatcher From(IEnumerable<AnyMatcher> ms)
         {
             var matchers = ms.ToList();
 
@@ -29,7 +30,6 @@ namespace SixPeg.Matchers
             if (first is MatchSpace space)
             {
                 var rest = From(matchers.Skip(1));
-                //Debug.Assert(space.Matcher != null);
                 rest.Space = space;
                 return rest;
             }
@@ -81,6 +81,11 @@ namespace SixPeg.Matchers
             }
 
             return true;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

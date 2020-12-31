@@ -1,17 +1,15 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SixPeg.Matchers
 {
     public class MatchChoice : BaseMatchers
     {
-        public MatchChoice(IEnumerable<IMatcher> matchers)
+        public MatchChoice(IEnumerable<AnyMatcher> matchers)
             : base("/", "choice", matchers)
         {
         }
-
-        public override bool IsClassy => Matchers.All(m => m.IsClassy);
 
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
         {
@@ -36,6 +34,11 @@ namespace SixPeg.Matchers
             }
             cursor = start;
             return false;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

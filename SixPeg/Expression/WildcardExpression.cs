@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using SixPeg.Visiting;
 
 namespace SixPeg.Expression
 {
@@ -8,12 +9,12 @@ namespace SixPeg.Expression
         {
         }
 
-        protected override IMatcher MakeMatcher()
+        protected override AnyMatcher MakeMatcher()
         {
             return new MatchCharacterAny();
         }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }

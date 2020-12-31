@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace SixPeg.Matchers
 {
     public class MatchNot : BaseMatcher
     {
-        public MatchNot(IMatcher matcher)
+        public MatchNot(AnyMatcher matcher)
             : base("!", "not", matcher)
         {
         }
@@ -34,6 +35,11 @@ namespace SixPeg.Matchers
 
             cursor = start;
             return true;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

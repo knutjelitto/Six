@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using SixPeg.Visiting;
 using System;
 
 namespace SixPeg.Expression
@@ -14,7 +15,7 @@ namespace SixPeg.Expression
         public AnyExpression Expression { get; }
         public Quantifier Quantifier { get; }
 
-        protected override IMatcher MakeMatcher()
+        protected override AnyMatcher MakeMatcher()
         {
             return (Quantifier.Min, Quantifier.Max) switch
             {
@@ -26,7 +27,7 @@ namespace SixPeg.Expression
             };
         }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }

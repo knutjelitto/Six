@@ -4,7 +4,7 @@
 @using System.Linq
 @using System.Text.RegularExpressions
 @using SixPeg.Expression
-
+   
 axiom <GrammarPart>
     = grammar:grammar EOF                       { grammar }
 
@@ -37,31 +37,34 @@ terminals <Terminals>
     = _ "terminals" lbrace terminals:terminal* rbrace   { new Terminals(terminals) }
 
 option <OptionExpression>
-    = name:identifier equals value:(<object>identifier / string)
-                                                { new OptionExpression(name, value)}
+    = name:identifier equals value:identifier   { new OptionExpression(name, value)}
 
 rulePreamble
-    = equals
+    = attributes ruleName (equals/colon)
 
 rule <RuleExpression>
-    = name:ruleName equals expression:expression semicolon? { new RuleExpression(name, expression) }
+    = attrs:attributes name:ruleName (equals/colon) expression:expression semicolon?
+                                                { new RuleExpression(name, attrs, expression) }
 
 ruleName
     = identifier
     / spacedName
 
 terminal <TerminalExpression>
-    = name:terminalName equals expression:expression semicolon? { new TerminalExpression(name, expression) }
+    = attrs:attributes name:ruleName (equals/colon) expression:expression semicolon?
+                                                { new TerminalExpression(name, attrs, expression) }
 
-terminalName
-    = identifier
-    / spacedName
+attributes <Attributes>
+    = attrs:attribute*                          { new Attributes(attrs) }
+
+attribute <Symbol>
+    = at id:identifier                          { id }
 
 expression <AnyExpression>
     = choice
 
 choice <AnyExpression>
-    = choices:sequence<1,,slash>                { new ChoiceExpression(choices) }
+    = choices:sequence<1,,(slash/bar)>          { new ChoiceExpression(choices) }
 
 sequence <AnyExpression>
     = elements:element<0,,_>                    { new SequenceExpression(elements) }
@@ -86,10 +89,10 @@ quantifier <Quantifier> -memoize
     / plus                                      { new Quantifier(min: 1, max: null) }
 
 primary <AnyExpression> -memoize
-    = name:identifier !(rulePreamble)           { new ReferenceExpression(name) }
-    / spaced:spacedName !(rulePreamble)         { new SpacedExpression(spaced) }
+    = !rulePreamble name:identifier             { new ReferenceExpression(name) }
+    / !rulePreamble spaced:spacedName           { new SpacedExpression(spaced) }
+    / !rulePreamble cls:class                   { cls }
     / stringLiteral
-    / class
     / dot                                       { new WildcardExpression() }
     / lparen expression:expression rparen       { expression }
 
@@ -105,10 +108,13 @@ error <AnyExpression>
     / hash _ "error" lparen #error{ "error-error-error" }
     / hash #error{ "error-error" }
 
+at        -lexical = _ "@"
 hash      -lexical = _ "#"
 equals    -lexical = _ "="
 semicolon -lexical = _ ";"
+colon     -lexical = _ ":"
 slash     -lexical = _ "/"
+bar       -lexical = _ "|"
 and       -lexical = _ "&"
 not       -lexical = _ "!"
 before    -lexical = _ "<"
@@ -126,8 +132,8 @@ lbracket  -lexical = "["
 rbracket  -lexical = "]"
 
 identifier <Symbol> -memoize -lexical
-    = _ name:(identifier_head identifier_tail*) { new Symbol(name) }
-    / _ name:'_'  { new Symbol(name, false) }
+    = _ name:(identifier_head identifier_tail*) { new Symbol(Source, name, nameStart.Location, nameEnd.Location, false) }
+    / _ name:'_'  { new Symbol(Source, name, nameStart.Location, nameEnd.Location, false) }
 
 identifier_head
     = _ start:(letter (letter / digit)*)        { start }
@@ -136,8 +142,10 @@ identifier_tail
     = tail:(('-'/'_') (letter / digit)+)        { tail }
 
 spacedName <Symbol> -memoize -lexical
-    = _ "'" chars:singleQuotedCharacter* ("'" / #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString })
-    { new Symbol(string.Join("", chars), true) }
+    = _ start:"'" chars:singleQuotedCharacter* end:"'"
+                                                { new Symbol(Source, string.Join("", chars), startStart.Location, endEnd.Location, true) }
+    / _ start:"'" chars:singleQuotedCharacter* #error{ "PEG0009:" + Resources.PEG0009_ERROR_PARSER_UnterminatedString }
+                                                { new Symbol(Source, string.Join("", chars), startStart.Location, 0, true) }
 
 singleQuotedCharacter
   = !("'" / eolChar) .

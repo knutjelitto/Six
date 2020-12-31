@@ -1,9 +1,10 @@
 ﻿using Six.Support;
+using SixPeg.Expression;
 using SixPeg.Matches;
 
-namespace SixPeg.Expression
+namespace SixPeg.Visiting
 {
-    public class ResolveVisitor : IVisitor<bool>
+    public class ResolveVisitor : IExpressionVisitor<bool>
     {
         private readonly Grammar grammar;
         private readonly IWriter writer;
@@ -14,12 +15,7 @@ namespace SixPeg.Expression
             this.writer = writer;
         }
 
-        public void Resolve()
-        {
-            _ = Visit(grammar);
-        }
-
-        public bool Visit(Grammar expr)
+        public bool Resolve()
         {
             grammar.Space = null;
             grammar.Start = null;
@@ -29,8 +25,11 @@ namespace SixPeg.Expression
             {
                 if (grammar.Indexed.TryGetValue(rule.Name, out var already))
                 {
-                    writer.WriteLine($"already defined rule: {already.Name}");
+                    new Error(rule.Name.Source).Report($"rule `{rule.Name}`", rule.Name.Start);
+                    new Error(already.Name.Source).Report($"is alread defined here", already.Name.Start);
+                    writer.WriteLine();
                     grammar.Error = true;
+                    throw new BailOutException();
                 }
                 else
                 {
@@ -45,6 +44,11 @@ namespace SixPeg.Expression
                 if (grammar.Start == null)
                 {
                     grammar.Start = rule;
+                }
+
+                if (grammar.Error)
+                {
+                    break;
                 }
             }
 

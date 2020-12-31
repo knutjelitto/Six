@@ -7,7 +7,7 @@
 		// ------------------------------------
 
 		Expression
-			= PrefixExpr (binary_op Expression)*
+			= PrefixExpr (!line-end binary_op Expression)*
 
 		ExpressionList
 			= Expression (',' Expression)*
@@ -28,29 +28,29 @@
 
 		Postfix
 			= Selector
-			/ Index
 			/ Slice
+			/ Index
 			/ TypeAssertion
 			/ Arguments
 
 		Selector
 			= '.' identifier
 
-		Index
-			= '[' Expression ']'
-
 		Slice
 			= '[' Expression? ':' Expression? ']'
 			/ '[' Expression? ':' Expression ':' Expression ']'
+
+		Index
+			= '[' Expression ']'
 
 		TypeAssertion
 			= '.' '(' !('type' !more) Type ')'
 
 		Arguments
-			= '(' ( (ExpressionList / UType (',' ExpressionList)? ) '...'? ','? )?')'
+			= !line-end '(' ( (ExpressionList / (!Expression UType) (',' ExpressionList)? ) '...'? ','? )?')'
 
 		// ------------------------------------
-		// operand
+		// conversion
 		// ------------------------------------
 		Conversion
 			= UType '(' Expression ','? ')'
@@ -71,9 +71,9 @@
 			/ CompositeLit
 
 		BasicLit
-			= float_lit
+			= imaginary_lit
+			/ float_lit
 			/ int_lit
-			/ imaginary_lit
 			/ rune_lit
 			/ string_lit
 
@@ -94,6 +94,7 @@
 			/ MapType
 			/ TypeName
 
+		@single
 		LiteralValue
 			= '{' (ElementList ','?)? '}'
 
@@ -131,9 +132,9 @@
 			= '=='
 			/ '!='
 			/ '<='
-			/ '<' ![<-]
 			/ '>='
-			/ '>' ![>]
+			/ '<' ![=<-]
+			/ '>' ![=>]
 
 		add_op
 			= '+' ![+]

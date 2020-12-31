@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SixPeg.Visiting;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace SixPeg.Expression
         public IEnumerator<AnyExpression> GetEnumerator() => Expressions.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public void AcceptForAll<T>(IVisitor<T> visitor)
+        public void AcceptForAll<T>(IExpressionVisitor<T> visitor)
         {
             foreach (var expression in Expressions)
             {

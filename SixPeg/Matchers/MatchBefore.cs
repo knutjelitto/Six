@@ -1,12 +1,13 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
-    public class MatchBefore : BaseMatcher
+    public sealed class MatchBefore : BaseMatcher
     {
-        public MatchBefore(IMatcher matcher)
+        public MatchBefore(AnyMatcher matcher)
             : base("<", "before", matcher)
         {
             Debug.Assert(matcher.IsClassy);
@@ -28,6 +29,11 @@ namespace SixPeg.Matchers
         {
             var before = cursor - 1;
             return before >= 0 && Matcher.Match(subject, ref before);
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

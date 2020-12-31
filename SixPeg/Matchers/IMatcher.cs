@@ -13,8 +13,8 @@ namespace SixPeg.Matchers
         /// <summary>
         /// true, if this matches a single character
         /// </summary>
-        bool IsClassy { get; }
-        bool IsTerminal { get; set; }
+        bool IsClassy { get; set; }
+        //bool IsTerminal { get; set; }
         string DDLong { get; }
         string Marker { get; }
     }

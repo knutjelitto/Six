@@ -1,17 +1,12 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
-    public class MatchCharacterAny : AnyMatcher
+    public sealed class MatchCharacterAny : MatchClassy
     {
-        public MatchCharacterAny()
-        {
-        }
-
-        public override bool IsClassy => true;
-
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
         {
             var next = start;
@@ -38,6 +33,11 @@ namespace SixPeg.Matchers
         public override void Write(IWriter writer)
         {
             writer.WriteLine($"{SpacePrefix}match any");
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
 
         public override string DDLong => $"any(.)";

@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using SixPeg.Visiting;
 using System;
 
 namespace SixPeg.Expression
@@ -17,14 +18,14 @@ namespace SixPeg.Expression
         public override bool Equals(object obj) => obj is CharacterRangeExpression other && other.Min == Min && other.Max == Max;
         public override int GetHashCode() => HashCode.Combine(Min, Max);
 
-        protected override IMatcher MakeMatcher()
+        protected override AnyMatcher MakeMatcher()
         {
             return Min == Max
-                ? new MatchCharacterExact(Min)
-                : (IMatcher)new MatchCharacterRange(Min, Max);
+                ? (AnyMatcher)new MatchCharacterExact(Min)
+                : new MatchCharacterRange(Min, Max);
         }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }

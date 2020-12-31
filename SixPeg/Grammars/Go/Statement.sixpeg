@@ -6,6 +6,7 @@
 		// statement
 		// ------------------------------------
 
+		@single
 		Block
 			= '{' StatementList '}'
 
@@ -43,7 +44,7 @@
 		// labeled-statement
 		// ------------------------------------
 		LabeledStmt
-			= Label ':' ![=] Statement
+			= Label ':' ![=] Statement?
 
 		Label
 			= identifier
@@ -58,19 +59,19 @@
 		// return-statement
 		// ------------------------------------
 		ReturnStmt
-			= 'return' ExpressionList?
+			= 'return' (!line-end ExpressionList?)?
 
 		// ------------------------------------
 		// break-statement
 		// ------------------------------------
 		BreakStmt
-			= 'break' Label?
+			= 'break' (!line-end Label)?
 
 		// ------------------------------------
 		// continue-statement
 		// ------------------------------------
 		ContinueStmt
-			= 'continue' Label?
+			= 'continue' (!line-end Label)?
 
 		// ------------------------------------
 		// goto-statement
@@ -177,7 +178,7 @@
 		// ExpressionStmt-statement
 		// ------------------------------------
 		ExpressionStmt
-			= !(('break'/'return') !more) Expression
+			= !(('break'/'return'/'continue'/'fallthrough'/'if') !more) Expression
 
 		// ------------------------------------
 		// send-statement

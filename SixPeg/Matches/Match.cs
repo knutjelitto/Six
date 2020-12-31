@@ -14,6 +14,11 @@ namespace SixPeg.Matches
             Start = start;
             Next = next;
             Matches = matches;
+
+            if (Next > AnyMatcher.furthestCursor)
+            {
+                AnyMatcher.furthestCursor = Next;
+            }
         }
 
         public IMatcher Matcher { get; }

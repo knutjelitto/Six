@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using SixPeg.Visiting;
 using System.Diagnostics;
 
 namespace SixPeg.Expression
@@ -13,13 +14,13 @@ namespace SixPeg.Expression
         public Symbol Name { get; }
         public AnyExpression Expression { get; internal set; }
 
-        protected override IMatcher MakeMatcher()
+        protected override AnyMatcher MakeMatcher()
         {
             Debug.Assert(Expression != null);
             return Expression.GetMatcher();
         }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
         {
             return visitor.Visit(this);
         }

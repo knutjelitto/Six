@@ -12,11 +12,12 @@ namespace SixPeg.Expression
         public readonly Dictionary<Symbol, AnyRule> Indexed = new Dictionary<Symbol, AnyRule>();
         public readonly Dictionary<Symbol, MatchCache> CachedMatch = new Dictionary<Symbol, MatchCache>();
         public readonly Dictionary<Symbol, MatchesCache> CachedMatches = new Dictionary<Symbol, MatchesCache>();
-        public readonly List<MatchName> ReferencesToResolve = new List<MatchName>();
+        public readonly List<MatchRef> ReferencesToResolve = new List<MatchRef>();
 
-        public Grammar(IList<AnyRule> rules)
+        public Grammar(IList<AnyRule> rules, IList<OptionExpression> options)
         {
             Rules = rules.ToList();
+            Options = options.ToList();
             Generated = new List<AnyRule>();
         }
 
@@ -26,6 +27,7 @@ namespace SixPeg.Expression
         public AnyRule Space { get; set; }
         public IMatcher Matcher { get; private set; }
         public bool Error { get; set; } = false;
+        public List<OptionExpression> Options { get; }
 
         public void Clear()
         {
@@ -83,6 +85,29 @@ namespace SixPeg.Expression
             }
         }
 
+        public void ReportKindness(IWriter writer)
+        {
+            if (Error)
+            {
+                return;
+            }
+            using (writer.Indent("RULES"))
+            {
+                foreach (var rule in Rules.OfType<RuleExpression>())
+                {
+                    writer.WriteLine($"{rule.Name}");
+                }
+            }
+            writer.WriteLine();
+            using (writer.Indent("TERMINALS"))
+            {
+                foreach (var rule in Rules.OfType<TerminalExpression>())
+                {
+                    writer.WriteLine($"{rule.Name}");
+                }
+            }
+        }
+
         public AnyRule FindRule(Symbol name)
         {
             if (Indexed.TryGetValue(name, out var rule))
@@ -105,7 +130,7 @@ namespace SixPeg.Expression
             if (!Indexed.TryGetValue(identifier, out var _))
             {
                 var expression = new CharacterSequenceExpression(spaced.Name.Text[1..^1]) { Spaced = true };
-                var rule = new RuleExpression(identifier, expression);
+                var rule = new TerminalExpression(identifier, new Attributes(), expression);
                 Indexed.Add(identifier, rule);
                 Rules.Add(rule);
             }

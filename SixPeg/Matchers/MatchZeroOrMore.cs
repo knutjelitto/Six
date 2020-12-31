@@ -1,11 +1,13 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
     public sealed class MatchZeroOrMore : BaseMatcher
     {
-        public MatchZeroOrMore(IMatcher matcher)
+        public MatchZeroOrMore(AnyMatcher matcher)
             : base("*", "zero-or-more", matcher)
         {
         }
@@ -27,6 +29,10 @@ namespace SixPeg.Matchers
 
             IEnumerable<IMatch> Inner(int depth, int next)
             {
+                if (depth >= 100)
+                {
+                    Debug.Assert(true);
+                }
                 foreach (var outer in Matcher.Matches(subject, next).Materialize())
                 {
                     if (matches.Count == depth)
@@ -56,6 +62,11 @@ namespace SixPeg.Matchers
             }
 
             return true;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

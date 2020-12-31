@@ -1,45 +1,42 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
     [DebuggerDisplay("{DDLong}")]
-    public abstract class AnyMatcher : IMatcher
+    public abstract class AnyMatcher : IMatcher, IVisitableMatcher
     {
         public static int furthestCursor = 0;
-        public static int furthestFail = 0;
-        public static int furthestSuccess = 0;
 
         public IMatcher Space { get; set; } = null;
-        public bool IsTerminal { get; set; } = false;
-        protected string SpacePrefix => Space == null ? string.Empty : "_ ";
+        public bool IsClassy { get; set; } = false;
+        public string SpacePrefix => Space == null ? string.Empty : "_ ";
         public virtual string DDLong => ToString();
         public abstract string Marker { get; }
-        public virtual bool IsClassy => false;
 
         public static void Clear()
         {
             furthestCursor = 0;
-            furthestFail = 0;
-            furthestSuccess = 0;
         }
 
-        public IEnumerable<IMatch> Matches(Context subject, int cursor)
+        public IEnumerable<IMatch> Matches(Context subject, int start)
         {
-            var before = cursor;
-            ConsumeSpace(subject, ref cursor);
-
-            var matches = InnerMatches(subject, before, cursor).Materialize();
-
-            foreach (var match in matches)
+            if (this is MatchRef name)
             {
-                if (match.Next > furthestCursor)
+                if (name.Name.Text == "raw_string_lit")
                 {
-                    furthestCursor = match.Next;
+                    //new Error(subject).Report($"{name.Name.Text}", start);
+                    Debug.Assert(true);
                 }
             }
+
+            var before = start;
+            ConsumeSpace(subject, ref start);
+
+            var matches = InnerMatches(subject, before, start).Materialize();
 
             return matches;
         }
@@ -56,19 +53,6 @@ namespace SixPeg.Matchers
                 cursor = start;
             }
 
-            if (cursor > furthestCursor)
-            {
-                furthestCursor = cursor;
-            }
-            if (match && cursor > furthestSuccess)
-            {
-                furthestSuccess = cursor;
-            }
-            if (!match && cursor > furthestFail)
-            {
-                furthestFail = cursor;
-            }
-
             return match;
         }
 
@@ -83,5 +67,6 @@ namespace SixPeg.Matchers
 
         protected abstract bool InnerMatch(Context subject, ref int cursor);
         public abstract void Write(IWriter writer);
+        public abstract T Accept<T>(IMatcherVisitor<T> visitor);
     }
 }

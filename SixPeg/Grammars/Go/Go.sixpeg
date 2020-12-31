@@ -3,10 +3,10 @@
     rules
     {
         SourceFile
-            = PackageClause ';?' (ImportDecl ';?')* (TopLevelDecl ';?')* EOF
+            = PackageClause (ImportDecl ';?')* (TopLevelDecl ';?')* EOF
 
         PackageClause
-            = 'package' PackageName
+            = 'package' PackageName ';?'
 
         PackageName
             = identifier
@@ -22,16 +22,15 @@
     }
     terminals
     {
-        EOF
-            = _ !.
+        EOF = _ !.
 
-        _
-            = whitespace*
+        _   = whitespace*
 
-        // imaginary ';' (maybe ';')
-        ';?' = _ [;]
-            / single-whitespace* (line-break / comment)
-            / _ &[)}]
-            / _ !.
+        // imaginary ';' (maybe real ';')
+        ';?'
+            = ';'
+            / &(line-end !(EOF / _ [)}]))
+            / &(_ [)}])
+            / &EOF
     }
 }

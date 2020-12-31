@@ -1,11 +1,12 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
     public class MatchZeroOrOne : BaseMatcher
     {
-        public MatchZeroOrOne(IMatcher matcher)
+        public MatchZeroOrOne(AnyMatcher matcher)
             : base("?", "zero-or-one", matcher)
         {
         }
@@ -27,6 +28,11 @@ namespace SixPeg.Matchers
         protected override bool InnerMatch(Context subject, ref int cursor)
         {
             return Matcher.Match(subject, ref cursor) || true;
+        }
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

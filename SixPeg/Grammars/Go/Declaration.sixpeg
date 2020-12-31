@@ -71,7 +71,7 @@
 		// method-declaration
 		// ------------------------------------
 		MethodDecl
-			= 'func' Receiver MethodName Signature FunctionBody
+			= 'func' !more Receiver MethodName Signature FunctionBody
 
 		Receiver
 			= Parameters

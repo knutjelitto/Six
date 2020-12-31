@@ -1,17 +1,16 @@
 ﻿using Six.Support;
 using SixPeg.Matches;
+using SixPeg.Visiting;
 using System.Collections.Generic;
 
 namespace SixPeg.Matchers
 {
-    public class MatchCharacterExact : AnyMatcher
+    public class MatchCharacterExact : MatchClassy
     {
         public MatchCharacterExact(char character)
         {
             Character = character;
         }
-
-        public override bool IsClassy => true;
 
         public char Character { get; }
 
@@ -46,5 +45,10 @@ namespace SixPeg.Matchers
         public override string DDLong => $"single(\"{Character.Escape()}\")";
 
         public override string Marker => "=";
+
+        public override T Accept<T>(IMatcherVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }

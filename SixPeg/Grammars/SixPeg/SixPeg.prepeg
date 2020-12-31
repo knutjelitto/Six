@@ -1,8 +1,63 @@
-﻿grammar
-	= rule* EOF
+﻿grammar SixPeg
+{
+	options
+	{
+		start = axiom
+	}
 
-EOF = _ !.
+	rules
+	{
+		start
+			= grammar EOF
 
+		grammar
+			= 'grammar' name '{' part* '}'
+
+		part
+			= options
+			/ rules
+			/ terminals
+
+		options
+			= 'options' '{' option* '}'
+
+		rules
+			= 'rules' '{' rule* '}'
+
+		terminals:
+			'terminals' '{' terminal* '}'
+
+		option:
+			name '=' name
+
+		rule:
+			name ':' top-choice?
+
+		top-choice:
+			'/'? sequence ('/' sequence )*
+
+		sequence:
+			element*
+
+		element:
+			prefixed
+
+		prefixed:
+			/ '&' suffixed
+			/ '!' suffixed
+			/ '%' suffixed
+			/ suffixed
+
+		suffixed:
+	}
+	
+	terminals
+	{
+		EOF = _ !.
+	}
+}
+
+/*
 rule
 	= identifier '=' expression
 	/ identifier #error(11)
@@ -78,3 +133,4 @@ digit
 	= [0-9]
 
 _	= [ \t\r\n]*
+*/

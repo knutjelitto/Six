@@ -1,12 +1,13 @@
 ﻿using Pegasus.Common;
 using SixPeg.Matchers;
+using SixPeg.Visiting;
 using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
-    public abstract class AnyExpression : IVisitable, ILexical
+    public abstract class AnyExpression : IVisitableExpression, ILexical
     {
-        private IMatcher matcher;
+        private AnyMatcher matcher;
 
         public Cursor EndCursor { get; set; }
         public Cursor StartCursor { get; set; }
@@ -15,7 +16,7 @@ namespace SixPeg.Expression
         public bool Spaced { get; set; } = false;
 
         [DebuggerStepThrough]
-        public IMatcher GetMatcher()
+        public AnyMatcher GetMatcher()
         {
             if (matcher == null)
             {
@@ -28,7 +29,8 @@ namespace SixPeg.Expression
             return matcher;
         }
 
-        protected abstract IMatcher MakeMatcher();
-        public abstract T Accept<T>(IVisitor<T> visitor);
+        protected abstract AnyMatcher MakeMatcher();
+
+        public abstract T Accept<T>(IExpressionVisitor<T> visitor);
     }
 }

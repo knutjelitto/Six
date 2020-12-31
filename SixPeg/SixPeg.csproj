@@ -5,6 +5,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="SixPeg.pegasus" />
   </ItemGroup>
@@ -52,12 +57,13 @@
     <None Update="Simple.sixpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SixPeg.sixpeg">
+    <None Update="Grammars\SixPeg\SixPeg.prepeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Expression\Visiting\" />
     <Folder Include="Reports\" />
     <Folder Include="Support\" />
   </ItemGroup>
