@@ -11,60 +11,64 @@ namespace SixPeg.Visiting
     public class ExpressionResolver : IExpressionVisitor<AnyMatcher>
     {
         private readonly Parser parser;
+        private readonly Optimizer optimizer;
 
         public ExpressionResolver(Parser parser)
         {
             this.parser = parser;
+            optimizer = new Optimizer();
         }
 
         public AnyMatcher Resolve(AnyExpression expr)
         {
-            return expr.Accept(this);
+            return optimizer.Optimize(expr.Accept(this));
         }
 
         public AnyMatcher Visit(AndExpression expr)
         {
-            return new MatchAnd(expr.Expression.Accept(this));
+            return optimizer.Optimize(new MatchAnd(expr.Expression.Accept(this)));
         }
 
         public AnyMatcher Visit(CharacterClassExpression expr)
         {
-            return new MatchChoice(expr.Ranges.Select(r => r.Accept(this)));
+            return optimizer.Optimize(new MatchChoice(expr.Ranges.Select(r => r.Accept(this))));
         }
 
         public AnyMatcher Visit(CharacterRangeExpression expr)
         {
             return expr.Min == expr.Max
-                ? new MatchCharacterExact(expr.Min)
-                : (AnyMatcher)new MatchCharacterRange(expr.Min, expr.Max);
+                ? optimizer.Optimize(new MatchCharacterExact(expr.Min))
+                : optimizer.Optimize(new MatchCharacterRange(expr.Min, expr.Max));
         }
 
         public AnyMatcher Visit(CharacterSequenceExpression expr)
         {
             return expr.Text.Length switch
             {
-                1 => new MatchCharacterExact(expr.Text[0]),
-                _ => new MatchCharacterSequence(expr.Text)
+                1 => optimizer.Optimize(new MatchCharacterExact(expr.Text[0])),
+                _ => optimizer.Optimize(new MatchCharacterSequence(expr.Text))
             };
         }
 
         public AnyMatcher Visit(ChoiceExpression expr)
         {
-            return expr.Count switch
+            IReadOnlyList<AnyMatcher> matchers = expr.Expressions.Select(e => e.Accept(this)).ToArray();
+
+            return matchers.Count switch
             {
-                1 => expr[0].Accept(this),
-                _ => new MatchChoice(expr.Expressions.Select(e => e.Accept(this)))
+                1 => optimizer.Optimize(matchers[0]),
+                _ => optimizer.Optimize(new MatchChoice(matchers))
             };
         }
 
         public AnyMatcher Visit(ErrorExpression expr)
         {
-            return new MatchError(expr.Arguments);
+            return optimizer.Optimize(new MatchError(expr.Arguments));
         }
 
         public AnyMatcher Visit(NotExpression expr)
         {
-            return new MatchNot(expr.Expression.Accept(this));
+            return optimizer.Optimize(new MatchNot(expr.Expression.Accept(this)));
         }
 
         public AnyMatcher Visit(QuantifiedExpression expr)
@@ -125,9 +129,13 @@ namespace SixPeg.Visiting
                     : new MatchCharacterSequence(text);
 
                 var sequence = new List<AnyMatcher> { matchSpace, matchText };
-                if (parser.More != null && text.IsIdentifier())
+                if (text.IsIdentifier())
                 {
-                    sequence.Add(new MatchNot(new MatchReference(parser.More)));
+                    _ = parser.Keywords.Add(text);
+                    if (parser.More != null)
+                    {
+                        sequence.Add(new MatchNot(new MatchReference(parser.More)));
+                    }
                 }
 
                 rule = new MatchRule(expr.Name)

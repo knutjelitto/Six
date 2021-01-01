@@ -1,5 +1,4 @@
-﻿using Six.Support;
-using SixPeg.Matches;
+﻿using SixPeg.Matches;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 
@@ -26,9 +25,14 @@ namespace SixPeg.Matchers
             return Rule.Match(subject, ref cursor);
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}{Rule.Name}");
+            var match = Rule.Match(subject, start);
+            if (match != null)
+            {
+                return IMatch.Success(this, before, start, match);
+            }
+            return null;
         }
 
         public override string DDLong => $"{Rule.Name}";

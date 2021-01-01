@@ -1,5 +1,6 @@
 ﻿using Six.Support;
 using SixPeg.Matchers;
+using System.Linq;
 
 namespace SixPeg.Visiting
 {
@@ -14,9 +15,20 @@ namespace SixPeg.Visiting
 
         public void Print(Parser parser)
         {
-            foreach (var matcher in parser.Rules)
+            using (Writer.Indent("rules:"))
             {
-                _ = matcher.Accept(this);
+                foreach (var matcher in parser.Rules)
+                {
+                    _ = matcher.Accept(this);
+                }
+            }
+            Writer.WriteLine();
+            using (Writer.Indent("keywords:"))
+            {
+                foreach (var keyword in parser.Keywords.OrderBy(k => k))
+                {
+                    Writer.WriteLine($"{keyword}");
+                }
             }
         }
 
@@ -87,11 +99,6 @@ namespace SixPeg.Visiting
             return true;
         }
 
-        public bool Visit(MatchRef matcher)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public bool Visit(MatchRule matcher)
         {
             using (Writer.Indent($"{matcher.Name}:"))
@@ -126,11 +133,6 @@ namespace SixPeg.Visiting
                 }
             }
             return true;
-        }
-
-        public bool Visit(MatchSpace matcher)
-        {
-            throw new System.NotImplementedException();
         }
 
         public bool Visit(MatchZeroOrMore matcher)

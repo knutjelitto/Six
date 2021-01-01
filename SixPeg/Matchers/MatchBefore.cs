@@ -31,6 +31,16 @@ namespace SixPeg.Matchers
             return before >= 0 && Matcher.Match(subject, ref before);
         }
 
+        protected override IMatch InnerMatch(Context subject, int before, int start)
+        {
+            var cursor = start - 1;
+            if (cursor >= 0 && Matcher.Match(subject, ref cursor))
+            {
+                return IMatch.Success(this, before, start);
+            }
+            return null;
+        }
+
         public override T Accept<T>(IMatcherVisitor<T> visitor)
         {
             return visitor.Visit(this);

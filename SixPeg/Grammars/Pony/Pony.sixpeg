@@ -500,7 +500,9 @@
         new-line:
             line-break _
 
+        //
         // fragments
+        //
 
         line-break
 	        = [\u000A]
@@ -522,7 +524,7 @@
             | !("\"" | "\\") .
 
         EXP:
-            [eE][+-]? (DIGIT | '_')+
+            [eE][+-]? (DIGIT | "_")+
 
         LETTER:
             [a-zA-Z]

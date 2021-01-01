@@ -14,6 +14,9 @@ namespace Six.Support
                 '\r' => "\\r",
                 '\t' => "\\t",
                 '\v' => "\\v",
+                '\'' => "\\'",
+                '\"' => "\\\"",
+                '\\' => "\\\\",
                 _ => character.ToString(),
             };
         }
@@ -21,6 +24,11 @@ namespace Six.Support
         public static string Escape(this string characters)
         {
             return string.Join(string.Empty, characters.Select(c => c.Escape()));
+        }
+
+        public static string Capitalize(this string text)
+        {
+            return char.ToUpperInvariant(text[0]) + text[1..];
         }
 
         public static bool IsIdentifier(this string name)

@@ -64,6 +64,21 @@ namespace SixPeg.Matchers
             return true;
         }
 
+        protected override IMatch InnerMatch(Context subject, int before, int start)
+        {
+            var matches = new List<IMatch>();
+            IMatch match;
+            var cursor = start;
+            while ((match = Matcher.Match(subject, cursor)) != null)
+            {
+                matches.Add(match);
+                cursor = match.Next;
+            }
+
+            return IMatch.Success(this, before, start, cursor, matches);
+        }
+
+
         public override T Accept<T>(IMatcherVisitor<T> visitor)
         {
             return visitor.Visit(this);

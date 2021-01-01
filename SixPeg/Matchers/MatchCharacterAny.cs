@@ -1,5 +1,4 @@
-﻿using Six.Support;
-using SixPeg.Matches;
+﻿using SixPeg.Matches;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 
@@ -30,9 +29,13 @@ namespace SixPeg.Matchers
             return false;
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}match any");
+            if (start < subject.Length)
+            {
+                return IMatch.Success(this, before, start, start + 1);
+            }
+            return null;
         }
 
         public override T Accept<T>(IMatcherVisitor<T> visitor)

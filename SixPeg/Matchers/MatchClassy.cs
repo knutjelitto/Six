@@ -4,7 +4,8 @@
     {
         public MatchClassy()
         {
-            IsClassy = true;
         }
+
+        public override bool IsClassy => true;
     }
 }

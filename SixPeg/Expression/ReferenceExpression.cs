@@ -1,6 +1,4 @@
-﻿using SixPeg.Matchers;
-using SixPeg.Visiting;
-using System.Diagnostics;
+﻿using SixPeg.Visiting;
 
 namespace SixPeg.Expression
 {
@@ -13,17 +11,6 @@ namespace SixPeg.Expression
 
         public Symbol Name { get; }
         public AnyRule Rule { get; internal set; }
-
-        protected override AnyMatcher MakeMatcher()
-        {
-            Debug.Assert(Rule != null);
-            var matcher = Rule == Grammar.Space
-                ? new MatchSpace(Rule.Name, Grammar.CachedMatch[Rule.Name], Grammar.CachedMatches[Rule.Name])
-                : new MatchRef(Rule.Name, Grammar.CachedMatch[Rule.Name], Grammar.CachedMatches[Rule.Name]);
-
-            Grammar.ReferencesToResolve.Add(matcher);
-            return matcher;
-        }
 
         public override string ToString()
         {

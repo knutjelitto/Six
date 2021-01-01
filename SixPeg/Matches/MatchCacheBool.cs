@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace SixPeg.Matches
 {
-    public class MatchCache
+    public class MatchCacheBool
     {
-        private readonly Dictionary<int, IMatch> cache = new Dictionary<int, IMatch>();
+        private readonly Dictionary<int, (bool, int)> cache = new Dictionary<int, (bool, int)>();
 
-        public MatchCache(Symbol name)
+        public MatchCacheBool(Symbol name)
         {
             Name = name;
         }
@@ -16,13 +16,13 @@ namespace SixPeg.Matches
         public Symbol Name { get; }
 
         [DebuggerStepThrough]
-        public bool Already(int cursor, out IMatch result)
+        public bool Already(int cursor, out (bool result, int cursor) result)
         {
             return cache.TryGetValue(cursor, out result);
         }
 
         [DebuggerStepThrough]
-        public void Cache(int cursor, IMatch result)
+        public void Cache(int cursor, (bool, int) result)
         {
             cache.Add(cursor, result);
         }

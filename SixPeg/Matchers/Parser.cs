@@ -11,12 +11,18 @@ namespace SixPeg.Matchers
     {
         public List<MatchRule> Rules { get; }
         public Dictionary<Symbol, MatchRule> Index { get; }
+        public HashSet<string> Keywords { get; }
 
-        public Parser()
+        public Parser(string name)
         {
+            Name = name;
+
             Rules = new List<MatchRule>();
             Index = new Dictionary<Symbol, MatchRule>();
+            Keywords = new HashSet<string>();
         }
+
+        public string Name { get; }
 
         public MatchRule Start { get; set; }
         public MatchRule Space { get; set; }
@@ -64,6 +70,18 @@ namespace SixPeg.Matchers
             for (var index = 0; index < grammar.Rules.Count; index += 1)
             {
                 Rules[index].Matcher = resolver.Resolve(grammar.Rules[index]);
+            }
+
+            return this;
+        }
+
+        public Parser Optimize()
+        {
+            var optimizer = new Optimizer();
+
+            for (var index = 0; index < Rules.Count; index += 1)
+            {
+                Rules[index].Matcher = optimizer.Optimize(Rules[index].Matcher);
             }
 
             return this;

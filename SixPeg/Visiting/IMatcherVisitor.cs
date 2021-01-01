@@ -14,12 +14,10 @@ namespace SixPeg.Visiting
         T Visit(MatchEpsilon matcher);
         T Visit(MatchError matcher);
         T Visit(MatchReference matcher);
-        T Visit(MatchRef matcher);
         T Visit(MatchRule matcher);
         T Visit(MatchNot matcher);
         T Visit(MatchOneOrMore matcher);
         T Visit(MatchSequence matcher);
-        T Visit(MatchSpace matcher);
         T Visit(MatchZeroOrMore matcher);
         T Visit(MatchZeroOrOne matcher);
     }

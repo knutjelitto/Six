@@ -39,9 +39,13 @@ namespace SixPeg.Matchers
             return false;
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}match \"{MinCharacter.Escape()}\" .. \"{MaxCharacter.Escape()}\"");
+            if (start < subject.Length && MinCharacter <= subject.Text[start] && subject.Text[start] <= MaxCharacter)
+            {
+                return IMatch.Success(this, before, start, start + 1);
+            }
+            return null;
         }
 
         public override string DDLong => $"range(\"{MinCharacter.Escape()}\",\"{MaxCharacter.Escape()}\")";

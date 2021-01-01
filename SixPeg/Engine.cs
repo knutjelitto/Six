@@ -114,8 +114,12 @@ namespace SixPeg
 
                         root += '/';
 
-                        foreach (var path in pony.EnumerateFiles("*.pony", SearchOption.AllDirectories).Select(f => f.FullName.Replace('\\', '/')))
+                        foreach (var path in pony.EnumerateFiles("*.pony", SearchOption.AllDirectories).Select(f => f.FullName.Replace('\\', '/')).OrderBy(f => f))
                         {
+                            if (!path.EndsWith("ponylang/peg/peg/pegparser.pony"))
+                            {
+                                //continue;
+                            }
                             var skip = false;
                             no += 1;
                             yield return new TestFile(path, path.Replace(root, ""), no, skip);
@@ -127,6 +131,24 @@ namespace SixPeg
             }
         }
 
+
+        public Parser CreateParser()
+        {
+            try
+            {
+                var grammar = CreateGrammar();
+                return new Parser(GrammarName).Build(grammar).Optimize();
+            }
+            catch (BailOutException)
+            {
+                return null;
+            }
+        }
+
+        public Parser CreateParser(Grammar grammar)
+        {
+            return new Parser(GrammarName).Build(grammar).Optimize();
+        }
 
         public Grammar CreateGrammar()
         {
@@ -191,7 +213,8 @@ namespace SixPeg
                         var trees = new List<IMatch>();
                         watch.Reset();
                         watch.Start();
-                        var matches = parser.Start.Matches(subject, 0);
+                        //var matches = parser.Start.Matches(subject, 0);
+                        var matches = Enumerable.Repeat(parser.Start.Match(subject, 0), 1);
                         foreach (var tree in matches)
                         {
                             trees.Add(tree);

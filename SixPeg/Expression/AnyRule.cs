@@ -1,5 +1,4 @@
-﻿using SixPeg.Matchers;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace SixPeg.Expression
 {
@@ -25,11 +24,6 @@ namespace SixPeg.Expression
         public AnyExpression Expression { get; }
         public bool IsTerminal { get; }
         public bool Used { get; set; }
-
-        protected override AnyMatcher MakeMatcher()
-        {
-            return Expression.GetMatcher();
-        }
 
         public override string ToString()
         {

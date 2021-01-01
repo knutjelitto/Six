@@ -1,5 +1,4 @@
 ﻿using Six.Support;
-using SixPeg.Matchers;
 using SixPeg.Visiting;
 
 namespace SixPeg.Expression
@@ -12,13 +11,6 @@ namespace SixPeg.Expression
         }
 
         public string Text { get; }
-
-        protected override AnyMatcher MakeMatcher()
-        {
-            return Text.Length == 1 
-                ? (AnyMatcher)new MatchCharacterExact(Text[0])
-                : new MatchCharacterSequence(Text);
-        }
 
         public override T Accept<T>(IExpressionVisitor<T> visitor)
         {

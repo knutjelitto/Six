@@ -29,9 +29,13 @@ namespace SixPeg.Matchers
             throw new System.NotImplementedException(message);
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}#error(...)");
+            var message = string.Join(" ", Arguments);
+
+            new Error(subject).Report(message, furthestCursor);
+
+            throw new System.NotImplementedException(message);
         }
 
         public override T Accept<T>(IMatcherVisitor<T> visitor)

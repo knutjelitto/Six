@@ -1,7 +1,6 @@
 ﻿using SixPeg.Matches;
 using SixPeg.Visiting;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SixPeg.Matchers
 {
@@ -10,31 +9,6 @@ namespace SixPeg.Matchers
         public MatchSequence(IEnumerable<AnyMatcher> matchers)
             : base("_", "sequence", matchers)
         {
-        }
-
-        public static AnyMatcher From(IEnumerable<AnyMatcher> ms)
-        {
-            var matchers = ms.ToList();
-
-            if (matchers.Count == 0)
-            {
-                return new MatchEpsilon();
-            }
-            if (matchers.Count == 1)
-            {
-                return matchers[0];
-            }
-
-            var first = matchers.First();
-
-            if (first is MatchSpace space)
-            {
-                var rest = From(matchers.Skip(1));
-                rest.Space = space;
-                return rest;
-            }
-
-            return new MatchSequence(matchers);
         }
 
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)
@@ -81,6 +55,25 @@ namespace SixPeg.Matchers
             }
 
             return true;
+        }
+
+        protected override IMatch InnerMatch(Context subject, int before, int start)
+        {
+            var matches = new IMatch[Matchers.Count];
+
+            var cursor = start;
+            for (var i = 0; i < Matchers.Count; i += 1)
+            {
+                var match = Matchers[i].Match(subject, cursor);
+                if (match == null)
+                {
+                    return null;
+                }
+                matches[i] = match;
+                cursor = match.Next;
+            }
+
+            return IMatch.Success(this, before, start, cursor, matches);
         }
 
         public override T Accept<T>(IMatcherVisitor<T> visitor)

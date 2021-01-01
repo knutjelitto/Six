@@ -37,9 +37,13 @@ namespace SixPeg.Matchers
             return false;
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}match \"{Character.Escape()}\"");
+            if (start < subject.Length && subject.Text[start] == Character)
+            {
+                return IMatch.Success(this, before, start, start + 1);
+            }
+            return null;
         }
 
         public override string DDLong => $"single(\"{Character.Escape()}\")";

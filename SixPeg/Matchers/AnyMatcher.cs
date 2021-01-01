@@ -1,5 +1,4 @@
-﻿using Six.Support;
-using SixPeg.Matches;
+﻿using SixPeg.Matches;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +11,7 @@ namespace SixPeg.Matchers
         public static int furthestCursor = 0;
 
         public IMatcher Space { get; set; } = null;
-        public bool IsClassy { get; set; } = false;
+        public virtual bool IsClassy { get; } = false;
         public string SpacePrefix => Space == null ? string.Empty : "_ ";
         public virtual string DDLong => ToString();
         public abstract string Marker { get; }
@@ -24,15 +23,6 @@ namespace SixPeg.Matchers
 
         public IEnumerable<IMatch> Matches(Context subject, int start)
         {
-            if (this is MatchRef name)
-            {
-                if (name.Name.Text == "raw_string_lit")
-                {
-                    //new Error(subject).Report($"{name.Name.Text}", start);
-                    Debug.Assert(true);
-                }
-            }
-
             var before = start;
             ConsumeSpace(subject, ref start);
 
@@ -41,12 +31,11 @@ namespace SixPeg.Matchers
             return matches;
         }
 
-        protected abstract IEnumerable<IMatch> InnerMatches(Context subject, int before, int start);
-
         public bool Match(Context subject, ref int cursor)
         {
             var start = cursor;
             ConsumeSpace(subject, ref cursor);
+
             var match = InnerMatch(subject, ref cursor);
             if (!match)
             {
@@ -55,6 +44,20 @@ namespace SixPeg.Matchers
 
             return match;
         }
+
+        public IMatch Match(Context subject, int start)
+        {
+            var before = start;
+            ConsumeSpace(subject, ref start);
+
+            var match = InnerMatch(subject, before, start);
+
+            return match;
+        }
+
+        protected abstract IEnumerable<IMatch> InnerMatches(Context subject, int before, int start);
+        protected abstract bool InnerMatch(Context subject, ref int cursor);
+        protected abstract IMatch InnerMatch(Context subject, int before, int start);
 
         [DebuggerStepThrough]
         private void ConsumeSpace(Context subject, ref int cursor)
@@ -65,8 +68,6 @@ namespace SixPeg.Matchers
             }
         }
 
-        protected abstract bool InnerMatch(Context subject, ref int cursor);
-        public abstract void Write(IWriter writer);
         public abstract T Accept<T>(IMatcherVisitor<T> visitor);
     }
 }

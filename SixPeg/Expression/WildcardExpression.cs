@@ -1,5 +1,4 @@
-﻿using SixPeg.Matchers;
-using SixPeg.Visiting;
+﻿using SixPeg.Visiting;
 
 namespace SixPeg.Expression
 {
@@ -7,11 +6,6 @@ namespace SixPeg.Expression
     {
         public WildcardExpression()
         {
-        }
-
-        protected override AnyMatcher MakeMatcher()
-        {
-            return new MatchCharacterAny();
         }
 
         public override T Accept<T>(IExpressionVisitor<T> visitor)

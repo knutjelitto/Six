@@ -41,9 +41,13 @@ namespace SixPeg.Matchers
             return false;
         }
 
-        public override void Write(IWriter writer)
+        protected override IMatch InnerMatch(Context subject, int before, int start)
         {
-            writer.WriteLine($"{SpacePrefix}match \"{Text.Escape()}\"");
+            if (start + Text.Length <= subject.Length && MemoryExtensions.Equals(Text.AsSpan(), subject.Text.AsSpan(start, Text.Length), StringComparison.Ordinal))
+            {
+                return IMatch.Success(this, before, start, start + Text.Length);
+            }
+            return null;
         }
 
         public override string DDLong => $"string(\"{Text.Escape()}\")";
