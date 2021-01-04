@@ -121,6 +121,7 @@ namespace SixPeg.Matchers
                 throw new BailOutException();
             }
 
+            rule.Index = Rules.Count;
             Rules.Add(rule);
             Index.Add(rule.Name, rule);
         }

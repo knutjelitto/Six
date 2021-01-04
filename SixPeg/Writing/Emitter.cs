@@ -3,18 +3,15 @@ using SixPeg.Matchers;
 using SixPeg.Visiting;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Dynamic;
 using System.Linq;
 
 namespace SixPeg.Writing
 {
     public class Emitter : IMatcherVisitor<bool>
     {
-        private string NmSuccess => $"{D.NmMatch}.Success";
-        private string NmOptional => $"{D.NmMatch}.Optional";
+        private string NmSuccess => $"{D.NmMatchType}.Success";
+        private string NmOptional => $"{D.NmMatchType}.Optional";
         private const string PmContext = "context";
-        private const string NmContext = "Context";
         private const string TyContext = "Context";
 
         public Emitter(Parser parser, IWriter writer)
@@ -49,19 +46,31 @@ namespace SixPeg.Writing
         {
             D.Line("#if true");
             D.Line("using System;");
+            D.Line("using System.Diagnostics;");
             D.Line("using System.Collections.Generic;");
             D.Line("using SixPeg.Runtime;");
             D.NL();
             using (D.Block($"namespace SixPeg.Pegger.{Parser.Name}"))
             {
-                using (D.Block($"public class {Parser.Name}Peg"))
+                using (D.Block($"public abstract class {Parser.Name}Pegger : Runtime.Pegger"))
                 {
-                    using (D.Block($"public {Parser.Name}Peg({TyContext} {PmContext})"))
+                    D.Line($"public {Parser.Name}Pegger({TyContext} {PmContext})");
+                    D.Line($"    : base({PmContext}, {Parser.Rules.Count})");
+                    using (D.Block())
                     {
-                        D.Line($"{NmContext} = {PmContext};");
                     }
-                    D.NL();
-                    D.Line($"public {TyContext} {NmContext} {{ get; }}");
+
+                    if (Parser.Keywords.Count > 0)
+                    {
+                        using (D.Block($"protected HashSet<string> _keywords = new HashSet<string>"))
+                        {
+                            foreach (var keyword in Parser.Keywords)
+                            {
+                                D.Line($"\"{keyword.Escape()}\",");
+                            }
+                        }
+                        D.Line(";");
+                    }
 
                     foreach (var rule in Parser.Rules)
                     {
@@ -75,14 +84,23 @@ namespace SixPeg.Writing
 
         public bool Visit(MatchRule matcher)
         {
-            using (D.Block($"public {D.NmMatch} {N.NameFor(matcher)}(int start)"))
+            N.Reset();
+
+            var cacheIndexName = $"Cache_{N.NameFor(matcher)}";
+            D.Line($"protected const int {cacheIndexName} = {matcher.Index};");
+            D.NL();
+            using (D.Block($"public virtual {D.NmMatchType} {N.NameFor(matcher)}(int start)"))
             {
-                N.Reset();
-                var match = D.NewMatch();
-                using (SetResult(match))
+                string match;
                 using (SetStart("start"))
                 {
-                    _ = matcher.Matcher.Accept(this);
+                    match = N.Local(D.NmResult);
+                    using (SetResult(match))
+                    using (D.If($"!Caches[{cacheIndexName}].Already({GetStart()}, out var {match})"))
+                    {
+                        _ = matcher.Matcher.Accept(this);
+                        D.Line($"Caches[{cacheIndexName}].Cache({GetStart()}, {match});");
+                    }
                 }
                 D.Line($"return {match};");
 
@@ -93,115 +111,91 @@ namespace SixPeg.Writing
 
         public bool Visit(MatchSequence sequence)
         {
-            using (D.Indent("Sequence"))
+            var next = D.NewVar(D.NmNext, GetStart());
+            var matches = D.NewMatches();
+            using (SetStart(next))
+            using (D.Block("for (;;) // ---Sequence---"))
             {
-                var next = D.NewVar("next", GetStart());
-                var matches = D.NewMatches();
-                var match = D.NewMatch();
-                using (SetStart(next))
-                using (SetResult(match))
-                using (D.Block("for (;;)"))
+                var last = sequence.Matchers.Last();
+                foreach (var matcher in sequence.Matchers)
                 {
-                    var last = sequence.Matchers.Last();
-                    foreach (var matcher in sequence.Matchers)
+                    var inline = Inline(matcher);
+                    if (inline != null)
                     {
-                        using (SetResult(match))
-                        {
-                            _ = matcher.Accept(this);
-                        }
-                        using (D.If($"{match} == null"))
+                        using (D.If($"({GetResult()} = {inline}) == null"))
                         {
                             D.Line("break;");
                         }
-                        D.Line($"{matches}.Add({match});");
-                        if (matcher != last)
+                    }
+                    else
+                    {
+                        _ = matcher.Accept(this);
+                        if (!((matcher is MatchZeroOrOne) || (matcher is MatchZeroOrMore)))
                         {
-                            D.Line($"{next} = {match}.Next;");
+                            using (D.If($"{GetResult()} == null"))
+                            {
+                                D.Line("break;");
+                            }
                         }
                     }
-                    D.Line("break;");
+                    D.Line($"{matches}.Add({GetResult()});");
+                    if (matcher != last)
+                    {
+                        D.Line($"{next} = {GetResult()}.Next;");
+                    }
                 }
-                using (D.If($"{matches}.Count == {sequence.Matchers.Count}"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}(start, {string.Join(", ", matches)});");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
-                }
+                D.Line("break;");
+            }
+            using (D.If($"{GetResult()} != null"))
+            {
+                D.Line($"{GetResult()} = {NmSuccess}(start, {matches});");
             }
 
             return true;
         }
-#if false
-        public bool Visit(MatchSequence matcher)
+
+        public bool Visit(MatchChoice choice)
         {
-            using (D.Indent("Sequence"))
+            using (D.Block("for (;;) // ---Choice---"))
             {
-                D.Line($"{GetResult()} = null;");
-                Emit(0, Enumerable.Empty<string>());
-            }
-
-            return true;
-
-            void Emit(int index, IEnumerable<string> results)
-            {
-                if (index < matcher.Matchers.Count)
+                var last = choice.Matchers.Last();
+                foreach (var matcher in choice.Matchers)
                 {
-                    var match = D.NewMatch();
-                    using (SetResult(match))
+                    var inline = Inline(matcher);
+                    if (inline != null)
                     {
-                        _ = matcher.Matchers[index].Accept(this);
-                    }
-                    using (SetStart($"{match}.Next"))
-                    {
-                        using (D.If($"{match} != null"))
+                        if (matcher == last)
                         {
-                            Emit(index + 1, results.Append(match));
+                            D.Line($"{GetResult()} = {inline};");
+                            D.Line("break;");
+                        }
+                        else
+                        {
+                            using (D.If($"({GetResult()} = {inline}) != null"))
+                            {
+                                D.Line("break;");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _ = matcher.Accept(this);
+                        if (matcher == last)
+                        {
+                            D.Line("break;");
+                        }
+                        else
+                        {
+                            using (D.If($"{GetResult()} != null"))
+                            {
+                                D.Line("break;");
+                            }
                         }
                     }
                 }
-                else
-                {
-                    var matches = string.Join(", ", results);
-                    D.Line($"{GetResult()} = {NmSuccess}(start, {matches});");
-                }
-            }
-        }
-#endif
-
-        public bool Visit(MatchChoice matcher)
-        {
-            var match = D.NewMatch();
-
-            using (D.Indent("Choice"))
-            {
-                D.Line($"{GetResult()} = null;");
-                Emit(0);
             }
 
             return true;
-
-            void Emit(int index)
-            {
-                Debug.Assert(index < matcher.Matchers.Count);
-                using (SetResult(match))
-                {
-                    _ = matcher.Matchers[index].Accept(this);
-                }
-                using (D.If($"{match} != null"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {match});");
-                }
-                index += 1;
-                if (index < matcher.Matchers.Count)
-                {
-                    using (D.Else())
-                    {
-                        Emit(index);
-                    }
-                }
-            }
         }
 
         public bool Visit(MatchAnd matcher)
@@ -229,18 +223,15 @@ namespace SixPeg.Writing
         {
             using (D.Indent("Not"))
             {
-                var match = D.NewMatch();
-                using (SetResult(match))
+                var inline = Inline(matcher.Matcher);
+                if (inline != null)
+                {
+                    D.Line($"{GetResult()} = {inline};");
+                }
+                else
                 {
                     _ = matcher.Matcher.Accept(this);
-                }
-                using (D.If($"{match} == null"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()});");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
+                    D.Line($"{GetResult()} = {nameof(Runtime.Pegger.Not_)}({GetStart()}, {GetResult()});");
                 }
             }
             return true;
@@ -256,65 +247,37 @@ namespace SixPeg.Writing
 
         public bool Visit(MatchCharacterAny matcher)
         {
-            using (D.Indent("CharacterAny"))
-            {
-                using (D.If($"{GetStart()} < {NmContext}.Length"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {GetStart()} + 1);");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
-                }
-            }
+            D.Line($"{GetResult()} = {Inline(matcher)});");
             return true;
         }
 
         public bool Visit(MatchCharacterExact matcher)
         {
-            using (D.Indent("CharacterExact"))
-            {
-                using (D.If($"{GetStart()} < {NmContext}.Length && {NmContext}.Text[{GetStart()}] == '{matcher.Character.Escape()}'"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {GetStart()} + 1);");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
-                }
-            }
+            D.Line($"{GetResult()} = {Inline(matcher)};");
             return true;
         }
 
         public bool Visit(MatchCharacterRange matcher)
         {
-            using (D.Indent("CharacterRange"))
-            {
-                using (D.If($"{GetStart()} < {NmContext}.Length && '{matcher.MinCharacter.Escape()}' <= {NmContext}.Text[{GetStart()}] && {NmContext}.Text[{GetStart()}] <= '{matcher.MaxCharacter.Escape()}'"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {GetStart()} + 1);");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
-                }
-            }
+            D.Line($"{GetResult()} = {Inline(matcher)};");
             return true;
         }
 
         public bool Visit(MatchCharacterSequence matcher)
         {
-            using (D.Indent("CharacterSequence"))
-            {
-                using (D.If($"{GetStart()} + {matcher.Text.Length} <= {NmContext}.Length && MemoryExtensions.Equals(\"{matcher.Text.Escape()}\".AsSpan(), {NmContext}.Text.AsSpan({GetStart()}, {matcher.Text.Length}), StringComparison.Ordinal)"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {GetStart()} + {matcher.Text.Length});");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
-                }
-            }
+            D.Line($"{GetResult()} = {Inline(matcher)};");
+            return true;
+        }
+
+        public bool Visit(MatchCharacterSet matcher)
+        {
+            D.Line($"{GetResult()} = {Inline(matcher)};");
+            return true;
+        }
+
+        public bool Visit(MatchReference matcher)
+        {
+            D.Line($"{GetResult()} = {Inline(matcher)};");
             return true;
         }
 
@@ -335,51 +298,37 @@ namespace SixPeg.Writing
             }
         }
 
-        private string Inline(MatchReference matcher)
-        {
-            return $"{N.NameFor(matcher.Rule)}({GetStart()})";
-        }
-
-        public bool Visit(MatchReference matcher)
-        {
-            using (D.Indent("Reference"))
-            {
-                D.Line($"{GetResult()} = {N.NameFor(matcher.Rule)}({GetStart()});");
-            }
-            return true;
-        }
-
         public bool Visit(MatchOneOrMore matcher)
         {
             using (D.Indent("OneOrMore"))
             {
-                var matches = D.NewMatches();
-                var match = D.NewMatch();
-                var next = D.NewVar("next", GetStart());
-                using (D.Block($"for(;;)"))
+                var matches = D.NewMatches(D.NmOomResults);
+                var next = D.NewVar(D.NmOomNext, GetStart());
+                using (SetStart(next))
+                using (D.Block($"for (;;)"))
                 {
-                    using (SetResult(match))
-                    using (SetStart(next))
+                    var inline = Inline(matcher.Matcher);
+                    if (inline != null)
                     {
-                        _ = matcher.Matcher.Accept(this);
-                        using (D.If($"{match} == null"))
+                        using (D.If($"({GetResult()} = {inline}) == null"))
                         {
                             D.Line("break;");
                         }
-                        using (D.Else())
+                    }
+                    else
+                    {
+                        _ = matcher.Matcher.Accept(this);
+                        using (D.If($"{GetResult()} == null"))
                         {
-                            D.Line($"{matches}.Add({match});");
-                            D.Line($"{next} = {match}.Next;");
+                            D.Line("break;");
                         }
                     }
+                    D.Line($"{matches}.Add({GetResult()});");
+                    D.Line($"{next} = {GetResult()}.Next;");
                 }
                 using (D.If($"{matches}.Count > 0"))
                 {
                     D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {matches});");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
                 }
             }
             return false;
@@ -389,46 +338,85 @@ namespace SixPeg.Writing
         {
             using (D.Indent("ZeroOrMore"))
             {
-                var matches = D.NewMatches();
-                var match = D.NewMatch();
-                var next = D.NewVar("next", GetStart());
-                using (D.Block($"for(;;)"))
+                var matches = D.NewMatches(D.NmZomResults);
+                var next = D.NewVar(D.NmZomNext, GetStart());
+                using (SetStart(next))
+                using (D.Block($"for (;;)"))
                 {
-                    using (SetResult(match))
-                    using (SetStart(next))
+                    var inline = Inline(matcher.Matcher);
+                    if (inline != null)
                     {
-                        _ = matcher.Matcher.Accept(this);
-                        using (D.If($"{match} == null"))
+                        using (D.If($"({GetResult()} = {inline}) == null"))
                         {
                             D.Line("break;");
                         }
-                        using (D.Else())
+                    }
+                    else
+                    {
+                        _ = matcher.Matcher.Accept(this);
+                        using (D.If($"{GetResult()} == null"))
                         {
-                            D.Line($"{matches}.Add({match});");
-                            D.Line($"{next} = {match}.Next;");
+                            D.Line("break;");
                         }
                     }
+                    D.Line($"{matches}.Add({GetResult()});");
+                    D.Line($"{next} = {GetResult()}.Next;");
                 }
                 D.Line($"{GetResult()} = {NmSuccess}({GetStart()}, {matches});");
             }
-            return false;
+            return true;
         }
 
         public bool Visit(MatchZeroOrOne matcher)
         {
-            using (D.Indent("ZeroOrOne"))
+            var inline = Inline(matcher.Matcher);
+            if (inline != null)
             {
-                if (matcher.Matcher is MatchReference reference)
-                {
-                    D.Line($"{GetResult()} = {NmOptional}({GetStart()}, {Inline(reference)});");
-                }
-                else
-                {
-                    _ = matcher.Matcher.Accept(this);
-                    D.Line($"{GetResult()} = {NmOptional}({GetStart()}, {GetResult()});");
-                }
+                D.Line($"{GetResult()} = {NmOptional}({GetStart()}, {inline});");
+            }
+            else
+            {
+                _ = matcher.Matcher.Accept(this);
+                D.Line($"{GetResult()} = {NmOptional}({GetStart()}, {GetResult()});");
             }
             return true;
+        }
+
+        private string Inline(AnyMatcher any)
+        {
+            if (any is MatchReference reference)
+            {
+                return $"{N.NameFor(reference.Rule)}({GetStart()})";
+            }
+            if (any is MatchCharacterSequence sequence)
+            {
+                return $"CharacterSequence_({GetStart()}, \"{sequence.Text.Escape()}\")";
+            }
+            if (any is MatchCharacterAny)
+            {
+                return $"CharacterAny_({GetStart()})";
+            }
+            if (any is MatchCharacterExact exact)
+            {
+                return $"CharacterExact_({GetStart()}, '{exact.Character.Escape()}')";
+            }
+            if (any is MatchCharacterRange range)
+            {
+                return $"CharacterRange_({GetStart()}, '{range.MinCharacter.Escape()}', '{range.MaxCharacter.Escape()}')";
+            }
+            if (any is MatchCharacterSet set)
+            {
+                return $"CharacterSet_({GetStart()}, \"{set.Set.Escape()}\")";
+            }
+            if (any is MatchNot not)
+            {
+                var inline = Inline(not.Matcher);
+                if (inline != null)
+                {
+                    return $"{nameof(Runtime.Pegger.Not_)}({GetStart()}, {inline})";
+                }
+            }
+            return null;
         }
     }
 }

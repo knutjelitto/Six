@@ -18,7 +18,7 @@ namespace SixPeg
             TestLang("Pony");
 
             Console.Write("done ... ");
-            //_ = Console.ReadKey(true);
+            _ = Console.ReadKey(true);
         }
 
         internal static Parser Test(Engine engine, List<TestFile> testFiles)

@@ -1,6 +1,7 @@
 ﻿using SixPeg.Matches;
 using SixPeg.Visiting;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SixPeg.Matchers
@@ -10,8 +11,9 @@ namespace SixPeg.Matchers
         private bool? isClassy = null;
 
         public MatchChoice(IEnumerable<AnyMatcher> matchers)
-            : base("/", "choice", matchers)
+            : base("|", "choice", matchers)
         {
+            Debug.Assert(Matchers.Count >= 2);
         }
 
         public override bool IsClassy => isClassy ??= Matchers.All(m => m.IsClassy);

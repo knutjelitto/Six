@@ -70,6 +70,15 @@ namespace SixPeg.Visiting
             return true;
         }
 
+        public bool Visit(MatchCharacterSet matcher)
+        {
+            var set = string.Join("' or '", matcher.Set.Select(s => s.ToString()));
+
+            Writer.WriteLine($"{matcher.SpacePrefix}match \'{set}\'");
+
+            return true;
+        }
+
         public bool Visit(MatchChoice matcher)
         {
             using (Writer.Indent($"{matcher.SpacePrefix}choice"))

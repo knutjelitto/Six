@@ -5,9 +5,14 @@ namespace SixPeg.Writing
 {
     public class WriteDecl
     {
-        public string NmResult => "result";
-        public string NmResults => "results";
-        public string NmMatch => "Match";
+        public string NmResult => "match";
+        public string NmResults => "matches";
+        public string NmOomResults => "oomMatches";
+        public string NmZomResults => "zomMatches";
+        public string NmNext => "next";
+        public string NmOomNext => "oomNext";
+        public string NmZomNext => "zomNext";
+        public string NmMatchType => "Match";
 
         public WriteDecl(IWriter writer, Namer n)
         {
@@ -28,9 +33,12 @@ namespace SixPeg.Writing
             Writer.WriteLine(text);
         }
 
-        public IDisposable Block(string text)
+        public IDisposable Block(string text = null)
         {
-            Writer.WriteLine(text);
+            if (text != null)
+            {
+                Writer.WriteLine(text);
+            }
             return Writer.Block();
         }
 
@@ -62,15 +70,14 @@ namespace SixPeg.Writing
         {
             var local = N.Local(NmResult);
             init = init == null ? string.Empty : $" = {init}";
-            Line($"{NmMatch} {local}{init};");
+            Line($"{NmMatchType} {local}{init};");
             return local;
         }
 
-
-        public string NewMatches()
+        public string NewMatches(string name = null)
         {
-            var local = N.Local(NmResults);
-            Line($"var {local} = new List<{NmMatch}>();");
+            var local = N.Local(name ?? NmResults);
+            Line($"var {local} = new List<{NmMatchType}>();");
             return local;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SixPeg.Runtime
@@ -36,7 +35,8 @@ namespace SixPeg.Runtime
 
         public static Match Success(int start, IReadOnlyList<Match> matches)
         {
-            return new Match(start, matches.Last().Next, matches);
+            var next = matches.LastOrDefault()?.Next ?? start;
+            return new Match(start, next, matches);
         }
 
         public static Match Success(int start, params Match[] matches)

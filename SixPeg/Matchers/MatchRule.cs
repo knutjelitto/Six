@@ -20,6 +20,7 @@ namespace SixPeg.Matchers
         public override string Marker => $"{Name}=";
         public override string DDLong => $"{Name}={Matcher?.DDLong ?? "<not-yet>"}";
 
+        public int Index { get; set; } = -1;
         public bool IsTerminal { get; set; } = false;
         public bool IsSingle { get; set; } = false;
         public Symbol Name { get; }

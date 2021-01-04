@@ -52,15 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SixPegTry.sixpeg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SwiftExpression.sixpeg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Simple.sixpeg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Grammars\SixPeg\SixPeg.prepeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

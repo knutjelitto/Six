@@ -12,6 +12,7 @@ namespace SixPeg.Matchers
 
         public IMatcher Space { get; set; } = null;
         public virtual bool IsClassy { get; } = false;
+        public virtual bool IsInline { get; } = false;
         public string SpacePrefix => Space == null ? string.Empty : "_ ";
         public virtual string DDLong => ToString();
         public abstract string Marker { get; }

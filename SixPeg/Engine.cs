@@ -2,7 +2,6 @@
 using Six.Support;
 using SixPeg.Expression;
 using SixPeg.Matchers;
-using SixPeg.Matches;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -116,10 +115,6 @@ namespace SixPeg
 
                         foreach (var path in pony.EnumerateFiles("*.pony", SearchOption.AllDirectories).Select(f => f.FullName.Replace('\\', '/')).OrderBy(f => f))
                         {
-                            if (!path.EndsWith("ponylang/peg/peg/pegparser.pony"))
-                            {
-                                //continue;
-                            }
                             var skip = false;
                             no += 1;
                             yield return new TestFile(path, path.Replace(root, ""), no, skip);
@@ -201,20 +196,30 @@ namespace SixPeg
 
                 ok = false;
 
-                var subject = new Context(file.Path.FullName);
+                var context = new Context(file.Path.FullName);
 
-                file.Lines = subject.Source.Index.Index.Count;
+                file.Lines = context.Source.Index.Index.Count;
 
                 if (!ok)
                 {
                     try
                     {
+#if true
+                        var pegger = new PonyPeg(context);
+
+                        watch.Reset();
+                        watch.Start();
+                        var match = pegger.Module(0);
+                        file.Time = watch.Elapsed;
+
+                        ok = match != null;
+#else
                         parser.Clear();
                         var trees = new List<IMatch>();
                         watch.Reset();
                         watch.Start();
                         //var matches = parser.Start.Matches(subject, 0);
-                        var matches = Enumerable.Repeat(parser.Start.Match(subject, 0), 1);
+                        var matches = Enumerable.Repeat(parser.Start.Match(context, 0), 1);
                         foreach (var tree in matches)
                         {
                             trees.Add(tree);
@@ -226,6 +231,9 @@ namespace SixPeg
                         }
                         file.Time = watch.Elapsed;
 
+                        var pegger = new Pegger.Pony.PonyPeg(context);
+                        var match = pegger.Module(0);
+
                         ok = trees.Count == 1;
 
                         if (!ok)
@@ -234,19 +242,20 @@ namespace SixPeg
                             {
                                 bool differ = IMatch.Differ(trees[0], trees[1]);
 
-                                new Error(subject).Report($"far too many trees (#{trees.Count}) (differ:{differ})", subject.Length);
+                                new Error(context).Report($"far too many trees (#{trees.Count}) (differ:{differ})", context.Length);
 
                                 ok = true;
                             }
                             else
                             {
-                                new Error(subject).Report("parse failed", AnyMatcher.furthestCursor);
+                                new Error(context).Report("parse failed", AnyMatcher.furthestCursor);
                             }
                         }
                         else
                         {
                             Debug.Assert(true);
                         }
+#endif
                     }
                     catch
                     {

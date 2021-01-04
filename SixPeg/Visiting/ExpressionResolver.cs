@@ -31,7 +31,13 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(CharacterClassExpression expr)
         {
-            return optimizer.Optimize(new MatchChoice(expr.Ranges.Select(r => r.Accept(this))));
+            IReadOnlyList<AnyMatcher> matchers = expr.Ranges.Select(e => optimizer.Optimize(e.Accept(this))).ToArray();
+
+            return expr.Ranges.Count switch
+            {
+                1 => optimizer.Optimize(matchers[0]),
+                _ => optimizer.Optimize(new MatchChoice(matchers)),
+            };
         }
 
         public AnyMatcher Visit(CharacterRangeExpression expr)
@@ -106,11 +112,12 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(SequenceExpression expr)
         {
+            var matchers = expr.Select(e => optimizer.Optimize(e.Accept(this))).ToArray();
             return expr.Count switch
             {
                 0 => new MatchEpsilon(),
-                1 => expr[0].Accept(this),
-                _ => new MatchSequence(expr.Select(e => e.Accept(this)))
+                1 => optimizer.Optimize(matchers[0]),
+                _ => optimizer.Optimize(new MatchSequence(expr.Select(e => e.Accept(this)))),
             };
         }
 

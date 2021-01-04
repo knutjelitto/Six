@@ -10,6 +10,7 @@ namespace SixPeg.Visiting
         T Visit(MatchCharacterExact matcher);
         T Visit(MatchCharacterRange matcher);
         T Visit(MatchCharacterSequence matcher);
+        T Visit(MatchCharacterSet matcher);
         T Visit(MatchChoice matcher);
         T Visit(MatchEpsilon matcher);
         T Visit(MatchError matcher);

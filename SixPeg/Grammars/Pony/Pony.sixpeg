@@ -192,15 +192,15 @@
             | parampattern
 
         nextparampattern
-            : ('not' | 'addressof' | MINUS_NEW | MINUS_TILDE_NEW | 'digestof') parampattern
+            : ('not' | 'addressof' | MINUS_TILDE_NEW | MINUS_NEW | 'digestof') parampattern
             | nextpostfix
 
         caseparampattern
-            : ('not' | 'addressof' | '-' | '-~' | MINUS_NEW | MINUS_TILDE_NEW | 'digestof') caseparampattern
+            : ('not' | 'addressof' | '-~' | '-' | MINUS_TILDE_NEW | MINUS_NEW | 'digestof') caseparampattern
             | casepostfix
 
         parampattern
-            : ('not' | 'addressof' | '-' | '-~' | MINUS_NEW | MINUS_TILDE_NEW | 'digestof') parampattern
+            : ('not' | 'addressof' | '-~' | '-' | MINUS_TILDE_NEW | MINUS_NEW | 'digestof') parampattern
             | postfix
 
         nextpostfix:
@@ -450,8 +450,16 @@
         ID: !keyword ident
 
         ident
-            : _ LETTER (LETTER | DIGIT | [_] | ['])*
-            | _ [_] (LETTER | DIGIT | [_] | ['])*
+            : _ identifier-head identifier-part* identifier-tail*
+
+        identifier-head:
+            [a-zA-Z_]
+
+        identifier-part: 
+            [a-zA-Z0-9_]
+
+        identifier-tail:
+            "'"
 
         INT
             : _ "0b" (BINARY | [_])+

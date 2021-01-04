@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matchers;
+using System.Linq;
 
 namespace SixPeg.Visiting
 {
@@ -40,8 +41,19 @@ namespace SixPeg.Visiting
             return matcher;
         }
 
+        public AnyMatcher Visit(MatchCharacterSet matcher)
+        {
+            return matcher;
+        }
+
         public AnyMatcher Visit(MatchChoice matcher)
         {
+            if (matcher.Matchers.All(m => m is MatchCharacterExact))
+            {
+                string set = string.Join(string.Empty, matcher.Matchers.Cast<MatchCharacterExact>().Select(e => e.Character.ToString()));
+
+                return new MatchCharacterSet(set);
+            }
             return matcher;
         }
 
@@ -77,6 +89,13 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(MatchSequence matcher)
         {
+            if (matcher.Matchers.All(m => m is MatchCharacterExact))
+            {
+                string sequence = string.Join(string.Empty, matcher.Matchers.Cast<MatchCharacterExact>().Select(e => e.Character.ToString()));
+
+                return new MatchCharacterSequence(sequence);
+            }
+
             return matcher;
         }
 
