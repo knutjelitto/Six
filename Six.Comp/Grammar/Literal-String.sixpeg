@@ -1,0 +1,78 @@
+﻿grammar Swift
+{
+    terminals
+    {
+        string-literal
+            = interpolated-string-literal
+            / static-string-literal
+
+        static-string-literal
+            = multiline-string-literal-opening-delimiter multiline-quoted-text? multiline-string-literal-closing-delimiter
+            / string-literal-opening-delimiter quoted-text? string-literal-closing-delimiter
+
+
+        interpolated-string-literal
+            = multiline-string-literal-opening-delimiter multiline-interpolated-text? multiline-string-literal-closing-delimiter
+            / string-literal-opening-delimiter interpolated-text? string-literal-closing-delimiter
+
+        quoted-text
+            = quoted-text-item+
+
+        quoted-text-item
+            = escaped-character
+            / !(["] / [\\] / line-break-character) .
+
+        multiline-quoted-text
+            = multiline-quoted-text-item+
+
+        multiline-quoted-text-item
+            = escaped-character
+            / escaped-newline
+            / !([\\] / multiline-string-literal-closing-delimiter) .
+
+        interpolated-text
+            = interpolated-text-item+
+
+        interpolated-text-item
+            = [\\][(] expression ')'
+            / quoted-text-item
+
+        multiline-interpolated-text
+            = multiline-interpolated-text-item+
+
+        multiline-interpolated-text-item
+            = [\\][(] expression ')'
+            / multiline-quoted-text-item
+
+        escaped-character
+            = escape-sequence [0]
+            / escape-sequence [\\]
+            / escape-sequence [t]
+            / escape-sequence [n]
+            / escape-sequence [r]
+            / escape-sequence ["]
+            / escape-sequence [']
+            / escape-sequence [u] [{] hex-digit hex-digit? hex-digit? hex-digit? hex-digit? hex-digit? hex-digit? hex-digit? [}]
+
+        escape-sequence
+            = [\\] extended-string-literal-delimiter?
+
+        escaped-newline
+            =  escape-sequence inline-spaces? line-break
+
+        string-literal-opening-delimiter
+            = extended-string-literal-delimiter? ["]
+
+        string-literal-closing-delimiter
+            = ["] extended-string-literal-delimiter?
+
+        multiline-string-literal-opening-delimiter
+            = extended-string-literal-delimiter? ["]["]["]
+
+        multiline-string-literal-closing-delimiter
+            = ["]["]["] extended-string-literal-delimiter?
+
+        extended-string-literal-delimiter
+            = [#]+
+    }
+}

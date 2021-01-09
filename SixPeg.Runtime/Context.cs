@@ -1,6 +1,6 @@
 ﻿using Six.Support;
 
-namespace SixPeg
+namespace SixPeg.Runtime
 {
     public class Context : ISource
     {

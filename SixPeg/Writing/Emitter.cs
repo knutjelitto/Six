@@ -3,6 +3,7 @@ using SixPeg.Matchers;
 using SixPeg.Visiting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SixPeg.Writing
@@ -82,24 +83,43 @@ namespace SixPeg.Writing
             D.Line("#endif");
         }
 
-        public bool Visit(MatchRule matcher)
+        public bool Visit(MatchRule rule)
         {
             N.Reset();
 
-            var cacheIndexName = $"Cache_{N.NameFor(matcher)}";
-            D.Line($"protected const int {cacheIndexName} = {matcher.Index};");
-            D.NL();
-            using (D.Block($"public virtual {D.NmMatchType} {N.NameFor(matcher)}(int start)"))
+            if (rule.Fragment)
+            {
+                Debug.Assert(true);
+            }
+
+            var cacheIndexName = $"Cache_{N.NameFor(rule)}";
+            if (!rule.Fragment)
+            {
+                D.Line($"protected const int {cacheIndexName} = {rule.Index};");
+                D.NL();
+            }
+            using (D.Block($"public virtual {D.NmMatchType} {N.NameFor(rule)}(int start)"))
             {
                 string match;
                 using (SetStart("start"))
                 {
-                    match = N.Local(D.NmResult);
-                    using (SetResult(match))
-                    using (D.If($"!Caches[{cacheIndexName}].Already({GetStart()}, out var {match})"))
+                    if (rule.Fragment)
                     {
-                        _ = matcher.Matcher.Accept(this);
-                        D.Line($"Caches[{cacheIndexName}].Cache({GetStart()}, {match});");
+                        match = D.NewMatch();
+                        using (SetResult(match))
+                        {
+                            _ = rule.Matcher.Accept(this);
+                        }
+                    }
+                    else
+                    {
+                        match = N.Local(D.NmResult);
+                        using (SetResult(match))
+                        using (D.If($"!Caches[{cacheIndexName}].Already({GetStart()}, out var {match})"))
+                        {
+                            _ = rule.Matcher.Accept(this);
+                            D.Line($"Caches[{cacheIndexName}].Cache({GetStart()}, {match});");
+                        }
                     }
                 }
                 D.Line($"return {match};");
@@ -202,18 +222,15 @@ namespace SixPeg.Writing
         {
             using (D.Indent("And"))
             {
-                var match = D.NewMatch();
-                using (SetResult(match))
+                var inline = Inline(matcher.Matcher);
+                if (inline != null)
+                {
+                    D.Line($"{GetResult()} = {inline};");
+                }
+                else
                 {
                     _ = matcher.Matcher.Accept(this);
-                }
-                using (D.If($"{match} != null"))
-                {
-                    D.Line($"{GetResult()} = {NmSuccess}({GetStart()});");
-                }
-                using (D.Else())
-                {
-                    D.Line($"{GetResult()} = null;");
+                    D.Line($"{GetResult()} = {nameof(Runtime.Pegger.And_)}({GetStart()}, {GetResult()});");
                 }
             }
             return true;
@@ -241,8 +258,9 @@ namespace SixPeg.Writing
         {
             using (D.Indent("Before"))
             {
-                throw new NotImplementedException();
+                D.Line($"throw new NotImplementedException();");
             }
+            return false;
         }
 
         public bool Visit(MatchCharacterAny matcher)
@@ -294,8 +312,9 @@ namespace SixPeg.Writing
         {
             using (D.Indent("Error"))
             {
-                throw new NotImplementedException();
+                D.Line($"throw new NotImplementedException();");
             }
+            return true;
         }
 
         public bool Visit(MatchOneOrMore matcher)
@@ -390,23 +409,23 @@ namespace SixPeg.Writing
             }
             if (any is MatchCharacterSequence sequence)
             {
-                return $"CharacterSequence_({GetStart()}, \"{sequence.Text.Escape()}\")";
+                return $"{nameof(Runtime.Pegger.CharacterSequence_)}({GetStart()}, \"{sequence.Text.Escape()}\")";
             }
             if (any is MatchCharacterAny)
             {
-                return $"CharacterAny_({GetStart()})";
+                return $"{nameof(Runtime.Pegger.CharacterAny_)}({GetStart()})";
             }
             if (any is MatchCharacterExact exact)
             {
-                return $"CharacterExact_({GetStart()}, '{exact.Character.Escape()}')";
+                return $"{nameof(Runtime.Pegger.CharacterExact_)}({GetStart()}, '{exact.Character.Escape()}')";
             }
             if (any is MatchCharacterRange range)
             {
-                return $"CharacterRange_({GetStart()}, '{range.MinCharacter.Escape()}', '{range.MaxCharacter.Escape()}')";
+                return $"{nameof(Runtime.Pegger.CharacterRange_)}({GetStart()}, '{range.MinCharacter.Escape()}', '{range.MaxCharacter.Escape()}')";
             }
             if (any is MatchCharacterSet set)
             {
-                return $"CharacterSet_({GetStart()}, \"{set.Set.Escape()}\")";
+                return $"{nameof(Runtime.Pegger.CharacterSet_)}({GetStart()}, \"{set.Set.Escape()}\")";
             }
             if (any is MatchNot not)
             {
@@ -414,6 +433,14 @@ namespace SixPeg.Writing
                 if (inline != null)
                 {
                     return $"{nameof(Runtime.Pegger.Not_)}({GetStart()}, {inline})";
+                }
+            }
+            if (any is MatchAnd and)
+            {
+                var inline = Inline(and.Matcher);
+                if (inline != null)
+                {
+                    return $"{nameof(Runtime.Pegger.And_)}({GetStart()}, {inline})";
                 }
             }
             return null;

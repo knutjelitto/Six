@@ -1,0 +1,59 @@
+﻿grammar Swift
+{
+    terminals
+    {
+        whitespace
+            = whitespace-item
+
+        single-whitespace
+            = line-break-character
+            / inline-space
+            / [\u0000]
+            / [\u000B]
+            / [\u000C]
+
+        whitespace-item
+            = line-break
+            / inline-space
+            / comment
+            / multiline-comment
+            / [\u0000]
+            / [\u000B]
+            / [\u000C]
+
+        line-break
+	        = [\u000A]
+	        / [\u000D][\u000A]
+	        / [\u000D]
+
+        line-break-character
+	        = [\u000A]
+	        / [\u000D]
+
+        inline-spaces
+            = inline-space+
+
+        inline-space
+            = [\u0009] / [\u0020]
+
+        comment
+            = [/][/] comment-text line-break
+
+        comment-text
+            = comment-text-item*
+
+        comment-text-item
+            = !line-break-character .
+
+        multiline-comment
+            = [/][*] multiline-comment-text [*][/]
+
+        multiline-comment-text
+            = multiline-comment-text-item*
+
+        multiline-comment-text-item
+            = multiline-comment
+            / !( [/][*] / [*][/] ) .
+    }
+}
+

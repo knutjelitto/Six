@@ -1,4 +1,5 @@
-﻿using SixPeg.Runtime;
+﻿#if true
+using SixPeg.Runtime;
 
 namespace SixPeg
 {
@@ -9,13 +10,11 @@ namespace SixPeg
         {
         }
 
-#if true
-        public override Match Keyword(int start)
+        public override Match Identifier(int start)
         {
-            if (!Caches[Cache_Keyword].Already(start, out var result))
+            if (!Caches[Cache_Identifier].Already(start, out var match))
             {
                 Match space = _space_(start);
-                result = null;
                 var next = space.Next;
                 if (next < Context.Length && (char.IsLetter(Context.Text[next]) || Context.Text[next] == '_'))
                 {
@@ -31,16 +30,18 @@ namespace SixPeg
                     var mayKeyword = Context.Text[space.Next..next];
                     if (_keywords.Contains(mayKeyword))
                     {
-                        var match = Match.Success(space.Next, next);
-                        var more = Match.Success(next);
-
-                        result = Match.Success(start, space, match, more);
+                        match = null;
+                    }
+                    else
+                    {
+                        match = Match.Success(start, space, Match.Success(space.Next, next));
                     }
                 }
-                Caches[Cache_Keyword].Cache(start, result);
+                Caches[Cache_Identifier].Cache(start, match);
             }
-            return result;
+            return match;
         }
-#endif
+
     }
 }
+#endif

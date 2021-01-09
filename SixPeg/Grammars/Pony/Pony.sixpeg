@@ -11,19 +11,19 @@
     rules
     {
         module:
-            STRING? use* class_def* EOF
+            string-literal? use* class_def* EOF
 
         use:
-            'use' (ID '=')? (STRING | use_ffi) ('if' infix)?
+            'use' (identifier '=')? (string-literal | use_ffi) ('if' infix)?
 
         use_ffi:
-            '@' (ID | STRING) typeargs '(' params? ')' '?'?
+            '@' (identifier | string-literal) typeargs '(' params? ')' '?'?
 
         class-kind:
             'type' | 'interface' | 'trait' | 'primitive' | 'struct' | 'class' | 'actor'
 
         class_def: 
-            class-kind anno? '@'? cap? ID typeparams? ('is' type)? STRING? members
+            class-kind anno? '@'? cap? identifier typeparams? ('is' type)? string-literal? members
 
         members:
             field* method*
@@ -32,16 +32,16 @@
             'var' | 'let' | 'embed'
 
         field:
-            field-kind ID ':' type ('=' infix)? STRING?
+            field-kind identifier ':' type ('=' infix)? string-literal?
 
         method-kind:
             'fun' | 'be' | 'new'
 
         method:
-            method-kind anno? (cap | '@')? ID typeparams? '(' params? ')' (':' type)? '?'? STRING? ('=>' rawseq)?
+            method-kind anno? (cap | '@')? identifier typeparams? '(' params? ')' (':' type)? '?'? string-literal? ('=>' rawseq)?
 
         anno:
-            ('\\' ID (',' ID)* '\\')
+            ('\\' identifier (',' identifier)* '\\')
 
         annotatedrawseq:
             anno? (exprseq | jump)
@@ -73,10 +73,18 @@
             infix ('=' assignment)?
 
         nextinfix:
-            nextterm antlr_0*
+            nextterm infix-rest*
 
         infix:
-            term antlr_0*
+            term infix-rest*
+
+        infix-rest
+            : binop
+            | isop
+            | 'as' type
+
+        binop:
+            infix-operator '?'? term
 
         isop:
             ('is' | 'isnt') term
@@ -118,8 +126,6 @@
             | '!=~'
             | '!='
 
-        binop:
-            infix-operator '?'? term
 
         @single
         nextterm
@@ -172,23 +178,23 @@
             'elseif' anno? rawseq 'then' rawseq (elseif | ('else' annotatedrawseq))?
 
         idseq
-            : ID
+            : identifier
             | '(' idseq_in_seq (',' idseq_in_seq)* ')'
 
         idseq_in_seq
-            : ID
+            : identifier
             | '(' idseq_in_seq (',' idseq_in_seq)* ')'
 
         nextpattern
-            : ('var' | 'let' | 'embed') ID (':' type)?
+            : ('var' | 'let' | 'embed') identifier (':' type)?
             | nextparampattern
 
         casepattern
-            : ('var' | 'let' | 'embed') ID (':' type)?
+            : ('var' | 'let' | 'embed') identifier (':' type)?
             | caseparampattern
 
         pattern
-            : ('var' | 'let' | 'embed') ID (':' type)?
+            : ('var' | 'let' | 'embed') identifier (':' type)?
             | parampattern
 
         nextparampattern
@@ -204,65 +210,72 @@
             | postfix
 
         nextpostfix:
-            nextatom antlr_2*
+            nextatom postfix-rest*
 
         casepostfix:
-            caseatom antlr_2*
+            caseatom postfix-rest*
 
         postfix:
-            atom antlr_2*
+            atom postfix-rest*
+
+        postfix-rest
+            : dot
+            | tilde
+            | chain
+            | typeargs
+            | call
 
         call:
             '(' positional? named? ')' '?'?
 
         chain:
-            '.>' ID
+            '.>' identifier
 
         tilde:
-            '~' ID
+            '~' identifier
 
         dot:
-            '.' ID
+            '.' identifier
 
         nextatom
-            : ID
+            : identifier
             | 'this'
             | literal
             | LPAREN_NEW rawseq tuple? ')'
             | LSQUARE_NEW ('as' type ':')? rawseq? ']'
             | 'object' anno? cap? ('is' type)? members 'end'
-            | '{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@' (ID | STRING) typeargs? '(' positional? named? ')' '?'?
+            | '{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@' (identifier | string-literal) typeargs? '(' positional? named? ')' '?'?
             | '__loc'
             | 'if' anno? rawseq 'then' rawseq (elseif | ('else' annotatedrawseq))? 'end'
             | 'while' anno? rawseq 'do' rawseq ('else' annotatedrawseq)? 'end'
             | 'for' anno? idseq 'in' rawseq 'do' rawseq ('else' annotatedrawseq)? 'end'
 
         caseatom
-            : ID
+            : identifier
             | 'this'
             | literal
             | '(' rawseq tuple? ')'
             | '[' ('as' type ':')? rawseq? ']'
             | 'object' anno? cap? ('is' type)? members 'end'
-            | '{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@' (ID | STRING) typeargs? '(' positional? named? ')' '?'?
+            | '{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@' (identifier | string-literal) typeargs? '(' positional? named? ')' '?'?
             | '__loc'
             | 'while' anno? rawseq 'do' rawseq ('else' annotatedrawseq)? 'end'
             | 'for' anno? idseq 'in' rawseq 'do' rawseq ('else' annotatedrawseq)? 'end'
 
         atom
-            : ID
+            : identifier
             | 'this'
             | literal
             | '(' rawseq tuple? ')'
             | '[' ('as' type ':')? rawseq? ']'
             | 'object' anno? cap? ('is' type)? members 'end'
-            | '{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@{' anno? cap? ID? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
-            | '@' (ID | STRING) typeargs? '(' positional? named? ')' '?'?
+            | '{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@{' anno? cap? identifier? typeparams? '(' lambdaparams? ')' lambdacaptures? (':' type)? '?'? '=>' rawseq '}' cap?
+            | '@' (identifier | string-literal) typeargs? '(' positional? named? ')' '?'?
             | '__loc'
             | 'if' anno? rawseq 'then' rawseq (elseif | ('else' annotatedrawseq))? 'end'
             | 'while' anno? rawseq 'do' rawseq ('else' annotatedrawseq)? 'end'
@@ -275,13 +288,13 @@
             '(' (lambdacapture | 'this') (',' (lambdacapture | 'this'))* ')'
 
         lambdacapture:
-            ID (':' type)? ('=' infix)?
+            identifier (':' type)? ('=' infix)?
 
         lambdaparams:
             lambdaparam (',' lambdaparam)*
 
         lambdaparam:
-            ID (':' type)? ('=' infix)?
+            identifier (':' type)? ('=' infix)?
 
         positional:
             rawseq (',' rawseq)*
@@ -290,7 +303,7 @@
             'where' namedarg (',' namedarg)*
 
         namedarg:
-            ID '=' rawseq
+            identifier '=' rawseq
 
         type:
             atomtype ('->' type)?
@@ -304,16 +317,20 @@
             | barelambdatype
 
         barelambdatype:
-            '@{' cap? ID? typeparams? '(' (type (',' type)*)? ')' (':' type)? '?'? '}' (cap | gencap)? ('^' | '!')?
+            '@{' cap? identifier? typeparams? '(' (type (',' type)*)? ')' (':' type)? '?'? '}' (cap | gencap)? ('^' | '!')?
 
         lambdatype:
-            '{' cap? ID? typeparams? ('(' | LPAREN_NEW) (type (',' type)*)? ')' (':' type)? '?'? '}' (cap | gencap)? ('^' | '!')?
+            '{' cap? identifier? typeparams? ('(' | LPAREN_NEW) (type (',' type)*)? ')' (':' type)? '?'? '}' (cap | gencap)? ('^' | '!')?
 
         tupletype:
             ',' infixtype (',' infixtype)*
 
         infixtype:
-            type antlr_5*
+            type infixtype-rest*
+
+        infixtype-rest
+            : uniontype
+            | isecttype
 
         isecttype:
             '&' type
@@ -322,7 +339,7 @@
             '|' type
 
         nominal:
-            ID ('.' ID)? typeargs? (cap | gencap)? ('^' | '!')?
+            identifier ('.' identifier)? typeargs? (cap | gencap)? ('^' | '!')?
 
         gencap:
             '#read' | '#send' | '#share' | '#alias' | '#any'
@@ -340,7 +357,7 @@
             (param | '...') (',' (param | '...'))*
 
         typeparam:
-            ID (':' type)? ('=' typearg)?
+            identifier (':' type)? ('=' typearg)?
 
         typearg
             : type
@@ -350,28 +367,12 @@
         literal
             : 'true'
             | 'false'
-            | FLOAT
-            | INT
-            | STRING
+            | float-literal
+            | integer-literal
+            | string-literal
 
         param:
-            ID ':' type ('=' infix)?
-
-        antlr_0
-            : binop
-            | isop
-            | 'as' type
-
-        antlr_5
-            : uniontype
-            | isecttype
-
-        antlr_2
-            : dot
-            | tilde
-            | chain
-            | typeargs
-            | call
+            identifier ':' type ('=' infix)?
     }
 
     terminals
@@ -447,10 +448,8 @@
 
         // tokens
 
-        ID: !keyword ident
-
-        ident
-            : _ identifier-head identifier-part* identifier-tail*
+        identifier:
+            !keyword _ identifier-head identifier-part* identifier-tail*
 
         identifier-head:
             [a-zA-Z_]
@@ -461,16 +460,16 @@
         identifier-tail:
             "'"
 
-        INT
+        integer-literal
             : _ "0b" (BINARY | [_])+
             | _ "0x" (HEX | [_])+
             | _ DIGIT (DIGIT | [_])*
             | _ ['] CHAR_CHAR* [']
 
-        FLOAT:
+        float-literal:
             _ DIGIT ![bx] (DIGIT | [_])* ([.] DIGIT (DIGIT | [_])*)? EXP?
 
-        STRING
+        string-literal
             : _ triple-x (!triple-x .)* triple-x ["]*
             | _ ["] STRING_CHAR* ["]
 
@@ -517,10 +516,6 @@
 	        / [\u000D][\u000A]
 	        / [\u000D]
 
-        line-break-character
-	        = [\u000A]
-	        / [\u000D]
-
         CHAR_CHAR
             : "\\\'" 
             | CHAR_ESC
@@ -533,9 +528,6 @@
 
         EXP:
             [eE][+-]? (DIGIT | "_")+
-
-        LETTER:
-            [a-zA-Z]
 
         DIGIT:
             [0-9]

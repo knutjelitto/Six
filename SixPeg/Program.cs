@@ -15,7 +15,10 @@ namespace SixPeg
         {
             foreach (var arg in args) { Console.WriteLine($"{arg}"); }
 
-            TestLang("Pony");
+            //TestLang("Swift");
+
+            var builder = new Builder();
+            builder.Build();
 
             Console.Write("done ... ");
             _ = Console.ReadKey(true);

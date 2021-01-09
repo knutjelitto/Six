@@ -28,7 +28,16 @@ namespace SixPeg.Runtime
             return null;
         }
 
-        protected Match CharacterAny_(int start)
+        public Match And_(int start, Match match)
+        {
+            if (match != null)
+            {
+                return Match.Success(start);
+            }
+            return null;
+        }
+
+        public Match CharacterAny_(int start)
         {
             if (start < Context.Length)
             {
@@ -37,7 +46,7 @@ namespace SixPeg.Runtime
             return null;
         }
 
-        protected Match CharacterExact_(int start, char exact)
+        public Match CharacterExact_(int start, char exact)
         {
             if (start < Context.Length && Context.Text[start] == exact)
             {
@@ -46,7 +55,7 @@ namespace SixPeg.Runtime
             return null;
         }
 
-        protected Match CharacterRange_(int start, char min, char max)
+        public Match CharacterRange_(int start, char min, char max)
         {
             if (start < Context.Length && min <= Context.Text[start] && Context.Text[start] <= max)
             {
@@ -56,7 +65,7 @@ namespace SixPeg.Runtime
         }
 
 
-        protected Match CharacterSequence_(int start, string text)
+        public Match CharacterSequence_(int start, string text)
         {
             if (start + text.Length <= Context.Length && MemoryExtensions.Equals(text.AsSpan(), Context.Text.AsSpan(start, text.Length), StringComparison.Ordinal))
             {
@@ -65,7 +74,7 @@ namespace SixPeg.Runtime
             return null;
         }
 
-        protected Match CharacterSet_(int start, string set)
+        public Match CharacterSet_(int start, string set)
         {
             if (start < Context.Length && set.Contains(Context.Text[start]))
             {

@@ -1,0 +1,24 @@
+﻿grammar Swift
+{
+    options
+    {
+        start = unit
+        space = _
+        more = more
+        matches = first // unconditionally use first match of any rule
+    }
+
+    rules
+    {
+        unit:
+            statements? EOF
+    }
+
+    terminals
+    {
+        EOF : _ !.
+            | #error("EOF")
+
+        _:  whitespace*
+    }
+}

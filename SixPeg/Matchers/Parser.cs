@@ -35,9 +35,8 @@ namespace SixPeg.Matchers
 
             foreach (var rule in grammar.Rules)
             {
-                var matcher = new MatchRule(rule.Name)
+                var matcher = new MatchRule(rule.Name, rule is TerminalExpression)
                 {
-                    IsTerminal = rule is TerminalExpression,
                     IsSingle = allSingle || rule.Attributes.Symbols.Any(s => s.Text == "single"),
                 };
 
@@ -72,17 +71,7 @@ namespace SixPeg.Matchers
                 Rules[index].Matcher = resolver.Resolve(grammar.Rules[index]);
             }
 
-            return this;
-        }
-
-        public Parser Optimize()
-        {
-            var optimizer = new Optimizer();
-
-            for (var index = 0; index < Rules.Count; index += 1)
-            {
-                Rules[index].Matcher = optimizer.Optimize(Rules[index].Matcher);
-            }
+            new Terminator(this).Terminate();
 
             return this;
         }

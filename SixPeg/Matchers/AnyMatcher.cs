@@ -1,4 +1,5 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Runtime;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,9 +11,13 @@ namespace SixPeg.Matchers
     {
         public static int furthestCursor = 0;
 
+        public bool UsedByRule { get; set; } = false;
+        public bool UsedByTerminal { get; set; } = false;
+        public bool Used => UsedByRule || UsedByTerminal;
+        public bool Fragment => !UsedByRule;
+
         public IMatcher Space { get; set; } = null;
         public virtual bool IsClassy { get; } = false;
-        public virtual bool IsInline { get; } = false;
         public string SpacePrefix => Space == null ? string.Empty : "_ ";
         public virtual string DDLong => ToString();
         public abstract string Marker { get; }

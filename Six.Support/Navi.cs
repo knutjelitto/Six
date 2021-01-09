@@ -28,6 +28,21 @@ namespace Six.Support
         public DirectoryInfo SwiftCoreFull { get; }
         public DirectoryInfo SwiftTests { get; }
 
+        public DirectoryInfo GetProject(string projectName)
+        {
+            return new DirectoryInfo(Path.Combine(Workspace.FullName, projectName));
+        }
+
+        public DirectoryInfo Subdir(DirectoryInfo parent, string name)
+        {
+            return new DirectoryInfo(Path.Combine(parent.FullName, name));
+        }
+
+        public FileInfo File(DirectoryInfo parent, string name)
+        {
+            return new FileInfo(Path.Combine(parent.FullName, name));
+        }
+
 
         public DirectoryInfo TempFor(DirectoryInfo work)
         {

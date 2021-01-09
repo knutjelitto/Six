@@ -1,5 +1,6 @@
 ﻿using SixPeg.Expression;
 using SixPeg.Matches;
+using SixPeg.Runtime;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,27 +9,27 @@ namespace SixPeg.Matchers
 {
     public class MatchRule : AnyMatcher
     {
-        public MatchRule(Symbol name)
+        public MatchRule(Symbol name, bool isTerminal)
         {
             Name = name;
+            IsTerminal = isTerminal;
 
             MatchCacheBool = new MatchCacheBool(Name);
-            MatchCache = new MatchCache(Name);
+            MatchCache = new Matches.MatchCache(Name);
             MatchesCache = new MatchesCache(Name);
         }
 
+        public Symbol Name { get; }
+        public bool IsTerminal { get; }
+        public int Index { get; set; } = -1;
+        public bool IsSingle { get; set; } = false;
+        private MatchCacheBool MatchCacheBool { get; }
+        private Matches.MatchCache MatchCache { get; }
+        private MatchesCache MatchesCache { get; }
+        public IMatcher Matcher { get; set; }
         public override string Marker => $"{Name}=";
         public override string DDLong => $"{Name}={Matcher?.DDLong ?? "<not-yet>"}";
 
-        public int Index { get; set; } = -1;
-        public bool IsTerminal { get; set; } = false;
-        public bool IsSingle { get; set; } = false;
-        public Symbol Name { get; }
-        private MatchCacheBool MatchCacheBool { get; }
-        private MatchCache MatchCache { get; }
-        private MatchesCache MatchesCache { get; }
-
-        public IMatcher Matcher { get; set; }
 
         public new void Clear()
         {

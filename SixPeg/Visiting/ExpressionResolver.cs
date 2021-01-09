@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SixPeg.Visiting
 {
-    public class ExpressionResolver : IExpressionVisitor<AnyMatcher>
+    public sealed class ExpressionResolver : IExpressionVisitor<AnyMatcher>
     {
         private readonly Parser parser;
         private readonly Optimizer optimizer;
@@ -21,70 +21,75 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Resolve(AnyExpression expr)
         {
-            return optimizer.Optimize(expr.Accept(this));
+            return Optim(expr.Accept(this));
+        }
+
+        private AnyMatcher Optim(AnyMatcher matcher)
+        {
+            return optimizer.Optimize(matcher);
         }
 
         public AnyMatcher Visit(AndExpression expr)
         {
-            return optimizer.Optimize(new MatchAnd(expr.Expression.Accept(this)));
+            return Optim(new MatchAnd(Optim(expr.Expression.Accept(this))));
         }
 
         public AnyMatcher Visit(CharacterClassExpression expr)
         {
-            IReadOnlyList<AnyMatcher> matchers = expr.Ranges.Select(e => optimizer.Optimize(e.Accept(this))).ToArray();
+            IReadOnlyList<AnyMatcher> matchers = expr.Ranges.Select(e => Optim(e.Accept(this))).ToArray();
 
             return expr.Ranges.Count switch
             {
-                1 => optimizer.Optimize(matchers[0]),
-                _ => optimizer.Optimize(new MatchChoice(matchers)),
+                1 => Optim(matchers[0]),
+                _ => Optim(new MatchChoice(matchers)),
             };
         }
 
         public AnyMatcher Visit(CharacterRangeExpression expr)
         {
             return expr.Min == expr.Max
-                ? optimizer.Optimize(new MatchCharacterExact(expr.Min))
-                : optimizer.Optimize(new MatchCharacterRange(expr.Min, expr.Max));
+                ? Optim(new MatchCharacterExact(expr.Min))
+                : Optim(new MatchCharacterRange(expr.Min, expr.Max));
         }
 
         public AnyMatcher Visit(CharacterSequenceExpression expr)
         {
             return expr.Text.Length switch
             {
-                1 => optimizer.Optimize(new MatchCharacterExact(expr.Text[0])),
-                _ => optimizer.Optimize(new MatchCharacterSequence(expr.Text))
+                1 => Optim(new MatchCharacterExact(expr.Text[0])),
+                _ => Optim(new MatchCharacterSequence(expr.Text))
             };
         }
 
         public AnyMatcher Visit(ChoiceExpression expr)
         {
-            IReadOnlyList<AnyMatcher> matchers = expr.Expressions.Select(e => e.Accept(this)).ToArray();
+            IReadOnlyList<AnyMatcher> matchers = expr.Expressions.Select(e => Optim(e.Accept(this))).ToArray();
 
             return matchers.Count switch
             {
-                1 => optimizer.Optimize(matchers[0]),
-                _ => optimizer.Optimize(new MatchChoice(matchers))
+                1 => Optim(matchers[0]),
+                _ => Optim(new MatchChoice(matchers))
             };
         }
 
         public AnyMatcher Visit(ErrorExpression expr)
         {
-            return optimizer.Optimize(new MatchError(expr.Arguments));
+            return Optim(new MatchError(expr.Arguments));
         }
 
         public AnyMatcher Visit(NotExpression expr)
         {
-            return optimizer.Optimize(new MatchNot(expr.Expression.Accept(this)));
+            return Optim(new MatchNot(Optim(expr.Expression.Accept(this))));
         }
 
         public AnyMatcher Visit(QuantifiedExpression expr)
         {
             return (expr.Quantifier.Min, expr.Quantifier.Max) switch
             {
-                (1, 1) => expr.Expression.Accept(this),
-                (0, 1) => new MatchZeroOrOne(expr.Expression.Accept(this)),
-                (0, null) => new MatchZeroOrMore(expr.Expression.Accept(this)),
-                (1, null) => new MatchOneOrMore(expr.Expression.Accept(this)),
+                (1, 1) => Optim(expr.Expression.Accept(this)),
+                (0, 1) => Optim(new MatchZeroOrOne(Optim(expr.Expression.Accept(this)))),
+                (0, null) => Optim(new MatchZeroOrMore(Optim(expr.Expression.Accept(this)))),
+                (1, null) => Optim(new MatchOneOrMore(Optim(expr.Expression.Accept(this)))),
                 _ => throw new NotImplementedException(),
             };
         }
@@ -102,22 +107,22 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(RuleExpression expr)
         {
-            return expr.Expression.Accept(this);
+            return Optim(expr.Expression.Accept(this));
         }
 
         public AnyMatcher Visit(TerminalExpression expr)
         {
-            return expr.Expression.Accept(this);
+            return Optim(expr.Expression.Accept(this));
         }
 
         public AnyMatcher Visit(SequenceExpression expr)
         {
-            var matchers = expr.Select(e => optimizer.Optimize(e.Accept(this))).ToArray();
+            var matchers = expr.Select(e => Optim(e.Accept(this))).ToArray();
             return expr.Count switch
             {
                 0 => new MatchEpsilon(),
-                1 => optimizer.Optimize(matchers[0]),
-                _ => optimizer.Optimize(new MatchSequence(expr.Select(e => e.Accept(this)))),
+                1 => Optim(matchers[0]),
+                _ => Optim(new MatchSequence(expr.Select(e => e.Accept(this)))),
             };
         }
 
@@ -125,15 +130,15 @@ namespace SixPeg.Visiting
         {
             if (!parser.GetRule(expr.Name, out var rule))
             {
+                Debug.Assert(parser.Space != null);
                 var matchSpace = new MatchReference(parser.Space);
-                Debug.Assert(matchSpace != null);
 
                 var text = expr.Name.Text[1..^1];
                 Debug.Assert(text.Length >= 1);
 
                 var matchText = text.Length == 1
-                    ? (AnyMatcher)new MatchCharacterExact(text[0])
-                    : new MatchCharacterSequence(text);
+                    ? Optim(new MatchCharacterExact(text[0]))
+                    : Optim(new MatchCharacterSequence(text));
 
                 var sequence = new List<AnyMatcher> { matchSpace, matchText };
                 if (text.IsIdentifier())
@@ -145,10 +150,9 @@ namespace SixPeg.Visiting
                     }
                 }
 
-                rule = new MatchRule(expr.Name)
+                rule = new MatchRule(expr.Name, true)
                 {
-                    Matcher = new MatchSequence(sequence),
-                    IsTerminal = true,
+                    Matcher = Optim(new MatchSequence(sequence)),
                 };
                 parser.Add(rule);
             }
@@ -158,12 +162,12 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(WildcardExpression expr)
         {
-            return new MatchCharacterAny();
+            return Optim(new MatchCharacterAny());
         }
 
         public AnyMatcher Visit(BeforeExpression expr)
         {
-            return new MatchBefore(expr.Expression.Accept(this));
+            return Optim(new MatchBefore(expr.Expression.Accept(this)));
         }
     }
 }

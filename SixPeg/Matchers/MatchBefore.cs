@@ -1,7 +1,7 @@
 ﻿using SixPeg.Matches;
+using SixPeg.Runtime;
 using SixPeg.Visiting;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SixPeg.Matchers
 {
@@ -10,7 +10,6 @@ namespace SixPeg.Matchers
         public MatchBefore(AnyMatcher matcher)
             : base("<", "before", matcher)
         {
-            Debug.Assert(matcher.IsClassy);
         }
 
         protected override IEnumerable<IMatch> InnerMatches(Context subject, int before, int start)

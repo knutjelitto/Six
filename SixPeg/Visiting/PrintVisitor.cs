@@ -32,14 +32,70 @@ namespace SixPeg.Visiting
             }
         }
 
+        public bool Visit(MatchRule matcher)
+        {
+            var rt = matcher.IsTerminal ? "T" : "R";
+            var f = matcher.Fragment ? "F" : "";
+
+            using (Writer.Indent($"{matcher.Name}[{rt}{f}]:"))
+            {
+                return matcher.Matcher.Accept(this);
+            }
+        }
+
+        public bool Visit(MatchReference matcher)
+        {
+            Writer.WriteLine($"{matcher.SpacePrefix}{matcher.Rule.Name}");
+
+            return true;
+        }
+
+        public bool Visit(MatchChoice matcher)
+        {
+            using (Writer.Indent($"{matcher.SpacePrefix}choice"))
+            {
+                foreach (var m in matcher.Matchers)
+                {
+                    _ = m.Accept(this);
+                }
+            }
+            return true;
+        }
+
+        public bool Visit(MatchSequence matcher)
+        {
+            using (Writer.Indent($"{matcher.SpacePrefix}sequence"))
+            {
+                foreach (var m in matcher.Matchers)
+                {
+                    _ = m.Accept(this);
+                }
+            }
+            return true;
+        }
+
+        public bool Visit(MatchNot matcher)
+        {
+            using (Writer.Indent($"{matcher.SpacePrefix}not"))
+            {
+                return matcher.Matcher.Accept(this);
+            }
+        }
+
         public bool Visit(MatchAnd matcher)
         {
-            throw new System.NotImplementedException();
+            using (Writer.Indent($"{matcher.SpacePrefix}and"))
+            {
+                return matcher.Matcher.Accept(this);
+            }
         }
 
         public bool Visit(MatchBefore matcher)
         {
-            throw new System.NotImplementedException();
+            using (Writer.Indent($"{matcher.SpacePrefix}before"))
+            {
+                return matcher.Matcher.Accept(this);
+            }
         }
 
         public bool Visit(MatchCharacterAny matcher)
@@ -72,56 +128,25 @@ namespace SixPeg.Visiting
 
         public bool Visit(MatchCharacterSet matcher)
         {
-            var set = string.Join("' or '", matcher.Set.Select(s => s.ToString()));
+            var set = string.Join("' or '", matcher.Set.Select(s => s.ToString().Escape()));
 
             Writer.WriteLine($"{matcher.SpacePrefix}match \'{set}\'");
 
             return true;
         }
 
-        public bool Visit(MatchChoice matcher)
-        {
-            using (Writer.Indent($"{matcher.SpacePrefix}choice"))
-            {
-                foreach (var m in matcher.Matchers)
-                {
-                    _ = m.Accept(this);
-                }
-            }
-            return true;
-        }
-
         public bool Visit(MatchEpsilon matcher)
         {
-            throw new System.NotImplementedException();
+            Writer.WriteLine($"{matcher.SpacePrefix}epsilon");
+
+            return true;
         }
 
         public bool Visit(MatchError matcher)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public bool Visit(MatchReference matcher)
-        {
-            Writer.WriteLine($"{matcher.SpacePrefix}{matcher.Rule.Name}");
+            Writer.WriteLine($"#error");
 
             return true;
-        }
-
-        public bool Visit(MatchRule matcher)
-        {
-            using (Writer.Indent($"{matcher.Name}:"))
-            {
-                return matcher.Matcher.Accept(this);
-            }
-        }
-
-        public bool Visit(MatchNot matcher)
-        {
-            using (Writer.Indent($"{matcher.SpacePrefix}not"))
-            {
-                return matcher.Matcher.Accept(this);
-            }
         }
 
         public bool Visit(MatchOneOrMore matcher)
@@ -130,18 +155,6 @@ namespace SixPeg.Visiting
             {
                 return matcher.Matcher.Accept(this);
             }
-        }
-
-        public bool Visit(MatchSequence matcher)
-        {
-            using (Writer.Indent($"{matcher.SpacePrefix}sequence"))
-            {
-                foreach (var m in matcher.Matchers)
-                {
-                    _ = m.Accept(this);
-                }
-            }
-            return true;
         }
 
         public bool Visit(MatchZeroOrMore matcher)

@@ -1,9 +1,0 @@
-﻿unit
-    = statements? EOF
-
-EOF
-    = _ !.
-    / #error("EOF")
-
-_
-    = whitespace*

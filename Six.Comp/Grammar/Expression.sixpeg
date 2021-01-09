@@ -1,0 +1,324 @@
+﻿// ====================================
+// == Expression
+// ====================================
+
+grammar Swift
+{
+    rules
+    {
+        expression
+            = try-operator? prefix-expression binary-expressions?
+
+        binary-expressions
+            = binary-expression+
+
+        binary-expression
+            = assignment-operator try-operator? prefix-expression
+            / conditional-operator try-operator? prefix-expression
+            / binary-operator prefix-expression
+            / type-casting-operator
+
+        prefix-expression
+            = prefix-operator? postfix-expression
+            / in-out-expression
+
+        in-out-expression
+            = '&' name
+
+        postfix-expression
+            = primary-expression postfix-appendix*
+
+        postfix-appendix
+            = postfix-operator
+            / function-call
+            / initializer-appendix
+            / explicit-member
+            / postfix-self
+            / subscript
+            / forced-value
+            / optional-chaining
+
+        //----
+        function-call
+            = function-call-argument-clause trailing-closures
+            / function-call-argument-clause
+            / trailing-closures
+
+        function-call-argument-clause
+            = '(' function-call-argument-list? ')'
+
+        function-call-argument-list
+            = function-call-argument (',' function-call-argument)*
+
+        function-call-argument
+            = (name ':')? (expression / _ operator)
+
+        trailing-closures
+            = ':' &closure-expression closure-expression labeled-trailing-closures?
+            / ':' &'{' #error("trailing-closures")
+
+        labeled-trailing-closures
+            = labeled-trailing-closure labeled-trailing-closure*
+
+        labeled-trailing-closure
+            = name ':' closure-expression
+
+        //----
+        initializer-appendix
+            = '.' 'init' !more argument-name-clause?
+
+        argument-name-clause
+            = '(' argument-names ')'
+
+        argument-names
+            = argument-name+
+
+        argument-name
+            = name ':'
+
+        //----
+        explicit-member
+            = '.' decimal-digits
+            / '.' name argument-name-clause
+            / '.' name generic-argument-clause?
+
+        //----
+        postfix-self
+            = '.' 'self'
+
+        //----
+        subscript
+            = '[' function-call-argument-list ']'
+
+        //----
+        forced-value
+            = [!]
+
+        //----
+        optional-chaining
+            = [?]
+
+        //----
+        primary-expression
+            = name generic-argument-clause?
+            / literal-expression
+            / self-expression
+            / superclass-expression
+            / closure-expression
+            / parenthesized-expression
+            / tuple-expression
+            / implicit-member-expression
+            / wildcard-expression
+            / key-path-expression
+            / selector-expression
+            / key-path-string-expression
+
+        literal-expression
+            = literal
+            / array-literal
+            / dictionary-literal
+            / playground-literal
+            / '#file'
+            / '#fileID'
+            / '#filePath'
+            / '#line'
+            / '#column'
+            / '#function'
+            / '#dsohandle'
+
+        literal
+            = numeric-literal
+            / string-literal
+            / boolean-literal
+            / nil-literal
+
+        numeric-literal
+            = '-'? _ (floating-point-literal / integer-literal)
+
+        boolean-literal
+            = 'true'
+            / 'false'
+
+        nil-literal
+            = 'nil'
+
+        array-literal
+            = '[' array-literal-items ']'
+            / '[' ']'
+
+        array-literal-items
+            = array-literal-item (',' array-literal-item)* ','?
+
+        array-literal-item
+            = expression
+
+        dictionary-literal
+            = '[' dictionary-literal-items ']'
+            / '[' ':' ']'
+
+        dictionary-literal-items
+            = dictionary-literal-item (',' dictionary-literal-item)* ','?
+
+        dictionary-literal-item
+            = expression ':' expression
+
+        playground-literal
+            = '#colorLiteral' '(' 'red' ':' expression ',' 'green' ':' expression ',' 'blue' ':' expression ',' 'alpha' ':' expression ')'
+            / '#fileLiteral' '(' 'resourceName' ':' expression ')'
+            / '#imageLiteral' '(' 'resourceName' ':' expression ')'
+
+        self-expression
+            = 'self' '.' 'init' !more
+            / 'self' '.' name
+            / 'self' '[' function-call-argument-list ']'
+            / 'self' !more
+
+        superclass-expression
+            = 'super' '.' 'init' !more
+            / 'super' '.' name
+            / 'super' '[' function-call-argument-list ']'
+
+        closure-expression
+            = '{' closure-signature? statements? '}'
+
+        closure-signature
+            = capture-list? closure-parameter-clause 'throws'? function-result? 'in'
+            / capture-list 'in'
+
+        closure-parameter-clause
+            = '(' ')'
+            / '(' closure-parameter-list ')'
+            / identifier-list
+
+        closure-parameter-list
+            = closure-parameter (',' closure-parameter)*
+
+        closure-parameter
+            = closure-parameter-name type-annotation '...'
+            / closure-parameter-name type-annotation
+            / closure-parameter-name
+
+        closure-parameter-name
+            = name
+
+        identifier-list
+            = name (',' name)*
+
+        capture-list
+            = '[' capture-list-items ']'
+
+        capture-list-items
+            = capture-list-item (',' capture-list-item)*
+
+        capture-list-item
+            = capture-specifier? expression
+
+        capture-specifier
+            = 'weak'
+            / 'unowned' ( '(' ('safe' / 'unsafe') ')' )?
+
+        parenthesized-expression
+            = '(' expression ')'
+
+        tuple-expression
+            = '(' ')'
+            / '(' tuple-element-list ')'
+
+        tuple-element-list
+            = tuple-element (',' tuple-element)+
+
+        tuple-element
+            = (name ':')? expression
+
+        implicit-member-expression
+            = '.' name
+
+        wildcard-expression
+            = '_' !more
+
+        key-path-expression
+            = '\\' type? '.' key-path-components
+
+        key-path-components
+            = key-path-component ('.' key-path-component)?
+
+        key-path-component
+            = name key-path-postfixes
+            / key-path-postfixes
+            / name
+
+        key-path-postfixes
+            = key-path-postfix+
+
+        key-path-postfix
+            = '?'
+            / '!'
+            / 'self'
+            / '[' function-call-argument-list ']'
+
+        selector-expression
+            = '#selector' '(' ('getter:'/'setter:')? expression ')'
+
+        key-path-string-expression
+            = '#keyPath' '(' expression ')'
+
+        //----
+        try-operator
+            = 'try' ('?' / '!')?
+
+        assignment-operator
+            = '='
+
+        type-casting-operator
+            = 'is' !more type
+            / 'as' !more ('?' /'!')? type
+            / ('is' / 'as') !more #error("type-casting-operator")
+
+        conditional-operator
+            = _ <space-before '?' &space-after expression ':'
+
+        binary-operator
+            = _ <space-before operator &space-after
+            / operator !space-after
+
+        prefix-operator
+            = _ <space-before operator !space-after
+
+        postfix-operator
+            = operator &space-after
+            / operator &[.]
+
+        operator
+            = operator-head operator-character*
+            / dot-operator-head dot-operator-character+
+
+        operator-head
+            = "/" / "=" / "-" / "+" / "!" / "*" / "%" / "<" / ">" / "&" / "|" / "^" / "~" / "?"
+
+        operator-character
+            = operator-head
+
+        dot-operator-head
+            = "."
+
+        dot-operator-character
+            = "." / operator-character
+
+        puncts
+            = "," / ";" / ":"
+
+        space-before
+            = single-whitespace
+            / puncts
+            / "("
+            / "["
+            / "{"
+
+        space-after
+            = single-whitespace
+            / puncts 
+            / ")"
+            / "]"
+            / "}"
+    }
+}
