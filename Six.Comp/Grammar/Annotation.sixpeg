@@ -1,88 +1,94 @@
-﻿full-prefix
-    = attributes? declaration-modifiers?
+﻿grammar Six
+{
+    rules
+    {
+        full-prefix
+            = attributes? declaration-modifiers?
 
-access-prefix
-    = attributes? access-level-modifier?
+        access-prefix
+            = attributes? access-level-modifier?
 
-mutation-prefix
-    = attributes? mutation-modifier?
+        mutation-prefix
+            = attributes? mutation-modifier?
 
-// ------------------------------------
-// attributes / modifiers
-// ------------------------------------
-attributes
-    = attribute+
+        // ------------------------------------
+        // attributes / modifiers
+        // ------------------------------------
+        attributes
+            = attribute+
 
-attribute
-    = '@' 'inlinable'
-    / '@' 'frozen'
-    / '@' 'escaping'
-    / '@' 'autoclosure'
-    / '@' 'usableFromInline'
-    / '@' 'discardableResult'
-    / '@' 'nonobjc'
-    / '@' 'unknown'
-    / '@' 'inline' '(' ('never' / '__always') ')'
-    / '@' 'available' '(' (name / swift-version / ',' / ':' / '*' / static-string-literal)+ ')'
-    / '@' 'convention' '(' ('block'/'thin'/'c') ')'
-    / '@' 'objc' ( '(' (':' / name)+ ')' )?
-    / '@' '_show_in_interface'
-    / '@' '_fixed_layout'
-    / '@' '_nonoverride'
-    / '@' '_borrowed'
-    / '@' '_transparent'
-    / '@' '_nonEphemeral'
-    / '@' '_alwaysEmitIntoClient'
-    / '@' '_objc_non_lazy_realization'
-    / '@' '_implements' '(' type-identifier (',' type-identifier)* ')'
-    / '@' '_specialize' '(' generic-where-clause ')'
-    / '@' '_effects' '(' ('readnone' / 'readonly' / 'releasenone') ')'
-    / '@' '_silgen_name' '(' static-string-literal ')'
-    / '@' '_semantics' '(' static-string-literal ')'
-    / '@' '_objcRuntimeName' '(' name ')'
-    / '@' '_cdecl' '(' static-string-literal ')'
-    / '@' #error( "attribute" )
+        attribute
+            = '@' 'inlinable'
+            / '@' 'frozen'
+            / '@' 'escaping'
+            / '@' 'autoclosure'
+            / '@' 'usableFromInline'
+            / '@' 'discardableResult'
+            / '@' 'nonobjc'
+            / '@' 'unknown'
+            / '@' 'inline' '(' ('never' / '__always') ')'
+            / '@' 'available' '(' (name / swift-version / ',' / ':' / '*' / static-string-literal)+ ')'
+            / '@' 'convention' '(' ('block'/'thin'/'c') ')'
+            / '@' 'objc' ( '(' (':' / name)+ ')' )?
+            / '@' '_show_in_interface'
+            / '@' '_fixed_layout'
+            / '@' '_nonoverride'
+            / '@' '_borrowed'
+            / '@' '_transparent'
+            / '@' '_nonEphemeral'
+            / '@' '_alwaysEmitIntoClient'
+            / '@' '_objc_non_lazy_realization'
+            / '@' '_implements' '(' type-identifier (',' type-identifier)* ')'
+            / '@' '_specialize' '(' generic-where-clause ')'
+            / '@' '_effects' '(' ('readnone' / 'readonly' / 'releasenone') ')'
+            / '@' '_silgen_name' '(' static-string-literal ')'
+            / '@' '_semantics' '(' static-string-literal ')'
+            / '@' '_objcRuntimeName' '(' name ')'
+            / '@' '_cdecl' '(' static-string-literal ')'
+            / '@' #error( "attribute" )
 
-declaration-modifiers
-    = modifier+
+        declaration-modifiers
+            = modifier+
 
-modifier
-    = _ modifier-token
+        modifier
+            = _ modifier-token
 
-modifier-token    
-    = access-level-modifier
-    / declaration-modifier
-    / mutation-modifier
+        modifier-token    
+            = access-level-modifier
+            / declaration-modifier
+            / mutation-modifier
 
-declaration-modifier
-    = 'class'
-    / 'convenience'
-    / 'dynamic'
-    / 'final'
-    / 'infix'
-    / 'lazy'
-    / 'optional'
-    / 'override'
-    / 'postfix'
-    / 'prefix'
-    / 'required'
-    / 'static'
-    / 'unowned' ( '(' ('safe' / 'unsafe') ')' )?
-    / 'weak'
-    / '__consuming'
+        declaration-modifier
+            = 'class'
+            / 'convenience'
+            / 'dynamic'
+            / 'final'
+            / 'infix'
+            / 'lazy'
+            / 'optional'
+            / 'override'
+            / 'postfix'
+            / 'prefix'
+            / 'required'
+            / 'static'
+            / 'unowned' ( '(' ('safe' / 'unsafe') ')' )?
+            / 'weak'
+            / '__consuming'
 
-access-level-modifier
-    = access-modifier-base ( '(' 'set' ')' )?
+        access-level-modifier
+            = access-modifier-base ( '(' 'set' ')' )?
 
-access-modifier-base
-    = 'private'
-    / 'fileprivate'
-    / 'internal'
-    / 'public'
-    / 'open'
+        access-modifier-base
+            = 'private'
+            / 'fileprivate'
+            / 'internal'
+            / 'public'
+            / 'open'
 
-mutation-modifier
-    = 'mutating'
-    / 'nonmutating'
+        mutation-modifier
+            = 'mutating'
+            / 'nonmutating'
+    }
+}
 
 

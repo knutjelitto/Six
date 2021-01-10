@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Six.Support
 {
     public class FileWriter : IndentWriter, IDisposable
     {
         public FileWriter(string filename)
-            : base(new BaseTextWriter(new StreamWriter(filename)))
+            : base(new BaseTextWriter(new StreamWriter(filename, false, Encoding.UTF8)))
         {
         }
 

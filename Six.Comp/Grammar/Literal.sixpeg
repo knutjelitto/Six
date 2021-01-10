@@ -1,10 +1,6 @@
-﻿// ====================================
-// == Identifier / Literal
-// ====================================
-
-grammar Swift
+﻿grammar Six
 {
-    terminals
+    terminals // == Identifier / Literal
     {
         name
             = _ identifier
@@ -15,22 +11,25 @@ grammar Swift
             / implicit-parameter-name
             / property-wrapper-projection
 
+        @fragment
         identifier-head
             = [a-zA-Z_]
 
+        @fragment
         identifier-character
             = identifier-head
             / [0-9]
 
-        more
-            = identifier-character
-
+        @fragment
         implicit-parameter-name
             = [$] decimal-digits
 
+        @fragment
         property-wrapper-projection
             = [$] identifier-character+
 
+        more
+            = identifier-character
 
         integer-literal
             = binary-literal
@@ -120,8 +119,3 @@ grammar Swift
             = _ [0-9]+
     }
 }
-
-
-
-
-

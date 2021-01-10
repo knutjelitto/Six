@@ -2,101 +2,108 @@
 // == Compiler Control
 // ====================================
 
-compiler-control-statement
-    = conditional-compilation-block
-    / line-control-statement
-    / diagnostic-statement
+grammar Six
+{
+    rules
+    {
+        compiler-control-statement
+            = conditional-compilation-block
+            / line-control-statement
+            / diagnostic-statement
 
-conditional-compilation-block
-    = if-directive-clause elseif-directive-clauses? else-directive-clause? endif-directive
+        conditional-compilation-block
+            = if-directive-clause elseif-directive-clauses? else-directive-clause? endif-directive
 
-if-directive-clause
-    = if-directive compilation-condition statements?
-    / if-directive #error("if-directive-clause")
+        if-directive-clause
+            = if-directive compilation-condition statements?
+            / if-directive #error("if-directive-clause")
 
-elseif-directive-clauses
-    = elseif-directive-clause+
+        elseif-directive-clauses
+            = elseif-directive-clause+
 
-elseif-directive-clause
-    = elseif-directive compilation-condition statements?
+        elseif-directive-clause
+            = elseif-directive compilation-condition statements?
 
-else-directive-clause
-    = else-directive statements?
+        else-directive-clause
+            = else-directive statements?
 
-if-directive
-    = '#if'
+        if-directive
+            = '#if'
 
-elseif-directive
-    = '#elseif'
+        elseif-directive
+            = '#elseif'
 
-else-directive
-    = '#else'
+        else-directive
+            = '#else'
 
-endif-directive
-    = '#endif'
+        endif-directive
+            = '#endif'
 
-compilation-condition-primary
-    = platform-condition
-    / name
-    / boolean-literal
-    / '(' compilation-condition ')'
-    / '!' compilation-condition
+        compilation-condition-primary
+            = platform-condition
+            / name
+            / boolean-literal
+            / '(' compilation-condition ')'
+            / '!' compilation-condition
 
-compilation-condition
-    = compilation-condition-primary ( ('||' / '&&') compilation-condition-primary )*
+        compilation-condition
+            = compilation-condition-primary ( ('||' / '&&') compilation-condition-primary )*
 
-platform-condition
-    = 'os' '(' operating-system ')'
-    / 'arch' '(' architecture ')'
-    / 'swift' '(' ('>=' / '<') swift-version ')'
-    / 'compiler' '(' ('>=' / '<') swift-version ')'
-    / 'canImport' '(' module-name ')'
-    / 'targetEnvironment' '(' environment ')'
+        platform-condition
+            = 'os' '(' operating-system ')'
+            / 'arch' '(' architecture ')'
+            / 'swift' '(' ('>=' / '<') swift-version ')'
+            / 'compiler' '(' ('>=' / '<') swift-version ')'
+            / 'canImport' '(' module-name ')'
+            / 'targetEnvironment' '(' environment ')'
 
-operating-system
-    = 'macOS'
-    / 'iOS'
-    / 'watchOS'
-    / 'tvOS'
-    / 'Windows'
-    / 'Android'
-    / 'Linux'
-    / 'OpenBSD'
-    / #error("unknown operating system")
+        operating-system
+            = 'macOS'
+            / 'iOS'
+            / 'watchOS'
+            / 'tvOS'
+            / 'Windows'
+            / 'Android'
+            / 'Linux'
+            / 'OpenBSD'
+            / #error("unknown operating system")
 
-architecture
-    = 'i386'
-    / 'x86_64'
-    / 'arm'
-    / 'arm64'
-    / 'wasm32'
-    / 'powerpc64'
-    / 's390x'
-    / #error("unknown architecture")
+        architecture
+            = 'i386'
+            / 'x86_64'
+            / 'arm'
+            / 'arm64'
+            / 'wasm32'
+            / 'powerpc64'
+            / 's390x'
+            / #error("unknown architecture")
 
-swift-version
-    = decimal-digits ('.' decimal-digits)*
+        swift-version
+            = decimal-digits ('.' decimal-digits)*
 
-module-name
-    = name
+        module-name
+            = name
 
-environment
-    = 'simulator' /  'macCatalyst'
+        environment
+            = 'simulator' /  'macCatalyst'
 
-line-control-statement
-    = '#sourceLocation' '(' ('file:' file-path ',' 'line:' line-number)? ')'
+        line-control-statement
+            = '#sourceLocation' '(' ('file:' file-path ',' 'line:' line-number)? ')'
 
-file-path
-    = static-string-literal
+        file-path
+            = static-string-literal
 
-line-number
-    = _ nonzero-decimal-literal
+        line-number
+            = _ nonzero-decimal-literal
 
-diagnostic-statement
-    = '#error' '(' diagnostic-message ')'
-    / '#warning' '(' diagnostic-message ')'
+        diagnostic-statement
+            = '#error' '(' diagnostic-message ')'
+            / '#warning' '(' diagnostic-message ')'
 
-diagnostic-message
-    = static-string-literal
+        diagnostic-message
+            = static-string-literal
+    }
+}
+
 
 

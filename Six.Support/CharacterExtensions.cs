@@ -4,6 +4,16 @@ namespace Six.Support
 {
     public static class CharacterExtensions
     {
+        public static string AsStringLiteral(this string text)
+        {
+            return $"\"{text.Escape()}\"";
+        }
+
+        public static string AsCharLiteral(this char text)
+        {
+            return $"\'{text.Escape()}\'";
+        }
+
         public static string Escape(this char character)
         {
             return character switch

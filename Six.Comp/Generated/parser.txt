@@ -1,4 +1,4 @@
-rules:
+﻿rules:
     unit[R]:
         sequence
             ?
@@ -618,7 +618,7 @@ rules:
     function-name[R]:
         choice
             name
-            operator
+            operator-name
             #error
     parameter-clause[R]:
         choice
@@ -1809,6 +1809,10 @@ rules:
                 operator
                 and
                     match "."
+    operator-name[R]:
+        sequence
+            _
+            operator
     operator[R]:
         choice
             sequence
@@ -2104,8 +2108,6 @@ rules:
         choice
             identifier-head
             match "0" .. "9"
-    more[T]:
-        identifier-character
     implicit-parameter-name[TF]:
         sequence
             match "$"
@@ -2115,6 +2117,8 @@ rules:
             match "$"
             +
                 identifier-character
+    more[T]:
+        identifier-character
     integer-literal[T]:
         choice
             binary-literal

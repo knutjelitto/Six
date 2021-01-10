@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SixPeg.Runtime\SixPeg.Runtime.csproj" />
+    <ProjectReference Include="..\Six.Peg.Runtime\Six.Peg.Runtime.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,11 +2,29 @@
 
 namespace Six.Comp
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            foreach (var arg in args)
+            {
+                Console.WriteLine($"{arg}");
+            }
+
+            BuildCore();
+
+            Console.Write("done ... ");
+            _ = Console.ReadKey(true);
+        }
+
+        private static void BuildCore()
+        {
+            var builder = new CoreBuilder();
+            var ok = builder.Build();
+            if (!ok)
+            {
+                Console.WriteLine("FAIL");
+            }
         }
     }
 }

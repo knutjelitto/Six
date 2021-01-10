@@ -45,13 +45,14 @@ grammar Swift
             / trailing-closures
 
         function-call-argument-clause
-            = '(' function-call-argument-list? ')'
+            : '(' function-call-argument-list? ')'
+            | '(' #error( "function-call-argument-clause" )
 
         function-call-argument-list
             = function-call-argument (',' function-call-argument)*
 
         function-call-argument
-            = (name ':')? (expression / _ operator)
+            = (name ':')? (expression / operator-name)
 
         trailing-closures
             = ':' &closure-expression closure-expression labeled-trailing-closures?
@@ -287,6 +288,9 @@ grammar Swift
         postfix-operator
             = operator &space-after
             / operator &[.]
+
+        operator-name:
+            _ operator
 
         operator
             = operator-head operator-character*

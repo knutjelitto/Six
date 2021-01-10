@@ -17,6 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Six.Peg.Runtime\Six.Peg.Runtime.csproj" />
       <ProjectReference Include="..\Six.Support\Six.Support.csproj" />
     </ItemGroup>
 
