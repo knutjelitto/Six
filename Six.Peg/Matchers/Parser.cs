@@ -1,5 +1,5 @@
 ﻿using Six.Peg.Runtime;
-using SixPeg.Expression;
+using Six.Peg.Expression;
 using SixPeg.Visiting;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,7 +83,7 @@ namespace SixPeg.Matchers
             return this;
         }
 
-        private bool GetAttribute(AnyRule rule, string attribute)
+        private bool GetAttribute(Rule rule, string attribute)
         {
             return rule.Attributes.Symbols.Any(s => s.Text == attribute);
         }

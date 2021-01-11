@@ -1,6 +1,6 @@
 ﻿using Six.Peg.Runtime;
 using Six.Support;
-using SixPeg.Expression;
+using Six.Peg.Expression;
 using SixPeg.Matchers;
 using SixPeg.Visiting;
 using SixPeg.Writing;
@@ -63,7 +63,7 @@ namespace SixPeg
         {
             var parser = new SixParser();
 
-            var rules = new List<AnyRule>();
+            var rules = new List<Rule>();
             var options = new List<OptionExpression>();
 
             foreach (var grammarFile in GrammarFiles())

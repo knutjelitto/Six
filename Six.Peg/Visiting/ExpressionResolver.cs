@@ -1,6 +1,6 @@
 ﻿using Six.Peg.Runtime;
 using Six.Support;
-using SixPeg.Expression;
+using Six.Peg.Expression;
 using SixPeg.Matchers;
 using System;
 using System.Collections.Generic;
@@ -104,6 +104,11 @@ namespace SixPeg.Visiting
 
             new Error(expr.Name.Source).Report($"undefined rule `{expr.Name}`", expr.Name.Start, expr.Name.Length);
             throw new BailOutException();
+        }
+
+        public AnyMatcher Visit(Rule expr)
+        {
+            throw new NotImplementedException();
         }
 
         public AnyMatcher Visit(RuleExpression expr)

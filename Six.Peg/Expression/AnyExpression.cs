@@ -1,6 +1,6 @@
 ﻿using SixPeg.Visiting;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public abstract class AnyExpression : IVisitableExpression
     {

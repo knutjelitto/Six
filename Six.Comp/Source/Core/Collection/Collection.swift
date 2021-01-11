@@ -65,15 +65,10 @@
 ///     }
 ///     // Prints "15.0"
 ///     // Prints "20.0"
-@frozen
 public struct IndexingIterator<Elements: Collection> {
-  @usableFromInline
   internal let _elements: Elements
-  @usableFromInline
   internal var _position: Elements.Index
 
-  @inlinable
-  @inline(__always)
   /// Creates an iterator over the given collection.
   public /// @testable
   init(_elements: Elements) {
@@ -81,8 +76,6 @@ public struct IndexingIterator<Elements: Collection> {
     self._position = _elements.startIndex
   }
 
-  @inlinable
-  @inline(__always)
   /// Creates an iterator over the given collection.
   public /// @testable
   init(_elements: Elements, _position: Elements.Index) {
@@ -120,8 +113,6 @@ extension IndexingIterator: IteratorProtocol, Sequence {
   ///
   /// - Returns: The next element in the underlying sequence if a next element
   ///   exists; otherwise, `nil`.
-  @inlinable
-  @inline(__always)
   public mutating func next() -> Elements.Element? {
     if _position == _elements.endIndex { return nil }
     let element = _elements[_position]
@@ -335,7 +326,6 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 public protocol Collection: Sequence {
   // FIXME: ideally this would be in MigrationSupport.swift, but it needs
   // to be on the protocol instead of as an extension
-  @available(*, deprecated/*, obsoleted: 5.0*/, message: "all index distances are now of type Int")
   typealias IndexDistance = Int  
 
   // FIXME: Associated type inference requires this.
@@ -414,7 +404,6 @@ public protocol Collection: Sequence {
   ///   `endIndex` property.
   ///
   /// - Complexity: O(1)
-  @_borrowed
   subscript(position: Index) -> Element { get }
 
   /// Accesses a contiguous subrange of the collection's elements.
@@ -694,13 +683,10 @@ extension Collection {
   ///
   /// - Parameter i: A valid index of the collection. `i` must be less than
   ///   `endIndex`.
-  @inlinable // protocol-only
-  @inline(__always)
   public func formIndex(after i: inout Index) {
     i = index(after: i)
   }
 
-  @inlinable
   public func _failEarlyRangeCheck(_ index: Index, bounds: Range<Index>) {
     // FIXME: swift-3-indexing-model: tests.
     _precondition(
@@ -711,7 +697,6 @@ extension Collection {
       "Out of bounds: index >= endIndex")
   }
 
-  @inlinable
   public func _failEarlyRangeCheck(_ index: Index, bounds: ClosedRange<Index>) {
     // FIXME: swift-3-indexing-model: tests.
     _precondition(
@@ -722,7 +707,6 @@ extension Collection {
       "Out of bounds: index > endIndex")
   }
 
-  @inlinable
   public func _failEarlyRangeCheck(_ range: Range<Index>, bounds: Range<Index>) {
     // FIXME: swift-3-indexing-model: tests.
     _precondition(
@@ -766,7 +750,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the absolute
   ///   value of `distance`.
-  @inlinable
   public func index(_ i: Index, offsetBy distance: Int) -> Index {
     return self._advanceForward(i, by: distance)
   }
@@ -813,7 +796,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the absolute
   ///   value of `distance`.
-  @inlinable
   public func index(
     _ i: Index, offsetBy distance: Int, limitedBy limit: Index
   ) -> Index? {
@@ -834,7 +816,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the absolute
   ///   value of `distance`.
-  @inlinable
   public func formIndex(_ i: inout Index, offsetBy distance: Int) {
     i = index(i, offsetBy: distance)
   }
@@ -862,7 +843,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the absolute
   ///   value of `distance`.
-  @inlinable
   public func formIndex(
     _ i: inout Index, offsetBy distance: Int, limitedBy limit: Index
   ) -> Bool {
@@ -890,7 +870,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the
   ///   resulting distance.
-  @inlinable
   public func distance(from start: Index, to end: Index) -> Int {
     _precondition(start <= end,
       "Only BidirectionalCollections can have end come before start")
@@ -928,7 +907,6 @@ extension Collection {
   ///   the same sequence of elements each time you run your program, that
   ///   sequence may change when your program is compiled using a different
   ///   version of Swift.
-  @inlinable
   public func randomElement<T: RandomNumberGenerator>(
     using generator: inout T
   ) -> Element? {
@@ -956,15 +934,12 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length
   ///   of the collection.
-  @inlinable
   public func randomElement() -> Element? {
     var g = SystemRandomNumberGenerator()
     return randomElement(using: &g)
   }
 
   /// Do not use this method directly; call advanced(by: n) instead.
-  @inlinable
-  @inline(__always)
   internal func _advanceForward(_ i: Index, by n: Int) -> Index {
     _precondition(n >= 0,
       "Only BidirectionalCollections can be advanced by a negative amount")
@@ -977,8 +952,6 @@ extension Collection {
   }
 
   /// Do not use this method directly; call advanced(by: n, limit) instead.
-  @inlinable
-  @inline(__always)
   internal func _advanceForward(
     _ i: Index, by n: Int, limitedBy limit: Index
   ) -> Index? {
@@ -1001,8 +974,6 @@ extension Collection {
 /// `IndexingIterator<Self>`.
 extension Collection where Iterator == IndexingIterator<Self> {
   /// Returns an iterator over the elements of the collection.
-  @inlinable // trivial-implementation
-  @inline(__always)
   public __consuming func makeIterator() -> IndexingIterator<Self> {
     return IndexingIterator(_elements: self)
   }
@@ -1034,7 +1005,6 @@ extension Collection where SubSequence == Slice<Self> {
   ///   the range must be valid indices of the collection.
   ///
   /// - Complexity: O(1)
-  @inlinable
   public subscript(bounds: Range<Index>) -> Slice<Self> {
     _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
     return Slice(base: self, bounds: bounds)
@@ -1048,7 +1018,6 @@ extension Collection where SubSequence == Self {
   ///   not empty; otherwise, `nil`.
   ///
   /// - Complexity: O(1)
-  @inlinable
   public mutating func popFirst() -> Element? {
     // TODO: swift-3-indexing-model - review the following
     guard !isEmpty else { return nil }
@@ -1077,7 +1046,6 @@ extension Collection {
   ///     // Prints "Hi ho, Silver!")
   ///
   /// - Complexity: O(1)
-  @inlinable
   public var isEmpty: Bool {
     return startIndex == endIndex
   }
@@ -1091,7 +1059,6 @@ extension Collection {
   ///         print(firstNumber)
   ///     }
   ///     // Prints "10"
-  @inlinable
   public var first: Element? {
     let start = startIndex
     if start != endIndex { return self[start] }
@@ -1103,7 +1070,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length
   ///   of the collection.
-  @inlinable
   public var underestimatedCount: Int {
     // TODO: swift-3-indexing-model - review the following
     return count
@@ -1119,7 +1085,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length
   ///   of the collection.
-  @inlinable
   public var count: Int {
     return distance(from: startIndex, to: endIndex)
   }
@@ -1135,8 +1100,6 @@ extension Collection {
   ///   `Optional(Optional(index))` if an element was found.
   ///
   /// - Complexity: Hopefully less than O(`count`).
-  @inlinable
-  @inline(__always)
   public // dispatching
   func _customIndexOfEquatableElement(_: Element) -> Index?? {
     return nil
@@ -1152,8 +1115,6 @@ extension Collection {
   ///   `Optional(Optional(index))` if an element was found.
   ///
   /// - Complexity: Hopefully less than O(`count`).
-  @inlinable
-  @inline(__always)
   public // dispatching
   func _customLastIndexOfEquatableElement(_ element: Element) -> Index?? {
     return nil
@@ -1182,7 +1143,6 @@ extension Collection {
   ///   value of the same or of a different type.
   /// - Returns: An array containing the transformed elements of this
   ///   sequence.
-  @inlinable
   public func map<T>(
     _ transform: (Element) throws -> T
   ) rethrows -> [T] {
@@ -1226,7 +1186,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the number of
   ///   elements to drop from the beginning of the collection.
-  @inlinable
   public __consuming func dropFirst(_ k: Int = 1) -> SubSequence {
     _precondition(k >= 0, "Can't drop a negative number of elements from a collection")
     let start = index(startIndex, offsetBy: k, limitedBy: endIndex) ?? endIndex
@@ -1253,7 +1212,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length of
   ///   the collection.
-  @inlinable
   public __consuming func dropLast(_ k: Int = 1) -> SubSequence {
     _precondition(
       k >= 0, "Can't drop a negative number of elements from a collection")
@@ -1272,7 +1230,6 @@ extension Collection {
   ///   returns `false` it will not be called again.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
   public __consuming func drop(
     while predicate: (Element) throws -> Bool
   ) rethrows -> SubSequence {
@@ -1303,7 +1260,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the number of
   ///   elements to select from the beginning of the collection.
-  @inlinable
   public __consuming func prefix(_ maxLength: Int) -> SubSequence {
     _precondition(
       maxLength >= 0,
@@ -1322,7 +1278,6 @@ extension Collection {
   ///   returns `false` it will not be called again.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
   public __consuming func prefix(
     while predicate: (Element) throws -> Bool
   ) rethrows -> SubSequence {
@@ -1353,7 +1308,6 @@ extension Collection {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length of
   ///   the collection.
-  @inlinable
   public __consuming func suffix(_ maxLength: Int) -> SubSequence {
     _precondition(
       maxLength >= 0,
@@ -1398,7 +1352,6 @@ extension Collection {
   /// - Returns: A subsequence up to, but not including, the `end` position.
   ///
   /// - Complexity: O(1)
-  @inlinable
   public __consuming func prefix(upTo end: Index) -> SubSequence {
     return self[startIndex..<end]
   }
@@ -1436,7 +1389,6 @@ extension Collection {
   /// - Returns: A subsequence starting at the `start` position.
   ///
   /// - Complexity: O(1)
-  @inlinable
   public __consuming func suffix(from start: Index) -> SubSequence {
     return self[start..<endIndex]
   }
@@ -1470,7 +1422,6 @@ extension Collection {
   /// - Returns: A subsequence up to, and including, the `end` position.
   ///
   /// - Complexity: O(1)
-  @inlinable
   public __consuming func prefix(through position: Index) -> SubSequence {
     return prefix(upTo: index(after: position))
   }
@@ -1523,7 +1474,6 @@ extension Collection {
   ///   elements.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
   public __consuming func split(
     maxSplits: Int = Int.max,
     omittingEmptySubsequences: Bool = true,
@@ -1618,7 +1568,6 @@ extension Collection where Element: Equatable {
   ///   elements.
   ///
   /// - Complexity: O(*n*), where *n* is the length of the collection.
-  @inlinable
   public __consuming func split(
     separator: Element,
     maxSplits: Int = Int.max,
@@ -1640,8 +1589,6 @@ extension Collection where SubSequence == Self {
   /// - Returns: The first element of the collection.
   ///
   /// - Complexity: O(1)
-  @inlinable
-  @discardableResult
   public mutating func removeFirst() -> Element {
     // TODO: swift-3-indexing-model - review the following
     _precondition(!isEmpty, "Can't remove items from an empty collection")
@@ -1660,7 +1607,6 @@ extension Collection where SubSequence == Self {
   /// - Complexity: O(1) if the collection conforms to
   ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the specified
   ///   number of elements.
-  @inlinable
   public mutating func removeFirst(_ k: Int) {
     if k == 0 { return }
     _precondition(k >= 0, "Number of elements to remove should be non-negative")

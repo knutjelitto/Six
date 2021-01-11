@@ -26,13 +26,10 @@
 ///     }
 ///     // Prints "0: foo"
 ///     // Prints "1: bar"
-@frozen
 public struct EnumeratedSequence<Base: Sequence> {
-  @usableFromInline
   internal var _base: Base
 
   /// Construct from a `Base` sequence.
-  @inlinable
   internal init(_base: Base) {
     self._base = _base
   }
@@ -53,15 +50,11 @@ extension EnumeratedSequence {
   ///
   /// To create an instance, call
   /// `enumerated().makeIterator()` on a sequence or collection.
-  @frozen
   public struct Iterator {
-    @usableFromInline
     internal var _base: Base.Iterator
-    @usableFromInline
     internal var _count: Int
 
     /// Construct from a `Base` iterator.
-    @inlinable
     internal init(_base: Base.Iterator) {
       self._base = _base
       self._count = 0
@@ -77,7 +70,6 @@ extension EnumeratedSequence.Iterator: IteratorProtocol, Sequence {
   /// exists.
   ///
   /// Once `nil` has been returned, all subsequent calls return `nil`.
-  @inlinable
   public mutating func next() -> Element? {
     guard let b = _base.next() else { return nil }
     let result = (offset: _count, element: b)
@@ -88,7 +80,6 @@ extension EnumeratedSequence.Iterator: IteratorProtocol, Sequence {
 
 extension EnumeratedSequence: Sequence {
   /// Returns an iterator over the elements of this sequence.
-  @inlinable
   public __consuming func makeIterator() -> Iterator {
     return Iterator(_base: _base.makeIterator())
   }

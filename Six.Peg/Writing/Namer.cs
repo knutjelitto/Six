@@ -11,6 +11,24 @@ namespace SixPeg.Writing
         private readonly Dictionary<string, string> ruleNames = new Dictionary<string, string>();
         private int lit_counter = 0;
 
+        private bool IsNameable(string text)
+        {
+            return text.All(t => IsNameable(t));
+        }
+
+        private bool IsNameable(char text)
+        {
+            return char.IsLetterOrDigit(text) ||
+                   text == '@' ||
+                   text == '.'
+                   ;
+        }
+
+        private string Name(string text)
+        {
+            return text.Replace("@", "at_").Replace(".", "dot_");
+        }
+
         public string NameFor(MatchRule rule)
         {
             var text = rule.Name.Text;
@@ -21,9 +39,9 @@ namespace SixPeg.Writing
             if (text.StartsWith('\''))
             {
                 text = text[1..^1];
-                if (text.IsIdentifier())
+                if (IsNameable(text))
                 {
-                    text = $"Lit_{text}";
+                    text = $"Lit_{Name(text)}";
                 }
                 else
                 {

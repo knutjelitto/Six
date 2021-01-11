@@ -15,20 +15,25 @@ grammar Six
             = if-directive-clause elseif-directive-clauses? else-directive-clause? endif-directive
 
         if-directive-clause
-            = if-directive compilation-condition statements?
+            = if-directive compilation-condition statement*
             / if-directive #error("if-directive-clause")
 
         elseif-directive-clauses
             = elseif-directive-clause+
 
         elseif-directive-clause
-            = elseif-directive compilation-condition statements?
+            = elseif-directive compilation-condition statement*
 
         else-directive-clause
-            = else-directive statements?
+            = else-directive statement*
 
         if-directive
+            = '#' #error( "#if" )
+
+        /*
+        if-directive
             = '#if'
+        */
 
         elseif-directive
             = '#elseif'

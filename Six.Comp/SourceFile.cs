@@ -7,7 +7,7 @@ namespace Six.Comp
     {
         public SourceFile(string path, string name, int no, bool skip)
         {
-            Path = new FileInfo(path.Replace('\\', '/'));
+            Path = new FileInfo(path);
             Name = name;
             No = no;
             Skip = skip;

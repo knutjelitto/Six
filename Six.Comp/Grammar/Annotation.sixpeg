@@ -17,35 +17,40 @@
         attributes
             = attribute+
 
+        attribute:
+            '@' #error( "attribute" )
+
+        /*
         attribute
-            = '@' 'inlinable'
-            / '@' 'frozen'
-            / '@' 'escaping'
-            / '@' 'autoclosure'
-            / '@' 'usableFromInline'
-            / '@' 'discardableResult'
-            / '@' 'nonobjc'
-            / '@' 'unknown'
-            / '@' 'inline' '(' ('never' / '__always') ')'
-            / '@' 'available' '(' (name / swift-version / ',' / ':' / '*' / static-string-literal)+ ')'
-            / '@' 'convention' '(' ('block'/'thin'/'c') ')'
-            / '@' 'objc' ( '(' (':' / name)+ ')' )?
-            / '@' '_show_in_interface'
-            / '@' '_fixed_layout'
-            / '@' '_nonoverride'
-            / '@' '_borrowed'
-            / '@' '_transparent'
-            / '@' '_nonEphemeral'
-            / '@' '_alwaysEmitIntoClient'
-            / '@' '_objc_non_lazy_realization'
-            / '@' '_implements' '(' type-identifier (',' type-identifier)* ')'
-            / '@' '_specialize' '(' generic-where-clause ')'
-            / '@' '_effects' '(' ('readnone' / 'readonly' / 'releasenone') ')'
-            / '@' '_silgen_name' '(' static-string-literal ')'
-            / '@' '_semantics' '(' static-string-literal ')'
-            / '@' '_objcRuntimeName' '(' name ')'
-            / '@' '_cdecl' '(' static-string-literal ')'
+            = '@inlinable'
+            / '@frozen'
+            / '@escaping'
+            / '@autoclosure'
+            / '@usableFromInline'
+            / '@discardableResult'
+            / '@nonobjc'
+            / '@unknown'
+            / '@inline' '(' ('never' / '__always') ')'
+            / '@available' '(' (name / swift-version / ',' / ':' / '*' / static-string-literal)+ ')'
+            / '@convention' '(' ('block'/'thin'/'c') ')'
+            / '@objc' ( '(' (':' / name)+ ')' )?
+            / '@_show_in_interface'
+            / '@_fixed_layout'
+            / '@_nonoverride'
+            / '@_borrowed'
+            / '@_transparent'
+            / '@_nonEphemeral'
+            / '@_alwaysEmitIntoClient'
+            / '@_objc_non_lazy_realization'
+            / '@_implements' '(' type-identifier (',' type-identifier)* ')'
+            / '@_specialize' '(' generic-where-clause ')'
+            / '@_effects' '(' ('readnone' / 'readonly' / 'releasenone') ')'
+            / '@_silgen_name' '(' static-string-literal ')'
+            / '@_semantics' '(' static-string-literal ')'
+            / '@_objcRuntimeName' '(' name ')'
+            / '@_cdecl' '(' static-string-literal ')'
             / '@' #error( "attribute" )
+        */
 
         declaration-modifiers
             = modifier+

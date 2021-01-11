@@ -1,6 +1,6 @@
 ﻿using SixPeg.Visiting;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class ReferenceExpression : AnyExpression
     {
@@ -10,7 +10,7 @@ namespace SixPeg.Expression
         }
 
         public Symbol Name { get; }
-        public AnyRule Rule { get; internal set; }
+        public Rule Rule { get; internal set; }
 
         public override string ToString()
         {

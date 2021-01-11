@@ -1,17 +1,2 @@
-﻿// ------------------------------------
-// 'do' statement
-// ------------------------------------
-
-do-statement
-	= 'do' code-block catch-clause*
-
-catch-clause
-	= 'catch' catch-pattern-list? code-block
-
-catch-pattern-list
-	= catch-pattern (',' catch-pattern)*
-
-catch-pattern
-	= pattern where-clause?
-
+﻿
 

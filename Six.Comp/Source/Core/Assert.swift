@@ -37,10 +37,9 @@
 ///   - line: The line number to print along with `message` if the assertion
 ///     fails. The default is the line number where `assert(_:_:file:line:)`
 ///     is called.
-@_transparent
 public func assert(
-  _ condition: @autoclosure () -> Bool,
-  _ message: @autoclosure () -> String = String(),
+  _ condition: () -> Bool,
+  _ message: () -> String = String(),
   file: StaticString = #file, line: UInt = #line
 ) {
   // Only assert in debug mode.
@@ -79,10 +78,9 @@ public func assert(
 ///   - line: The line number to print along with `message` if the assertion
 ///     fails. The default is the line number where
 ///     `precondition(_:_:file:line:)` is called.
-@_transparent
 public func precondition(
-  _ condition: @autoclosure () -> Bool,
-  _ message: @autoclosure () -> String = String(),
+  _ condition: () -> Bool,
+  _ message: () -> String = String(),
   file: StaticString = #file, line: UInt = #line
 ) {
   // Only check in debug and release mode. In release mode just trap.
@@ -123,10 +121,8 @@ public func precondition(
 ///     where `assertionFailure(_:file:line:)` is called.
 ///   - line: The line number to print along with `message`. The default is the
 ///     line number where `assertionFailure(_:file:line:)` is called.
-@inlinable
-@inline(__always)
 public func assertionFailure(
-  _ message: @autoclosure () -> String = String(),
+  _ message: () -> String = String(),
   file: StaticString = #file, line: UInt = #line
 ) {
   if _isDebugAssertConfiguration() {
@@ -162,9 +158,8 @@ public func assertionFailure(
 ///     where `preconditionFailure(_:file:line:)` is called.
 ///   - line: The line number to print along with `message`. The default is the
 ///     line number where `preconditionFailure(_:file:line:)` is called.
-@_transparent
 public func preconditionFailure(
-  _ message: @autoclosure () -> String = String(),
+  _ message: () -> String = String(),
   file: StaticString = #file, line: UInt = #line
 ) -> Never {
   // Only check in debug and release mode.  In release mode just trap.
@@ -186,9 +181,8 @@ public func preconditionFailure(
 ///     where `fatalError(_:file:line:)` is called.
 ///   - line: The line number to print along with `message`. The default is the
 ///     line number where `fatalError(_:file:line:)` is called.
-@_transparent
 public func fatalError(
-  _ message: @autoclosure () -> String = String(),
+  _ message: () -> String = String(),
   file: StaticString = #file, line: UInt = #line
 ) -> Never {
   _assertionFailure("Fatal error", message(), file: file, line: line,
@@ -201,9 +195,8 @@ public func fatalError(
 /// building in fast mode they are disabled.  In release mode they don't print
 /// an error message but just trap. In debug mode they print an error message
 /// and abort.
-@usableFromInline @_transparent
 internal func _precondition(
-  _ condition: @autoclosure () -> Bool, _ message: StaticString = StaticString(),
+  _ condition: () -> Bool, _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
 ) {
   // Only check in debug and release mode. In release mode just trap.
@@ -218,7 +211,6 @@ internal func _precondition(
   }
 }
 
-@usableFromInline @_transparent
 internal func _preconditionFailure(
   _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
@@ -230,7 +222,6 @@ internal func _preconditionFailure(
 /// If `error` is true, prints an error message in debug mode, traps in release
 /// mode, and returns an undefined error otherwise.
 /// Otherwise returns `result`.
-@_transparent
 public func _overflowChecked<T>(
   _ args: (T, Bool),
   file: StaticString = #file, line: UInt = #line
@@ -256,9 +247,8 @@ public func _overflowChecked<T>(
 /// and abort.
 /// They are meant to be used when the check is not comprehensively checking for
 /// all possible errors.
-@usableFromInline @_transparent
 internal func _debugPrecondition(
-  _ condition: @autoclosure () -> Bool, _ message: StaticString = StaticString(),
+  _ condition: () -> Bool, _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
 ) {
   // Only check in debug mode.
@@ -270,7 +260,6 @@ internal func _debugPrecondition(
   }
 }
 
-@usableFromInline @_transparent
 internal func _debugPreconditionFailure(
   _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
@@ -287,36 +276,27 @@ internal func _debugPreconditionFailure(
 /// standard library. They are only enable when the standard library is built
 /// with the build configuration INTERNAL_CHECKS_ENABLED enabled. Otherwise, the
 /// call to this function is a noop.
-@usableFromInline @_transparent
 internal func _internalInvariant(
-  _ condition: @autoclosure () -> Bool, _ message: StaticString = StaticString(),
+  _ condition: () -> Bool, _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
 ) {
-#if INTERNAL_CHECKS_ENABLED
   if !_fastPath(condition()) {
     _fatalErrorMessage("Fatal error", message, file: file, line: line,
       flags: _fatalErrorFlags())
   }
-#endif
 }
 
-// Only perform the invariant check on Swift 5.1 and later
-@_alwaysEmitIntoClient // Swift 5.1
-@_transparent
 internal func _internalInvariant_5_1(
-  _ condition: @autoclosure () -> Bool, _ message: StaticString = StaticString(),
+  _ condition: () -> Bool, _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line
 ) {
-#if INTERNAL_CHECKS_ENABLED
   // FIXME: The below won't run the assert on 5.1 stdlib if testing on older
   // OSes, which means that testing may not test the assertion. We need a real
   // solution to this.
   guard #available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *) else { return }
   _internalInvariant(condition(), message, file: file, line: line)
-#endif
 }
 
-@usableFromInline @_transparent
 internal func _internalInvariantFailure(
   _ message: StaticString = StaticString(),
   file: StaticString = #file, line: UInt = #line

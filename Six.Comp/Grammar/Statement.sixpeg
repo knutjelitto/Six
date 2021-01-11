@@ -2,63 +2,89 @@
 // == Statement
 // ====================================
 
-statement 
-    = control-transfer-statement ';'?
-    / compiler-control-statement
-    / loop-statement ';'?
-    / branch-statement ';'?
-    / do-statement ';'?
-    / defer-statement ';'?
-    / labeled-statement ';'?
-    / declaration ';'?
-    / !('case' !more / 'default' !more) expression ';'? // follow in switch/case
-    / '{' #error("statement")
+grammar Six
+{
+    rules
+    {
+        statement
+            : statement-label? famous-statement ';'?
+            | compiler-control-statement
 
-code-block
-    = '{' statements? '}'
-    / '{' #error("code-block")
+        famous-statement 
+            : break-statement
+            | continue-statement
+            | fallthrough-statement
+            | return-statement
+            | throw-statement
+            | for-in-statement
+            | while-statement
+            | repeat-while-statement
+            | if-statement
+            | guard-statement
+            | switch-statement
+            | do-statement
+            | defer-statement
+            | declaration
+            | !(('case'/'default') !more) expression // follow in switch/case
+            | '{' #error("statement")
 
-statements
-    = statement+
+        code-block
+            = '{' statement* '}'
+            / '{' #error("code-block")
 
-control-transfer-statement
-    = break-statement
-    / continue-statement
-    / fallthrough-statement
-    / return-statement
-    / throw-statement
+        fallthrough-statement
+            = 'fallthrough'
 
-fallthrough-statement
-    = 'fallthrough'
+        throw-statement
+            = 'throw' expression
+            / 'throw' #error("throw-statement")
 
-throw-statement
-    = 'throw' expression
-    / 'throw' #error("throw-statement")
+        for-in-statement
+            = 'for' 'case'? pattern 'in' expression where-clause? code-block
 
-loop-statement
-    = for-in-statement
-    / while-statement
-    / repeat-while-statement
+        repeat-while-statement
+            = 'repeat' code-block 'while' expression
 
-for-in-statement
-    = 'for' 'case'? pattern 'in' expression where-clause? code-block
+        // ------------------------------------
+        // 'do' statement
+        // ------------------------------------
 
-repeat-while-statement
-    = 'repeat' code-block 'while' expression
+        do-statement
+	        = 'do' code-block catch-clause*
 
-branch-statement
-    = if-statement
-    / guard-statement
-    / switch-statement
+        catch-clause
+	        = 'catch' catch-pattern-list? code-block
 
+        catch-pattern-list
+	        = catch-pattern (',' catch-pattern)*
 
-// ------------------------------------
-// Misc
-// ------------------------------------
-where-clause
-    = 'where' where-expression
+        catch-pattern
+	        = pattern where-clause?
 
-where-expression
-    = expression
+        // ------------------------------------
+        // 'defer' statement
+        // ------------------------------------
 
+        defer-statement
+	        = 'defer' code-block
+    
+        // ------------------------------------
+        // statement-label
+        // ------------------------------------
 
+        statement-label
+	        = label-name ':'
+
+        label-name
+	        = name
+
+        // ------------------------------------
+        // Misc
+        // ------------------------------------
+        where-clause
+            = 'where' where-expression
+
+        where-expression
+            = expression
+    }
+}

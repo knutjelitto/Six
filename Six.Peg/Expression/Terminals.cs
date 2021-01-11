@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
-    public class Terminals : Grules<AnyRule>
+    public class Terminals : Grules<Rule>
     {
         public Terminals() { }
-        public Terminals(IEnumerable<AnyRule> terminals) : base(terminals) { }
+        public Terminals(IEnumerable<Rule> terminals) : base(terminals) { }
     }
 }

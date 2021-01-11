@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class Grules<T> : IReadOnlyList<T>, IGrules
     {

@@ -53,10 +53,11 @@ namespace Six.Comp
         protected virtual void DumpTree(SourceFile source, Match match)
         {
             var parseTreeFile = Navi.File(Navi.TempFor(source.Path.Directory), source.Path.Name + ".tree");
-            Console.WriteLine($"  -> {parseTreeFile}");
 
-            using var writer = new FileWriter(parseTreeFile.FullName);
-            DumpTree(writer, match);
+            using (var writer = new FileWriter(parseTreeFile.FullName))
+            {
+                DumpTree(writer, match);
+            }
         }
 
         protected virtual void DumpTree(IWriter writer, Match match)

@@ -11,7 +11,7 @@
     rules
     {
         unit:
-            statements? EOF
+            statement* EOF
     }
 
     terminals

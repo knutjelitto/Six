@@ -1,7 +1,7 @@
 ﻿using SixPeg.Visiting;
 using System;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class CharacterRangeExpression : AnyExpression
     {

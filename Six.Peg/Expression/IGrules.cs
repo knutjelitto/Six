@@ -1,4 +1,4 @@
-﻿namespace SixPeg.Expression
+﻿namespace Six.Peg.Expression
 {
     public interface IGrules
     {

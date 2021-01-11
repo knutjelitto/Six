@@ -1,5 +1,11 @@
 ﻿[*.{cs,vb}]
 
+# CS0114: Member hides inherited member; missing override keyword
+dotnet_diagnostic.CS0114.severity = error
+
+# CS3001: Argument type is not CLS-compliant
+dotnet_diagnostic.CS3001.severity = none
+
 # IDE0049: Use framework type
 dotnet_style_predefined_type_for_member_access = true:error
 
@@ -15,8 +21,6 @@ dotnet_diagnostic.IDE0005.severity = error
 # Default severity for all analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = silent
 
-# CS3001: Argument type is not CLS-compliant
-dotnet_diagnostic.CS3001.severity = none
 
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = warning
@@ -33,20 +37,20 @@ csharp_style_var_for_built_in_types = false:none
 # IDE0008: Use explicit type
 dotnet_diagnostic.IDE0008.severity = none
 
-# IDE0022: Use block body for methods
-csharp_style_expression_bodied_methods = false:none
-
 # IDE0009: Member access should be qualified.
 dotnet_style_qualification_for_field = false:warning
+
+# IDE0022: Use block body for methods
+csharp_style_expression_bodied_methods = false:none
 
 # IDE0022: Use expression body for methods
 dotnet_diagnostic.IDE0022.severity = none
 
-# CS0114: Member hides inherited member; missing override keyword
-dotnet_diagnostic.CS0114.severity = error
+# IDE0045: Convert to conditional expression
+dotnet_style_prefer_conditional_expression_over_assignment = false
 
 # IDE0046: Convert to conditional expression
 dotnet_style_prefer_conditional_expression_over_return = false
 
-# IDE0045: Convert to conditional expression
-dotnet_style_prefer_conditional_expression_over_assignment = false
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = false

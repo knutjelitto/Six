@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public abstract class AnyExpressions : AnyExpression, IReadOnlyList<AnyExpression>
     {

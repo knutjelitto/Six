@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
+﻿using SixPeg.Visiting;
+using System.Diagnostics;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
-    public abstract class AnyRule : AnyExpression
+    public class Rule : AnyExpression
     {
-        public AnyRule(Symbol name, Attributes attributes, AnyExpression expression, bool isTerminal)
+        public Rule(Symbol name, Attributes attributes, AnyExpression expression, bool isTerminal)
         {
             Name = name;
             Attributes = attributes;
@@ -24,6 +25,11 @@ namespace SixPeg.Expression
         public AnyExpression Expression { get; }
         public bool IsTerminal { get; }
         public bool Used { get; set; }
+
+        public override T Accept<T>(IExpressionVisitor<T> visitor)
+        {
+            return visitor.Visit(this);
+        }
 
         public override string ToString()
         {

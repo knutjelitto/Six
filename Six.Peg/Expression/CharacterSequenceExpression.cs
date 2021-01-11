@@ -1,7 +1,7 @@
 ﻿using Six.Support;
 using SixPeg.Visiting;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class CharacterSequenceExpression : AnyExpression
     {

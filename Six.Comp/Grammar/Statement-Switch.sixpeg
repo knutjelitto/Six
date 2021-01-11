@@ -18,8 +18,8 @@ grammar Swift
             = switch-case+
 
         switch-case
-            = case-label statements
-            / default-label statements
+            = case-label statement+
+            / default-label statement+
             / conditional-switch-case
 
         case-label

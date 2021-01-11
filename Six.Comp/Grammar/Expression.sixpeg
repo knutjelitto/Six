@@ -180,7 +180,7 @@ grammar Swift
             / 'super' '[' function-call-argument-list ']'
 
         closure-expression
-            = '{' closure-signature? statements? '}'
+            = '{' closure-signature? statement* '}'
 
         closure-signature
             = capture-list? closure-parameter-clause 'throws'? function-result? 'in'

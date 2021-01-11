@@ -1,7 +1,7 @@
 ﻿using Pegasus.Common;
 using Six.Peg.Runtime;
 using Six.Support;
-using SixPeg.Expression;
+using Six.Peg.Expression;
 using SixPeg.Matchers;
 using System;
 using System.Collections.Generic;
@@ -159,7 +159,7 @@ namespace SixPeg
         {
             var parser = new SixParser();
 
-            var rules = new List<AnyRule>();
+            var rules = new List<Rule>();
             var options = new List<OptionExpression>();
 
             foreach (var grammarFile in GrammarFiles())

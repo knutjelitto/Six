@@ -1,7 +1,7 @@
 ﻿using SixPeg.Visiting;
 using System.Collections.Generic;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class SequenceExpression : AnyExpressions
     {

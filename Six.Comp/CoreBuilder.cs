@@ -1,6 +1,7 @@
 ﻿using Six.Support;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Six.Comp
 {
@@ -16,12 +17,12 @@ namespace Six.Comp
             var sources = Navi.Subdir(Navi.Project, "Source");
             var coreSources = Navi.Subdir(sources, "Core");
 
-            return new List<SourceFile>(Enum());
+            return new List<SourceFile>(Enum().OrderBy(sf => sf.Name));
 
             IEnumerable<SourceFile> Enum()
             {
                 int count = 0;
-                foreach (var coreSource in coreSources.EnumerateFiles("*.swift", SearchOption.TopDirectoryOnly))
+                foreach (var coreSource in coreSources.EnumerateFiles("*.swift", SearchOption.AllDirectories))
                 {
                     count += 1;
                     var fullName = coreSource.FullName.Replace('\\', '/');

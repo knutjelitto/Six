@@ -1,7 +1,7 @@
 ﻿using Six.Peg.Runtime;
 using System.Diagnostics;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
     public class Symbol
     {

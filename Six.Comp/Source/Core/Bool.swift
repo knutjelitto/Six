@@ -60,28 +60,24 @@
 /// bridged into Swift as `Bool`. The single `Bool` type in Swift guarantees
 /// that functions, methods, and properties imported from C and Objective-C
 /// have a consistent type interface.
-@frozen
-public struct Bool {
-  @usableFromInline
+public struct Bool
+{
   internal var _value: Builtin.Int1
 
   /// Creates an instance initialized to `false`.
   ///
   /// Do not call this initializer directly. Instead, use the Boolean literal
   /// `false` to create a new `Bool` instance.
-  @_transparent
   public init() {
     let zero: Int8 = 0
     self._value = Builtin.trunc_Int8_Int1(zero._value)
   }
 
-  @usableFromInline @_transparent
   internal init(_ v: Builtin.Int1) { self._value = v }
   
   /// Creates an instance equal to the given Boolean value.
   ///
   /// - Parameter value: The Boolean value to copy.
-  @inlinable
   public init(_ value: Bool) {
     self = value
   }
@@ -110,7 +106,6 @@ public struct Bool {
   ///   the new random value.
   /// - Returns: Either `true` or `false`, randomly chosen with equal
   ///   probability.
-  @inlinable
   public static func random<T: RandomNumberGenerator>(
     using generator: inout T
   ) -> Bool {
@@ -133,7 +128,6 @@ public struct Bool {
   ///
   /// - Returns: Either `true` or `false`, randomly chosen with equal
   ///   probability.
-  @inlinable
   public static func random() -> Bool {
     var g = SystemRandomNumberGenerator()
     return Bool.random(using: &g)
@@ -141,7 +135,6 @@ public struct Bool {
 }
 
 extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral {
-  @_transparent
   public init(_builtinBooleanLiteral value: Builtin.Int1) {
     self._value = value
   }
@@ -164,7 +157,6 @@ extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral
   /// this Boolean literal initializer behind the scenes.
   ///
   /// - Parameter value: The value of the new instance.
-  @_transparent
   public init(booleanLiteral value: Bool) {
     self = value
   }
@@ -172,14 +164,12 @@ extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral
 
 extension Bool: CustomStringConvertible {
   /// A textual representation of the Boolean value.
-  @inlinable
   public var description: String {
     return self ? "true" : "false"
   }
 }
 
 extension Bool: Equatable {
-  @_transparent
   public static func == (lhs: Bool, rhs: Bool) -> Bool {
     return Bool(Builtin.cmp_eq_Int1(lhs._value, rhs._value))
   }
@@ -191,7 +181,6 @@ extension Bool: Hashable {
   ///
   /// - Parameter hasher: The hasher to use when combining the components
   ///   of this instance.
-  @inlinable
   public func hash(into hasher: inout Hasher) {
     hasher.combine((self ? 1 : 0) as UInt8)
   }
@@ -204,7 +193,6 @@ extension Bool: LosslessStringConvertible {
   /// `"false"`, the result is `nil`. This initializer is case sensitive.
   ///
   /// - Parameter description: A string representation of the Boolean value.
-  @inlinable
   public init?(_ description: String) {
     if description == "true" {
       self = true
@@ -236,7 +224,6 @@ extension Bool {
   ///     // Prints "You look nice today!"
   ///
   /// - Parameter a: The Boolean value to negate.
-  @_transparent
   public static prefix func ! (a: Bool) -> Bool {
     return Bool(Builtin.xor_Int1(a._value, true._value))
   }
@@ -275,9 +262,7 @@ extension Bool {
   /// - Parameters:
   ///   - lhs: The left-hand side of the operation.
   ///   - rhs: The right-hand side of the operation.
-  @_transparent
-  @inline(__always)
-  public static func && (lhs: Bool, rhs: @autoclosure () throws -> Bool) rethrows
+  public static func && (lhs: Bool, rhs: () throws -> Bool) rethrows
       -> Bool {
     return lhs ? try rhs() : false
   }
@@ -315,9 +300,7 @@ extension Bool {
   /// - Parameters:
   ///   - lhs: The left-hand side of the operation.
   ///   - rhs: The right-hand side of the operation.
-  @_transparent
-  @inline(__always)
-  public static func || (lhs: Bool, rhs: @autoclosure () throws -> Bool) rethrows
+  public static func || (lhs: Bool, rhs: () throws -> Bool) rethrows
       -> Bool {
     return lhs ? true : try rhs()
   }
@@ -333,7 +316,6 @@ extension Bool {
   ///
   ///     bools[0].toggle()
   ///     // bools == [false, false]
-  @inlinable
   public mutating func toggle() {
     self = !self
   }

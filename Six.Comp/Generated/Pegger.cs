@@ -7,7 +7,7 @@ namespace SixPeg.Pegger.Swift
     public abstract class SwiftPegger : Six.Peg.Runtime.Pegger
     {
         public SwiftPegger(Context context)
-            : base(context, 586)
+            : base(context, 547)
         {
         }
 
@@ -21,7 +21,18 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    match = Match.Optional(next, Statements(next));
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        if ((match = Statement(zomNext)) == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
                     if ((match = EOF(next)) == null)
@@ -240,1049 +251,26 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_Attribute].Already(start, out var match))
             {
-                while (true) // ---Choice---
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
                 {
-                    var next = start;
-                    var matches = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next)) == null)
-                        {
-                            break;
-                        }
-                        matches.Add(match);
-                        next = match.Next;
-                        if ((match = Lit_inlinable(next)) == null)
-                        {
-                            break;
-                        }
-                        matches.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches);
-                    }
-                    if (match != null)
+                    if ((match = Lit_at_(next)) == null)
                     {
                         break;
                     }
-                    var next2 = start;
-                    var matches2 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next2)) == null)
-                        {
-                            break;
-                        }
-                        matches2.Add(match);
-                        next2 = match.Next;
-                        if ((match = Lit_frozen(next2)) == null)
-                        {
-                            break;
-                        }
-                        matches2.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches2);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next3 = start;
-                    var matches3 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next3)) == null)
-                        {
-                            break;
-                        }
-                        matches3.Add(match);
-                        next3 = match.Next;
-                        if ((match = Lit_escaping(next3)) == null)
-                        {
-                            break;
-                        }
-                        matches3.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches3);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next4 = start;
-                    var matches4 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next4)) == null)
-                        {
-                            break;
-                        }
-                        matches4.Add(match);
-                        next4 = match.Next;
-                        if ((match = Lit_autoclosure(next4)) == null)
-                        {
-                            break;
-                        }
-                        matches4.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches4);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next5 = start;
-                    var matches5 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next5)) == null)
-                        {
-                            break;
-                        }
-                        matches5.Add(match);
-                        next5 = match.Next;
-                        if ((match = Lit_usableFromInline(next5)) == null)
-                        {
-                            break;
-                        }
-                        matches5.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches5);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next6 = start;
-                    var matches6 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next6)) == null)
-                        {
-                            break;
-                        }
-                        matches6.Add(match);
-                        next6 = match.Next;
-                        if ((match = Lit_discardableResult(next6)) == null)
-                        {
-                            break;
-                        }
-                        matches6.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches6);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next7 = start;
-                    var matches7 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next7)) == null)
-                        {
-                            break;
-                        }
-                        matches7.Add(match);
-                        next7 = match.Next;
-                        if ((match = Lit_nonobjc(next7)) == null)
-                        {
-                            break;
-                        }
-                        matches7.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches7);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next8 = start;
-                    var matches8 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next8)) == null)
-                        {
-                            break;
-                        }
-                        matches8.Add(match);
-                        next8 = match.Next;
-                        if ((match = Lit_unknown(next8)) == null)
-                        {
-                            break;
-                        }
-                        matches8.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches8);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next9 = start;
-                    var matches9 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next9)) == null)
-                        {
-                            break;
-                        }
-                        matches9.Add(match);
-                        next9 = match.Next;
-                        if ((match = Lit_inline(next9)) == null)
-                        {
-                            break;
-                        }
-                        matches9.Add(match);
-                        next9 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next9)) == null)
-                        {
-                            break;
-                        }
-                        matches9.Add(match);
-                        next9 = match.Next;
-                        while (true) // ---Choice---
-                        {
-                            if ((match = Lit_never(next9)) != null)
-                            {
-                                break;
-                            }
-                            match = Lit___always(next9);
-                            break;
-                        }
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        matches9.Add(match);
-                        next9 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next9)) == null)
-                        {
-                            break;
-                        }
-                        matches9.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches9);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next10 = start;
-                    var matches10 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next10)) == null)
-                        {
-                            break;
-                        }
-                        matches10.Add(match);
-                        next10 = match.Next;
-                        if ((match = Lit_available(next10)) == null)
-                        {
-                            break;
-                        }
-                        matches10.Add(match);
-                        next10 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next10)) == null)
-                        {
-                            break;
-                        }
-                        matches10.Add(match);
-                        next10 = match.Next;
-                        var oomMatches = new List<Match>();
-                        var oomNext = next10;
-                        while (true)
-                        {
-                            while (true) // ---Choice---
-                            {
-                                if ((match = Name(oomNext)) != null)
-                                {
-                                    break;
-                                }
-                                if ((match = SwiftVersion(oomNext)) != null)
-                                {
-                                    break;
-                                }
-                                if ((match = Lit_4_/*','*/(oomNext)) != null)
-                                {
-                                    break;
-                                }
-                                if ((match = Lit_5_/*':'*/(oomNext)) != null)
-                                {
-                                    break;
-                                }
-                                if ((match = Lit_6_/*'*'*/(oomNext)) != null)
-                                {
-                                    break;
-                                }
-                                match = StaticStringLiteral(oomNext);
-                                break;
-                            }
-                            if (match == null)
-                            {
-                                break;
-                            }
-                            oomMatches.Add(match);
-                            oomNext = match.Next;
-                        }
-                        if (oomMatches.Count > 0)
-                        {
-                            match = Match.Success("+", next10, oomMatches);
-                        }
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        matches10.Add(match);
-                        next10 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next10)) == null)
-                        {
-                            break;
-                        }
-                        matches10.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches10);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next11 = start;
-                    var matches11 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next11)) == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        next11 = match.Next;
-                        if ((match = Lit_convention(next11)) == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        next11 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next11)) == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        next11 = match.Next;
-                        while (true) // ---Choice---
-                        {
-                            if ((match = Lit_block(next11)) != null)
-                            {
-                                break;
-                            }
-                            if ((match = Lit_thin(next11)) != null)
-                            {
-                                break;
-                            }
-                            match = Lit_c(next11);
-                            break;
-                        }
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        next11 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next11)) == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches11);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next12 = start;
-                    var matches12 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next12)) == null)
-                        {
-                            break;
-                        }
-                        matches12.Add(match);
-                        next12 = match.Next;
-                        if ((match = Lit_objc(next12)) == null)
-                        {
-                            break;
-                        }
-                        matches12.Add(match);
-                        next12 = match.Next;
-                        var next13 = next12;
-                        var matches13 = new List<Match>();
-                        while (true) // ---Sequence---
-                        {
-                            if ((match = Lit_2_/*'('*/(next13)) == null)
-                            {
-                                break;
-                            }
-                            matches13.Add(match);
-                            next13 = match.Next;
-                            var oomMatches2 = new List<Match>();
-                            var oomNext2 = next13;
-                            while (true)
-                            {
-                                while (true) // ---Choice---
-                                {
-                                    if ((match = Lit_5_/*':'*/(oomNext2)) != null)
-                                    {
-                                        break;
-                                    }
-                                    match = Name(oomNext2);
-                                    break;
-                                }
-                                if (match == null)
-                                {
-                                    break;
-                                }
-                                oomMatches2.Add(match);
-                                oomNext2 = match.Next;
-                            }
-                            if (oomMatches2.Count > 0)
-                            {
-                                match = Match.Success("+", next13, oomMatches2);
-                            }
-                            if (match == null)
-                            {
-                                break;
-                            }
-                            matches13.Add(match);
-                            next13 = match.Next;
-                            if ((match = Lit_3_/*')'*/(next13)) == null)
-                            {
-                                break;
-                            }
-                            matches13.Add(match);
-                            break;
-                        }
-                        if (match != null)
-                        {
-                            match = Match.Success("_", next12, matches13);
-                        }
-                        match = Match.Optional(next12, match);
-                        matches12.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches12);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next14 = start;
-                    var matches14 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next14)) == null)
-                        {
-                            break;
-                        }
-                        matches14.Add(match);
-                        next14 = match.Next;
-                        if ((match = Lit__show_in_interface(next14)) == null)
-                        {
-                            break;
-                        }
-                        matches14.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches14);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next15 = start;
-                    var matches15 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next15)) == null)
-                        {
-                            break;
-                        }
-                        matches15.Add(match);
-                        next15 = match.Next;
-                        if ((match = Lit__fixed_layout(next15)) == null)
-                        {
-                            break;
-                        }
-                        matches15.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches15);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next16 = start;
-                    var matches16 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next16)) == null)
-                        {
-                            break;
-                        }
-                        matches16.Add(match);
-                        next16 = match.Next;
-                        if ((match = Lit__nonoverride(next16)) == null)
-                        {
-                            break;
-                        }
-                        matches16.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches16);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next17 = start;
-                    var matches17 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next17)) == null)
-                        {
-                            break;
-                        }
-                        matches17.Add(match);
-                        next17 = match.Next;
-                        if ((match = Lit__borrowed(next17)) == null)
-                        {
-                            break;
-                        }
-                        matches17.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches17);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next18 = start;
-                    var matches18 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next18)) == null)
-                        {
-                            break;
-                        }
-                        matches18.Add(match);
-                        next18 = match.Next;
-                        if ((match = Lit__transparent(next18)) == null)
-                        {
-                            break;
-                        }
-                        matches18.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches18);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next19 = start;
-                    var matches19 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next19)) == null)
-                        {
-                            break;
-                        }
-                        matches19.Add(match);
-                        next19 = match.Next;
-                        if ((match = Lit__nonEphemeral(next19)) == null)
-                        {
-                            break;
-                        }
-                        matches19.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches19);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next20 = start;
-                    var matches20 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next20)) == null)
-                        {
-                            break;
-                        }
-                        matches20.Add(match);
-                        next20 = match.Next;
-                        if ((match = Lit__alwaysEmitIntoClient(next20)) == null)
-                        {
-                            break;
-                        }
-                        matches20.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches20);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next21 = start;
-                    var matches21 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next21)) == null)
-                        {
-                            break;
-                        }
-                        matches21.Add(match);
-                        next21 = match.Next;
-                        if ((match = Lit__objc_non_lazy_realization(next21)) == null)
-                        {
-                            break;
-                        }
-                        matches21.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches21);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next22 = start;
-                    var matches22 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next22)) == null)
-                        {
-                            break;
-                        }
-                        matches22.Add(match);
-                        next22 = match.Next;
-                        if ((match = Lit__implements(next22)) == null)
-                        {
-                            break;
-                        }
-                        matches22.Add(match);
-                        next22 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next22)) == null)
-                        {
-                            break;
-                        }
-                        matches22.Add(match);
-                        next22 = match.Next;
-                        if ((match = TypeIdentifier(next22)) == null)
-                        {
-                            break;
-                        }
-                        matches22.Add(match);
-                        next22 = match.Next;
-                        var zomMatches = new List<Match>();
-                        var zomNext = next22;
-                        while (true)
-                        {
-                            var next23 = zomNext;
-                            var matches23 = new List<Match>();
-                            while (true) // ---Sequence---
-                            {
-                                if ((match = Lit_4_/*','*/(next23)) == null)
-                                {
-                                    break;
-                                }
-                                matches23.Add(match);
-                                next23 = match.Next;
-                                if ((match = TypeIdentifier(next23)) == null)
-                                {
-                                    break;
-                                }
-                                matches23.Add(match);
-                                break;
-                            }
-                            if (match != null)
-                            {
-                                match = Match.Success("_", zomNext, matches23);
-                            }
-                            if (match == null)
-                            {
-                                break;
-                            }
-                            zomMatches.Add(match);
-                            zomNext = match.Next;
-                        }
-                        match = Match.Success("*", next22, zomMatches);
-                        matches22.Add(match);
-                        next22 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next22)) == null)
-                        {
-                            break;
-                        }
-                        matches22.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches22);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next24 = start;
-                    var matches24 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next24)) == null)
-                        {
-                            break;
-                        }
-                        matches24.Add(match);
-                        next24 = match.Next;
-                        if ((match = Lit__specialize(next24)) == null)
-                        {
-                            break;
-                        }
-                        matches24.Add(match);
-                        next24 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next24)) == null)
-                        {
-                            break;
-                        }
-                        matches24.Add(match);
-                        next24 = match.Next;
-                        if ((match = GenericWhereClause(next24)) == null)
-                        {
-                            break;
-                        }
-                        matches24.Add(match);
-                        next24 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next24)) == null)
-                        {
-                            break;
-                        }
-                        matches24.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches24);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next25 = start;
-                    var matches25 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next25)) == null)
-                        {
-                            break;
-                        }
-                        matches25.Add(match);
-                        next25 = match.Next;
-                        if ((match = Lit__effects(next25)) == null)
-                        {
-                            break;
-                        }
-                        matches25.Add(match);
-                        next25 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next25)) == null)
-                        {
-                            break;
-                        }
-                        matches25.Add(match);
-                        next25 = match.Next;
-                        while (true) // ---Choice---
-                        {
-                            if ((match = Lit_readnone(next25)) != null)
-                            {
-                                break;
-                            }
-                            if ((match = Lit_readonly(next25)) != null)
-                            {
-                                break;
-                            }
-                            match = Lit_releasenone(next25);
-                            break;
-                        }
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        matches25.Add(match);
-                        next25 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next25)) == null)
-                        {
-                            break;
-                        }
-                        matches25.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches25);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next26 = start;
-                    var matches26 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next26)) == null)
-                        {
-                            break;
-                        }
-                        matches26.Add(match);
-                        next26 = match.Next;
-                        if ((match = Lit__silgen_name(next26)) == null)
-                        {
-                            break;
-                        }
-                        matches26.Add(match);
-                        next26 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next26)) == null)
-                        {
-                            break;
-                        }
-                        matches26.Add(match);
-                        next26 = match.Next;
-                        if ((match = StaticStringLiteral(next26)) == null)
-                        {
-                            break;
-                        }
-                        matches26.Add(match);
-                        next26 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next26)) == null)
-                        {
-                            break;
-                        }
-                        matches26.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches26);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next27 = start;
-                    var matches27 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next27)) == null)
-                        {
-                            break;
-                        }
-                        matches27.Add(match);
-                        next27 = match.Next;
-                        if ((match = Lit__semantics(next27)) == null)
-                        {
-                            break;
-                        }
-                        matches27.Add(match);
-                        next27 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next27)) == null)
-                        {
-                            break;
-                        }
-                        matches27.Add(match);
-                        next27 = match.Next;
-                        if ((match = StaticStringLiteral(next27)) == null)
-                        {
-                            break;
-                        }
-                        matches27.Add(match);
-                        next27 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next27)) == null)
-                        {
-                            break;
-                        }
-                        matches27.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches27);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next28 = start;
-                    var matches28 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next28)) == null)
-                        {
-                            break;
-                        }
-                        matches28.Add(match);
-                        next28 = match.Next;
-                        if ((match = Lit__objcRuntimeName(next28)) == null)
-                        {
-                            break;
-                        }
-                        matches28.Add(match);
-                        next28 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next28)) == null)
-                        {
-                            break;
-                        }
-                        matches28.Add(match);
-                        next28 = match.Next;
-                        if ((match = Name(next28)) == null)
-                        {
-                            break;
-                        }
-                        matches28.Add(match);
-                        next28 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next28)) == null)
-                        {
-                            break;
-                        }
-                        matches28.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches28);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next29 = start;
-                    var matches29 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next29)) == null)
-                        {
-                            break;
-                        }
-                        matches29.Add(match);
-                        next29 = match.Next;
-                        if ((match = Lit__cdecl(next29)) == null)
-                        {
-                            break;
-                        }
-                        matches29.Add(match);
-                        next29 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next29)) == null)
-                        {
-                            break;
-                        }
-                        matches29.Add(match);
-                        next29 = match.Next;
-                        if ((match = StaticStringLiteral(next29)) == null)
-                        {
-                            break;
-                        }
-                        matches29.Add(match);
-                        next29 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next29)) == null)
-                        {
-                            break;
-                        }
-                        matches29.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches29);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next30 = start;
-                    var matches30 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_1_/*'@'*/(next30)) == null)
-                        {
-                            break;
-                        }
-                        matches30.Add(match);
-                        next30 = match.Next;
-                        {
-                            // >>> ERROR
-                            new Error(Context).Report("attribute", next30);
-                            throw new BailOutException();
-                            // <<< ERROR
-                        }
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches30);
-                    }
-                    break;
+                    matches.Add(match);
+                    next = match.Next;
+                    {
+                        // >>> ERROR
+                        new Error(Context).Report("attribute", next);
+                        throw new BailOutException();
+                        // <<< ERROR
+                    }
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
                 }
                 if (match != null)
                 {
@@ -1454,7 +442,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_2_/*'('*/(next2)) == null)
+                            if ((match = Lit_1_/*'('*/(next2)) == null)
                             {
                                 break;
                             }
@@ -1475,7 +463,7 @@ namespace SixPeg.Pegger.Swift
                             }
                             matches2.Add(match);
                             next2 = match.Next;
-                            if ((match = Lit_3_/*')'*/(next2)) == null)
+                            if ((match = Lit_2_/*')'*/(next2)) == null)
                             {
                                 break;
                             }
@@ -1502,7 +490,7 @@ namespace SixPeg.Pegger.Swift
                     {
                         break;
                     }
-                    match = Lit___consuming(start);
+                    match = Lit_3_/*'__consuming'*/(start);
                     break;
                 }
                 if (match != null)
@@ -1534,7 +522,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -1546,7 +534,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -1728,7 +716,18 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        match = Match.Optional(next, Statements(next));
+                        var zomMatches = new List<Match>();
+                        var zomNext = next;
+                        while (true)
+                        {
+                            if ((match = Statement(zomNext)) == null)
+                            {
+                                break;
+                            }
+                            zomMatches.Add(match);
+                            zomNext = match.Next;
+                        }
+                        match = Match.Success("*", next, zomMatches);
                         matches.Add(match);
                         break;
                     }
@@ -1824,7 +823,18 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    match = Match.Optional(next, Statements(next));
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        if ((match = Statement(zomNext)) == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     break;
                 }
@@ -1857,7 +867,18 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    match = Match.Optional(next, Statements(next));
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        if ((match = Statement(zomNext)) == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     break;
                 }
@@ -1880,7 +901,27 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_IfDirective].Already(start, out var match))
             {
-                match = Lit_7_/*'#if'*/(start);
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = Lit_4_/*'#'*/(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    {
+                        // >>> ERROR
+                        new Error(Context).Report("#if", next);
+                        throw new BailOutException();
+                        // <<< ERROR
+                    }
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
                 if (match != null)
                 {
                     match = Match.Success("IfDirective", start, match);
@@ -1896,7 +937,7 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_ElseifDirective].Already(start, out var match))
             {
-                match = Lit_8_/*'#elseif'*/(start);
+                match = Lit_5_/*'#elseif'*/(start);
                 if (match != null)
                 {
                     match = Match.Success("ElseifDirective", start, match);
@@ -1912,7 +953,7 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_ElseDirective].Already(start, out var match))
             {
-                match = Lit_9_/*'#else'*/(start);
+                match = Lit_6_/*'#else'*/(start);
                 if (match != null)
                 {
                     match = Match.Success("ElseDirective", start, match);
@@ -1928,7 +969,7 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_EndifDirective].Already(start, out var match))
             {
-                match = Lit_10_/*'#endif'*/(start);
+                match = Lit_7_/*'#endif'*/(start);
                 if (match != null)
                 {
                     match = Match.Success("EndifDirective", start, match);
@@ -1962,7 +1003,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -1974,7 +1015,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -1993,7 +1034,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_11_/*'!'*/(next2)) == null)
+                        if ((match = Lit_8_/*'!'*/(next2)) == null)
                         {
                             break;
                         }
@@ -2047,11 +1088,11 @@ namespace SixPeg.Pegger.Swift
                         {
                             while (true) // ---Choice---
                             {
-                                if ((match = Lit_12_/*'||'*/(next2)) != null)
+                                if ((match = Lit_9_/*'||'*/(next2)) != null)
                                 {
                                     break;
                                 }
-                                match = Lit_13_/*'&&'*/(next2);
+                                match = Lit_10_/*'&&'*/(next2);
                                 break;
                             }
                             if (match == null)
@@ -2113,7 +1154,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -2125,7 +1166,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -2150,7 +1191,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -2162,7 +1203,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -2187,7 +1228,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next3)) == null)
+                        if ((match = Lit_1_/*'('*/(next3)) == null)
                         {
                             break;
                         }
@@ -2195,11 +1236,11 @@ namespace SixPeg.Pegger.Swift
                         next3 = match.Next;
                         while (true) // ---Choice---
                         {
-                            if ((match = Lit_14_/*'>='*/(next3)) != null)
+                            if ((match = Lit_11_/*'>='*/(next3)) != null)
                             {
                                 break;
                             }
-                            match = Lit_15_/*'<'*/(next3);
+                            match = Lit_12_/*'<'*/(next3);
                             break;
                         }
                         if (match == null)
@@ -2214,7 +1255,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next3)) == null)
+                        if ((match = Lit_2_/*')'*/(next3)) == null)
                         {
                             break;
                         }
@@ -2239,7 +1280,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches4.Add(match);
                         next4 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next4)) == null)
+                        if ((match = Lit_1_/*'('*/(next4)) == null)
                         {
                             break;
                         }
@@ -2247,11 +1288,11 @@ namespace SixPeg.Pegger.Swift
                         next4 = match.Next;
                         while (true) // ---Choice---
                         {
-                            if ((match = Lit_14_/*'>='*/(next4)) != null)
+                            if ((match = Lit_11_/*'>='*/(next4)) != null)
                             {
                                 break;
                             }
-                            match = Lit_15_/*'<'*/(next4);
+                            match = Lit_12_/*'<'*/(next4);
                             break;
                         }
                         if (match == null)
@@ -2266,7 +1307,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches4.Add(match);
                         next4 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next4)) == null)
+                        if ((match = Lit_2_/*')'*/(next4)) == null)
                         {
                             break;
                         }
@@ -2291,7 +1332,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches5.Add(match);
                         next5 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next5)) == null)
+                        if ((match = Lit_1_/*'('*/(next5)) == null)
                         {
                             break;
                         }
@@ -2303,7 +1344,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches5.Add(match);
                         next5 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next5)) == null)
+                        if ((match = Lit_2_/*')'*/(next5)) == null)
                         {
                             break;
                         }
@@ -2328,7 +1369,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches6.Add(match);
                         next6 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next6)) == null)
+                        if ((match = Lit_1_/*'('*/(next6)) == null)
                         {
                             break;
                         }
@@ -2340,7 +1381,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches6.Add(match);
                         next6 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next6)) == null)
+                        if ((match = Lit_2_/*')'*/(next6)) == null)
                         {
                             break;
                         }
@@ -2430,7 +1471,7 @@ namespace SixPeg.Pegger.Swift
                     {
                         break;
                     }
-                    if ((match = Lit_x86_64(start)) != null)
+                    if ((match = Lit_13_/*'x86_64'*/(start)) != null)
                     {
                         break;
                     }
@@ -2494,7 +1535,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_16_/*'.'*/(next2)) == null)
+                            if ((match = Lit_dot_(next2)) == null)
                             {
                                 break;
                             }
@@ -2585,13 +1626,13 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_17_/*'#sourceLocation'*/(next)) == null)
+                    if ((match = Lit_14_/*'#sourceLocation'*/(next)) == null)
                     {
                         break;
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -2601,7 +1642,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_18_/*'file:'*/(next2)) == null)
+                        if ((match = Lit_15_/*'file:'*/(next2)) == null)
                         {
                             break;
                         }
@@ -2613,13 +1654,13 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_4_/*','*/(next2)) == null)
+                        if ((match = Lit_16_/*','*/(next2)) == null)
                         {
                             break;
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_19_/*'line:'*/(next2)) == null)
+                        if ((match = Lit_17_/*'line:'*/(next2)) == null)
                         {
                             break;
                         }
@@ -2639,7 +1680,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, match);
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -2720,13 +1761,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_20_/*'#error'*/(next)) == null)
+                        if ((match = Lit_18_/*'#error'*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -2738,7 +1779,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -2757,13 +1798,13 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_21_/*'#warning'*/(next2)) == null)
+                        if ((match = Lit_19_/*'#warning'*/(next2)) == null)
                         {
                             break;
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -2775,7 +1816,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -2914,7 +1955,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -3003,7 +2044,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_22_/*'='*/(next)) == null)
+                        if ((match = Lit_20_/*'='*/(next)) == null)
                         {
                             break;
                         }
@@ -3028,7 +2069,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_22_/*'='*/(next2)) == null)
+                        if ((match = Lit_20_/*'='*/(next2)) == null)
                         {
                             break;
                         }
@@ -3191,7 +2232,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_23_/*'{'*/(next)) == null)
+                    if ((match = Lit_21_/*'{'*/(next)) == null)
                     {
                         break;
                     }
@@ -3211,7 +2252,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_24_/*'}'*/(next)) == null)
+                    if ((match = Lit_22_/*'}'*/(next)) == null)
                     {
                         break;
                     }
@@ -3331,7 +2372,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -3472,7 +2513,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_23_/*'{'*/(next)) == null)
+                    if ((match = Lit_21_/*'{'*/(next)) == null)
                     {
                         break;
                     }
@@ -3499,7 +2540,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_24_/*'}'*/(next)) == null)
+                    if ((match = Lit_22_/*'}'*/(next)) == null)
                     {
                         break;
                     }
@@ -3616,7 +2657,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -3700,7 +2741,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_22_/*'='*/(next)) == null)
+                    if ((match = Lit_20_/*'='*/(next)) == null)
                     {
                         break;
                     }
@@ -3924,13 +2965,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -3949,7 +2990,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -3976,7 +3017,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next2)) == null)
+                        if ((match = Lit_22_/*'}'*/(next2)) == null)
                         {
                             break;
                         }
@@ -3995,7 +3036,7 @@ namespace SixPeg.Pegger.Swift
                     var matches3 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next3)) == null)
+                        if ((match = Lit_21_/*'{'*/(next3)) == null)
                         {
                             break;
                         }
@@ -4270,13 +3311,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -4295,7 +3336,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -4307,7 +3348,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -4362,7 +3403,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -4476,7 +3517,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_25_/*'...'*/(next2)) == null)
+                        if ((match = Lit_dot_dot_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -4612,7 +3653,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches6.Add(match);
                         next6 = match.Next;
-                        if ((match = Lit_25_/*'...'*/(next6)) == null)
+                        if ((match = Lit_dot_dot_dot_(next6)) == null)
                         {
                             break;
                         }
@@ -4683,7 +3724,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_26_/*'->'*/(next)) == null)
+                        if ((match = Lit_23_/*'->'*/(next)) == null)
                         {
                             break;
                         }
@@ -4711,7 +3752,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_26_/*'->'*/(next2)) == null)
+                        if ((match = Lit_23_/*'->'*/(next2)) == null)
                         {
                             break;
                         }
@@ -4781,7 +3822,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_22_/*'='*/(next)) == null)
+                    if ((match = Lit_20_/*'='*/(next)) == null)
                     {
                         break;
                     }
@@ -4819,7 +3860,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -4828,7 +3869,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, Attributes(next));
                         matches.Add(match);
                         next = match.Next;
-                        match = Match.Optional(next, Lit___owned(next));
+                        match = Match.Optional(next, Lit_25_/*'__owned'*/(next));
                         matches.Add(match);
                         next = match.Next;
                         match = Match.Optional(next, Lit_inout(next));
@@ -4853,7 +3894,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -4862,7 +3903,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next2, Attributes(next2));
                         matches2.Add(match);
                         next2 = match.Next;
-                        match = Match.Optional(next2, Lit___owned(next2));
+                        match = Match.Optional(next2, Lit_25_/*'__owned'*/(next2));
                         matches2.Add(match);
                         next2 = match.Next;
                         match = Match.Optional(next2, Lit_inout(next2));
@@ -4887,7 +3928,7 @@ namespace SixPeg.Pegger.Swift
                     var matches3 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next3)) == null)
+                        if ((match = Lit_24_/*':'*/(next3)) == null)
                         {
                             break;
                         }
@@ -5019,11 +4060,11 @@ namespace SixPeg.Pegger.Swift
                         next = match.Next;
                         while (true) // ---Choice---
                         {
-                            if ((match = Lit_27_/*'?'*/(next)) != null)
+                            if ((match = Lit_26_/*'?'*/(next)) != null)
                             {
                                 break;
                             }
-                            match = Lit_11_/*'!'*/(next);
+                            match = Lit_8_/*'!'*/(next);
                             break;
                         }
                         match = Match.Optional(next, match);
@@ -5161,7 +4202,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -5230,7 +4271,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -5322,7 +4363,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -5338,7 +4379,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_4_/*','*/(next2)) == null)
+                        if ((match = Lit_16_/*','*/(next2)) == null)
                         {
                             break;
                         }
@@ -5396,7 +4437,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -5505,7 +4546,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_23_/*'{'*/(next)) == null)
+                    if ((match = Lit_21_/*'{'*/(next)) == null)
                     {
                         break;
                     }
@@ -5525,7 +4566,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_24_/*'}'*/(next)) == null)
+                    if ((match = Lit_22_/*'}'*/(next)) == null)
                     {
                         break;
                     }
@@ -5598,7 +4639,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -5640,7 +4681,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -5682,7 +4723,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -5745,7 +4786,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -5884,7 +4925,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
@@ -5893,7 +4934,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, ProtocolMembers(next));
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -5912,7 +4953,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -6359,7 +5400,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
@@ -6368,7 +5409,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, StructMembers(next));
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -6387,7 +5428,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -6607,7 +5648,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_26_/*'->'*/(next)) == null)
+                    if ((match = Lit_23_/*'->'*/(next)) == null)
                     {
                         break;
                     }
@@ -6751,7 +5792,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_22_/*'='*/(next)) == null)
+                    if ((match = Lit_20_/*'='*/(next)) == null)
                     {
                         break;
                     }
@@ -7097,7 +6138,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
@@ -7115,7 +6156,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, SpecialModifyClause(next));
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -7134,7 +6175,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7152,7 +6193,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next2)) == null)
+                        if ((match = Lit_22_/*'}'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7234,7 +6275,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit__modify(next)) == null)
+                    if ((match = Lit_27_/*'_modify'*/(next)) == null)
                     {
                         break;
                     }
@@ -7309,7 +6350,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -7321,7 +6362,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -7353,7 +6394,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
@@ -7368,7 +6409,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, SetterKeywordClause(next));
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -7387,7 +6428,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7405,7 +6446,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next2)) == null)
+                        if ((match = Lit_22_/*'}'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7511,7 +6552,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
@@ -7526,7 +6567,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next, DidSetClause(next));
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -7545,7 +6586,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7560,7 +6601,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Optional(next2, WillSetClause(next2));
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next2)) == null)
+                        if ((match = Lit_22_/*'}'*/(next2)) == null)
                         {
                             break;
                         }
@@ -7856,7 +6897,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_16_/*'.'*/(next2)) == null)
+                            if ((match = Lit_dot_(next2)) == null)
                             {
                                 break;
                             }
@@ -8072,7 +7113,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_23_/*'{'*/(next)) == null)
+                    if ((match = Lit_21_/*'{'*/(next)) == null)
                     {
                         break;
                     }
@@ -8081,7 +7122,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, ClassMembers(next));
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_24_/*'}'*/(next)) == null)
+                    if ((match = Lit_22_/*'}'*/(next)) == null)
                     {
                         break;
                     }
@@ -8586,29 +7627,58 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_FunctionCallArgumentClause].Already(start, out var match))
             {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
+                while (true) // ---Choice---
                 {
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    var next = start;
+                    var matches = new List<Match>();
+                    while (true) // ---Sequence---
+                    {
+                        if ((match = Lit_1_/*'('*/(next)) == null)
+                        {
+                            break;
+                        }
+                        matches.Add(match);
+                        next = match.Next;
+                        match = Match.Optional(next, FunctionCallArgumentList(next));
+                        matches.Add(match);
+                        next = match.Next;
+                        if ((match = Lit_2_/*')'*/(next)) == null)
+                        {
+                            break;
+                        }
+                        matches.Add(match);
+                        break;
+                    }
+                    if (match != null)
+                    {
+                        match = Match.Success("_", start, matches);
+                    }
+                    if (match != null)
                     {
                         break;
                     }
-                    matches.Add(match);
-                    next = match.Next;
-                    match = Match.Optional(next, FunctionCallArgumentList(next));
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    var next2 = start;
+                    var matches2 = new List<Match>();
+                    while (true) // ---Sequence---
                     {
-                        break;
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
+                        {
+                            break;
+                        }
+                        matches2.Add(match);
+                        next2 = match.Next;
+                        {
+                            // >>> ERROR
+                            new Error(Context).Report("function-call-argument-clause", next2);
+                            throw new BailOutException();
+                            // <<< ERROR
+                        }
                     }
-                    matches.Add(match);
+                    if (match != null)
+                    {
+                        match = Match.Success("_", start, matches2);
+                    }
                     break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
                 }
                 if (match != null)
                 {
@@ -8643,7 +7713,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -8704,7 +7774,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -8724,24 +7794,7 @@ namespace SixPeg.Pegger.Swift
                         {
                             break;
                         }
-                        var next3 = next;
-                        var matches3 = new List<Match>();
-                        while (true) // ---Sequence---
-                        {
-                            match = _(next3);
-                            matches3.Add(match);
-                            next3 = match.Next;
-                            if ((match = Operator(next3)) == null)
-                            {
-                                break;
-                            }
-                            matches3.Add(match);
-                            break;
-                        }
-                        if (match != null)
-                        {
-                            match = Match.Success("_", next, matches3);
-                        }
+                        match = OperatorName(next);
                         break;
                     }
                     if (match == null)
@@ -8776,7 +7829,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -8810,13 +7863,13 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = And_(next2, Lit_23_/*'{'*/(next2))) == null)
+                        if ((match = And_(next2, Lit_21_/*'{'*/(next2))) == null)
                         {
                             break;
                         }
@@ -8904,7 +7957,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -8940,7 +7993,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -8985,7 +8038,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -8997,7 +8050,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -9063,7 +8116,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -9095,7 +8148,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_16_/*'.'*/(next)) == null)
+                        if ((match = Lit_dot_(next)) == null)
                         {
                             break;
                         }
@@ -9120,7 +8173,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_16_/*'.'*/(next2)) == null)
+                        if ((match = Lit_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -9151,7 +8204,7 @@ namespace SixPeg.Pegger.Swift
                     var matches3 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_16_/*'.'*/(next3)) == null)
+                        if ((match = Lit_dot_(next3)) == null)
                         {
                             break;
                         }
@@ -9192,7 +8245,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -9646,7 +8699,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -9673,7 +8726,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
-                    match = Match.Optional(next, Lit_4_/*','*/(next));
+                    match = Match.Optional(next, Lit_16_/*','*/(next));
                     matches.Add(match);
                     break;
                 }
@@ -9755,7 +8808,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -9807,7 +8860,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -9834,7 +8887,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
-                    match = Match.Optional(next, Lit_4_/*','*/(next));
+                    match = Match.Optional(next, Lit_16_/*','*/(next));
                     matches.Add(match);
                     break;
                 }
@@ -9867,7 +8920,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -9911,7 +8964,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -9923,7 +8976,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -9935,7 +8988,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_4_/*','*/(next)) == null)
+                        if ((match = Lit_16_/*','*/(next)) == null)
                         {
                             break;
                         }
@@ -9947,7 +9000,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -9959,7 +9012,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_4_/*','*/(next)) == null)
+                        if ((match = Lit_16_/*','*/(next)) == null)
                         {
                             break;
                         }
@@ -9971,7 +9024,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -9983,7 +9036,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_4_/*','*/(next)) == null)
+                        if ((match = Lit_16_/*','*/(next)) == null)
                         {
                             break;
                         }
@@ -9995,7 +9048,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -10007,7 +9060,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -10032,7 +9085,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -10044,7 +9097,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -10056,7 +9109,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -10081,7 +9134,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_2_/*'('*/(next3)) == null)
+                        if ((match = Lit_1_/*'('*/(next3)) == null)
                         {
                             break;
                         }
@@ -10093,7 +9146,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next3)) == null)
+                        if ((match = Lit_24_/*':'*/(next3)) == null)
                         {
                             break;
                         }
@@ -10105,7 +9158,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next3)) == null)
+                        if ((match = Lit_2_/*')'*/(next3)) == null)
                         {
                             break;
                         }
@@ -10145,7 +9198,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_16_/*'.'*/(next)) == null)
+                        if ((match = Lit_dot_(next)) == null)
                         {
                             break;
                         }
@@ -10182,7 +9235,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_16_/*'.'*/(next2)) == null)
+                        if ((match = Lit_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -10290,7 +9343,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_16_/*'.'*/(next)) == null)
+                        if ((match = Lit_dot_(next)) == null)
                         {
                             break;
                         }
@@ -10327,7 +9380,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_16_/*'.'*/(next2)) == null)
+                        if ((match = Lit_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -10402,7 +9455,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_23_/*'{'*/(next)) == null)
+                    if ((match = Lit_21_/*'{'*/(next)) == null)
                     {
                         break;
                     }
@@ -10411,10 +9464,21 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, ClosureSignature(next));
                     matches.Add(match);
                     next = match.Next;
-                    match = Match.Optional(next, Statements(next));
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        if ((match = Statement(zomNext)) == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_24_/*'}'*/(next)) == null)
+                    if ((match = Lit_22_/*'}'*/(next)) == null)
                     {
                         break;
                     }
@@ -10520,13 +9584,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -10545,7 +9609,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -10557,7 +9621,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -10608,7 +9672,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -10673,7 +9737,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_25_/*'...'*/(next)) == null)
+                        if ((match = Lit_dot_dot_dot_(next)) == null)
                         {
                             break;
                         }
@@ -10765,7 +9829,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -10872,7 +9936,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -10972,7 +10036,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_2_/*'('*/(next2)) == null)
+                            if ((match = Lit_1_/*'('*/(next2)) == null)
                             {
                                 break;
                             }
@@ -10993,7 +10057,7 @@ namespace SixPeg.Pegger.Swift
                             }
                             matches2.Add(match);
                             next2 = match.Next;
-                            if ((match = Lit_3_/*')'*/(next2)) == null)
+                            if ((match = Lit_2_/*')'*/(next2)) == null)
                             {
                                 break;
                             }
@@ -11033,7 +10097,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -11045,7 +10109,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -11077,13 +10141,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -11102,7 +10166,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -11114,7 +10178,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -11160,7 +10224,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -11228,7 +10292,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -11272,7 +10336,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -11308,7 +10372,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit__(next)) == null)
+                    if ((match = Lit_42_/*'_'*/(next)) == null)
                     {
                         break;
                     }
@@ -11344,7 +10408,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_42_/*'\\'*/(next)) == null)
+                    if ((match = Lit_43_/*'\\'*/(next)) == null)
                     {
                         break;
                     }
@@ -11353,7 +10417,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, Type(next));
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -11399,7 +10463,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_16_/*'.'*/(next2)) == null)
+                        if ((match = Lit_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -11520,11 +10584,11 @@ namespace SixPeg.Pegger.Swift
             {
                 while (true) // ---Choice---
                 {
-                    if ((match = Lit_27_/*'?'*/(start)) != null)
+                    if ((match = Lit_26_/*'?'*/(start)) != null)
                     {
                         break;
                     }
-                    if ((match = Lit_11_/*'!'*/(start)) != null)
+                    if ((match = Lit_8_/*'!'*/(start)) != null)
                     {
                         break;
                     }
@@ -11580,13 +10644,13 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_43_/*'#selector'*/(next)) == null)
+                    if ((match = Lit_44_/*'#selector'*/(next)) == null)
                     {
                         break;
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -11594,11 +10658,11 @@ namespace SixPeg.Pegger.Swift
                     next = match.Next;
                     while (true) // ---Choice---
                     {
-                        if ((match = Lit_44_/*'getter:'*/(next)) != null)
+                        if ((match = Lit_45_/*'getter:'*/(next)) != null)
                         {
                             break;
                         }
-                        match = Lit_45_/*'setter:'*/(next);
+                        match = Lit_46_/*'setter:'*/(next);
                         break;
                     }
                     match = Match.Optional(next, match);
@@ -11610,7 +10674,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -11640,13 +10704,13 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_46_/*'#keyPath'*/(next)) == null)
+                    if ((match = Lit_47_/*'#keyPath'*/(next)) == null)
                     {
                         break;
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -11658,7 +10722,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -11696,11 +10760,11 @@ namespace SixPeg.Pegger.Swift
                     next = match.Next;
                     while (true) // ---Choice---
                     {
-                        if ((match = Lit_27_/*'?'*/(next)) != null)
+                        if ((match = Lit_26_/*'?'*/(next)) != null)
                         {
                             break;
                         }
-                        match = Lit_11_/*'!'*/(next);
+                        match = Lit_8_/*'!'*/(next);
                         break;
                     }
                     match = Match.Optional(next, match);
@@ -11726,7 +10790,7 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_AssignmentOperator].Already(start, out var match))
             {
-                match = Lit_22_/*'='*/(start);
+                match = Lit_20_/*'='*/(start);
                 if (match != null)
                 {
                     match = Match.Success("AssignmentOperator", start, match);
@@ -11793,11 +10857,11 @@ namespace SixPeg.Pegger.Swift
                         next2 = match.Next;
                         while (true) // ---Choice---
                         {
-                            if ((match = Lit_27_/*'?'*/(next2)) != null)
+                            if ((match = Lit_26_/*'?'*/(next2)) != null)
                             {
                                 break;
                             }
-                            match = Lit_11_/*'!'*/(next2);
+                            match = Lit_8_/*'!'*/(next2);
                             break;
                         }
                         match = Match.Optional(next2, match);
@@ -11893,7 +10957,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_27_/*'?'*/(next)) == null)
+                    if ((match = Lit_26_/*'?'*/(next)) == null)
                     {
                         break;
                     }
@@ -11911,7 +10975,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -12426,7 +11490,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_15_/*'<'*/(next)) == null)
+                        if ((match = Lit_12_/*'<'*/(next)) == null)
                         {
                             break;
                         }
@@ -12438,7 +11502,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_47_/*'>'*/(next)) == null)
+                        if ((match = Lit_48_/*'>'*/(next)) == null)
                         {
                             break;
                         }
@@ -12457,7 +11521,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_15_/*'<'*/(next2)) == null)
+                        if ((match = Lit_12_/*'<'*/(next2)) == null)
                         {
                             break;
                         }
@@ -12509,7 +11573,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -12568,7 +11632,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -12599,7 +11663,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -12754,7 +11818,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -12813,7 +11877,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -12844,7 +11908,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -12875,7 +11939,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_48_/*'=='*/(next3)) == null)
+                        if ((match = Lit_49_/*'=='*/(next3)) == null)
                         {
                             break;
                         }
@@ -12913,7 +11977,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_15_/*'<'*/(next)) == null)
+                    if ((match = Lit_12_/*'<'*/(next)) == null)
                     {
                         break;
                     }
@@ -12925,7 +11989,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_47_/*'>'*/(next)) == null)
+                    if ((match = Lit_48_/*'>'*/(next)) == null)
                     {
                         break;
                     }
@@ -12969,7 +12033,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -13395,7 +12459,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -13472,7 +12536,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -13815,6 +12879,9 @@ namespace SixPeg.Pegger.Swift
             var matches = new List<Match>();
             while (true) // ---Sequence---
             {
+                match = _(next);
+                matches.Add(match);
+                next = match.Next;
                 match = Match.Optional(next, ExtendedStringLiteralDelimiter(next));
                 matches.Add(match);
                 next = match.Next;
@@ -13871,6 +12938,9 @@ namespace SixPeg.Pegger.Swift
             var matches = new List<Match>();
             while (true) // ---Sequence---
             {
+                match = _(next);
+                matches.Add(match);
+                next = match.Next;
                 match = Match.Optional(next, ExtendedStringLiteralDelimiter(next));
                 matches.Add(match);
                 next = match.Next;
@@ -15217,11 +14287,11 @@ namespace SixPeg.Pegger.Swift
                         next2 = match.Next;
                         while (true) // ---Choice---
                         {
-                            if ((match = Lit_27_/*'?'*/(next2)) != null)
+                            if ((match = Lit_26_/*'?'*/(next2)) != null)
                             {
                                 break;
                             }
-                            if ((match = Lit_16_/*'.'*/(next2)) != null)
+                            if ((match = Lit_dot_(next2)) != null)
                             {
                                 break;
                             }
@@ -15335,7 +14405,7 @@ namespace SixPeg.Pegger.Swift
         {
             if (!Caches[Cache_PatternOptional].Already(start, out var match))
             {
-                match = Lit_27_/*'?'*/(start);
+                match = Lit_26_/*'?'*/(start);
                 if (match != null)
                 {
                     match = Match.Success("PatternOptional", start, match);
@@ -15355,7 +14425,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -15462,7 +14532,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit__(next)) == null)
+                    if ((match = Lit_42_/*'_'*/(next)) == null)
                     {
                         break;
                     }
@@ -15615,13 +14685,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -15640,7 +14710,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -15652,7 +14722,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -15671,7 +14741,7 @@ namespace SixPeg.Pegger.Swift
                     var matches3 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next3)) == null)
+                        if ((match = Lit_1_/*'('*/(next3)) == null)
                         {
                             break;
                         }
@@ -15723,7 +14793,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -15784,7 +14854,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_5_/*':'*/(next2)) == null)
+                        if ((match = Lit_24_/*':'*/(next2)) == null)
                         {
                             break;
                         }
@@ -15831,7 +14901,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, TypeIdentifier(next));
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -16056,7 +15126,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -16264,13 +15334,13 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_49_/*'#available'*/(next)) == null)
+                    if ((match = Lit_50_/*'#available'*/(next)) == null)
                     {
                         break;
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_2_/*'('*/(next)) == null)
+                    if ((match = Lit_1_/*'('*/(next)) == null)
                     {
                         break;
                     }
@@ -16282,7 +15352,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_3_/*')'*/(next)) == null)
+                    if ((match = Lit_2_/*')'*/(next)) == null)
                     {
                         break;
                     }
@@ -16326,7 +15396,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -16400,7 +15470,7 @@ namespace SixPeg.Pegger.Swift
                     {
                         break;
                     }
-                    match = Lit_6_/*'*'*/(start);
+                    match = Lit_51_/*'*'*/(start);
                     break;
                 }
                 if (match != null)
@@ -16480,7 +15550,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_16_/*'.'*/(next2)) == null)
+                        if ((match = Lit_dot_(next2)) == null)
                         {
                             break;
                         }
@@ -16496,7 +15566,7 @@ namespace SixPeg.Pegger.Swift
                         var matches3 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_16_/*'.'*/(next3)) == null)
+                            if ((match = Lit_dot_(next3)) == null)
                             {
                                 break;
                             }
@@ -16674,230 +15744,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_DeferStatement = 304;
-
-        public virtual Match DeferStatement(int start)
-        {
-            if (!Caches[Cache_DeferStatement].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = Lit_defer(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CodeBlock(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("DeferStatement", start, match);
-                }
-                Caches[Cache_DeferStatement].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_DoStatement = 305;
-
-        public virtual Match DoStatement(int start)
-        {
-            if (!Caches[Cache_DoStatement].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = Lit_do(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CodeBlock(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    var zomMatches = new List<Match>();
-                    var zomNext = next;
-                    while (true)
-                    {
-                        if ((match = CatchClause(zomNext)) == null)
-                        {
-                            break;
-                        }
-                        zomMatches.Add(match);
-                        zomNext = match.Next;
-                    }
-                    match = Match.Success("*", next, zomMatches);
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("DoStatement", start, match);
-                }
-                Caches[Cache_DoStatement].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_CatchClause = 306;
-
-        public virtual Match CatchClause(int start)
-        {
-            if (!Caches[Cache_CatchClause].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = Lit_catch(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    match = Match.Optional(next, CatchPatternList(next));
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CodeBlock(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("CatchClause", start, match);
-                }
-                Caches[Cache_CatchClause].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_CatchPatternList = 307;
-
-        public virtual Match CatchPatternList(int start)
-        {
-            if (!Caches[Cache_CatchPatternList].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = CatchPattern(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    var zomMatches = new List<Match>();
-                    var zomNext = next;
-                    while (true)
-                    {
-                        var next2 = zomNext;
-                        var matches2 = new List<Match>();
-                        while (true) // ---Sequence---
-                        {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
-                            {
-                                break;
-                            }
-                            matches2.Add(match);
-                            next2 = match.Next;
-                            if ((match = CatchPattern(next2)) == null)
-                            {
-                                break;
-                            }
-                            matches2.Add(match);
-                            break;
-                        }
-                        if (match != null)
-                        {
-                            match = Match.Success("_", zomNext, matches2);
-                        }
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        zomMatches.Add(match);
-                        zomNext = match.Next;
-                    }
-                    match = Match.Success("*", next, zomMatches);
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("CatchPatternList", start, match);
-                }
-                Caches[Cache_CatchPatternList].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_CatchPattern = 308;
-
-        public virtual Match CatchPattern(int start)
-        {
-            if (!Caches[Cache_CatchPattern].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = Pattern(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    match = Match.Optional(next, WhereClause(next));
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("CatchPattern", start, match);
-                }
-                Caches[Cache_CatchPattern].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_GuardStatement = 309;
+        protected const int Cache_GuardStatement = 304;
 
         public virtual Match GuardStatement(int start)
         {
@@ -16945,7 +15792,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_IfStatement = 310;
+        protected const int Cache_IfStatement = 305;
 
         public virtual Match IfStatement(int start)
         {
@@ -17050,7 +15897,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ElseClause = 311;
+        protected const int Cache_ElseClause = 306;
 
         public virtual Match ElseClause(int start)
         {
@@ -17140,174 +15987,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_LabeledStatement = 312;
-
-        public virtual Match LabeledStatement(int start)
-        {
-            if (!Caches[Cache_LabeledStatement].Already(start, out var match))
-            {
-                while (true) // ---Choice---
-                {
-                    var next = start;
-                    var matches = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = StatementLabel(next)) == null)
-                        {
-                            break;
-                        }
-                        matches.Add(match);
-                        next = match.Next;
-                        if ((match = LoopStatement(next)) == null)
-                        {
-                            break;
-                        }
-                        matches.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next2 = start;
-                    var matches2 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = StatementLabel(next2)) == null)
-                        {
-                            break;
-                        }
-                        matches2.Add(match);
-                        next2 = match.Next;
-                        if ((match = IfStatement(next2)) == null)
-                        {
-                            break;
-                        }
-                        matches2.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches2);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next3 = start;
-                    var matches3 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = StatementLabel(next3)) == null)
-                        {
-                            break;
-                        }
-                        matches3.Add(match);
-                        next3 = match.Next;
-                        if ((match = SwitchStatement(next3)) == null)
-                        {
-                            break;
-                        }
-                        matches3.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches3);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next4 = start;
-                    var matches4 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = StatementLabel(next4)) == null)
-                        {
-                            break;
-                        }
-                        matches4.Add(match);
-                        next4 = match.Next;
-                        if ((match = DoStatement(next4)) == null)
-                        {
-                            break;
-                        }
-                        matches4.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches4);
-                    }
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("LabeledStatement", start, match);
-                }
-                Caches[Cache_LabeledStatement].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_StatementLabel = 313;
-
-        public virtual Match StatementLabel(int start)
-        {
-            if (!Caches[Cache_StatementLabel].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    if ((match = LabelName(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("StatementLabel", start, match);
-                }
-                Caches[Cache_StatementLabel].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_LabelName = 314;
-
-        public virtual Match LabelName(int start)
-        {
-            if (!Caches[Cache_LabelName].Already(start, out var match))
-            {
-                match = Name(start);
-                if (match != null)
-                {
-                    match = Match.Success("LabelName", start, match);
-                }
-                Caches[Cache_LabelName].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_ReturnStatement = 315;
+        protected const int Cache_ReturnStatement = 307;
 
         public virtual Match ReturnStatement(int start)
         {
@@ -17443,7 +16123,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchStatement = 316;
+        protected const int Cache_SwitchStatement = 308;
 
         public virtual Match SwitchStatement(int start)
         {
@@ -17485,7 +16165,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchBody = 317;
+        protected const int Cache_SwitchBody = 309;
 
         public virtual Match SwitchBody(int start)
         {
@@ -17497,13 +16177,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -17522,7 +16202,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -17534,7 +16214,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next2)) == null)
+                        if ((match = Lit_22_/*'}'*/(next2)) == null)
                         {
                             break;
                         }
@@ -17553,7 +16233,7 @@ namespace SixPeg.Pegger.Swift
                     var matches3 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next3)) == null)
+                        if ((match = Lit_21_/*'{'*/(next3)) == null)
                         {
                             break;
                         }
@@ -17581,7 +16261,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchCases = 318;
+        protected const int Cache_SwitchCases = 310;
 
         public virtual Match SwitchCases(int start)
         {
@@ -17611,7 +16291,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchCase = 319;
+        protected const int Cache_SwitchCase = 311;
 
         public virtual Match SwitchCase(int start)
         {
@@ -17629,7 +16309,22 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Statements(next)) == null)
+                        var oomMatches = new List<Match>();
+                        var oomNext = next;
+                        while (true)
+                        {
+                            if ((match = Statement(oomNext)) == null)
+                            {
+                                break;
+                            }
+                            oomMatches.Add(match);
+                            oomNext = match.Next;
+                        }
+                        if (oomMatches.Count > 0)
+                        {
+                            match = Match.Success("+", next, oomMatches);
+                        }
+                        if (match == null)
                         {
                             break;
                         }
@@ -17654,7 +16349,22 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Statements(next2)) == null)
+                        var oomMatches2 = new List<Match>();
+                        var oomNext2 = next2;
+                        while (true)
+                        {
+                            if ((match = Statement(oomNext2)) == null)
+                            {
+                                break;
+                            }
+                            oomMatches2.Add(match);
+                            oomNext2 = match.Next;
+                        }
+                        if (oomMatches2.Count > 0)
+                        {
+                            match = Match.Success("+", next2, oomMatches2);
+                        }
+                        if (match == null)
                         {
                             break;
                         }
@@ -17681,7 +16391,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_CaseLabel = 320;
+        protected const int Cache_CaseLabel = 312;
 
         public virtual Match CaseLabel(int start)
         {
@@ -17708,7 +16418,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_5_/*':'*/(next)) == null)
+                        if ((match = Lit_24_/*':'*/(next)) == null)
                         {
                             break;
                         }
@@ -17758,7 +16468,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_CaseItemList = 321;
+        protected const int Cache_CaseItemList = 313;
 
         public virtual Match CaseItemList(int start)
         {
@@ -17784,7 +16494,7 @@ namespace SixPeg.Pegger.Swift
                             var matches2 = new List<Match>();
                             while (true) // ---Sequence---
                             {
-                                if ((match = Lit_4_/*','*/(next2)) == null)
+                                if ((match = Lit_16_/*','*/(next2)) == null)
                                 {
                                     break;
                                 }
@@ -17811,7 +16521,7 @@ namespace SixPeg.Pegger.Swift
                         match = Match.Success("*", next, zomMatches);
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = And_(next, Lit_5_/*':'*/(next))) == null)
+                        if ((match = And_(next, Lit_24_/*':'*/(next))) == null)
                         {
                             break;
                         }
@@ -17844,7 +16554,7 @@ namespace SixPeg.Pegger.Swift
                             var matches4 = new List<Match>();
                             while (true) // ---Sequence---
                             {
-                                if ((match = Lit_4_/*','*/(next4)) == null)
+                                if ((match = Lit_16_/*','*/(next4)) == null)
                                 {
                                     break;
                                 }
@@ -17878,7 +16588,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Not_(next3, Lit_5_/*':'*/(next3))) == null)
+                        if ((match = Not_(next3, Lit_24_/*':'*/(next3))) == null)
                         {
                             break;
                         }
@@ -17931,7 +16641,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_CaseItem = 322;
+        protected const int Cache_CaseItem = 314;
 
         public virtual Match CaseItem(int start)
         {
@@ -17964,7 +16674,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_DefaultLabel = 323;
+        protected const int Cache_DefaultLabel = 315;
 
         public virtual Match DefaultLabel(int start)
         {
@@ -17983,7 +16693,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -18003,7 +16713,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ConditionalSwitchCase = 324;
+        protected const int Cache_ConditionalSwitchCase = 316;
 
         public virtual Match ConditionalSwitchCase(int start)
         {
@@ -18045,7 +16755,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchIfDirectiveClause = 325;
+        protected const int Cache_SwitchIfDirectiveClause = 317;
 
         public virtual Match SwitchIfDirectiveClause(int start)
         {
@@ -18084,7 +16794,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchElseifDirectiveClauses = 326;
+        protected const int Cache_SwitchElseifDirectiveClauses = 318;
 
         public virtual Match SwitchElseifDirectiveClauses(int start)
         {
@@ -18114,7 +16824,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SwitchElseDirectiveClause = 327;
+        protected const int Cache_SwitchElseDirectiveClause = 319;
 
         public virtual Match SwitchElseDirectiveClause(int start)
         {
@@ -18147,7 +16857,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_WhileStatement = 328;
+        protected const int Cache_WhileStatement = 320;
 
         public virtual Match WhileStatement(int start)
         {
@@ -18249,7 +16959,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Statement = 329;
+        protected const int Cache_Statement = 321;
 
         public virtual Match Statement(int start)
         {
@@ -18261,13 +16971,16 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = ControlTransferStatement(next)) == null)
+                        match = Match.Optional(next, StatementLabel(next));
+                        matches.Add(match);
+                        next = match.Next;
+                        if ((match = FamousStatement(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        match = Match.Optional(next, Lit_50_/*';'*/(next));
+                        match = Match.Optional(next, Lit_52_/*';'*/(next));
                         matches.Add(match);
                         break;
                     }
@@ -18279,242 +16992,7 @@ namespace SixPeg.Pegger.Swift
                     {
                         break;
                     }
-                    if ((match = CompilerControlStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    var next2 = start;
-                    var matches2 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = LoopStatement(next2)) == null)
-                        {
-                            break;
-                        }
-                        matches2.Add(match);
-                        next2 = match.Next;
-                        match = Match.Optional(next2, Lit_50_/*';'*/(next2));
-                        matches2.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches2);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next3 = start;
-                    var matches3 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = BranchStatement(next3)) == null)
-                        {
-                            break;
-                        }
-                        matches3.Add(match);
-                        next3 = match.Next;
-                        match = Match.Optional(next3, Lit_50_/*';'*/(next3));
-                        matches3.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches3);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next4 = start;
-                    var matches4 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = DoStatement(next4)) == null)
-                        {
-                            break;
-                        }
-                        matches4.Add(match);
-                        next4 = match.Next;
-                        match = Match.Optional(next4, Lit_50_/*';'*/(next4));
-                        matches4.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches4);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next5 = start;
-                    var matches5 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = DeferStatement(next5)) == null)
-                        {
-                            break;
-                        }
-                        matches5.Add(match);
-                        next5 = match.Next;
-                        match = Match.Optional(next5, Lit_50_/*';'*/(next5));
-                        matches5.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches5);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next6 = start;
-                    var matches6 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = LabeledStatement(next6)) == null)
-                        {
-                            break;
-                        }
-                        matches6.Add(match);
-                        next6 = match.Next;
-                        match = Match.Optional(next6, Lit_50_/*';'*/(next6));
-                        matches6.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches6);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next7 = start;
-                    var matches7 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Declaration(next7)) == null)
-                        {
-                            break;
-                        }
-                        matches7.Add(match);
-                        next7 = match.Next;
-                        match = Match.Optional(next7, Lit_50_/*';'*/(next7));
-                        matches7.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches7);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next8 = start;
-                    var matches8 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        while (true) // ---Choice---
-                        {
-                            var next9 = next8;
-                            var matches9 = new List<Match>();
-                            while (true) // ---Sequence---
-                            {
-                                if ((match = Lit_case(next9)) == null)
-                                {
-                                    break;
-                                }
-                                matches9.Add(match);
-                                next9 = match.Next;
-                                if ((match = Not_(next9, More(next9))) == null)
-                                {
-                                    break;
-                                }
-                                matches9.Add(match);
-                                break;
-                            }
-                            if (match != null)
-                            {
-                                match = Match.Success("_", next8, matches9);
-                            }
-                            if (match != null)
-                            {
-                                break;
-                            }
-                            var next10 = next8;
-                            var matches10 = new List<Match>();
-                            while (true) // ---Sequence---
-                            {
-                                if ((match = Lit_default(next10)) == null)
-                                {
-                                    break;
-                                }
-                                matches10.Add(match);
-                                next10 = match.Next;
-                                if ((match = Not_(next10, More(next10))) == null)
-                                {
-                                    break;
-                                }
-                                matches10.Add(match);
-                                break;
-                            }
-                            if (match != null)
-                            {
-                                match = Match.Success("_", next8, matches10);
-                            }
-                            break;
-                        }
-                        match = Not_(next8, match);
-                        if (match == null)
-                        {
-                            break;
-                        }
-                        matches8.Add(match);
-                        next8 = match.Next;
-                        if ((match = Expression(next8)) == null)
-                        {
-                            break;
-                        }
-                        matches8.Add(match);
-                        next8 = match.Next;
-                        match = Match.Optional(next8, Lit_50_/*';'*/(next8));
-                        matches8.Add(match);
-                        break;
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches8);
-                    }
-                    if (match != null)
-                    {
-                        break;
-                    }
-                    var next11 = start;
-                    var matches11 = new List<Match>();
-                    while (true) // ---Sequence---
-                    {
-                        if ((match = Lit_23_/*'{'*/(next11)) == null)
-                        {
-                            break;
-                        }
-                        matches11.Add(match);
-                        next11 = match.Next;
-                        {
-                            // >>> ERROR
-                            new Error(Context).Report("statement", next11);
-                            throw new BailOutException();
-                            // <<< ERROR
-                        }
-                    }
-                    if (match != null)
-                    {
-                        match = Match.Success("_", start, matches11);
-                    }
+                    match = CompilerControlStatement(start);
                     break;
                 }
                 if (match != null)
@@ -18526,7 +17004,159 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_CodeBlock = 330;
+        protected const int Cache_FamousStatement = 322;
+
+        public virtual Match FamousStatement(int start)
+        {
+            if (!Caches[Cache_FamousStatement].Already(start, out var match))
+            {
+                while (true) // ---Choice---
+                {
+                    if ((match = BreakStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = ContinueStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = FallthroughStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = ReturnStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = ThrowStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = ForInStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = WhileStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = RepeatWhileStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = IfStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = GuardStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = SwitchStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = DoStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = DeferStatement(start)) != null)
+                    {
+                        break;
+                    }
+                    if ((match = Declaration(start)) != null)
+                    {
+                        break;
+                    }
+                    var next = start;
+                    var matches = new List<Match>();
+                    while (true) // ---Sequence---
+                    {
+                        var next2 = next;
+                        var matches2 = new List<Match>();
+                        while (true) // ---Sequence---
+                        {
+                            while (true) // ---Choice---
+                            {
+                                if ((match = Lit_case(next2)) != null)
+                                {
+                                    break;
+                                }
+                                match = Lit_default(next2);
+                                break;
+                            }
+                            if (match == null)
+                            {
+                                break;
+                            }
+                            matches2.Add(match);
+                            next2 = match.Next;
+                            if ((match = Not_(next2, More(next2))) == null)
+                            {
+                                break;
+                            }
+                            matches2.Add(match);
+                            break;
+                        }
+                        if (match != null)
+                        {
+                            match = Match.Success("_", next, matches2);
+                        }
+                        match = Not_(next, match);
+                        if (match == null)
+                        {
+                            break;
+                        }
+                        matches.Add(match);
+                        next = match.Next;
+                        if ((match = Expression(next)) == null)
+                        {
+                            break;
+                        }
+                        matches.Add(match);
+                        break;
+                    }
+                    if (match != null)
+                    {
+                        match = Match.Success("_", start, matches);
+                    }
+                    if (match != null)
+                    {
+                        break;
+                    }
+                    var next3 = start;
+                    var matches3 = new List<Match>();
+                    while (true) // ---Sequence---
+                    {
+                        if ((match = Lit_21_/*'{'*/(next3)) == null)
+                        {
+                            break;
+                        }
+                        matches3.Add(match);
+                        next3 = match.Next;
+                        {
+                            // >>> ERROR
+                            new Error(Context).Report("statement", next3);
+                            throw new BailOutException();
+                            // <<< ERROR
+                        }
+                    }
+                    if (match != null)
+                    {
+                        match = Match.Success("_", start, matches3);
+                    }
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("FamousStatement", start, match);
+                }
+                Caches[Cache_FamousStatement].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_CodeBlock = 323;
 
         public virtual Match CodeBlock(int start)
         {
@@ -18538,16 +17168,27 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next)) == null)
+                        if ((match = Lit_21_/*'{'*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        match = Match.Optional(next, Statements(next));
+                        var zomMatches = new List<Match>();
+                        var zomNext = next;
+                        while (true)
+                        {
+                            if ((match = Statement(zomNext)) == null)
+                            {
+                                break;
+                            }
+                            zomMatches.Add(match);
+                            zomNext = match.Next;
+                        }
+                        match = Match.Success("*", next, zomMatches);
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_24_/*'}'*/(next)) == null)
+                        if ((match = Lit_22_/*'}'*/(next)) == null)
                         {
                             break;
                         }
@@ -18566,7 +17207,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_23_/*'{'*/(next2)) == null)
+                        if ((match = Lit_21_/*'{'*/(next2)) == null)
                         {
                             break;
                         }
@@ -18594,73 +17235,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Statements = 331;
-
-        public virtual Match Statements(int start)
-        {
-            if (!Caches[Cache_Statements].Already(start, out var match))
-            {
-                var oomMatches = new List<Match>();
-                var oomNext = start;
-                while (true)
-                {
-                    if ((match = Statement(oomNext)) == null)
-                    {
-                        break;
-                    }
-                    oomMatches.Add(match);
-                    oomNext = match.Next;
-                }
-                if (oomMatches.Count > 0)
-                {
-                    match = Match.Success("+", start, oomMatches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Statements", start, match);
-                }
-                Caches[Cache_Statements].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_ControlTransferStatement = 332;
-
-        public virtual Match ControlTransferStatement(int start)
-        {
-            if (!Caches[Cache_ControlTransferStatement].Already(start, out var match))
-            {
-                while (true) // ---Choice---
-                {
-                    if ((match = BreakStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    if ((match = ContinueStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    if ((match = FallthroughStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    if ((match = ReturnStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    match = ThrowStatement(start);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("ControlTransferStatement", start, match);
-                }
-                Caches[Cache_ControlTransferStatement].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_FallthroughStatement = 333;
+        protected const int Cache_FallthroughStatement = 324;
 
         public virtual Match FallthroughStatement(int start)
         {
@@ -18676,7 +17251,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ThrowStatement = 334;
+        protected const int Cache_ThrowStatement = 325;
 
         public virtual Match ThrowStatement(int start)
         {
@@ -18741,35 +17316,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_LoopStatement = 335;
-
-        public virtual Match LoopStatement(int start)
-        {
-            if (!Caches[Cache_LoopStatement].Already(start, out var match))
-            {
-                while (true) // ---Choice---
-                {
-                    if ((match = ForInStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    if ((match = WhileStatement(start)) != null)
-                    {
-                        break;
-                    }
-                    match = RepeatWhileStatement(start);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("LoopStatement", start, match);
-                }
-                Caches[Cache_LoopStatement].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_ForInStatement = 336;
+        protected const int Cache_ForInStatement = 326;
 
         public virtual Match ForInStatement(int start)
         {
@@ -18829,7 +17376,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_RepeatWhileStatement = 337;
+        protected const int Cache_RepeatWhileStatement = 327;
 
         public virtual Match RepeatWhileStatement(int start)
         {
@@ -18877,35 +17424,282 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_BranchStatement = 338;
+        protected const int Cache_DoStatement = 328;
 
-        public virtual Match BranchStatement(int start)
+        public virtual Match DoStatement(int start)
         {
-            if (!Caches[Cache_BranchStatement].Already(start, out var match))
+            if (!Caches[Cache_DoStatement].Already(start, out var match))
             {
-                while (true) // ---Choice---
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
                 {
-                    if ((match = IfStatement(start)) != null)
+                    if ((match = Lit_do(next)) == null)
                     {
                         break;
                     }
-                    if ((match = GuardStatement(start)) != null)
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CodeBlock(next)) == null)
                     {
                         break;
                     }
-                    match = SwitchStatement(start);
+                    matches.Add(match);
+                    next = match.Next;
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        if ((match = CatchClause(zomNext)) == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
+                    matches.Add(match);
                     break;
                 }
                 if (match != null)
                 {
-                    match = Match.Success("BranchStatement", start, match);
+                    match = Match.Success("_", start, matches);
                 }
-                Caches[Cache_BranchStatement].Cache(start, match);
+                if (match != null)
+                {
+                    match = Match.Success("DoStatement", start, match);
+                }
+                Caches[Cache_DoStatement].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_WhereClause = 339;
+        protected const int Cache_CatchClause = 329;
+
+        public virtual Match CatchClause(int start)
+        {
+            if (!Caches[Cache_CatchClause].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = Lit_catch(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    match = Match.Optional(next, CatchPatternList(next));
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CodeBlock(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("CatchClause", start, match);
+                }
+                Caches[Cache_CatchClause].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_CatchPatternList = 330;
+
+        public virtual Match CatchPatternList(int start)
+        {
+            if (!Caches[Cache_CatchPatternList].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = CatchPattern(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    var zomMatches = new List<Match>();
+                    var zomNext = next;
+                    while (true)
+                    {
+                        var next2 = zomNext;
+                        var matches2 = new List<Match>();
+                        while (true) // ---Sequence---
+                        {
+                            if ((match = Lit_16_/*','*/(next2)) == null)
+                            {
+                                break;
+                            }
+                            matches2.Add(match);
+                            next2 = match.Next;
+                            if ((match = CatchPattern(next2)) == null)
+                            {
+                                break;
+                            }
+                            matches2.Add(match);
+                            break;
+                        }
+                        if (match != null)
+                        {
+                            match = Match.Success("_", zomNext, matches2);
+                        }
+                        if (match == null)
+                        {
+                            break;
+                        }
+                        zomMatches.Add(match);
+                        zomNext = match.Next;
+                    }
+                    match = Match.Success("*", next, zomMatches);
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("CatchPatternList", start, match);
+                }
+                Caches[Cache_CatchPatternList].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_CatchPattern = 331;
+
+        public virtual Match CatchPattern(int start)
+        {
+            if (!Caches[Cache_CatchPattern].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = Pattern(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    match = Match.Optional(next, WhereClause(next));
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("CatchPattern", start, match);
+                }
+                Caches[Cache_CatchPattern].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_DeferStatement = 332;
+
+        public virtual Match DeferStatement(int start)
+        {
+            if (!Caches[Cache_DeferStatement].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = Lit_defer(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CodeBlock(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("DeferStatement", start, match);
+                }
+                Caches[Cache_DeferStatement].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_StatementLabel = 333;
+
+        public virtual Match StatementLabel(int start)
+        {
+            if (!Caches[Cache_StatementLabel].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    if ((match = LabelName(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = Lit_24_/*':'*/(next)) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("StatementLabel", start, match);
+                }
+                Caches[Cache_StatementLabel].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_LabelName = 334;
+
+        public virtual Match LabelName(int start)
+        {
+            if (!Caches[Cache_LabelName].Already(start, out var match))
+            {
+                match = Name(start);
+                if (match != null)
+                {
+                    match = Match.Success("LabelName", start, match);
+                }
+                Caches[Cache_LabelName].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_WhereClause = 335;
 
         public virtual Match WhereClause(int start)
         {
@@ -18941,7 +17735,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_WhereExpression = 340;
+        protected const int Cache_WhereExpression = 336;
 
         public virtual Match WhereExpression(int start)
         {
@@ -18957,7 +17751,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TupleType = 341;
+        protected const int Cache_TupleType = 337;
 
         public virtual Match TupleType(int start)
         {
@@ -18969,13 +17763,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -18994,7 +17788,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -19006,7 +17800,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -19028,7 +17822,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TupleTypeElementList = 342;
+        protected const int Cache_TupleTypeElementList = 338;
 
         public virtual Match TupleTypeElementList(int start)
         {
@@ -19054,7 +17848,7 @@ namespace SixPeg.Pegger.Swift
                             var matches2 = new List<Match>();
                             while (true) // ---Sequence---
                             {
-                                if ((match = Lit_4_/*','*/(next2)) == null)
+                                if ((match = Lit_16_/*','*/(next2)) == null)
                                 {
                                     break;
                                 }
@@ -19107,7 +17901,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches3.Add(match);
                         next3 = match.Next;
-                        if ((match = Lit_4_/*','*/(next3)) == null)
+                        if ((match = Lit_16_/*','*/(next3)) == null)
                         {
                             break;
                         }
@@ -19135,7 +17929,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TupleTypeElement = 343;
+        protected const int Cache_TupleTypeElement = 339;
 
         public virtual Match TupleTypeElement(int start)
         {
@@ -19180,7 +17974,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ElementName = 344;
+        protected const int Cache_ElementName = 340;
 
         public virtual Match ElementName(int start)
         {
@@ -19196,7 +17990,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_EnumTupleType = 345;
+        protected const int Cache_EnumTupleType = 341;
 
         public virtual Match EnumTupleType(int start)
         {
@@ -19212,7 +18006,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -19224,7 +18018,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -19246,7 +18040,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Type = 346;
+        protected const int Cache_Type = 342;
 
         public virtual Match Type(int start)
         {
@@ -19290,7 +18084,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_PrimaryType = 347;
+        protected const int Cache_PrimaryType = 343;
 
         public virtual Match PrimaryType(int start)
         {
@@ -19338,7 +18132,7 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
@@ -19350,7 +18144,7 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -19372,7 +18166,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypePostfix = 348;
+        protected const int Cache_TypePostfix = 344;
 
         public virtual Match TypePostfix(int start)
         {
@@ -19400,7 +18194,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeOptional = 349;
+        protected const int Cache_TypeOptional = 345;
 
         public virtual Match TypeOptional(int start)
         {
@@ -19416,7 +18210,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeUnwrap = 350;
+        protected const int Cache_TypeUnwrap = 346;
 
         public virtual Match TypeUnwrap(int start)
         {
@@ -19432,7 +18226,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeMetatype = 351;
+        protected const int Cache_TypeMetatype = 347;
 
         public virtual Match TypeMetatype(int start)
         {
@@ -19442,7 +18236,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_16_/*'.'*/(next)) == null)
+                    if ((match = Lit_dot_(next)) == null)
                     {
                         break;
                     }
@@ -19518,7 +18312,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_FunctionType = 352;
+        protected const int Cache_FunctionType = 348;
 
         public virtual Match FunctionType(int start)
         {
@@ -19540,7 +18334,7 @@ namespace SixPeg.Pegger.Swift
                     match = Match.Optional(next, Lit_throws(next));
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_26_/*'->'*/(next)) == null)
+                    if ((match = Lit_23_/*'->'*/(next)) == null)
                     {
                         break;
                     }
@@ -19566,7 +18360,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_FunctionTypeArgumentClause = 353;
+        protected const int Cache_FunctionTypeArgumentClause = 349;
 
         public virtual Match FunctionTypeArgumentClause(int start)
         {
@@ -19578,13 +18372,13 @@ namespace SixPeg.Pegger.Swift
                     var matches = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next)) == null)
+                        if ((match = Lit_1_/*'('*/(next)) == null)
                         {
                             break;
                         }
                         matches.Add(match);
                         next = match.Next;
-                        if ((match = Lit_3_/*')'*/(next)) == null)
+                        if ((match = Lit_2_/*')'*/(next)) == null)
                         {
                             break;
                         }
@@ -19603,7 +18397,7 @@ namespace SixPeg.Pegger.Swift
                     var matches2 = new List<Match>();
                     while (true) // ---Sequence---
                     {
-                        if ((match = Lit_2_/*'('*/(next2)) == null)
+                        if ((match = Lit_1_/*'('*/(next2)) == null)
                         {
                             break;
                         }
@@ -19615,10 +18409,10 @@ namespace SixPeg.Pegger.Swift
                         }
                         matches2.Add(match);
                         next2 = match.Next;
-                        match = Match.Optional(next2, Lit_25_/*'...'*/(next2));
+                        match = Match.Optional(next2, Lit_dot_dot_dot_(next2));
                         matches2.Add(match);
                         next2 = match.Next;
-                        if ((match = Lit_3_/*')'*/(next2)) == null)
+                        if ((match = Lit_2_/*')'*/(next2)) == null)
                         {
                             break;
                         }
@@ -19640,7 +18434,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_FunctionTypeArgumentList = 354;
+        protected const int Cache_FunctionTypeArgumentList = 350;
 
         public virtual Match FunctionTypeArgumentList(int start)
         {
@@ -19664,7 +18458,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -19705,7 +18499,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_FunctionTypeArgument = 355;
+        protected const int Cache_FunctionTypeArgument = 351;
 
         public virtual Match FunctionTypeArgument(int start)
         {
@@ -19801,7 +18595,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ArgumentLabel = 356;
+        protected const int Cache_ArgumentLabel = 352;
 
         public virtual Match ArgumentLabel(int start)
         {
@@ -19817,7 +18611,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ArrayType = 357;
+        protected const int Cache_ArrayType = 353;
 
         public virtual Match ArrayType(int start)
         {
@@ -19859,7 +18653,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_DictionaryType = 358;
+        protected const int Cache_DictionaryType = 354;
 
         public virtual Match DictionaryType(int start)
         {
@@ -19881,7 +18675,7 @@ namespace SixPeg.Pegger.Swift
                     }
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -19913,7 +18707,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeIdentifier = 359;
+        protected const int Cache_TypeIdentifier = 355;
 
         public virtual Match TypeIdentifier(int start)
         {
@@ -19937,7 +18731,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_16_/*'.'*/(next2)) == null)
+                            if ((match = Lit_dot_(next2)) == null)
                             {
                                 break;
                             }
@@ -19978,7 +18772,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeIdentifierPart = 360;
+        protected const int Cache_TypeIdentifierPart = 356;
 
         public virtual Match TypeIdentifierPart(int start)
         {
@@ -20011,7 +18805,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_ProtocolCompositionType = 361;
+        protected const int Cache_ProtocolCompositionType = 357;
 
         public virtual Match ProtocolCompositionType(int start)
         {
@@ -20089,7 +18883,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_OpaqueType = 362;
+        protected const int Cache_OpaqueType = 358;
 
         public virtual Match OpaqueType(int start)
         {
@@ -20131,7 +18925,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_AnyType = 363;
+        protected const int Cache_AnyType = 359;
 
         public virtual Match AnyType(int start)
         {
@@ -20167,7 +18961,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SelfType = 364;
+        protected const int Cache_SelfType = 360;
 
         public virtual Match SelfType(int start)
         {
@@ -20203,7 +18997,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeName = 365;
+        protected const int Cache_TypeName = 361;
 
         public virtual Match TypeName(int start)
         {
@@ -20219,7 +19013,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeInheritanceClause = 366;
+        protected const int Cache_TypeInheritanceClause = 362;
 
         public virtual Match TypeInheritanceClause(int start)
         {
@@ -20229,7 +19023,7 @@ namespace SixPeg.Pegger.Swift
                 var matches = new List<Match>();
                 while (true) // ---Sequence---
                 {
-                    if ((match = Lit_5_/*':'*/(next)) == null)
+                    if ((match = Lit_24_/*':'*/(next)) == null)
                     {
                         break;
                     }
@@ -20255,7 +19049,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_TypeInheritanceList = 367;
+        protected const int Cache_TypeInheritanceList = 363;
 
         public virtual Match TypeInheritanceList(int start)
         {
@@ -20279,7 +19073,7 @@ namespace SixPeg.Pegger.Swift
                         var matches2 = new List<Match>();
                         while (true) // ---Sequence---
                         {
-                            if ((match = Lit_4_/*','*/(next2)) == null)
+                            if ((match = Lit_16_/*','*/(next2)) == null)
                             {
                                 break;
                             }
@@ -20331,7 +19125,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_SingleWhitespace = 369;
+        protected const int Cache_SingleWhitespace = 365;
 
         public virtual Match SingleWhitespace(int start)
         {
@@ -20692,11 +19486,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_1_/*'@'*/ = 381;
+        protected const int Cache_Lit_at_ = 377;
 
-        public virtual Match Lit_1_/*'@'*/(int start)
+        public virtual Match Lit_at_(int start)
         {
-            if (!Caches[Cache_Lit_1_/*'@'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_at_].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -20718,1544 +19512,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_1_/*\'@\'*/", start, match);
+                    match = Match.Success("Lit_at_", start, match);
                 }
-                Caches[Cache_Lit_1_/*'@'*/].Cache(start, match);
+                Caches[Cache_Lit_at_].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_inlinable = 382;
-
-        public virtual Match Lit_inlinable(int start)
-        {
-            if (!Caches[Cache_Lit_inlinable].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "inlinable")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_inlinable", start, match);
-                }
-                Caches[Cache_Lit_inlinable].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_frozen = 383;
-
-        public virtual Match Lit_frozen(int start)
-        {
-            if (!Caches[Cache_Lit_frozen].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "frozen")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_frozen", start, match);
-                }
-                Caches[Cache_Lit_frozen].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_escaping = 384;
-
-        public virtual Match Lit_escaping(int start)
-        {
-            if (!Caches[Cache_Lit_escaping].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "escaping")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_escaping", start, match);
-                }
-                Caches[Cache_Lit_escaping].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_autoclosure = 385;
-
-        public virtual Match Lit_autoclosure(int start)
-        {
-            if (!Caches[Cache_Lit_autoclosure].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "autoclosure")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_autoclosure", start, match);
-                }
-                Caches[Cache_Lit_autoclosure].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_usableFromInline = 386;
-
-        public virtual Match Lit_usableFromInline(int start)
-        {
-            if (!Caches[Cache_Lit_usableFromInline].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "usableFromInline")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_usableFromInline", start, match);
-                }
-                Caches[Cache_Lit_usableFromInline].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_discardableResult = 387;
-
-        public virtual Match Lit_discardableResult(int start)
-        {
-            if (!Caches[Cache_Lit_discardableResult].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "discardableResult")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_discardableResult", start, match);
-                }
-                Caches[Cache_Lit_discardableResult].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_nonobjc = 388;
-
-        public virtual Match Lit_nonobjc(int start)
-        {
-            if (!Caches[Cache_Lit_nonobjc].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "nonobjc")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_nonobjc", start, match);
-                }
-                Caches[Cache_Lit_nonobjc].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_unknown = 389;
-
-        public virtual Match Lit_unknown(int start)
-        {
-            if (!Caches[Cache_Lit_unknown].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "unknown")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_unknown", start, match);
-                }
-                Caches[Cache_Lit_unknown].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_inline = 390;
-
-        public virtual Match Lit_inline(int start)
-        {
-            if (!Caches[Cache_Lit_inline].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "inline")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_inline", start, match);
-                }
-                Caches[Cache_Lit_inline].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_2_/*'('*/ = 391;
-
-        public virtual Match Lit_2_/*'('*/(int start)
-        {
-            if (!Caches[Cache_Lit_2_/*'('*/].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, '(')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_2_/*\'(\'*/", start, match);
-                }
-                Caches[Cache_Lit_2_/*'('*/].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_never = 392;
-
-        public virtual Match Lit_never(int start)
-        {
-            if (!Caches[Cache_Lit_never].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "never")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_never", start, match);
-                }
-                Caches[Cache_Lit_never].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit___always = 393;
-
-        public virtual Match Lit___always(int start)
-        {
-            if (!Caches[Cache_Lit___always].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "__always")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit___always", start, match);
-                }
-                Caches[Cache_Lit___always].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_3_/*')'*/ = 394;
-
-        public virtual Match Lit_3_/*')'*/(int start)
-        {
-            if (!Caches[Cache_Lit_3_/*')'*/].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, ')')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_3_/*\')\'*/", start, match);
-                }
-                Caches[Cache_Lit_3_/*')'*/].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_available = 395;
-
-        public virtual Match Lit_available(int start)
-        {
-            if (!Caches[Cache_Lit_available].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "available")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_available", start, match);
-                }
-                Caches[Cache_Lit_available].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_4_/*','*/ = 396;
-
-        public virtual Match Lit_4_/*','*/(int start)
-        {
-            if (!Caches[Cache_Lit_4_/*','*/].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, ',')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_4_/*\',\'*/", start, match);
-                }
-                Caches[Cache_Lit_4_/*','*/].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_5_/*':'*/ = 397;
-
-        public virtual Match Lit_5_/*':'*/(int start)
-        {
-            if (!Caches[Cache_Lit_5_/*':'*/].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, ':')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_5_/*\':\'*/", start, match);
-                }
-                Caches[Cache_Lit_5_/*':'*/].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_6_/*'*'*/ = 398;
-
-        public virtual Match Lit_6_/*'*'*/(int start)
-        {
-            if (!Caches[Cache_Lit_6_/*'*'*/].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, '*')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_6_/*\'*\'*/", start, match);
-                }
-                Caches[Cache_Lit_6_/*'*'*/].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_convention = 399;
-
-        public virtual Match Lit_convention(int start)
-        {
-            if (!Caches[Cache_Lit_convention].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "convention")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_convention", start, match);
-                }
-                Caches[Cache_Lit_convention].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_block = 400;
-
-        public virtual Match Lit_block(int start)
-        {
-            if (!Caches[Cache_Lit_block].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "block")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_block", start, match);
-                }
-                Caches[Cache_Lit_block].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_thin = 401;
-
-        public virtual Match Lit_thin(int start)
-        {
-            if (!Caches[Cache_Lit_thin].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "thin")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_thin", start, match);
-                }
-                Caches[Cache_Lit_thin].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_c = 402;
-
-        public virtual Match Lit_c(int start)
-        {
-            if (!Caches[Cache_Lit_c].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterExact_(next, 'c')) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_c", start, match);
-                }
-                Caches[Cache_Lit_c].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_objc = 403;
-
-        public virtual Match Lit_objc(int start)
-        {
-            if (!Caches[Cache_Lit_objc].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "objc")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_objc", start, match);
-                }
-                Caches[Cache_Lit_objc].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__show_in_interface = 404;
-
-        public virtual Match Lit__show_in_interface(int start)
-        {
-            if (!Caches[Cache_Lit__show_in_interface].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_show_in_interface")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__show_in_interface", start, match);
-                }
-                Caches[Cache_Lit__show_in_interface].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__fixed_layout = 405;
-
-        public virtual Match Lit__fixed_layout(int start)
-        {
-            if (!Caches[Cache_Lit__fixed_layout].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_fixed_layout")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__fixed_layout", start, match);
-                }
-                Caches[Cache_Lit__fixed_layout].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__nonoverride = 406;
-
-        public virtual Match Lit__nonoverride(int start)
-        {
-            if (!Caches[Cache_Lit__nonoverride].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_nonoverride")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__nonoverride", start, match);
-                }
-                Caches[Cache_Lit__nonoverride].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__borrowed = 407;
-
-        public virtual Match Lit__borrowed(int start)
-        {
-            if (!Caches[Cache_Lit__borrowed].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_borrowed")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__borrowed", start, match);
-                }
-                Caches[Cache_Lit__borrowed].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__transparent = 408;
-
-        public virtual Match Lit__transparent(int start)
-        {
-            if (!Caches[Cache_Lit__transparent].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_transparent")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__transparent", start, match);
-                }
-                Caches[Cache_Lit__transparent].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__nonEphemeral = 409;
-
-        public virtual Match Lit__nonEphemeral(int start)
-        {
-            if (!Caches[Cache_Lit__nonEphemeral].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_nonEphemeral")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__nonEphemeral", start, match);
-                }
-                Caches[Cache_Lit__nonEphemeral].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__alwaysEmitIntoClient = 410;
-
-        public virtual Match Lit__alwaysEmitIntoClient(int start)
-        {
-            if (!Caches[Cache_Lit__alwaysEmitIntoClient].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_alwaysEmitIntoClient")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__alwaysEmitIntoClient", start, match);
-                }
-                Caches[Cache_Lit__alwaysEmitIntoClient].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__objc_non_lazy_realization = 411;
-
-        public virtual Match Lit__objc_non_lazy_realization(int start)
-        {
-            if (!Caches[Cache_Lit__objc_non_lazy_realization].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_objc_non_lazy_realization")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__objc_non_lazy_realization", start, match);
-                }
-                Caches[Cache_Lit__objc_non_lazy_realization].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__implements = 412;
-
-        public virtual Match Lit__implements(int start)
-        {
-            if (!Caches[Cache_Lit__implements].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_implements")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__implements", start, match);
-                }
-                Caches[Cache_Lit__implements].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__specialize = 413;
-
-        public virtual Match Lit__specialize(int start)
-        {
-            if (!Caches[Cache_Lit__specialize].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_specialize")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__specialize", start, match);
-                }
-                Caches[Cache_Lit__specialize].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__effects = 414;
-
-        public virtual Match Lit__effects(int start)
-        {
-            if (!Caches[Cache_Lit__effects].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_effects")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__effects", start, match);
-                }
-                Caches[Cache_Lit__effects].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_readnone = 415;
-
-        public virtual Match Lit_readnone(int start)
-        {
-            if (!Caches[Cache_Lit_readnone].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "readnone")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_readnone", start, match);
-                }
-                Caches[Cache_Lit_readnone].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_readonly = 416;
-
-        public virtual Match Lit_readonly(int start)
-        {
-            if (!Caches[Cache_Lit_readonly].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "readonly")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_readonly", start, match);
-                }
-                Caches[Cache_Lit_readonly].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_releasenone = 417;
-
-        public virtual Match Lit_releasenone(int start)
-        {
-            if (!Caches[Cache_Lit_releasenone].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "releasenone")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_releasenone", start, match);
-                }
-                Caches[Cache_Lit_releasenone].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__silgen_name = 418;
-
-        public virtual Match Lit__silgen_name(int start)
-        {
-            if (!Caches[Cache_Lit__silgen_name].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_silgen_name")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__silgen_name", start, match);
-                }
-                Caches[Cache_Lit__silgen_name].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__semantics = 419;
-
-        public virtual Match Lit__semantics(int start)
-        {
-            if (!Caches[Cache_Lit__semantics].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_semantics")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__semantics", start, match);
-                }
-                Caches[Cache_Lit__semantics].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__objcRuntimeName = 420;
-
-        public virtual Match Lit__objcRuntimeName(int start)
-        {
-            if (!Caches[Cache_Lit__objcRuntimeName].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_objcRuntimeName")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__objcRuntimeName", start, match);
-                }
-                Caches[Cache_Lit__objcRuntimeName].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit__cdecl = 421;
-
-        public virtual Match Lit__cdecl(int start)
-        {
-            if (!Caches[Cache_Lit__cdecl].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "_cdecl")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit__cdecl", start, match);
-                }
-                Caches[Cache_Lit__cdecl].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_class = 422;
+        protected const int Cache_Lit_class = 378;
 
         public virtual Match Lit_class(int start)
         {
@@ -22294,7 +19558,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_convenience = 423;
+        protected const int Cache_Lit_convenience = 379;
 
         public virtual Match Lit_convenience(int start)
         {
@@ -22333,7 +19597,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_dynamic = 424;
+        protected const int Cache_Lit_dynamic = 380;
 
         public virtual Match Lit_dynamic(int start)
         {
@@ -22372,7 +19636,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_final = 425;
+        protected const int Cache_Lit_final = 381;
 
         public virtual Match Lit_final(int start)
         {
@@ -22411,7 +19675,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_infix = 426;
+        protected const int Cache_Lit_infix = 382;
 
         public virtual Match Lit_infix(int start)
         {
@@ -22450,7 +19714,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_lazy = 427;
+        protected const int Cache_Lit_lazy = 383;
 
         public virtual Match Lit_lazy(int start)
         {
@@ -22489,7 +19753,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_optional = 428;
+        protected const int Cache_Lit_optional = 384;
 
         public virtual Match Lit_optional(int start)
         {
@@ -22528,7 +19792,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_override = 429;
+        protected const int Cache_Lit_override = 385;
 
         public virtual Match Lit_override(int start)
         {
@@ -22567,7 +19831,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_postfix = 430;
+        protected const int Cache_Lit_postfix = 386;
 
         public virtual Match Lit_postfix(int start)
         {
@@ -22606,7 +19870,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_prefix = 431;
+        protected const int Cache_Lit_prefix = 387;
 
         public virtual Match Lit_prefix(int start)
         {
@@ -22645,7 +19909,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_required = 432;
+        protected const int Cache_Lit_required = 388;
 
         public virtual Match Lit_required(int start)
         {
@@ -22684,7 +19948,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_static = 433;
+        protected const int Cache_Lit_static = 389;
 
         public virtual Match Lit_static(int start)
         {
@@ -22723,7 +19987,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_unowned = 434;
+        protected const int Cache_Lit_unowned = 390;
 
         public virtual Match Lit_unowned(int start)
         {
@@ -22762,7 +20026,40 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_safe = 435;
+        protected const int Cache_Lit_1_/*'('*/ = 391;
+
+        public virtual Match Lit_1_/*'('*/(int start)
+        {
+            if (!Caches[Cache_Lit_1_/*'('*/].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterExact_(next, '(')) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_1_/*\'(\'*/", start, match);
+                }
+                Caches[Cache_Lit_1_/*'('*/].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_safe = 392;
 
         public virtual Match Lit_safe(int start)
         {
@@ -22801,7 +20098,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_unsafe = 436;
+        protected const int Cache_Lit_unsafe = 393;
 
         public virtual Match Lit_unsafe(int start)
         {
@@ -22840,7 +20137,40 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_weak = 437;
+        protected const int Cache_Lit_2_/*')'*/ = 394;
+
+        public virtual Match Lit_2_/*')'*/(int start)
+        {
+            if (!Caches[Cache_Lit_2_/*')'*/].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterExact_(next, ')')) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_2_/*\')\'*/", start, match);
+                }
+                Caches[Cache_Lit_2_/*')'*/].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_weak = 395;
 
         public virtual Match Lit_weak(int start)
         {
@@ -22879,11 +20209,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit___consuming = 438;
+        protected const int Cache_Lit_3_/*'__consuming'*/ = 396;
 
-        public virtual Match Lit___consuming(int start)
+        public virtual Match Lit_3_/*'__consuming'*/(int start)
         {
-            if (!Caches[Cache_Lit___consuming].Already(start, out var match))
+            if (!Caches[Cache_Lit_3_/*'__consuming'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -22911,14 +20241,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit___consuming", start, match);
+                    match = Match.Success("Lit_3_/*\'__consuming\'*/", start, match);
                 }
-                Caches[Cache_Lit___consuming].Cache(start, match);
+                Caches[Cache_Lit_3_/*'__consuming'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_set = 439;
+        protected const int Cache_Lit_set = 397;
 
         public virtual Match Lit_set(int start)
         {
@@ -22957,7 +20287,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_private = 440;
+        protected const int Cache_Lit_private = 398;
 
         public virtual Match Lit_private(int start)
         {
@@ -22996,7 +20326,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_fileprivate = 441;
+        protected const int Cache_Lit_fileprivate = 399;
 
         public virtual Match Lit_fileprivate(int start)
         {
@@ -23035,7 +20365,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_internal = 442;
+        protected const int Cache_Lit_internal = 400;
 
         public virtual Match Lit_internal(int start)
         {
@@ -23074,7 +20404,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_public = 443;
+        protected const int Cache_Lit_public = 401;
 
         public virtual Match Lit_public(int start)
         {
@@ -23113,7 +20443,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_open = 444;
+        protected const int Cache_Lit_open = 402;
 
         public virtual Match Lit_open(int start)
         {
@@ -23152,7 +20482,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_mutating = 445;
+        protected const int Cache_Lit_mutating = 403;
 
         public virtual Match Lit_mutating(int start)
         {
@@ -23191,7 +20521,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_nonmutating = 446;
+        protected const int Cache_Lit_nonmutating = 404;
 
         public virtual Match Lit_nonmutating(int start)
         {
@@ -23230,11 +20560,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_7_/*'#if'*/ = 447;
+        protected const int Cache_Lit_4_/*'#'*/ = 405;
 
-        public virtual Match Lit_7_/*'#if'*/(int start)
+        public virtual Match Lit_4_/*'#'*/(int start)
         {
-            if (!Caches[Cache_Lit_7_/*'#if'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_4_/*'#'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23243,7 +20573,7 @@ namespace SixPeg.Pegger.Swift
                     match = _(next);
                     matches.Add(match);
                     next = match.Next;
-                    if ((match = CharacterSequence_(next, "#if")) == null)
+                    if ((match = CharacterExact_(next, '#')) == null)
                     {
                         break;
                     }
@@ -23256,18 +20586,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_7_/*\'#if\'*/", start, match);
+                    match = Match.Success("Lit_4_/*\'#\'*/", start, match);
                 }
-                Caches[Cache_Lit_7_/*'#if'*/].Cache(start, match);
+                Caches[Cache_Lit_4_/*'#'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_8_/*'#elseif'*/ = 448;
+        protected const int Cache_Lit_5_/*'#elseif'*/ = 406;
 
-        public virtual Match Lit_8_/*'#elseif'*/(int start)
+        public virtual Match Lit_5_/*'#elseif'*/(int start)
         {
-            if (!Caches[Cache_Lit_8_/*'#elseif'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_5_/*'#elseif'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23289,18 +20619,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_8_/*\'#elseif\'*/", start, match);
+                    match = Match.Success("Lit_5_/*\'#elseif\'*/", start, match);
                 }
-                Caches[Cache_Lit_8_/*'#elseif'*/].Cache(start, match);
+                Caches[Cache_Lit_5_/*'#elseif'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_9_/*'#else'*/ = 449;
+        protected const int Cache_Lit_6_/*'#else'*/ = 407;
 
-        public virtual Match Lit_9_/*'#else'*/(int start)
+        public virtual Match Lit_6_/*'#else'*/(int start)
         {
-            if (!Caches[Cache_Lit_9_/*'#else'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_6_/*'#else'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23322,18 +20652,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_9_/*\'#else\'*/", start, match);
+                    match = Match.Success("Lit_6_/*\'#else\'*/", start, match);
                 }
-                Caches[Cache_Lit_9_/*'#else'*/].Cache(start, match);
+                Caches[Cache_Lit_6_/*'#else'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_10_/*'#endif'*/ = 450;
+        protected const int Cache_Lit_7_/*'#endif'*/ = 408;
 
-        public virtual Match Lit_10_/*'#endif'*/(int start)
+        public virtual Match Lit_7_/*'#endif'*/(int start)
         {
-            if (!Caches[Cache_Lit_10_/*'#endif'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_7_/*'#endif'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23355,18 +20685,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_10_/*\'#endif\'*/", start, match);
+                    match = Match.Success("Lit_7_/*\'#endif\'*/", start, match);
                 }
-                Caches[Cache_Lit_10_/*'#endif'*/].Cache(start, match);
+                Caches[Cache_Lit_7_/*'#endif'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_11_/*'!'*/ = 451;
+        protected const int Cache_Lit_8_/*'!'*/ = 409;
 
-        public virtual Match Lit_11_/*'!'*/(int start)
+        public virtual Match Lit_8_/*'!'*/(int start)
         {
-            if (!Caches[Cache_Lit_11_/*'!'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_8_/*'!'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23388,18 +20718,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_11_/*\'!\'*/", start, match);
+                    match = Match.Success("Lit_8_/*\'!\'*/", start, match);
                 }
-                Caches[Cache_Lit_11_/*'!'*/].Cache(start, match);
+                Caches[Cache_Lit_8_/*'!'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_12_/*'||'*/ = 452;
+        protected const int Cache_Lit_9_/*'||'*/ = 410;
 
-        public virtual Match Lit_12_/*'||'*/(int start)
+        public virtual Match Lit_9_/*'||'*/(int start)
         {
-            if (!Caches[Cache_Lit_12_/*'||'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_9_/*'||'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23421,18 +20751,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_12_/*\'||\'*/", start, match);
+                    match = Match.Success("Lit_9_/*\'||\'*/", start, match);
                 }
-                Caches[Cache_Lit_12_/*'||'*/].Cache(start, match);
+                Caches[Cache_Lit_9_/*'||'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_13_/*'&&'*/ = 453;
+        protected const int Cache_Lit_10_/*'&&'*/ = 411;
 
-        public virtual Match Lit_13_/*'&&'*/(int start)
+        public virtual Match Lit_10_/*'&&'*/(int start)
         {
-            if (!Caches[Cache_Lit_13_/*'&&'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_10_/*'&&'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23454,14 +20784,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_13_/*\'&&\'*/", start, match);
+                    match = Match.Success("Lit_10_/*\'&&\'*/", start, match);
                 }
-                Caches[Cache_Lit_13_/*'&&'*/].Cache(start, match);
+                Caches[Cache_Lit_10_/*'&&'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_os = 454;
+        protected const int Cache_Lit_os = 412;
 
         public virtual Match Lit_os(int start)
         {
@@ -23500,7 +20830,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_arch = 455;
+        protected const int Cache_Lit_arch = 413;
 
         public virtual Match Lit_arch(int start)
         {
@@ -23539,7 +20869,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_swift = 456;
+        protected const int Cache_Lit_swift = 414;
 
         public virtual Match Lit_swift(int start)
         {
@@ -23578,11 +20908,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_14_/*'>='*/ = 457;
+        protected const int Cache_Lit_11_/*'>='*/ = 415;
 
-        public virtual Match Lit_14_/*'>='*/(int start)
+        public virtual Match Lit_11_/*'>='*/(int start)
         {
-            if (!Caches[Cache_Lit_14_/*'>='*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_11_/*'>='*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23604,18 +20934,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_14_/*\'>=\'*/", start, match);
+                    match = Match.Success("Lit_11_/*\'>=\'*/", start, match);
                 }
-                Caches[Cache_Lit_14_/*'>='*/].Cache(start, match);
+                Caches[Cache_Lit_11_/*'>='*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_15_/*'<'*/ = 458;
+        protected const int Cache_Lit_12_/*'<'*/ = 416;
 
-        public virtual Match Lit_15_/*'<'*/(int start)
+        public virtual Match Lit_12_/*'<'*/(int start)
         {
-            if (!Caches[Cache_Lit_15_/*'<'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_12_/*'<'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -23637,14 +20967,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_15_/*\'<\'*/", start, match);
+                    match = Match.Success("Lit_12_/*\'<\'*/", start, match);
                 }
-                Caches[Cache_Lit_15_/*'<'*/].Cache(start, match);
+                Caches[Cache_Lit_12_/*'<'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_compiler = 459;
+        protected const int Cache_Lit_compiler = 417;
 
         public virtual Match Lit_compiler(int start)
         {
@@ -23683,7 +21013,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_canImport = 460;
+        protected const int Cache_Lit_canImport = 418;
 
         public virtual Match Lit_canImport(int start)
         {
@@ -23722,7 +21052,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_targetEnvironment = 461;
+        protected const int Cache_Lit_targetEnvironment = 419;
 
         public virtual Match Lit_targetEnvironment(int start)
         {
@@ -23761,7 +21091,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_macOS = 462;
+        protected const int Cache_Lit_macOS = 420;
 
         public virtual Match Lit_macOS(int start)
         {
@@ -23800,7 +21130,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_iOS = 463;
+        protected const int Cache_Lit_iOS = 421;
 
         public virtual Match Lit_iOS(int start)
         {
@@ -23839,7 +21169,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_watchOS = 464;
+        protected const int Cache_Lit_watchOS = 422;
 
         public virtual Match Lit_watchOS(int start)
         {
@@ -23878,7 +21208,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_tvOS = 465;
+        protected const int Cache_Lit_tvOS = 423;
 
         public virtual Match Lit_tvOS(int start)
         {
@@ -23917,7 +21247,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Windows = 466;
+        protected const int Cache_Lit_Windows = 424;
 
         public virtual Match Lit_Windows(int start)
         {
@@ -23956,7 +21286,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Android = 467;
+        protected const int Cache_Lit_Android = 425;
 
         public virtual Match Lit_Android(int start)
         {
@@ -23995,7 +21325,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Linux = 468;
+        protected const int Cache_Lit_Linux = 426;
 
         public virtual Match Lit_Linux(int start)
         {
@@ -24034,7 +21364,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_OpenBSD = 469;
+        protected const int Cache_Lit_OpenBSD = 427;
 
         public virtual Match Lit_OpenBSD(int start)
         {
@@ -24073,7 +21403,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_i386 = 470;
+        protected const int Cache_Lit_i386 = 428;
 
         public virtual Match Lit_i386(int start)
         {
@@ -24112,11 +21442,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_x86_64 = 471;
+        protected const int Cache_Lit_13_/*'x86_64'*/ = 429;
 
-        public virtual Match Lit_x86_64(int start)
+        public virtual Match Lit_13_/*'x86_64'*/(int start)
         {
-            if (!Caches[Cache_Lit_x86_64].Already(start, out var match))
+            if (!Caches[Cache_Lit_13_/*'x86_64'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24144,14 +21474,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_x86_64", start, match);
+                    match = Match.Success("Lit_13_/*\'x86_64\'*/", start, match);
                 }
-                Caches[Cache_Lit_x86_64].Cache(start, match);
+                Caches[Cache_Lit_13_/*'x86_64'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_arm = 472;
+        protected const int Cache_Lit_arm = 430;
 
         public virtual Match Lit_arm(int start)
         {
@@ -24190,7 +21520,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_arm64 = 473;
+        protected const int Cache_Lit_arm64 = 431;
 
         public virtual Match Lit_arm64(int start)
         {
@@ -24229,7 +21559,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_wasm32 = 474;
+        protected const int Cache_Lit_wasm32 = 432;
 
         public virtual Match Lit_wasm32(int start)
         {
@@ -24268,7 +21598,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_powerpc64 = 475;
+        protected const int Cache_Lit_powerpc64 = 433;
 
         public virtual Match Lit_powerpc64(int start)
         {
@@ -24307,7 +21637,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_s390x = 476;
+        protected const int Cache_Lit_s390x = 434;
 
         public virtual Match Lit_s390x(int start)
         {
@@ -24346,11 +21676,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_16_/*'.'*/ = 477;
+        protected const int Cache_Lit_dot_ = 435;
 
-        public virtual Match Lit_16_/*'.'*/(int start)
+        public virtual Match Lit_dot_(int start)
         {
-            if (!Caches[Cache_Lit_16_/*'.'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_dot_].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24372,14 +21702,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_16_/*\'.\'*/", start, match);
+                    match = Match.Success("Lit_dot_", start, match);
                 }
-                Caches[Cache_Lit_16_/*'.'*/].Cache(start, match);
+                Caches[Cache_Lit_dot_].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_simulator = 478;
+        protected const int Cache_Lit_simulator = 436;
 
         public virtual Match Lit_simulator(int start)
         {
@@ -24418,7 +21748,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_macCatalyst = 479;
+        protected const int Cache_Lit_macCatalyst = 437;
 
         public virtual Match Lit_macCatalyst(int start)
         {
@@ -24457,11 +21787,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_17_/*'#sourceLocation'*/ = 480;
+        protected const int Cache_Lit_14_/*'#sourceLocation'*/ = 438;
 
-        public virtual Match Lit_17_/*'#sourceLocation'*/(int start)
+        public virtual Match Lit_14_/*'#sourceLocation'*/(int start)
         {
-            if (!Caches[Cache_Lit_17_/*'#sourceLocation'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_14_/*'#sourceLocation'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24483,18 +21813,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_17_/*\'#sourceLocation\'*/", start, match);
+                    match = Match.Success("Lit_14_/*\'#sourceLocation\'*/", start, match);
                 }
-                Caches[Cache_Lit_17_/*'#sourceLocation'*/].Cache(start, match);
+                Caches[Cache_Lit_14_/*'#sourceLocation'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_18_/*'file:'*/ = 481;
+        protected const int Cache_Lit_15_/*'file:'*/ = 439;
 
-        public virtual Match Lit_18_/*'file:'*/(int start)
+        public virtual Match Lit_15_/*'file:'*/(int start)
         {
-            if (!Caches[Cache_Lit_18_/*'file:'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_15_/*'file:'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24516,18 +21846,51 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_18_/*\'file:\'*/", start, match);
+                    match = Match.Success("Lit_15_/*\'file:\'*/", start, match);
                 }
-                Caches[Cache_Lit_18_/*'file:'*/].Cache(start, match);
+                Caches[Cache_Lit_15_/*'file:'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_19_/*'line:'*/ = 482;
+        protected const int Cache_Lit_16_/*','*/ = 440;
 
-        public virtual Match Lit_19_/*'line:'*/(int start)
+        public virtual Match Lit_16_/*','*/(int start)
         {
-            if (!Caches[Cache_Lit_19_/*'line:'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_16_/*','*/].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterExact_(next, ',')) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_16_/*\',\'*/", start, match);
+                }
+                Caches[Cache_Lit_16_/*','*/].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_17_/*'line:'*/ = 441;
+
+        public virtual Match Lit_17_/*'line:'*/(int start)
+        {
+            if (!Caches[Cache_Lit_17_/*'line:'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24549,18 +21912,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_19_/*\'line:\'*/", start, match);
+                    match = Match.Success("Lit_17_/*\'line:\'*/", start, match);
                 }
-                Caches[Cache_Lit_19_/*'line:'*/].Cache(start, match);
+                Caches[Cache_Lit_17_/*'line:'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_20_/*'#error'*/ = 483;
+        protected const int Cache_Lit_18_/*'#error'*/ = 442;
 
-        public virtual Match Lit_20_/*'#error'*/(int start)
+        public virtual Match Lit_18_/*'#error'*/(int start)
         {
-            if (!Caches[Cache_Lit_20_/*'#error'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_18_/*'#error'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24582,18 +21945,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_20_/*\'#error\'*/", start, match);
+                    match = Match.Success("Lit_18_/*\'#error\'*/", start, match);
                 }
-                Caches[Cache_Lit_20_/*'#error'*/].Cache(start, match);
+                Caches[Cache_Lit_18_/*'#error'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_21_/*'#warning'*/ = 484;
+        protected const int Cache_Lit_19_/*'#warning'*/ = 443;
 
-        public virtual Match Lit_21_/*'#warning'*/(int start)
+        public virtual Match Lit_19_/*'#warning'*/(int start)
         {
-            if (!Caches[Cache_Lit_21_/*'#warning'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_19_/*'#warning'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24615,14 +21978,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_21_/*\'#warning\'*/", start, match);
+                    match = Match.Success("Lit_19_/*\'#warning\'*/", start, match);
                 }
-                Caches[Cache_Lit_21_/*'#warning'*/].Cache(start, match);
+                Caches[Cache_Lit_19_/*'#warning'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_let = 485;
+        protected const int Cache_Lit_let = 444;
 
         public virtual Match Lit_let(int start)
         {
@@ -24661,11 +22024,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_22_/*'='*/ = 486;
+        protected const int Cache_Lit_20_/*'='*/ = 445;
 
-        public virtual Match Lit_22_/*'='*/(int start)
+        public virtual Match Lit_20_/*'='*/(int start)
         {
-            if (!Caches[Cache_Lit_22_/*'='*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_20_/*'='*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24687,14 +22050,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_22_/*\'=\'*/", start, match);
+                    match = Match.Success("Lit_20_/*\'=\'*/", start, match);
                 }
-                Caches[Cache_Lit_22_/*'='*/].Cache(start, match);
+                Caches[Cache_Lit_20_/*'='*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_indirect = 487;
+        protected const int Cache_Lit_indirect = 446;
 
         public virtual Match Lit_indirect(int start)
         {
@@ -24733,7 +22096,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_enum = 488;
+        protected const int Cache_Lit_enum = 447;
 
         public virtual Match Lit_enum(int start)
         {
@@ -24772,11 +22135,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_23_/*'{'*/ = 489;
+        protected const int Cache_Lit_21_/*'{'*/ = 448;
 
-        public virtual Match Lit_23_/*'{'*/(int start)
+        public virtual Match Lit_21_/*'{'*/(int start)
         {
-            if (!Caches[Cache_Lit_23_/*'{'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_21_/*'{'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24798,18 +22161,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_23_/*\'{\'*/", start, match);
+                    match = Match.Success("Lit_21_/*\'{\'*/", start, match);
                 }
-                Caches[Cache_Lit_23_/*'{'*/].Cache(start, match);
+                Caches[Cache_Lit_21_/*'{'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_24_/*'}'*/ = 490;
+        protected const int Cache_Lit_22_/*'}'*/ = 449;
 
-        public virtual Match Lit_24_/*'}'*/(int start)
+        public virtual Match Lit_22_/*'}'*/(int start)
         {
-            if (!Caches[Cache_Lit_24_/*'}'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_22_/*'}'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -24831,14 +22194,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_24_/*\'}\'*/", start, match);
+                    match = Match.Success("Lit_22_/*\'}\'*/", start, match);
                 }
-                Caches[Cache_Lit_24_/*'}'*/].Cache(start, match);
+                Caches[Cache_Lit_22_/*'}'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_case = 491;
+        protected const int Cache_Lit_case = 450;
 
         public virtual Match Lit_case(int start)
         {
@@ -24877,7 +22240,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_extension = 492;
+        protected const int Cache_Lit_extension = 451;
 
         public virtual Match Lit_extension(int start)
         {
@@ -24916,7 +22279,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_func = 493;
+        protected const int Cache_Lit_func = 452;
 
         public virtual Match Lit_func(int start)
         {
@@ -24955,7 +22318,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_throws = 494;
+        protected const int Cache_Lit_throws = 453;
 
         public virtual Match Lit_throws(int start)
         {
@@ -24994,7 +22357,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_rethrows = 495;
+        protected const int Cache_Lit_rethrows = 454;
 
         public virtual Match Lit_rethrows(int start)
         {
@@ -25033,11 +22396,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_25_/*'...'*/ = 496;
+        protected const int Cache_Lit_dot_dot_dot_ = 455;
 
-        public virtual Match Lit_25_/*'...'*/(int start)
+        public virtual Match Lit_dot_dot_dot_(int start)
         {
-            if (!Caches[Cache_Lit_25_/*'...'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_dot_dot_dot_].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -25059,18 +22422,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_25_/*\'...\'*/", start, match);
+                    match = Match.Success("Lit_dot_dot_dot_", start, match);
                 }
-                Caches[Cache_Lit_25_/*'...'*/].Cache(start, match);
+                Caches[Cache_Lit_dot_dot_dot_].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_26_/*'->'*/ = 497;
+        protected const int Cache_Lit_23_/*'->'*/ = 456;
 
-        public virtual Match Lit_26_/*'->'*/(int start)
+        public virtual Match Lit_23_/*'->'*/(int start)
         {
-            if (!Caches[Cache_Lit_26_/*'->'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_23_/*'->'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -25092,18 +22455,51 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_26_/*\'->\'*/", start, match);
+                    match = Match.Success("Lit_23_/*\'->\'*/", start, match);
                 }
-                Caches[Cache_Lit_26_/*'->'*/].Cache(start, match);
+                Caches[Cache_Lit_23_/*'->'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit___owned = 498;
+        protected const int Cache_Lit_24_/*':'*/ = 457;
 
-        public virtual Match Lit___owned(int start)
+        public virtual Match Lit_24_/*':'*/(int start)
         {
-            if (!Caches[Cache_Lit___owned].Already(start, out var match))
+            if (!Caches[Cache_Lit_24_/*':'*/].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterExact_(next, ':')) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_24_/*\':\'*/", start, match);
+                }
+                Caches[Cache_Lit_24_/*':'*/].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_25_/*'__owned'*/ = 458;
+
+        public virtual Match Lit_25_/*'__owned'*/(int start)
+        {
+            if (!Caches[Cache_Lit_25_/*'__owned'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -25131,14 +22527,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit___owned", start, match);
+                    match = Match.Success("Lit_25_/*\'__owned\'*/", start, match);
                 }
-                Caches[Cache_Lit___owned].Cache(start, match);
+                Caches[Cache_Lit_25_/*'__owned'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_inout = 499;
+        protected const int Cache_Lit_inout = 459;
 
         public virtual Match Lit_inout(int start)
         {
@@ -25177,7 +22573,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_init = 500;
+        protected const int Cache_Lit_init = 460;
 
         public virtual Match Lit_init(int start)
         {
@@ -25216,11 +22612,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_27_/*'?'*/ = 501;
+        protected const int Cache_Lit_26_/*'?'*/ = 461;
 
-        public virtual Match Lit_27_/*'?'*/(int start)
+        public virtual Match Lit_26_/*'?'*/(int start)
         {
-            if (!Caches[Cache_Lit_27_/*'?'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_26_/*'?'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -25242,14 +22638,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_27_/*\'?\'*/", start, match);
+                    match = Match.Success("Lit_26_/*\'?\'*/", start, match);
                 }
-                Caches[Cache_Lit_27_/*'?'*/].Cache(start, match);
+                Caches[Cache_Lit_26_/*'?'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_operator = 502;
+        protected const int Cache_Lit_operator = 462;
 
         public virtual Match Lit_operator(int start)
         {
@@ -25288,7 +22684,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_precedencegroup = 503;
+        protected const int Cache_Lit_precedencegroup = 463;
 
         public virtual Match Lit_precedencegroup(int start)
         {
@@ -25327,7 +22723,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_higherThan = 504;
+        protected const int Cache_Lit_higherThan = 464;
 
         public virtual Match Lit_higherThan(int start)
         {
@@ -25366,7 +22762,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_lowerThan = 505;
+        protected const int Cache_Lit_lowerThan = 465;
 
         public virtual Match Lit_lowerThan(int start)
         {
@@ -25405,7 +22801,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_assignment = 506;
+        protected const int Cache_Lit_assignment = 466;
 
         public virtual Match Lit_assignment(int start)
         {
@@ -25444,7 +22840,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_associativity = 507;
+        protected const int Cache_Lit_associativity = 467;
 
         public virtual Match Lit_associativity(int start)
         {
@@ -25483,7 +22879,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_left = 508;
+        protected const int Cache_Lit_left = 468;
 
         public virtual Match Lit_left(int start)
         {
@@ -25522,7 +22918,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_right = 509;
+        protected const int Cache_Lit_right = 469;
 
         public virtual Match Lit_right(int start)
         {
@@ -25561,7 +22957,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_none = 510;
+        protected const int Cache_Lit_none = 470;
 
         public virtual Match Lit_none(int start)
         {
@@ -25600,7 +22996,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_protocol = 511;
+        protected const int Cache_Lit_protocol = 471;
 
         public virtual Match Lit_protocol(int start)
         {
@@ -25639,7 +23035,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_associatedtype = 512;
+        protected const int Cache_Lit_associatedtype = 472;
 
         public virtual Match Lit_associatedtype(int start)
         {
@@ -25678,7 +23074,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_struct = 513;
+        protected const int Cache_Lit_struct = 473;
 
         public virtual Match Lit_struct(int start)
         {
@@ -25717,7 +23113,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_subscript = 514;
+        protected const int Cache_Lit_subscript = 474;
 
         public virtual Match Lit_subscript(int start)
         {
@@ -25756,7 +23152,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_typealias = 515;
+        protected const int Cache_Lit_typealias = 475;
 
         public virtual Match Lit_typealias(int start)
         {
@@ -25795,7 +23191,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_var = 516;
+        protected const int Cache_Lit_var = 476;
 
         public virtual Match Lit_var(int start)
         {
@@ -25834,7 +23230,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_get = 517;
+        protected const int Cache_Lit_get = 477;
 
         public virtual Match Lit_get(int start)
         {
@@ -25873,11 +23269,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit__modify = 518;
+        protected const int Cache_Lit_27_/*'_modify'*/ = 478;
 
-        public virtual Match Lit__modify(int start)
+        public virtual Match Lit_27_/*'_modify'*/(int start)
         {
-            if (!Caches[Cache_Lit__modify].Already(start, out var match))
+            if (!Caches[Cache_Lit_27_/*'_modify'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -25905,14 +23301,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit__modify", start, match);
+                    match = Match.Success("Lit_27_/*\'_modify\'*/", start, match);
                 }
-                Caches[Cache_Lit__modify].Cache(start, match);
+                Caches[Cache_Lit_27_/*'_modify'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_willSet = 519;
+        protected const int Cache_Lit_willSet = 479;
 
         public virtual Match Lit_willSet(int start)
         {
@@ -25951,7 +23347,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_didSet = 520;
+        protected const int Cache_Lit_didSet = 480;
 
         public virtual Match Lit_didSet(int start)
         {
@@ -25990,7 +23386,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_import = 521;
+        protected const int Cache_Lit_import = 481;
 
         public virtual Match Lit_import(int start)
         {
@@ -26029,7 +23425,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_deinit = 522;
+        protected const int Cache_Lit_deinit = 482;
 
         public virtual Match Lit_deinit(int start)
         {
@@ -26068,7 +23464,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_28_/*'&'*/ = 523;
+        protected const int Cache_Lit_28_/*'&'*/ = 483;
 
         public virtual Match Lit_28_/*'&'*/(int start)
         {
@@ -26101,7 +23497,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_self = 524;
+        protected const int Cache_Lit_self = 484;
 
         public virtual Match Lit_self(int start)
         {
@@ -26140,7 +23536,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_29_/*'['*/ = 525;
+        protected const int Cache_Lit_29_/*'['*/ = 485;
 
         public virtual Match Lit_29_/*'['*/(int start)
         {
@@ -26173,7 +23569,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_30_/*']'*/ = 526;
+        protected const int Cache_Lit_30_/*']'*/ = 486;
 
         public virtual Match Lit_30_/*']'*/(int start)
         {
@@ -26206,7 +23602,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_31_/*'#file'*/ = 527;
+        protected const int Cache_Lit_31_/*'#file'*/ = 487;
 
         public virtual Match Lit_31_/*'#file'*/(int start)
         {
@@ -26239,7 +23635,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_32_/*'#fileID'*/ = 528;
+        protected const int Cache_Lit_32_/*'#fileID'*/ = 488;
 
         public virtual Match Lit_32_/*'#fileID'*/(int start)
         {
@@ -26272,7 +23668,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_33_/*'#filePath'*/ = 529;
+        protected const int Cache_Lit_33_/*'#filePath'*/ = 489;
 
         public virtual Match Lit_33_/*'#filePath'*/(int start)
         {
@@ -26305,7 +23701,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_34_/*'#line'*/ = 530;
+        protected const int Cache_Lit_34_/*'#line'*/ = 490;
 
         public virtual Match Lit_34_/*'#line'*/(int start)
         {
@@ -26338,7 +23734,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_35_/*'#column'*/ = 531;
+        protected const int Cache_Lit_35_/*'#column'*/ = 491;
 
         public virtual Match Lit_35_/*'#column'*/(int start)
         {
@@ -26371,7 +23767,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_36_/*'#function'*/ = 532;
+        protected const int Cache_Lit_36_/*'#function'*/ = 492;
 
         public virtual Match Lit_36_/*'#function'*/(int start)
         {
@@ -26404,7 +23800,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_37_/*'#dsohandle'*/ = 533;
+        protected const int Cache_Lit_37_/*'#dsohandle'*/ = 493;
 
         public virtual Match Lit_37_/*'#dsohandle'*/(int start)
         {
@@ -26437,7 +23833,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_38_/*'-'*/ = 534;
+        protected const int Cache_Lit_38_/*'-'*/ = 494;
 
         public virtual Match Lit_38_/*'-'*/(int start)
         {
@@ -26470,7 +23866,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_true = 535;
+        protected const int Cache_Lit_true = 495;
 
         public virtual Match Lit_true(int start)
         {
@@ -26509,7 +23905,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_false = 536;
+        protected const int Cache_Lit_false = 496;
 
         public virtual Match Lit_false(int start)
         {
@@ -26548,7 +23944,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_nil = 537;
+        protected const int Cache_Lit_nil = 497;
 
         public virtual Match Lit_nil(int start)
         {
@@ -26587,7 +23983,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_39_/*'#colorLiteral'*/ = 538;
+        protected const int Cache_Lit_39_/*'#colorLiteral'*/ = 498;
 
         public virtual Match Lit_39_/*'#colorLiteral'*/(int start)
         {
@@ -26620,7 +24016,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_red = 539;
+        protected const int Cache_Lit_red = 499;
 
         public virtual Match Lit_red(int start)
         {
@@ -26659,7 +24055,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_green = 540;
+        protected const int Cache_Lit_green = 500;
 
         public virtual Match Lit_green(int start)
         {
@@ -26698,7 +24094,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_blue = 541;
+        protected const int Cache_Lit_blue = 501;
 
         public virtual Match Lit_blue(int start)
         {
@@ -26737,7 +24133,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_alpha = 542;
+        protected const int Cache_Lit_alpha = 502;
 
         public virtual Match Lit_alpha(int start)
         {
@@ -26776,7 +24172,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_40_/*'#fileLiteral'*/ = 543;
+        protected const int Cache_Lit_40_/*'#fileLiteral'*/ = 503;
 
         public virtual Match Lit_40_/*'#fileLiteral'*/(int start)
         {
@@ -26809,7 +24205,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_resourceName = 544;
+        protected const int Cache_Lit_resourceName = 504;
 
         public virtual Match Lit_resourceName(int start)
         {
@@ -26848,7 +24244,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_41_/*'#imageLiteral'*/ = 545;
+        protected const int Cache_Lit_41_/*'#imageLiteral'*/ = 505;
 
         public virtual Match Lit_41_/*'#imageLiteral'*/(int start)
         {
@@ -26881,7 +24277,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_super = 546;
+        protected const int Cache_Lit_super = 506;
 
         public virtual Match Lit_super(int start)
         {
@@ -26920,7 +24316,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_in = 547;
+        protected const int Cache_Lit_in = 507;
 
         public virtual Match Lit_in(int start)
         {
@@ -26959,11 +24355,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit__ = 548;
+        protected const int Cache_Lit_42_/*'_'*/ = 508;
 
-        public virtual Match Lit__(int start)
+        public virtual Match Lit_42_/*'_'*/(int start)
         {
-            if (!Caches[Cache_Lit__].Already(start, out var match))
+            if (!Caches[Cache_Lit_42_/*'_'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -26991,18 +24387,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit__", start, match);
+                    match = Match.Success("Lit_42_/*\'_\'*/", start, match);
                 }
-                Caches[Cache_Lit__].Cache(start, match);
+                Caches[Cache_Lit_42_/*'_'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_42_/*'\\'*/ = 549;
+        protected const int Cache_Lit_43_/*'\\'*/ = 509;
 
-        public virtual Match Lit_42_/*'\\'*/(int start)
+        public virtual Match Lit_43_/*'\\'*/(int start)
         {
-            if (!Caches[Cache_Lit_42_/*'\\'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_43_/*'\\'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27024,18 +24420,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_42_/*\'\\\\\'*/", start, match);
+                    match = Match.Success("Lit_43_/*\'\\\\\'*/", start, match);
                 }
-                Caches[Cache_Lit_42_/*'\\'*/].Cache(start, match);
+                Caches[Cache_Lit_43_/*'\\'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_43_/*'#selector'*/ = 550;
+        protected const int Cache_Lit_44_/*'#selector'*/ = 510;
 
-        public virtual Match Lit_43_/*'#selector'*/(int start)
+        public virtual Match Lit_44_/*'#selector'*/(int start)
         {
-            if (!Caches[Cache_Lit_43_/*'#selector'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_44_/*'#selector'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27057,18 +24453,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_43_/*\'#selector\'*/", start, match);
+                    match = Match.Success("Lit_44_/*\'#selector\'*/", start, match);
                 }
-                Caches[Cache_Lit_43_/*'#selector'*/].Cache(start, match);
+                Caches[Cache_Lit_44_/*'#selector'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_44_/*'getter:'*/ = 551;
+        protected const int Cache_Lit_45_/*'getter:'*/ = 511;
 
-        public virtual Match Lit_44_/*'getter:'*/(int start)
+        public virtual Match Lit_45_/*'getter:'*/(int start)
         {
-            if (!Caches[Cache_Lit_44_/*'getter:'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_45_/*'getter:'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27090,18 +24486,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_44_/*\'getter:\'*/", start, match);
+                    match = Match.Success("Lit_45_/*\'getter:\'*/", start, match);
                 }
-                Caches[Cache_Lit_44_/*'getter:'*/].Cache(start, match);
+                Caches[Cache_Lit_45_/*'getter:'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_45_/*'setter:'*/ = 552;
+        protected const int Cache_Lit_46_/*'setter:'*/ = 512;
 
-        public virtual Match Lit_45_/*'setter:'*/(int start)
+        public virtual Match Lit_46_/*'setter:'*/(int start)
         {
-            if (!Caches[Cache_Lit_45_/*'setter:'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_46_/*'setter:'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27123,18 +24519,18 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_45_/*\'setter:\'*/", start, match);
+                    match = Match.Success("Lit_46_/*\'setter:\'*/", start, match);
                 }
-                Caches[Cache_Lit_45_/*'setter:'*/].Cache(start, match);
+                Caches[Cache_Lit_46_/*'setter:'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_46_/*'#keyPath'*/ = 553;
+        protected const int Cache_Lit_47_/*'#keyPath'*/ = 513;
 
-        public virtual Match Lit_46_/*'#keyPath'*/(int start)
+        public virtual Match Lit_47_/*'#keyPath'*/(int start)
         {
-            if (!Caches[Cache_Lit_46_/*'#keyPath'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_47_/*'#keyPath'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27156,14 +24552,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_46_/*\'#keyPath\'*/", start, match);
+                    match = Match.Success("Lit_47_/*\'#keyPath\'*/", start, match);
                 }
-                Caches[Cache_Lit_46_/*'#keyPath'*/].Cache(start, match);
+                Caches[Cache_Lit_47_/*'#keyPath'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_try = 554;
+        protected const int Cache_Lit_try = 514;
 
         public virtual Match Lit_try(int start)
         {
@@ -27202,7 +24598,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_is = 555;
+        protected const int Cache_Lit_is = 515;
 
         public virtual Match Lit_is(int start)
         {
@@ -27241,7 +24637,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_as = 556;
+        protected const int Cache_Lit_as = 516;
 
         public virtual Match Lit_as(int start)
         {
@@ -27280,11 +24676,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_47_/*'>'*/ = 557;
+        protected const int Cache_Lit_48_/*'>'*/ = 517;
 
-        public virtual Match Lit_47_/*'>'*/(int start)
+        public virtual Match Lit_48_/*'>'*/(int start)
         {
-            if (!Caches[Cache_Lit_47_/*'>'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_48_/*'>'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27306,14 +24702,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_47_/*\'>\'*/", start, match);
+                    match = Match.Success("Lit_48_/*\'>\'*/", start, match);
                 }
-                Caches[Cache_Lit_47_/*'>'*/].Cache(start, match);
+                Caches[Cache_Lit_48_/*'>'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_where = 558;
+        protected const int Cache_Lit_where = 518;
 
         public virtual Match Lit_where(int start)
         {
@@ -27352,11 +24748,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_48_/*'=='*/ = 559;
+        protected const int Cache_Lit_49_/*'=='*/ = 519;
 
-        public virtual Match Lit_48_/*'=='*/(int start)
+        public virtual Match Lit_49_/*'=='*/(int start)
         {
-            if (!Caches[Cache_Lit_48_/*'=='*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_49_/*'=='*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27378,14 +24774,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_48_/*\'==\'*/", start, match);
+                    match = Match.Success("Lit_49_/*\'==\'*/", start, match);
                 }
-                Caches[Cache_Lit_48_/*'=='*/].Cache(start, match);
+                Caches[Cache_Lit_49_/*'=='*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_break = 560;
+        protected const int Cache_Lit_break = 520;
 
         public virtual Match Lit_break(int start)
         {
@@ -27424,7 +24820,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_default = 561;
+        protected const int Cache_Lit_default = 521;
 
         public virtual Match Lit_default(int start)
         {
@@ -27463,11 +24859,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_49_/*'#available'*/ = 562;
+        protected const int Cache_Lit_50_/*'#available'*/ = 522;
 
-        public virtual Match Lit_49_/*'#available'*/(int start)
+        public virtual Match Lit_50_/*'#available'*/(int start)
         {
-            if (!Caches[Cache_Lit_49_/*'#available'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_50_/*'#available'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -27489,14 +24885,47 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_49_/*\'#available\'*/", start, match);
+                    match = Match.Success("Lit_50_/*\'#available\'*/", start, match);
                 }
-                Caches[Cache_Lit_49_/*'#available'*/].Cache(start, match);
+                Caches[Cache_Lit_50_/*'#available'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_iOSApplicationExtension = 563;
+        protected const int Cache_Lit_51_/*'*'*/ = 523;
+
+        public virtual Match Lit_51_/*'*'*/(int start)
+        {
+            if (!Caches[Cache_Lit_51_/*'*'*/].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterExact_(next, '*')) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_51_/*\'*\'*/", start, match);
+                }
+                Caches[Cache_Lit_51_/*'*'*/].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_iOSApplicationExtension = 524;
 
         public virtual Match Lit_iOSApplicationExtension(int start)
         {
@@ -27535,7 +24964,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_macOSApplicationExtension = 564;
+        protected const int Cache_Lit_macOSApplicationExtension = 525;
 
         public virtual Match Lit_macOSApplicationExtension(int start)
         {
@@ -27574,7 +25003,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_macCatalystApplicationExtension = 565;
+        protected const int Cache_Lit_macCatalystApplicationExtension = 526;
 
         public virtual Match Lit_macCatalystApplicationExtension(int start)
         {
@@ -27613,7 +25042,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_continue = 566;
+        protected const int Cache_Lit_continue = 527;
 
         public virtual Match Lit_continue(int start)
         {
@@ -27652,124 +25081,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_defer = 567;
-
-        public virtual Match Lit_defer(int start)
-        {
-            if (!Caches[Cache_Lit_defer].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "defer")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_defer", start, match);
-                }
-                Caches[Cache_Lit_defer].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_do = 568;
-
-        public virtual Match Lit_do(int start)
-        {
-            if (!Caches[Cache_Lit_do].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "do")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_do", start, match);
-                }
-                Caches[Cache_Lit_do].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_catch = 569;
-
-        public virtual Match Lit_catch(int start)
-        {
-            if (!Caches[Cache_Lit_catch].Already(start, out var match))
-            {
-                var next = start;
-                var matches = new List<Match>();
-                while (true) // ---Sequence---
-                {
-                    match = _(next);
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = CharacterSequence_(next, "catch")) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    next = match.Next;
-                    if ((match = Not_(next, More(next))) == null)
-                    {
-                        break;
-                    }
-                    matches.Add(match);
-                    break;
-                }
-                if (match != null)
-                {
-                    match = Match.Success("_", start, matches);
-                }
-                if (match != null)
-                {
-                    match = Match.Success("Lit_catch", start, match);
-                }
-                Caches[Cache_Lit_catch].Cache(start, match);
-            }
-            return match;
-        }
-
-        protected const int Cache_Lit_guard = 570;
+        protected const int Cache_Lit_guard = 528;
 
         public virtual Match Lit_guard(int start)
         {
@@ -27808,7 +25120,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_else = 571;
+        protected const int Cache_Lit_else = 529;
 
         public virtual Match Lit_else(int start)
         {
@@ -27847,7 +25159,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_if = 572;
+        protected const int Cache_Lit_if = 530;
 
         public virtual Match Lit_if(int start)
         {
@@ -27886,7 +25198,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_return = 573;
+        protected const int Cache_Lit_return = 531;
 
         public virtual Match Lit_return(int start)
         {
@@ -27925,7 +25237,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_switch = 574;
+        protected const int Cache_Lit_switch = 532;
 
         public virtual Match Lit_switch(int start)
         {
@@ -27964,7 +25276,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_while = 575;
+        protected const int Cache_Lit_while = 533;
 
         public virtual Match Lit_while(int start)
         {
@@ -28003,11 +25315,11 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_50_/*';'*/ = 576;
+        protected const int Cache_Lit_52_/*';'*/ = 534;
 
-        public virtual Match Lit_50_/*';'*/(int start)
+        public virtual Match Lit_52_/*';'*/(int start)
         {
-            if (!Caches[Cache_Lit_50_/*';'*/].Already(start, out var match))
+            if (!Caches[Cache_Lit_52_/*';'*/].Already(start, out var match))
             {
                 var next = start;
                 var matches = new List<Match>();
@@ -28029,14 +25341,14 @@ namespace SixPeg.Pegger.Swift
                 }
                 if (match != null)
                 {
-                    match = Match.Success("Lit_50_/*\';\'*/", start, match);
+                    match = Match.Success("Lit_52_/*\';\'*/", start, match);
                 }
-                Caches[Cache_Lit_50_/*';'*/].Cache(start, match);
+                Caches[Cache_Lit_52_/*';'*/].Cache(start, match);
             }
             return match;
         }
 
-        protected const int Cache_Lit_fallthrough = 577;
+        protected const int Cache_Lit_fallthrough = 535;
 
         public virtual Match Lit_fallthrough(int start)
         {
@@ -28075,7 +25387,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_throw = 578;
+        protected const int Cache_Lit_throw = 536;
 
         public virtual Match Lit_throw(int start)
         {
@@ -28114,7 +25426,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_for = 579;
+        protected const int Cache_Lit_for = 537;
 
         public virtual Match Lit_for(int start)
         {
@@ -28153,7 +25465,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_repeat = 580;
+        protected const int Cache_Lit_repeat = 538;
 
         public virtual Match Lit_repeat(int start)
         {
@@ -28192,7 +25504,124 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Type = 581;
+        protected const int Cache_Lit_do = 539;
+
+        public virtual Match Lit_do(int start)
+        {
+            if (!Caches[Cache_Lit_do].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterSequence_(next, "do")) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = Not_(next, More(next))) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_do", start, match);
+                }
+                Caches[Cache_Lit_do].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_catch = 540;
+
+        public virtual Match Lit_catch(int start)
+        {
+            if (!Caches[Cache_Lit_catch].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterSequence_(next, "catch")) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = Not_(next, More(next))) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_catch", start, match);
+                }
+                Caches[Cache_Lit_catch].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_defer = 541;
+
+        public virtual Match Lit_defer(int start)
+        {
+            if (!Caches[Cache_Lit_defer].Already(start, out var match))
+            {
+                var next = start;
+                var matches = new List<Match>();
+                while (true) // ---Sequence---
+                {
+                    match = _(next);
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = CharacterSequence_(next, "defer")) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    next = match.Next;
+                    if ((match = Not_(next, More(next))) == null)
+                    {
+                        break;
+                    }
+                    matches.Add(match);
+                    break;
+                }
+                if (match != null)
+                {
+                    match = Match.Success("_", start, matches);
+                }
+                if (match != null)
+                {
+                    match = Match.Success("Lit_defer", start, match);
+                }
+                Caches[Cache_Lit_defer].Cache(start, match);
+            }
+            return match;
+        }
+
+        protected const int Cache_Lit_Type = 542;
 
         public virtual Match Lit_Type(int start)
         {
@@ -28231,7 +25660,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Protocol = 582;
+        protected const int Cache_Lit_Protocol = 543;
 
         public virtual Match Lit_Protocol(int start)
         {
@@ -28270,7 +25699,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_some = 583;
+        protected const int Cache_Lit_some = 544;
 
         public virtual Match Lit_some(int start)
         {
@@ -28309,7 +25738,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Any = 584;
+        protected const int Cache_Lit_Any = 545;
 
         public virtual Match Lit_Any(int start)
         {
@@ -28348,7 +25777,7 @@ namespace SixPeg.Pegger.Swift
             return match;
         }
 
-        protected const int Cache_Lit_Self = 585;
+        protected const int Cache_Lit_Self = 546;
 
         public virtual Match Lit_Self(int start)
         {
@@ -28389,41 +25818,6 @@ namespace SixPeg.Pegger.Swift
 
         protected HashSet<string> _keywords = new HashSet<string>
         {
-            "inlinable",
-            "frozen",
-            "escaping",
-            "autoclosure",
-            "usableFromInline",
-            "discardableResult",
-            "nonobjc",
-            "unknown",
-            "inline",
-            "never",
-            "__always",
-            "available",
-            "convention",
-            "block",
-            "thin",
-            "c",
-            "objc",
-            "_show_in_interface",
-            "_fixed_layout",
-            "_nonoverride",
-            "_borrowed",
-            "_transparent",
-            "_nonEphemeral",
-            "_alwaysEmitIntoClient",
-            "_objc_non_lazy_realization",
-            "_implements",
-            "_specialize",
-            "_effects",
-            "readnone",
-            "readonly",
-            "releasenone",
-            "_silgen_name",
-            "_semantics",
-            "_objcRuntimeName",
-            "_cdecl",
             "class",
             "convenience",
             "dynamic",
@@ -28526,9 +25920,6 @@ namespace SixPeg.Pegger.Swift
             "macOSApplicationExtension",
             "macCatalystApplicationExtension",
             "continue",
-            "defer",
-            "do",
-            "catch",
             "guard",
             "else",
             "if",
@@ -28539,6 +25930,9 @@ namespace SixPeg.Pegger.Swift
             "throw",
             "for",
             "repeat",
+            "do",
+            "catch",
+            "defer",
             "Type",
             "Protocol",
             "some",

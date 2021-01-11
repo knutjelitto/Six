@@ -1,17 +1,2 @@
-﻿// ------------------------------------
-// labeled statement
-// ------------------------------------
-
-labeled-statement
-	= statement-label loop-statement
-	/ statement-label if-statement
-	/ statement-label switch-statement
-	/ statement-label do-statement
-
-statement-label
-	= label-name ':'
-
-label-name
-	= name
-	
+﻿	
 

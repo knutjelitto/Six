@@ -37,7 +37,6 @@ public protocol _HasCustomAnyHashableRepresentation {
   __consuming func _toCustomAnyHashable() -> AnyHashable?
 }
 
-@usableFromInline
 internal protocol _AnyHashableBox {
   var _canonicalBox: _AnyHashableBox { get }
 
@@ -134,7 +133,6 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
 /// encoding of wrapped values. Do not rely on `AnyHashable` generating such
 /// compatible hashes, as the hash encoding that it uses may change between any
 /// two releases of the standard library.
-@frozen
 public struct AnyHashable {
   internal var _box: _AnyHashableBox
 
@@ -184,15 +182,6 @@ public struct AnyHashable {
   func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
     // Attempt the downcast.
     if _box._downCastConditional(into: result) { return true }
-
-    #if _runtime(_ObjC)
-    // Bridge to Objective-C and then attempt the cast from there.
-    // FIXME: This should also work without the Objective-C runtime.
-    if let value = _bridgeAnythingToObjectiveC(_box._base) as? T {
-      result.initialize(to: value)
-      return true
-    }
-    #endif
 
     return false
   }
@@ -266,7 +255,6 @@ extension AnyHashable: CustomReflectable {
 /// Completely ignores the `_HasCustomAnyHashableRepresentation`
 /// conformance, if it exists.
 /// Called by AnyHashableSupport.cpp.
-@_silgen_name("_swift_makeAnyHashableUsingDefaultRepresentation")
 internal func _makeAnyHashableUsingDefaultRepresentation<H: Hashable>(
   of value: H,
   storingResultInto result: UnsafeMutablePointer<AnyHashable>
@@ -275,20 +263,17 @@ internal func _makeAnyHashableUsingDefaultRepresentation<H: Hashable>(
 }
 
 /// Provided by AnyHashable.cpp.
-@_silgen_name("_swift_makeAnyHashableUpcastingToHashableBaseType")
 internal func _makeAnyHashableUpcastingToHashableBaseType<H: Hashable>(
   _ value: H,
   storingResultInto result: UnsafeMutablePointer<AnyHashable>
 )
 
-@inlinable
 public // COMPILER_INTRINSIC
 func _convertToAnyHashable<H: Hashable>(_ value: H) -> AnyHashable {
   return AnyHashable(value)
 }
 
 /// Called by the casting machinery.
-@_silgen_name("_swift_convertToAnyHashableIndirect")
 internal func _convertToAnyHashableIndirect<H: Hashable>(
   _ value: H,
   _ target: UnsafeMutablePointer<AnyHashable>
@@ -297,7 +282,6 @@ internal func _convertToAnyHashableIndirect<H: Hashable>(
 }
 
 /// Called by the casting machinery.
-@_silgen_name("_swift_anyHashableDownCastConditionalIndirect")
 internal func _anyHashableDownCastConditionalIndirect<T>(
   _ value: UnsafePointer<AnyHashable>,
   _ target: UnsafeMutablePointer<T>

@@ -1,8 +1,8 @@
 ﻿rules:
     unit[R]:
         sequence
-            ?
-                statements
+            *
+                statement
             EOF
     EOF[T]:
         choice
@@ -36,148 +36,9 @@
         +
             attribute
     attribute[R]:
-        choice
-            sequence
-                '@'
-                'inlinable'
-            sequence
-                '@'
-                'frozen'
-            sequence
-                '@'
-                'escaping'
-            sequence
-                '@'
-                'autoclosure'
-            sequence
-                '@'
-                'usableFromInline'
-            sequence
-                '@'
-                'discardableResult'
-            sequence
-                '@'
-                'nonobjc'
-            sequence
-                '@'
-                'unknown'
-            sequence
-                '@'
-                'inline'
-                '('
-                choice
-                    'never'
-                    '__always'
-                ')'
-            sequence
-                '@'
-                'available'
-                '('
-                +
-                    choice
-                        name
-                        swift-version
-                        ','
-                        ':'
-                        '*'
-                        static-string-literal
-                ')'
-            sequence
-                '@'
-                'convention'
-                '('
-                choice
-                    'block'
-                    'thin'
-                    'c'
-                ')'
-            sequence
-                '@'
-                'objc'
-                ?
-                    sequence
-                        '('
-                        +
-                            choice
-                                ':'
-                                name
-                        ')'
-            sequence
-                '@'
-                '_show_in_interface'
-            sequence
-                '@'
-                '_fixed_layout'
-            sequence
-                '@'
-                '_nonoverride'
-            sequence
-                '@'
-                '_borrowed'
-            sequence
-                '@'
-                '_transparent'
-            sequence
-                '@'
-                '_nonEphemeral'
-            sequence
-                '@'
-                '_alwaysEmitIntoClient'
-            sequence
-                '@'
-                '_objc_non_lazy_realization'
-            sequence
-                '@'
-                '_implements'
-                '('
-                type-identifier
-                *
-                    sequence
-                        ','
-                        type-identifier
-                ')'
-            sequence
-                '@'
-                '_specialize'
-                '('
-                generic-where-clause
-                ')'
-            sequence
-                '@'
-                '_effects'
-                '('
-                choice
-                    'readnone'
-                    'readonly'
-                    'releasenone'
-                ')'
-            sequence
-                '@'
-                '_silgen_name'
-                '('
-                static-string-literal
-                ')'
-            sequence
-                '@'
-                '_semantics'
-                '('
-                static-string-literal
-                ')'
-            sequence
-                '@'
-                '_objcRuntimeName'
-                '('
-                name
-                ')'
-            sequence
-                '@'
-                '_cdecl'
-                '('
-                static-string-literal
-                ')'
-            sequence
-                '@'
-                #error
+        sequence
+            '@'
+            #error
     declaration-modifiers[R]:
         +
             modifier
@@ -252,8 +113,8 @@
             sequence
                 if-directive
                 compilation-condition
-                ?
-                    statements
+                *
+                    statement
             sequence
                 if-directive
                 #error
@@ -264,15 +125,17 @@
         sequence
             elseif-directive
             compilation-condition
-            ?
-                statements
+            *
+                statement
     else-directive-clause[R]:
         sequence
             else-directive
-            ?
-                statements
+            *
+                statement
     if-directive[R]:
-        '#if'
+        sequence
+            '#'
+            #error
     elseif-directive[R]:
         '#elseif'
     else-directive[R]:
@@ -1302,11 +1165,15 @@
             function-call-argument-clause
             trailing-closures
     function-call-argument-clause[R]:
-        sequence
-            '('
-            ?
-                function-call-argument-list
-            ')'
+        choice
+            sequence
+                '('
+                ?
+                    function-call-argument-list
+                ')'
+            sequence
+                '('
+                #error
     function-call-argument-list[R]:
         sequence
             function-call-argument
@@ -1322,9 +1189,7 @@
                     ':'
             choice
                 expression
-                sequence
-                    _
-                    operator
+                operator-name
     trailing-closures[R]:
         choice
             sequence
@@ -1568,8 +1433,8 @@
             '{'
             ?
                 closure-signature
-            ?
-                statements
+            *
+                statement
             '}'
     closure-signature[R]:
         choice
@@ -2056,6 +1921,7 @@
             line-break
     string-literal-opening-delimiter[TF]:
         sequence
+            _
             ?
                 extended-string-literal-delimiter
             match "\""
@@ -2066,6 +1932,7 @@
                 extended-string-literal-delimiter
     multiline-string-literal-opening-delimiter[TF]:
         sequence
+            _
             ?
                 extended-string-literal-delimiter
             match "\""
@@ -2454,34 +2321,6 @@
                         not
                             more
                 #error
-    defer-statement[R]:
-        sequence
-            'defer'
-            code-block
-    do-statement[R]:
-        sequence
-            'do'
-            code-block
-            *
-                catch-clause
-    catch-clause[R]:
-        sequence
-            'catch'
-            ?
-                catch-pattern-list
-            code-block
-    catch-pattern-list[R]:
-        sequence
-            catch-pattern
-            *
-                sequence
-                    ','
-                    catch-pattern
-    catch-pattern[R]:
-        sequence
-            pattern
-            ?
-                where-clause
     guard-statement[R]:
         sequence
             'guard'
@@ -2515,26 +2354,6 @@
                 and
                     'else'
                 #error
-    labeled-statement[R]:
-        choice
-            sequence
-                statement-label
-                loop-statement
-            sequence
-                statement-label
-                if-statement
-            sequence
-                statement-label
-                switch-statement
-            sequence
-                statement-label
-                do-statement
-    statement-label[R]:
-        sequence
-            label-name
-            ':'
-    label-name[R]:
-        name
     return-statement[R]:
         choice
             sequence
@@ -2582,10 +2401,12 @@
         choice
             sequence
                 case-label
-                statements
+                +
+                    statement
             sequence
                 default-label
-                statements
+                +
+                    statement
             conditional-switch-case
     case-label[R]:
         choice
@@ -2671,48 +2492,37 @@
     statement[R]:
         choice
             sequence
-                control-transfer-statement
+                ?
+                    statement-label
+                famous-statement
                 ?
                     ';'
             compiler-control-statement
-            sequence
-                loop-statement
-                ?
-                    ';'
-            sequence
-                branch-statement
-                ?
-                    ';'
-            sequence
-                do-statement
-                ?
-                    ';'
-            sequence
-                defer-statement
-                ?
-                    ';'
-            sequence
-                labeled-statement
-                ?
-                    ';'
-            sequence
-                declaration
-                ?
-                    ';'
+    famous-statement[R]:
+        choice
+            break-statement
+            continue-statement
+            fallthrough-statement
+            return-statement
+            throw-statement
+            for-in-statement
+            while-statement
+            repeat-while-statement
+            if-statement
+            guard-statement
+            switch-statement
+            do-statement
+            defer-statement
+            declaration
             sequence
                 not
-                    choice
-                        sequence
+                    sequence
+                        choice
                             'case'
-                            not
-                                more
-                        sequence
                             'default'
-                            not
-                                more
+                        not
+                            more
                 expression
-                ?
-                    ';'
             sequence
                 '{'
                 #error
@@ -2720,22 +2530,12 @@
         choice
             sequence
                 '{'
-                ?
-                    statements
+                *
+                    statement
                 '}'
             sequence
                 '{'
                 #error
-    statements[R]:
-        +
-            statement
-    control-transfer-statement[R]:
-        choice
-            break-statement
-            continue-statement
-            fallthrough-statement
-            return-statement
-            throw-statement
     fallthrough-statement[R]:
         'fallthrough'
     throw-statement[R]:
@@ -2746,11 +2546,6 @@
             sequence
                 'throw'
                 #error
-    loop-statement[R]:
-        choice
-            for-in-statement
-            while-statement
-            repeat-while-statement
     for-in-statement[R]:
         sequence
             'for'
@@ -2768,11 +2563,40 @@
             code-block
             'while'
             expression
-    branch-statement[R]:
-        choice
-            if-statement
-            guard-statement
-            switch-statement
+    do-statement[R]:
+        sequence
+            'do'
+            code-block
+            *
+                catch-clause
+    catch-clause[R]:
+        sequence
+            'catch'
+            ?
+                catch-pattern-list
+            code-block
+    catch-pattern-list[R]:
+        sequence
+            catch-pattern
+            *
+                sequence
+                    ','
+                    catch-pattern
+    catch-pattern[R]:
+        sequence
+            pattern
+            ?
+                where-clause
+    defer-statement[R]:
+        sequence
+            'defer'
+            code-block
+    statement-label[R]:
+        sequence
+            label-name
+            ':'
+    label-name[R]:
+        name
     where-clause[R]:
         sequence
             'where'
@@ -3029,236 +2853,6 @@
         sequence
             _
             match "@"
-    'inlinable'[T]:
-        sequence
-            _
-            match "inlinable"
-            not
-                more
-    'frozen'[T]:
-        sequence
-            _
-            match "frozen"
-            not
-                more
-    'escaping'[T]:
-        sequence
-            _
-            match "escaping"
-            not
-                more
-    'autoclosure'[T]:
-        sequence
-            _
-            match "autoclosure"
-            not
-                more
-    'usableFromInline'[T]:
-        sequence
-            _
-            match "usableFromInline"
-            not
-                more
-    'discardableResult'[T]:
-        sequence
-            _
-            match "discardableResult"
-            not
-                more
-    'nonobjc'[T]:
-        sequence
-            _
-            match "nonobjc"
-            not
-                more
-    'unknown'[T]:
-        sequence
-            _
-            match "unknown"
-            not
-                more
-    'inline'[T]:
-        sequence
-            _
-            match "inline"
-            not
-                more
-    '('[T]:
-        sequence
-            _
-            match "("
-    'never'[T]:
-        sequence
-            _
-            match "never"
-            not
-                more
-    '__always'[T]:
-        sequence
-            _
-            match "__always"
-            not
-                more
-    ')'[T]:
-        sequence
-            _
-            match ")"
-    'available'[T]:
-        sequence
-            _
-            match "available"
-            not
-                more
-    ','[T]:
-        sequence
-            _
-            match ","
-    ':'[T]:
-        sequence
-            _
-            match ":"
-    '*'[T]:
-        sequence
-            _
-            match "*"
-    'convention'[T]:
-        sequence
-            _
-            match "convention"
-            not
-                more
-    'block'[T]:
-        sequence
-            _
-            match "block"
-            not
-                more
-    'thin'[T]:
-        sequence
-            _
-            match "thin"
-            not
-                more
-    'c'[T]:
-        sequence
-            _
-            match "c"
-            not
-                more
-    'objc'[T]:
-        sequence
-            _
-            match "objc"
-            not
-                more
-    '_show_in_interface'[T]:
-        sequence
-            _
-            match "_show_in_interface"
-            not
-                more
-    '_fixed_layout'[T]:
-        sequence
-            _
-            match "_fixed_layout"
-            not
-                more
-    '_nonoverride'[T]:
-        sequence
-            _
-            match "_nonoverride"
-            not
-                more
-    '_borrowed'[T]:
-        sequence
-            _
-            match "_borrowed"
-            not
-                more
-    '_transparent'[T]:
-        sequence
-            _
-            match "_transparent"
-            not
-                more
-    '_nonEphemeral'[T]:
-        sequence
-            _
-            match "_nonEphemeral"
-            not
-                more
-    '_alwaysEmitIntoClient'[T]:
-        sequence
-            _
-            match "_alwaysEmitIntoClient"
-            not
-                more
-    '_objc_non_lazy_realization'[T]:
-        sequence
-            _
-            match "_objc_non_lazy_realization"
-            not
-                more
-    '_implements'[T]:
-        sequence
-            _
-            match "_implements"
-            not
-                more
-    '_specialize'[T]:
-        sequence
-            _
-            match "_specialize"
-            not
-                more
-    '_effects'[T]:
-        sequence
-            _
-            match "_effects"
-            not
-                more
-    'readnone'[T]:
-        sequence
-            _
-            match "readnone"
-            not
-                more
-    'readonly'[T]:
-        sequence
-            _
-            match "readonly"
-            not
-                more
-    'releasenone'[T]:
-        sequence
-            _
-            match "releasenone"
-            not
-                more
-    '_silgen_name'[T]:
-        sequence
-            _
-            match "_silgen_name"
-            not
-                more
-    '_semantics'[T]:
-        sequence
-            _
-            match "_semantics"
-            not
-                more
-    '_objcRuntimeName'[T]:
-        sequence
-            _
-            match "_objcRuntimeName"
-            not
-                more
-    '_cdecl'[T]:
-        sequence
-            _
-            match "_cdecl"
-            not
-                more
     'class'[T]:
         sequence
             _
@@ -3337,6 +2931,10 @@
             match "unowned"
             not
                 more
+    '('[T]:
+        sequence
+            _
+            match "("
     'safe'[T]:
         sequence
             _
@@ -3349,6 +2947,10 @@
             match "unsafe"
             not
                 more
+    ')'[T]:
+        sequence
+            _
+            match ")"
     'weak'[T]:
         sequence
             _
@@ -3409,10 +3011,10 @@
             match "nonmutating"
             not
                 more
-    '#if'[T]:
+    '#'[T]:
         sequence
             _
-            match "#if"
+            match "#"
     '#elseif'[T]:
         sequence
             _
@@ -3595,6 +3197,10 @@
         sequence
             _
             match "file:"
+    ','[T]:
+        sequence
+            _
+            match ","
     'line:'[T]:
         sequence
             _
@@ -3675,6 +3281,10 @@
         sequence
             _
             match "->"
+    ':'[T]:
+        sequence
+            _
+            match ":"
     '__owned'[T]:
         sequence
             _
@@ -4019,6 +3629,10 @@
         sequence
             _
             match "#available"
+    '*'[T]:
+        sequence
+            _
+            match "*"
     'iOSApplicationExtension'[T]:
         sequence
             _
@@ -4041,24 +3655,6 @@
         sequence
             _
             match "continue"
-            not
-                more
-    'defer'[T]:
-        sequence
-            _
-            match "defer"
-            not
-                more
-    'do'[T]:
-        sequence
-            _
-            match "do"
-            not
-                more
-    'catch'[T]:
-        sequence
-            _
-            match "catch"
             not
                 more
     'guard'[T]:
@@ -4125,6 +3721,24 @@
             match "repeat"
             not
                 more
+    'do'[T]:
+        sequence
+            _
+            match "do"
+            not
+                more
+    'catch'[T]:
+        sequence
+            _
+            match "catch"
+            not
+                more
+    'defer'[T]:
+        sequence
+            _
+            match "defer"
+            not
+                more
     'Type'[T]:
         sequence
             _
@@ -4158,25 +3772,9 @@
 
 keywords:
     _
-    __always
     __consuming
     __owned
-    _alwaysEmitIntoClient
-    _borrowed
-    _cdecl
-    _effects
-    _fixed_layout
-    _implements
     _modify
-    _nonEphemeral
-    _nonoverride
-    _objc_non_lazy_realization
-    _objcRuntimeName
-    _semantics
-    _show_in_interface
-    _silgen_name
-    _specialize
-    _transparent
     alpha
     Android
     Any
@@ -4187,12 +3785,8 @@ keywords:
     assignment
     associatedtype
     associativity
-    autoclosure
-    available
-    block
     blue
     break
-    c
     canImport
     case
     catch
@@ -4200,24 +3794,20 @@ keywords:
     compiler
     continue
     convenience
-    convention
     default
     defer
     deinit
     didSet
-    discardableResult
     do
     dynamic
     else
     enum
-    escaping
     extension
     fallthrough
     false
     fileprivate
     final
     for
-    frozen
     func
     get
     green
@@ -4230,8 +3820,6 @@ keywords:
     indirect
     infix
     init
-    inlinable
-    inline
     inout
     internal
     iOS
@@ -4247,12 +3835,9 @@ keywords:
     macOS
     macOSApplicationExtension
     mutating
-    never
     nil
     none
     nonmutating
-    nonobjc
-    objc
     open
     OpenBSD
     operator
@@ -4267,10 +3852,7 @@ keywords:
     protocol
     Protocol
     public
-    readnone
-    readonly
     red
-    releasenone
     repeat
     required
     resourceName
@@ -4291,7 +3873,6 @@ keywords:
     swift
     switch
     targetEnvironment
-    thin
     throw
     throws
     true
@@ -4299,10 +3880,8 @@ keywords:
     tvOS
     Type
     typealias
-    unknown
     unowned
     unsafe
-    usableFromInline
     var
     wasm32
     watchOS

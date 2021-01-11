@@ -1,8 +1,8 @@
 ﻿using SixPeg.Visiting;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
-    public class RuleExpression : AnyRule
+    public class RuleExpression : Rule
     {
         public RuleExpression(Symbol name, Attributes attributes, AnyExpression expression)
             : base(name, attributes, expression, false)

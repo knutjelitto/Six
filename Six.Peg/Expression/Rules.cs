@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace SixPeg.Expression
+namespace Six.Peg.Expression
 {
-    public class Rules : Grules<AnyRule>
+    public class Rules : Grules<Rule>
     {
         public Rules() { }
-        public Rules(IEnumerable<AnyRule> rules) : base(rules) { }
+        public Rules(IEnumerable<Rule> rules) : base(rules) { }
     }
 }
