@@ -158,19 +158,18 @@ public func assertionFailure(
 ///     where `preconditionFailure(_:file:line:)` is called.
 ///   - line: The line number to print along with `message`. The default is the
 ///     line number where `preconditionFailure(_:file:line:)` is called.
-public func preconditionFailure(
-  _ message: () -> String = String(),
-  file: StaticString = #file, line: UInt = #line
-) -> Never {
-  // Only check in debug and release mode.  In release mode just trap.
-  if _isDebugAssertConfiguration() {
-    _assertionFailure("Fatal error", message(), file: file, line: line,
-      flags: _fatalErrorFlags())
-  } else if _isReleaseAssertConfiguration() {
-    Builtin.condfail_message(true._value,
-      StaticString("precondition failure").unsafeRawPointer)
-  }
-  _conditionallyUnreachable()
+public func preconditionFailure(_ message: () -> String = String(), file: StaticString = #file, line: UInt = #line) -> Never
+{
+    // Only check in debug and release mode.  In release mode just trap.
+    if _isDebugAssertConfiguration()
+    {
+        _assertionFailure("Fatal error", message(), file: file, line: line, flags: _fatalErrorFlags())
+    } 
+    else if _isReleaseAssertConfiguration()
+    {
+        Builtin.condfail_message(true._value, StaticString("precondition failure").unsafeRawPointer)
+    }
+    _conditionallyUnreachable()
 }
 
 /// Unconditionally prints a given message and stops execution.

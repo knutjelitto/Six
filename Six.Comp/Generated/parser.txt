@@ -16,29 +16,138 @@
             whitespace
     full-prefix[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             ?
                 declaration-modifiers
     access-prefix[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             ?
                 access-level-modifier
     mutation-prefix[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             ?
                 mutation-modifier
-    attributes[R]:
-        +
-            attribute
     attribute[R]:
-        sequence
-            '@'
-            #error
+        choice
+            '@inlinable'
+            '@frozen'
+            '@escaping'
+            '@autoclosure'
+            '@usableFromInline'
+            '@discardableResult'
+            '@nonobjc'
+            '@unknown'
+            '@main'
+            '@testable'
+            sequence
+                '@inline'
+                '('
+                choice
+                    'never'
+                    '__always'
+                ')'
+            sequence
+                '@available'
+                '('
+                +
+                    choice
+                        name
+                        swift-version
+                        ','
+                        ':'
+                        '*'
+                        static-string-literal
+                ')'
+            sequence
+                '@convention'
+                '('
+                choice
+                    'block'
+                    'thin'
+                    'c'
+                ')'
+            sequence
+                '@objc'
+                ?
+                    sequence
+                        '('
+                        +
+                            choice
+                                ':'
+                                name
+                        ')'
+            '@_show_in_interface'
+            '@_fixed_layout'
+            '@_nonoverride'
+            '@_borrowed'
+            '@_transparent'
+            '@_nonEphemeral'
+            '@_alwaysEmitIntoClient'
+            '@_objc_non_lazy_realization'
+            sequence
+                '@_implements'
+                '('
+                type-identifier
+                *
+                    sequence
+                        ','
+                        type-identifier
+                ')'
+            sequence
+                '@_specialize'
+                '('
+                generic-where-clause
+                ')'
+            sequence
+                '@_effects'
+                '('
+                choice
+                    'readnone'
+                    'readonly'
+                    'releasenone'
+                ')'
+            sequence
+                '@_silgen_name'
+                '('
+                static-string-literal
+                ')'
+            sequence
+                '@_semantics'
+                '('
+                static-string-literal
+                ')'
+            sequence
+                '@_objcRuntimeName'
+                '('
+                name
+                ')'
+            sequence
+                '@_cdecl'
+                '('
+                static-string-literal
+                ')'
+            '@unsafe_no_objc_tagged_pointer'
+            sequence
+                '@derivative'
+                '('
+                'of'
+                ':'
+                'init'
+                '('
+                '_'
+                ':'
+                '_'
+                ':'
+                ')'
+                ')'
+            sequence
+                '@'
+                #error
     declaration-modifiers[R]:
         +
             modifier
@@ -133,9 +242,7 @@
             *
                 statement
     if-directive[R]:
-        sequence
-            '#'
-            #error
+        '#if'
     elseif-directive[R]:
         '#elseif'
     else-directive[R]:
@@ -335,8 +442,8 @@
             compiler-control-statement
     union-style-enum-case-clause[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             ?
                 'indirect'
             'case'
@@ -381,8 +488,8 @@
             compiler-control-statement
     raw-value-style-enum-case-clause[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'case'
             not
                 more
@@ -459,7 +566,8 @@
                 function-signature
                 ?
                     generic-where-clause
-                function-body
+                ?
+                    function-body
             sequence
                 function-head
                 #error
@@ -503,46 +611,40 @@
     parameter[R]:
         choice
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 external-name
                 local-name
                 type-annotation
                 default-argument-clause
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 external-name
                 local-name
                 type-annotation
                 '...'
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 external-name
                 local-name
                 type-annotation
             sequence
-                ?
-                    attributes
-                external-name
-                local-name
-                #error
-            sequence
-                ?
-                    attributes
+                *
+                    attribute
                 local-name
                 type-annotation
                 default-argument-clause
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 local-name
                 type-annotation
                 '...'
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 local-name
                 type-annotation
             #error
@@ -550,11 +652,19 @@
         choice
             sequence
                 '->'
-                ?
-                    attributes
+                *
+                    attribute
+                type
+            sequence
+                ':'
+                *
+                    attribute
                 type
             sequence
                 '->'
+                #error
+            sequence
+                ':'
                 #error
     external-name[R]:
         name
@@ -568,19 +678,29 @@
         choice
             sequence
                 ':'
+                *
+                    attribute
                 ?
-                    attributes
-                ?
-                    '__owned'
+                    sequence
+                        choice
+                            '__owned'
+                            '__shared'
+                        not
+                            more
                 ?
                     'inout'
                 type
             sequence
                 ':'
+                *
+                    attribute
                 ?
-                    attributes
-                ?
-                    '__owned'
+                    sequence
+                        choice
+                            '__owned'
+                            '__shared'
+                        not
+                            more
                 ?
                     'inout'
                 #error
@@ -588,9 +708,7 @@
                 ':'
                 #error
     function-body[R]:
-        choice
-            code-block
-            epsilon
+        code-block
     initializer-declaration[R]:
         sequence
             initializer-head
@@ -817,19 +935,20 @@
         choice
             sequence
                 '{'
-                ?
-                    struct-members
+                *
+                    struct-member
                 '}'
             sequence
                 '{'
                 #error
-    struct-members[R]:
-        +
-            struct-member
     struct-member[R]:
         choice
             declaration
             compiler-control-statement
+            sequence
+                not
+                    '}'
+                #error
     subscript-declaration[R]:
         choice
             sequence
@@ -854,8 +973,8 @@
     subscript-result[R]:
         sequence
             '->'
-            ?
-                attributes
+            *
+                attribute
             type
     typealias-declaration[R]:
         choice
@@ -996,16 +1115,16 @@
                 '}'
     willSet-clause[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'willSet'
             ?
                 setter-name
             code-block
     didSet-clause[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'didSet'
             ?
                 setter-name
@@ -1029,8 +1148,8 @@
             precedence-group-declaration
     import-declaration[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'import'
             ?
                 import-kind
@@ -1070,16 +1189,16 @@
     class-head[R]:
         choice
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 ?
                     access-level-modifier
                 ?
                     'final'
                 'class'
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 'final'
                 ?
                     access-level-modifier
@@ -1101,8 +1220,8 @@
             compiler-control-statement
     deinitializer-declaration[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'deinit'
             code-block
     expression[R]:
@@ -1218,8 +1337,6 @@
         sequence
             '.'
             'init'
-            not
-                more
             ?
                 argument-name-clause
     argument-name-clause[R]:
@@ -1263,21 +1380,23 @@
         match "?"
     primary-expression[R]:
         choice
-            sequence
-                name
-                ?
-                    generic-argument-clause
+            primary-name
             literal-expression
             self-expression
             superclass-expression
             closure-expression
-            parenthesized-expression
+            clamped-expression
             tuple-expression
             implicit-member-expression
             wildcard-expression
             key-path-expression
             selector-expression
             key-path-string-expression
+    primary-name[R]:
+        sequence
+            name
+            ?
+                generic-argument-clause
     literal-expression[R]:
         choice
             literal
@@ -1515,7 +1634,7 @@
                             'safe'
                             'unsafe'
                         ')'
-    parenthesized-expression[R]:
+    clamped-expression[R]:
         sequence
             '('
             expression
@@ -1554,7 +1673,7 @@
                 more
     key-path-expression[R]:
         sequence
-            '\\'
+            '\\\\'
             ?
                 type
             '.'
@@ -1994,8 +2113,7 @@
             decimal-literal
     binary-literal[TF]:
         sequence
-            match "0"
-            match "b"
+            match "0b"
             binary-digit
             *
                 binary-literal-character
@@ -2007,8 +2125,7 @@
             match "_"
     octal-literal[TF]:
         sequence
-            match "0"
-            match "o"
+            match "0o"
             octal-digit
             *
                 octal-literal-character
@@ -2040,8 +2157,7 @@
             match "_"
     hexadecimal-literal[TF]:
         sequence
-            match "0"
-            match "x"
+            match "0x"
             hexadecimal-digit
             *
                 hexadecimal-literal-character
@@ -2066,22 +2182,25 @@
                     hexadecimal-exponent
             sequence
                 decimal-literal
-                ?
-                    decimal-fraction
-                ?
-                    decimal-exponent
+                decimal-fraction
+                decimal-exponent
+            sequence
+                decimal-literal
+                decimal-exponent
+            sequence
+                decimal-fraction
+                decimal-exponent
+            decimal-fraction
     decimal-fraction[TF]:
         sequence
             match "."
             decimal-literal
     decimal-exponent[TF]:
         sequence
-            floating-point-e
+            match 'e' or 'E'
             ?
-                sign
+                match '+' or '-'
             decimal-literal
-    floating-point-e[TF]:
-        match 'e' or 'E'
     hexadecimal-fraction[TF]:
         sequence
             match "."
@@ -2090,14 +2209,10 @@
                 hexadecimal-literal-character
     hexadecimal-exponent[TF]:
         sequence
-            floating-point-p
+            match 'p' or 'P'
             ?
-                sign
+                match '+' or '-'
             decimal-literal
-    floating-point-p[TF]:
-        match 'p' or 'P'
-    sign[TF]:
-        match '+' or '-'
     decimal-digits[T]:
         sequence
             _
@@ -2203,29 +2318,6 @@
         sequence
             'is'
             type
-    break-statement[R]:
-        choice
-            sequence
-                'break'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                ?
-                    label-name
-            sequence
-                'break'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                #error
     condition-list[R]:
         sequence
             condition
@@ -2298,85 +2390,6 @@
                         sequence
                             '.'
                             decimal-digits
-    continue-statement[R]:
-        choice
-            sequence
-                'continue'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                ?
-                    label-name
-            sequence
-                'continue'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                #error
-    guard-statement[R]:
-        sequence
-            'guard'
-            condition-list
-            'else'
-            code-block
-    if-statement[R]:
-        choice
-            sequence
-                'if'
-                condition-list
-                code-block
-                ?
-                    else-clause
-            sequence
-                'if'
-                condition-list
-                #error
-            sequence
-                'if'
-                #error
-    else-clause[R]:
-        choice
-            sequence
-                'else'
-                code-block
-            sequence
-                'else'
-                if-statement
-            sequence
-                and
-                    'else'
-                #error
-    return-statement[R]:
-        choice
-            sequence
-                'return'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                ?
-                    expression
-            sequence
-                'return'
-                not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
-                #error
     switch-statement[R]:
         sequence
             'switch'
@@ -2411,14 +2424,14 @@
     case-label[R]:
         choice
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 'case'
                 case-item-list
                 ':'
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 'case'
                 #error
     case-item-list[R]:
@@ -2450,8 +2463,8 @@
                 where-clause
     default-label[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             'default'
             ':'
     conditional-switch-case[R]:
@@ -2476,19 +2489,6 @@
             else-directive
             ?
                 switch-cases
-    while-statement[R]:
-        choice
-            sequence
-                'while'
-                condition-list
-                code-block
-            sequence
-                'while'
-                condition-list
-                #error
-            sequence
-                'while'
-                #error
     statement[R]:
         choice
             sequence
@@ -2516,12 +2516,7 @@
             declaration
             sequence
                 not
-                    sequence
-                        choice
-                            'case'
-                            'default'
-                        not
-                            more
+                    in-switch
                 expression
             sequence
                 '{'
@@ -2536,8 +2531,47 @@
             sequence
                 '{'
                 #error
+    break-statement[R]:
+        choice
+            sequence
+                'break'
+                not
+                    in-switch
+                ?
+                    label-name
+            sequence
+                'break'
+                not
+                    in-switch
+                #error
+    continue-statement[R]:
+        choice
+            sequence
+                'continue'
+                not
+                    in-switch
+                ?
+                    label-name
+            sequence
+                'continue'
+                not
+                    in-switch
+                #error
     fallthrough-statement[R]:
         'fallthrough'
+    return-statement[R]:
+        choice
+            sequence
+                'return'
+                not
+                    in-switch
+                ?
+                    expression
+            sequence
+                'return'
+                not
+                    in-switch
+                #error
     throw-statement[R]:
         choice
             sequence
@@ -2557,12 +2591,58 @@
             ?
                 where-clause
             code-block
+    while-statement[R]:
+        choice
+            sequence
+                'while'
+                condition-list
+                code-block
+            sequence
+                'while'
+                condition-list
+                #error
+            sequence
+                'while'
+                #error
     repeat-while-statement[R]:
         sequence
             'repeat'
             code-block
             'while'
             expression
+    if-statement[R]:
+        choice
+            sequence
+                'if'
+                condition-list
+                code-block
+                ?
+                    else-clause
+            sequence
+                'if'
+                condition-list
+                #error
+            sequence
+                'if'
+                #error
+    else-clause[R]:
+        choice
+            sequence
+                'else'
+                code-block
+            sequence
+                'else'
+                if-statement
+            sequence
+                and
+                    'else'
+                #error
+    guard-statement[R]:
+        sequence
+            'guard'
+            condition-list
+            'else'
+            code-block
     do-statement[R]:
         sequence
             'do'
@@ -2597,6 +2677,13 @@
             ':'
     label-name[R]:
         name
+    in-switch[R]:
+        sequence
+            choice
+                'case'
+                'default'
+            not
+                more
     where-clause[R]:
         sequence
             'where'
@@ -2655,10 +2742,12 @@
             self-type
             opaque-type
             tuple-type
-            sequence
-                '('
-                type
-                ')'
+            clamped-type
+    clamped-type[R]:
+        sequence
+            '('
+            type
+            ')'
     type-postfix[R]:
         choice
             type-optional
@@ -2682,8 +2771,8 @@
                         more
     function-type[R]:
         sequence
-            ?
-                attributes
+            *
+                attribute
             function-type-argument-clause
             ?
                 'throws'
@@ -2717,8 +2806,8 @@
                 argument-label
                 type-annotation
             sequence
-                ?
-                    attributes
+                *
+                    attribute
                 ?
                     'inout'
                 type
@@ -2792,7 +2881,7 @@
         choice
             line-break-character
             inline-space
-            match " "
+            match "\u0000"
             match "\v"
             match "\f"
     whitespace-item[TF]:
@@ -2801,7 +2890,7 @@
             inline-space
             comment
             multiline-comment
-            match " "
+            match "\u0000"
             match "\v"
             match "\f"
     line-break[TF]:
@@ -2849,931 +2938,13 @@
                         match "/*"
                         match "*/"
                 match ANY
-    '@'[T]:
-        sequence
-            _
-            match "@"
-    'class'[T]:
-        sequence
-            _
-            match "class"
-            not
-                more
-    'convenience'[T]:
-        sequence
-            _
-            match "convenience"
-            not
-                more
-    'dynamic'[T]:
-        sequence
-            _
-            match "dynamic"
-            not
-                more
-    'final'[T]:
-        sequence
-            _
-            match "final"
-            not
-                more
-    'infix'[T]:
-        sequence
-            _
-            match "infix"
-            not
-                more
-    'lazy'[T]:
-        sequence
-            _
-            match "lazy"
-            not
-                more
-    'optional'[T]:
-        sequence
-            _
-            match "optional"
-            not
-                more
-    'override'[T]:
-        sequence
-            _
-            match "override"
-            not
-                more
-    'postfix'[T]:
-        sequence
-            _
-            match "postfix"
-            not
-                more
-    'prefix'[T]:
-        sequence
-            _
-            match "prefix"
-            not
-                more
-    'required'[T]:
-        sequence
-            _
-            match "required"
-            not
-                more
-    'static'[T]:
-        sequence
-            _
-            match "static"
-            not
-                more
-    'unowned'[T]:
-        sequence
-            _
-            match "unowned"
-            not
-                more
-    '('[T]:
-        sequence
-            _
-            match "("
-    'safe'[T]:
-        sequence
-            _
-            match "safe"
-            not
-                more
-    'unsafe'[T]:
-        sequence
-            _
-            match "unsafe"
-            not
-                more
-    ')'[T]:
-        sequence
-            _
-            match ")"
-    'weak'[T]:
-        sequence
-            _
-            match "weak"
-            not
-                more
-    '__consuming'[T]:
-        sequence
-            _
-            match "__consuming"
-            not
-                more
-    'set'[T]:
-        sequence
-            _
-            match "set"
-            not
-                more
-    'private'[T]:
-        sequence
-            _
-            match "private"
-            not
-                more
-    'fileprivate'[T]:
-        sequence
-            _
-            match "fileprivate"
-            not
-                more
-    'internal'[T]:
-        sequence
-            _
-            match "internal"
-            not
-                more
-    'public'[T]:
-        sequence
-            _
-            match "public"
-            not
-                more
-    'open'[T]:
-        sequence
-            _
-            match "open"
-            not
-                more
-    'mutating'[T]:
-        sequence
-            _
-            match "mutating"
-            not
-                more
-    'nonmutating'[T]:
-        sequence
-            _
-            match "nonmutating"
-            not
-                more
-    '#'[T]:
-        sequence
-            _
-            match "#"
-    '#elseif'[T]:
-        sequence
-            _
-            match "#elseif"
-    '#else'[T]:
-        sequence
-            _
-            match "#else"
-    '#endif'[T]:
-        sequence
-            _
-            match "#endif"
-    '!'[T]:
-        sequence
-            _
-            match "!"
-    '||'[T]:
-        sequence
-            _
-            match "||"
-    '&&'[T]:
-        sequence
-            _
-            match "&&"
-    'os'[T]:
-        sequence
-            _
-            match "os"
-            not
-                more
-    'arch'[T]:
-        sequence
-            _
-            match "arch"
-            not
-                more
-    'swift'[T]:
-        sequence
-            _
-            match "swift"
-            not
-                more
-    '>='[T]:
-        sequence
-            _
-            match ">="
-    '<'[T]:
-        sequence
-            _
-            match "<"
-    'compiler'[T]:
-        sequence
-            _
-            match "compiler"
-            not
-                more
-    'canImport'[T]:
-        sequence
-            _
-            match "canImport"
-            not
-                more
-    'targetEnvironment'[T]:
-        sequence
-            _
-            match "targetEnvironment"
-            not
-                more
-    'macOS'[T]:
-        sequence
-            _
-            match "macOS"
-            not
-                more
-    'iOS'[T]:
-        sequence
-            _
-            match "iOS"
-            not
-                more
-    'watchOS'[T]:
-        sequence
-            _
-            match "watchOS"
-            not
-                more
-    'tvOS'[T]:
-        sequence
-            _
-            match "tvOS"
-            not
-                more
-    'Windows'[T]:
-        sequence
-            _
-            match "Windows"
-            not
-                more
-    'Android'[T]:
-        sequence
-            _
-            match "Android"
-            not
-                more
-    'Linux'[T]:
-        sequence
-            _
-            match "Linux"
-            not
-                more
-    'OpenBSD'[T]:
-        sequence
-            _
-            match "OpenBSD"
-            not
-                more
-    'i386'[T]:
-        sequence
-            _
-            match "i386"
-            not
-                more
-    'x86_64'[T]:
-        sequence
-            _
-            match "x86_64"
-            not
-                more
-    'arm'[T]:
-        sequence
-            _
-            match "arm"
-            not
-                more
-    'arm64'[T]:
-        sequence
-            _
-            match "arm64"
-            not
-                more
-    'wasm32'[T]:
-        sequence
-            _
-            match "wasm32"
-            not
-                more
-    'powerpc64'[T]:
-        sequence
-            _
-            match "powerpc64"
-            not
-                more
-    's390x'[T]:
-        sequence
-            _
-            match "s390x"
-            not
-                more
-    '.'[T]:
-        sequence
-            _
-            match "."
-    'simulator'[T]:
-        sequence
-            _
-            match "simulator"
-            not
-                more
-    'macCatalyst'[T]:
-        sequence
-            _
-            match "macCatalyst"
-            not
-                more
-    '#sourceLocation'[T]:
-        sequence
-            _
-            match "#sourceLocation"
-    'file:'[T]:
-        sequence
-            _
-            match "file:"
-    ','[T]:
-        sequence
-            _
-            match ","
-    'line:'[T]:
-        sequence
-            _
-            match "line:"
-    '#error'[T]:
-        sequence
-            _
-            match "#error"
-    '#warning'[T]:
-        sequence
-            _
-            match "#warning"
-    'let'[T]:
-        sequence
-            _
-            match "let"
-            not
-                more
-    '='[T]:
-        sequence
-            _
-            match "="
-    'indirect'[T]:
-        sequence
-            _
-            match "indirect"
-            not
-                more
-    'enum'[T]:
-        sequence
-            _
-            match "enum"
-            not
-                more
-    '{'[T]:
-        sequence
-            _
-            match "{"
-    '}'[T]:
-        sequence
-            _
-            match "}"
-    'case'[T]:
-        sequence
-            _
-            match "case"
-            not
-                more
-    'extension'[T]:
-        sequence
-            _
-            match "extension"
-            not
-                more
-    'func'[T]:
-        sequence
-            _
-            match "func"
-            not
-                more
-    'throws'[T]:
-        sequence
-            _
-            match "throws"
-            not
-                more
-    'rethrows'[T]:
-        sequence
-            _
-            match "rethrows"
-            not
-                more
-    '...'[T]:
-        sequence
-            _
-            match "..."
-    '->'[T]:
-        sequence
-            _
-            match "->"
-    ':'[T]:
-        sequence
-            _
-            match ":"
-    '__owned'[T]:
-        sequence
-            _
-            match "__owned"
-            not
-                more
-    'inout'[T]:
-        sequence
-            _
-            match "inout"
-            not
-                more
-    'init'[T]:
-        sequence
-            _
-            match "init"
-            not
-                more
-    '?'[T]:
-        sequence
-            _
-            match "?"
-    'operator'[T]:
-        sequence
-            _
-            match "operator"
-            not
-                more
-    'precedencegroup'[T]:
-        sequence
-            _
-            match "precedencegroup"
-            not
-                more
-    'higherThan'[T]:
-        sequence
-            _
-            match "higherThan"
-            not
-                more
-    'lowerThan'[T]:
-        sequence
-            _
-            match "lowerThan"
-            not
-                more
-    'assignment'[T]:
-        sequence
-            _
-            match "assignment"
-            not
-                more
-    'associativity'[T]:
-        sequence
-            _
-            match "associativity"
-            not
-                more
-    'left'[T]:
-        sequence
-            _
-            match "left"
-            not
-                more
-    'right'[T]:
-        sequence
-            _
-            match "right"
-            not
-                more
-    'none'[T]:
-        sequence
-            _
-            match "none"
-            not
-                more
-    'protocol'[T]:
-        sequence
-            _
-            match "protocol"
-            not
-                more
-    'associatedtype'[T]:
-        sequence
-            _
-            match "associatedtype"
-            not
-                more
-    'struct'[T]:
-        sequence
-            _
-            match "struct"
-            not
-                more
-    'subscript'[T]:
-        sequence
-            _
-            match "subscript"
-            not
-                more
-    'typealias'[T]:
-        sequence
-            _
-            match "typealias"
-            not
-                more
-    'var'[T]:
-        sequence
-            _
-            match "var"
-            not
-                more
-    'get'[T]:
-        sequence
-            _
-            match "get"
-            not
-                more
-    '_modify'[T]:
-        sequence
-            _
-            match "_modify"
-            not
-                more
-    'willSet'[T]:
-        sequence
-            _
-            match "willSet"
-            not
-                more
-    'didSet'[T]:
-        sequence
-            _
-            match "didSet"
-            not
-                more
-    'import'[T]:
-        sequence
-            _
-            match "import"
-            not
-                more
-    'deinit'[T]:
-        sequence
-            _
-            match "deinit"
-            not
-                more
-    '&'[T]:
-        sequence
-            _
-            match "&"
-    'self'[T]:
-        sequence
-            _
-            match "self"
-            not
-                more
-    '['[T]:
-        sequence
-            _
-            match "["
-    ']'[T]:
-        sequence
-            _
-            match "]"
-    '#file'[T]:
-        sequence
-            _
-            match "#file"
-    '#fileID'[T]:
-        sequence
-            _
-            match "#fileID"
-    '#filePath'[T]:
-        sequence
-            _
-            match "#filePath"
-    '#line'[T]:
-        sequence
-            _
-            match "#line"
-    '#column'[T]:
-        sequence
-            _
-            match "#column"
-    '#function'[T]:
-        sequence
-            _
-            match "#function"
-    '#dsohandle'[T]:
-        sequence
-            _
-            match "#dsohandle"
-    '-'[T]:
-        sequence
-            _
-            match "-"
-    'true'[T]:
-        sequence
-            _
-            match "true"
-            not
-                more
-    'false'[T]:
-        sequence
-            _
-            match "false"
-            not
-                more
-    'nil'[T]:
-        sequence
-            _
-            match "nil"
-            not
-                more
-    '#colorLiteral'[T]:
-        sequence
-            _
-            match "#colorLiteral"
-    'red'[T]:
-        sequence
-            _
-            match "red"
-            not
-                more
-    'green'[T]:
-        sequence
-            _
-            match "green"
-            not
-                more
-    'blue'[T]:
-        sequence
-            _
-            match "blue"
-            not
-                more
-    'alpha'[T]:
-        sequence
-            _
-            match "alpha"
-            not
-                more
-    '#fileLiteral'[T]:
-        sequence
-            _
-            match "#fileLiteral"
-    'resourceName'[T]:
-        sequence
-            _
-            match "resourceName"
-            not
-                more
-    '#imageLiteral'[T]:
-        sequence
-            _
-            match "#imageLiteral"
-    'super'[T]:
-        sequence
-            _
-            match "super"
-            not
-                more
-    'in'[T]:
-        sequence
-            _
-            match "in"
-            not
-                more
-    '_'[T]:
-        sequence
-            _
-            match "_"
-            not
-                more
-    '\\'[T]:
-        sequence
-            _
-            match "\\\\"
-    '#selector'[T]:
-        sequence
-            _
-            match "#selector"
-    'getter:'[T]:
-        sequence
-            _
-            match "getter:"
-    'setter:'[T]:
-        sequence
-            _
-            match "setter:"
-    '#keyPath'[T]:
-        sequence
-            _
-            match "#keyPath"
-    'try'[T]:
-        sequence
-            _
-            match "try"
-            not
-                more
-    'is'[T]:
-        sequence
-            _
-            match "is"
-            not
-                more
-    'as'[T]:
-        sequence
-            _
-            match "as"
-            not
-                more
-    '>'[T]:
-        sequence
-            _
-            match ">"
-    'where'[T]:
-        sequence
-            _
-            match "where"
-            not
-                more
-    '=='[T]:
-        sequence
-            _
-            match "=="
-    'break'[T]:
-        sequence
-            _
-            match "break"
-            not
-                more
-    'default'[T]:
-        sequence
-            _
-            match "default"
-            not
-                more
-    '#available'[T]:
-        sequence
-            _
-            match "#available"
-    '*'[T]:
-        sequence
-            _
-            match "*"
-    'iOSApplicationExtension'[T]:
-        sequence
-            _
-            match "iOSApplicationExtension"
-            not
-                more
-    'macOSApplicationExtension'[T]:
-        sequence
-            _
-            match "macOSApplicationExtension"
-            not
-                more
-    'macCatalystApplicationExtension'[T]:
-        sequence
-            _
-            match "macCatalystApplicationExtension"
-            not
-                more
-    'continue'[T]:
-        sequence
-            _
-            match "continue"
-            not
-                more
-    'guard'[T]:
-        sequence
-            _
-            match "guard"
-            not
-                more
-    'else'[T]:
-        sequence
-            _
-            match "else"
-            not
-                more
-    'if'[T]:
-        sequence
-            _
-            match "if"
-            not
-                more
-    'return'[T]:
-        sequence
-            _
-            match "return"
-            not
-                more
-    'switch'[T]:
-        sequence
-            _
-            match "switch"
-            not
-                more
-    'while'[T]:
-        sequence
-            _
-            match "while"
-            not
-                more
-    ';'[T]:
-        sequence
-            _
-            match ";"
-    'fallthrough'[T]:
-        sequence
-            _
-            match "fallthrough"
-            not
-                more
-    'throw'[T]:
-        sequence
-            _
-            match "throw"
-            not
-                more
-    'for'[T]:
-        sequence
-            _
-            match "for"
-            not
-                more
-    'repeat'[T]:
-        sequence
-            _
-            match "repeat"
-            not
-                more
-    'do'[T]:
-        sequence
-            _
-            match "do"
-            not
-                more
-    'catch'[T]:
-        sequence
-            _
-            match "catch"
-            not
-                more
-    'defer'[T]:
-        sequence
-            _
-            match "defer"
-            not
-                more
-    'Type'[T]:
-        sequence
-            _
-            match "Type"
-            not
-                more
-    'Protocol'[T]:
-        sequence
-            _
-            match "Protocol"
-            not
-                more
-    'some'[T]:
-        sequence
-            _
-            match "some"
-            not
-                more
-    'Any'[T]:
-        sequence
-            _
-            match "Any"
-            not
-                more
-    'Self'[T]:
-        sequence
-            _
-            match "Self"
-            not
-                more
 
 keywords:
     _
+    __always
     __consuming
     __owned
+    __shared
     _modify
     alpha
     Android
@@ -3785,8 +2956,10 @@ keywords:
     assignment
     associatedtype
     associativity
+    block
     blue
     break
+    c
     canImport
     case
     catch
@@ -3835,9 +3008,11 @@ keywords:
     macOS
     macOSApplicationExtension
     mutating
+    never
     nil
     none
     nonmutating
+    of
     open
     OpenBSD
     operator
@@ -3852,7 +3027,10 @@ keywords:
     protocol
     Protocol
     public
+    readnone
+    readonly
     red
+    releasenone
     repeat
     required
     resourceName
@@ -3873,6 +3051,7 @@ keywords:
     swift
     switch
     targetEnvironment
+    thin
     throw
     throws
     true

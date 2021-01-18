@@ -4,13 +4,15 @@ namespace Six.Support
 {
     public class IndentWriter : IWriter
     {
-        const string indent = "    ";
+        const string defaultIndent = "    ";
+        readonly string indent = "    ";
         string currentIndent = string.Empty;
         bool pending = false;
 
-        public IndentWriter(IBaseWriter writer)
+        public IndentWriter(IBaseWriter writer, string? indent = null)
         {
             Writer = writer;
+            this.indent = indent ?? defaultIndent;
         }
 
         public IBaseWriter Writer { get; }

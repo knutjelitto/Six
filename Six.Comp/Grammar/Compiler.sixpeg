@@ -28,12 +28,7 @@ grammar Six
             = else-directive statement*
 
         if-directive
-            = '#' #error( "#if" )
-
-        /*
-        if-directive
             = '#if'
-        */
 
         elseif-directive
             = '#elseif'

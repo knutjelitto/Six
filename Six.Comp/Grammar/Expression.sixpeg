@@ -28,110 +28,116 @@ grammar Swift
         postfix-expression
             = primary-expression postfix-appendix*
 
+        @lift
         postfix-appendix
-            = postfix-operator
-            / function-call
-            / initializer-appendix
-            / explicit-member
-            / postfix-self
-            / subscript
-            / forced-value
-            / optional-chaining
+            : postfix-operator
+            | function-call
+            | initializer-appendix
+            | explicit-member
+            | postfix-self
+            | subscript
+            | forced-value
+            | optional-chaining
 
         //----
         function-call
-            = function-call-argument-clause trailing-closures
-            / function-call-argument-clause
-            / trailing-closures
+            : function-call-argument-clause trailing-closures
+            | function-call-argument-clause
+            | trailing-closures
 
         function-call-argument-clause
             : '(' function-call-argument-list? ')'
             | '(' #error( "function-call-argument-clause" )
 
         function-call-argument-list
-            = function-call-argument (',' function-call-argument)*
+            : function-call-argument (',' function-call-argument)*
 
         function-call-argument
-            = (name ':')? (expression / operator-name)
+            : (name ':')? (expression / operator-name)
 
         trailing-closures
-            = ':' &closure-expression closure-expression labeled-trailing-closures?
-            / ':' &'{' #error("trailing-closures")
+            : ':' &closure-expression closure-expression labeled-trailing-closures?
+            | ':' &'{' #error("trailing-closures")
 
         labeled-trailing-closures
             = labeled-trailing-closure labeled-trailing-closure*
 
         labeled-trailing-closure
-            = name ':' closure-expression
+            : name ':' closure-expression
 
         //----
         initializer-appendix
-            = '.' 'init' !more argument-name-clause?
+            : '.' 'init' argument-name-clause?
 
         argument-name-clause
-            = '(' argument-names ')'
+            : '(' argument-names ')'
 
         argument-names
-            = argument-name+
+            : argument-name+
 
         argument-name
-            = name ':'
+            : name ':'
 
         //----
         explicit-member
-            = '.' decimal-digits
-            / '.' name argument-name-clause
-            / '.' name generic-argument-clause?
+            : '.' decimal-digits
+            | '.' name argument-name-clause
+            | '.' name generic-argument-clause?
 
         //----
         postfix-self
-            = '.' 'self'
+            : '.' 'self'
 
         //----
         subscript
-            = '[' function-call-argument-list ']'
+            : '[' function-call-argument-list ']'
 
         //----
         forced-value
-            = [!]
+            : [!]
 
         //----
         optional-chaining
-            = [?]
+            : [?]
 
-        //----
+        @lift
         primary-expression
-            = name generic-argument-clause?
-            / literal-expression
-            / self-expression
-            / superclass-expression
-            / closure-expression
-            / parenthesized-expression
-            / tuple-expression
-            / implicit-member-expression
-            / wildcard-expression
-            / key-path-expression
-            / selector-expression
-            / key-path-string-expression
+            : primary-name
+            | literal-expression
+            | self-expression
+            | superclass-expression
+            | closure-expression
+            | clamped-expression
+            | tuple-expression
+            | implicit-member-expression
+            | wildcard-expression
+            | key-path-expression
+            | selector-expression
+            | key-path-string-expression
 
+        primary-name:
+            name generic-argument-clause?
+
+        @lift
         literal-expression
-            = literal
-            / array-literal
-            / dictionary-literal
-            / playground-literal
-            / '#file'
-            / '#fileID'
-            / '#filePath'
-            / '#line'
-            / '#column'
-            / '#function'
-            / '#dsohandle'
+            : literal
+            | array-literal
+            | dictionary-literal
+            | playground-literal
+            | '#file'
+            | '#fileID'
+            | '#filePath'
+            | '#line'
+            | '#column'
+            | '#function'
+            | '#dsohandle'
 
+        @lift
         literal
-            = numeric-literal
-            / string-literal
-            / boolean-literal
-            / nil-literal
+            : numeric-literal
+            | string-literal
+            | boolean-literal
+            | nil-literal
 
         numeric-literal
             = '-'? _ (floating-point-literal / integer-literal)
@@ -218,7 +224,7 @@ grammar Swift
             = 'weak'
             / 'unowned' ( '(' ('safe' / 'unsafe') ')' )?
 
-        parenthesized-expression
+        clamped-expression
             = '(' expression ')'
 
         tuple-expression

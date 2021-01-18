@@ -10,6 +10,7 @@ grammar Six
             : statement-label? famous-statement ';'?
             | compiler-control-statement
 
+        @lift
         famous-statement 
             : break-statement
             | continue-statement
@@ -25,25 +26,56 @@ grammar Six
             | do-statement
             | defer-statement
             | declaration
-            | !(('case'/'default') !more) expression // follow in switch/case
+            | !in-switch expression // follow in switch/case
             | '{' #error("statement")
 
         code-block
-            = '{' statement* '}'
-            / '{' #error("code-block")
+            : '{' statement* '}'
+            | '{' #error("code-block")
+
+
+        break-statement
+            : 'break' !in-switch label-name?
+            | 'break' !in-switch #error("break-statement")
+
+        continue-statement
+            : 'continue' !in-switch label-name?
+            | 'continue' !in-switch #error("continue-statement")
 
         fallthrough-statement
             = 'fallthrough'
 
+        return-statement
+            : 'return' !in-switch expression?
+            | 'return' !in-switch #error("return-statement")
+
         throw-statement
-            = 'throw' expression
-            / 'throw' #error("throw-statement")
+            : 'throw' expression
+            | 'throw' #error("throw-statement")
 
-        for-in-statement
-            = 'for' 'case'? pattern 'in' expression where-clause? code-block
+        for-in-statement:
+            'for' 'case'? pattern 'in' expression where-clause? code-block
 
-        repeat-while-statement
-            = 'repeat' code-block 'while' expression
+        while-statement
+            : 'while' condition-list code-block
+            | 'while' condition-list #error("while-statement - code-block")
+            | 'while' #error("while-statement - condition-list")
+
+        repeat-while-statement:
+            'repeat' code-block 'while' expression
+
+        if-statement
+            : 'if' condition-list code-block else-clause?
+            | 'if' condition-list #error("if-statement - code-block")
+            | 'if' #error("if-statement - condition-list")
+
+        else-clause
+            : 'else' code-block
+            | 'else' if-statement
+            | &'else' #error("else-clause")
+
+        guard-statement:
+            'guard' condition-list 'else' code-block
 
         // ------------------------------------
         // 'do' statement
@@ -81,6 +113,9 @@ grammar Six
         // ------------------------------------
         // Misc
         // ------------------------------------
+        in-switch:
+            ('case'/'default') !more
+
         where-clause
             = 'where' where-expression
 

@@ -3,7 +3,7 @@
     rules // function-declaration
     {
         function-declaration
-            = function-head function-name generic-parameter-clause? function-signature generic-where-clause? function-body
+            = function-head function-name generic-parameter-clause? function-signature generic-where-clause? function-body?
             / function-head #error("function-declaration")
 
         function-head
@@ -21,43 +21,43 @@
             / #error( "function-name" )
 
         parameter-clause
-            = '(' ')'
-            / '(' parameter-list ')'
-            / #error( "parameter-clause" )
+            : '(' ')'
+            | '(' parameter-list ')'
+            | #error( "parameter-clause" )
 
         parameter-list
             = parameter (',' parameter)*
 
         parameter
-            = attributes? external-name local-name type-annotation default-argument-clause
-            / attributes? external-name local-name type-annotation '...'
-            / attributes? external-name local-name type-annotation
-            / attributes? external-name local-name #error("parameter-1")
-            / attributes? local-name type-annotation default-argument-clause
-            / attributes? local-name type-annotation '...'
-            / attributes? local-name type-annotation
+            = attribute* external-name local-name type-annotation default-argument-clause
+            / attribute* external-name local-name type-annotation '...'
+            / attribute* external-name local-name type-annotation
+            / attribute* local-name type-annotation default-argument-clause
+            / attribute* local-name type-annotation '...'
+            / attribute* local-name type-annotation
             / #error("parameter")
 
         function-result
-            = '->' attributes? type
-            / '->' #error( "function-result" )
+            : '->' attribute* type
+            | ':'  attribute* type
+            | '->' #error( "function-result" )
+            | ':' #error( "function-result" )
 
-        external-name
-            = name
+        external-name:
+            name
 
-        local-name
-            = name
+        local-name:
+            name
 
-        default-argument-clause
-            = '=' expression
+        default-argument-clause:
+            '=' expression
 
         type-annotation
-            = ':' attributes? '__owned'? 'inout'? type
-            / ':' attributes? '__owned'? 'inout'? #error("type-annotation-1")
-            / ':' #error("type-annotation-2")
+            : ':' attribute* (('__owned'/'__shared') !more)? 'inout'? type
+            | ':' attribute* (('__owned'/'__shared') !more)? 'inout'? #error("type-annotation-1")
+            | ':' #error("type-annotation-2")
 
-        function-body
-            = code-block
-            /
+        function-body:
+            code-block
     }
 }

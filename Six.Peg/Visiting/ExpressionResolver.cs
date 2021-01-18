@@ -134,36 +134,29 @@ namespace SixPeg.Visiting
 
         public AnyMatcher Visit(SpacedExpression expr)
         {
-            if (!parser.GetRule(expr.Name, out var rule))
+            if (parser.GetRule(expr.Name, out var rule))
             {
-                Debug.Assert(parser.Space != null);
-                var matchSpace = new MatchReference(parser.Space) { AlwaysSucceeds = true };
-
-                var text = expr.Name.Text[1..^1];
-                Debug.Assert(text.Length >= 1);
-
-                var matchText = text.Length == 1
-                    ? Optim(new MatchCharacterExact(text[0]))
-                    : Optim(new MatchCharacterSequence(text));
-
-                var sequence = new List<AnyMatcher> { matchSpace, matchText };
-                if (text.IsIdentifier())
-                {
-                    _ = parser.Keywords.Add(text);
-                    if (parser.More != null)
-                    {
-                        sequence.Add(new MatchNot(new MatchReference(parser.More)));
-                    }
-                }
-
-                rule = new MatchRule(expr.Name, true)
-                {
-                    Matcher = Optim(new MatchSequence(sequence)),
-                };
-                parser.Add(rule);
+                return new MatchReference(rule);
             }
 
-            return new MatchReference(rule);
+            Debug.Assert(parser.Space != null);
+            Debug.Assert(parser.More != null);
+
+            var text = expr.Name.Text[1..^1];
+            Debug.Assert(text.Length >= 1);
+
+            var notMore = false;
+            if (text.IsIdentifier())
+            {
+                _ = parser.Keywords.Add(text);
+                notMore = true;
+            }
+            if (text.Length > 1 && "@#".Contains(text[0]) && text[1..].IsIdentifier())
+            {
+                notMore = true;
+            }
+
+            return new MatchTerminal(text, notMore);
         }
 
         public AnyMatcher Visit(WildcardExpression expr)

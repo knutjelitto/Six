@@ -1,4 +1,0 @@
-﻿break-statement
-    = 'break' !(('case'/'default') !more) label-name?
-    / 'break' !(('case'/'default') !more) #error("break-statement")
-

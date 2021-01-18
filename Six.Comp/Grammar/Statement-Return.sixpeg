@@ -1,5 +1,0 @@
-﻿return-statement
-    = 'return' !(('case'/'default') !more) expression?
-    / 'return' !(('case'/'default') !more) #error("return-statement")
-
-

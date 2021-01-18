@@ -3,24 +3,17 @@
     rules
     {
         full-prefix
-            = attributes? declaration-modifiers?
+            = attribute* declaration-modifiers?
 
         access-prefix
-            = attributes? access-level-modifier?
+            = attribute* access-level-modifier?
 
         mutation-prefix
-            = attributes? mutation-modifier?
+            = attribute* mutation-modifier?
 
         // ------------------------------------
         // attributes / modifiers
         // ------------------------------------
-        attributes
-            = attribute+
-
-        attribute:
-            '@' #error( "attribute" )
-
-        /*
         attribute
             = '@inlinable'
             / '@frozen'
@@ -30,6 +23,8 @@
             / '@discardableResult'
             / '@nonobjc'
             / '@unknown'
+            / '@main'
+            / '@testable'
             / '@inline' '(' ('never' / '__always') ')'
             / '@available' '(' (name / swift-version / ',' / ':' / '*' / static-string-literal)+ ')'
             / '@convention' '(' ('block'/'thin'/'c') ')'
@@ -49,8 +44,9 @@
             / '@_semantics' '(' static-string-literal ')'
             / '@_objcRuntimeName' '(' name ')'
             / '@_cdecl' '(' static-string-literal ')'
+            / '@unsafe_no_objc_tagged_pointer'
+            / '@derivative' '(' 'of' ':' 'init' '(' '_' ':' '_' ':' ')' ')'
             / '@' #error( "attribute" )
-        */
 
         declaration-modifiers
             = modifier+

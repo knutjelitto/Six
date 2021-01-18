@@ -2,109 +2,119 @@
 // == TYPE
 // ====================================
 
-type
-    = primary-type type-postfix*
+grammar Six
+{
+    rules
+    {
+        type
+            = primary-type type-postfix*
 
-primary-type
-    = protocol-composition-type
-    / type-identifier
-    / function-type
-    / array-type
-    / dictionary-type
-    / any-type
-    / self-type
-    / opaque-type
-    / tuple-type
-    / '(' type ')'
+        @lift
+        primary-type
+            : protocol-composition-type
+            | type-identifier
+            | function-type
+            | array-type
+            | dictionary-type
+            | any-type
+            | self-type
+            | opaque-type
+            | tuple-type
+            | clamped-type
 
-type-postfix
-    = type-optional
-    / type-unwrap
-    / type-metatype
+        clamped-type:
+            '(' type ')'
 
-type-optional
-    = [?]
+        type-postfix
+            = type-optional
+            / type-unwrap
+            / type-metatype
 
-type-unwrap
-    = [!]
+        type-optional
+            = [?]
 
-type-metatype
-    = '.' ('Type' !more / 'Protocol' !more)
+        type-unwrap
+            = [!]
 
-// ------------------------------------
-// function-type
-// ------------------------------------
-function-type
-    = attributes? function-type-argument-clause 'throws'? '->' type
+        type-metatype
+            = '.' ('Type' !more / 'Protocol' !more)
 
-function-type-argument-clause
-    = '(' ')'
-    / '(' function-type-argument-list '...'? ')'
+        // ------------------------------------
+        // function-type
+        // ------------------------------------
+        function-type
+            = attribute* function-type-argument-clause 'throws'? '->' type
 
-function-type-argument-list
-    = function-type-argument (',' function-type-argument)*
+        function-type-argument-clause
+            = '(' ')'
+            / '(' function-type-argument-list '...'? ')'
 
-function-type-argument
-    = name argument-label type-annotation
-    / argument-label type-annotation
-    / attributes? 'inout'? type
+        function-type-argument-list
+            = function-type-argument (',' function-type-argument)*
 
-argument-label
-    = name
+        function-type-argument
+            = name argument-label type-annotation
+            / argument-label type-annotation
+            / attribute* 'inout'? type
 
-// ------------------------------------
-// array-type
-// ------------------------------------
-array-type
-    = '[' type ']'
+        argument-label
+            = name
 
-// ------------------------------------
-// dictionary-type
-// ------------------------------------
-dictionary-type
-    = '[' type ':' type ']'
+        // ------------------------------------
+        // array-type
+        // ------------------------------------
+        array-type
+            = '[' type ']'
 
-// ------------------------------------
-// type-identifier
-// ------------------------------------
-type-identifier
-    = type-identifier-part ('.' type-identifier-part)*
+        // ------------------------------------
+        // dictionary-type
+        // ------------------------------------
+        dictionary-type
+            = '[' type ':' type ']'
 
-type-identifier-part
-    = type-name generic-argument-clause?
+        // ------------------------------------
+        // type-identifier
+        // ------------------------------------
+        type-identifier
+            = type-identifier-part ('.' type-identifier-part)*
 
-// ------------------------------------
-// protocol-composition-type
-// ------------------------------------
-protocol-composition-type
-    = type-identifier ('&' !operator-character type-identifier)+
+        type-identifier-part
+            = type-name generic-argument-clause?
 
-// ------------------------------------
-// opaque-type
-// ------------------------------------
-opaque-type
-    = 'some' !more type
+        // ------------------------------------
+        // protocol-composition-type
+        // ------------------------------------
+        protocol-composition-type
+            = type-identifier ('&' !operator-character type-identifier)+
 
-// ------------------------------------
-// any-type
-// ------------------------------------
-any-type
-    = 'Any' !more
+        // ------------------------------------
+        // opaque-type
+        // ------------------------------------
+        opaque-type
+            = 'some' !more type
 
-// ------------------------------------
-// self-type
-// ------------------------------------
-self-type
-    = 'Self' !more
+        // ------------------------------------
+        // any-type
+        // ------------------------------------
+        any-type
+            = 'Any' !more
+
+        // ------------------------------------
+        // self-type
+        // ------------------------------------
+        self-type
+            = 'Self' !more
     
-// ------------------------------------
+        // ------------------------------------
 
-type-name
-    = name
+        @lift
+        type-name
+            = name
 
-type-inheritance-clause
-    = ':' type-inheritance-list
+        type-inheritance-clause
+            = ':' type-inheritance-list
 
-type-inheritance-list
-    = type-identifier (',' type-identifier)*
-
+        type-inheritance-list
+            = type-identifier (',' type-identifier)*
+    }
+}

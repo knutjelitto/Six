@@ -15,14 +15,23 @@ namespace Six.Comp
         protected override List<SourceFile> Files()
         {
             var sources = Navi.Subdir(Navi.Project, "Source");
-            var coreSources = Navi.Subdir(sources, "Core");
 
-            return new List<SourceFile>(Enum().OrderBy(sf => sf.Name));
+            var count = 0;
+            var sourceFiles = new List<SourceFile>();
+            //sourceFiles.AddRange(Enum(Navi.Subdir(sources, "Algorithms")));
+            //sourceFiles.AddRange(Enum(Navi.Subdir(sources, "Numerics")));
+            //sourceFiles.AddRange(Enum(Navi.Subdir(sources, "Nio")));
+            //sourceFiles.AddRange(Enum(Navi.Subdir(sources, "PackageManager")));
+            sourceFiles.AddRange(Enum(Navi.Subdir(sources, "Core")));
+            sourceFiles.AddRange(Enum(Navi.Subdir(sources, "CoreFull")));
 
-            IEnumerable<SourceFile> Enum()
+            //sourceFiles = sourceFiles.Skip(60).Take(10).ToList();
+
+            return sourceFiles;
+
+            IEnumerable<SourceFile> Enum(DirectoryInfo directory)
             {
-                int count = 0;
-                foreach (var coreSource in coreSources.EnumerateFiles("*.swift", SearchOption.AllDirectories))
+                foreach (var coreSource in directory.EnumerateFiles("*.swift", SearchOption.AllDirectories).OrderBy(f => f.FullName[(sources.FullName.Length + 1)..]))
                 {
                     count += 1;
                     var fullName = coreSource.FullName.Replace('\\', '/');

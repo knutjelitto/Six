@@ -1,4 +1,4 @@
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 1)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 1)
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the Swift.org open source project
@@ -13,7 +13,7 @@
 
 // Generate comparison functions for tuples up to some reasonable arity.
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 25)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 25)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -97,9 +97,9 @@ public func >=(lhs: (), rhs: ()) -> Bool {
     return true
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 112)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 115)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 115)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -159,7 +159,7 @@ public func != <A: Equatable, B: Equatable>(lhs: (A,B), rhs: (A,B)) -> Bool {
   )
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before the second in a lexicographical ordering.
 ///
@@ -180,7 +180,7 @@ public func < <A: Comparable, B: Comparable>(lhs: (A,B), rhs: (A,B)) -> Bool {
     rhs.1
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before or the same as the second in a lexicographical ordering.
 ///
@@ -201,7 +201,7 @@ public func <= <A: Comparable, B: Comparable>(lhs: (A,B), rhs: (A,B)) -> Bool {
     rhs.1
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after the second in a lexicographical ordering.
 ///
@@ -222,7 +222,7 @@ public func > <A: Comparable, B: Comparable>(lhs: (A,B), rhs: (A,B)) -> Bool {
     rhs.1
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after or the same as the second in a lexicographical ordering.
 ///
@@ -243,9 +243,9 @@ public func >= <A: Comparable, B: Comparable>(lhs: (A,B), rhs: (A,B)) -> Bool {
     rhs.1
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 112)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 115)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 115)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -305,7 +305,7 @@ public func != <A: Equatable, B: Equatable, C: Equatable>(lhs: (A,B,C), rhs: (A,
   )
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before the second in a lexicographical ordering.
 ///
@@ -326,7 +326,7 @@ public func < <A: Comparable, B: Comparable, C: Comparable>(lhs: (A,B,C), rhs: (
     rhs.1, rhs.2
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before or the same as the second in a lexicographical ordering.
 ///
@@ -347,7 +347,7 @@ public func <= <A: Comparable, B: Comparable, C: Comparable>(lhs: (A,B,C), rhs: 
     rhs.1, rhs.2
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after the second in a lexicographical ordering.
 ///
@@ -368,7 +368,7 @@ public func > <A: Comparable, B: Comparable, C: Comparable>(lhs: (A,B,C), rhs: (
     rhs.1, rhs.2
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after or the same as the second in a lexicographical ordering.
 ///
@@ -389,9 +389,9 @@ public func >= <A: Comparable, B: Comparable, C: Comparable>(lhs: (A,B,C), rhs: 
     rhs.1, rhs.2
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 112)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 115)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 115)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -451,7 +451,7 @@ public func != <A: Equatable, B: Equatable, C: Equatable, D: Equatable>(lhs: (A,
   )
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before the second in a lexicographical ordering.
 ///
@@ -472,7 +472,7 @@ public func < <A: Comparable, B: Comparable, C: Comparable, D: Comparable>(lhs: 
     rhs.1, rhs.2, rhs.3
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before or the same as the second in a lexicographical ordering.
 ///
@@ -493,7 +493,7 @@ public func <= <A: Comparable, B: Comparable, C: Comparable, D: Comparable>(lhs:
     rhs.1, rhs.2, rhs.3
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after the second in a lexicographical ordering.
 ///
@@ -514,7 +514,7 @@ public func > <A: Comparable, B: Comparable, C: Comparable, D: Comparable>(lhs: 
     rhs.1, rhs.2, rhs.3
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after or the same as the second in a lexicographical ordering.
 ///
@@ -535,9 +535,9 @@ public func >= <A: Comparable, B: Comparable, C: Comparable, D: Comparable>(lhs:
     rhs.1, rhs.2, rhs.3
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 112)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 115)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 115)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -597,7 +597,7 @@ public func != <A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equat
   )
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before the second in a lexicographical ordering.
 ///
@@ -618,7 +618,7 @@ public func < <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: Co
     rhs.1, rhs.2, rhs.3, rhs.4
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before or the same as the second in a lexicographical ordering.
 ///
@@ -639,7 +639,7 @@ public func <= <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: C
     rhs.1, rhs.2, rhs.3, rhs.4
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after the second in a lexicographical ordering.
 ///
@@ -660,7 +660,7 @@ public func > <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: Co
     rhs.1, rhs.2, rhs.3, rhs.4
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after or the same as the second in a lexicographical ordering.
 ///
@@ -681,9 +681,9 @@ public func >= <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: C
     rhs.1, rhs.2, rhs.3, rhs.4
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 112)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 115)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 115)
 
 /// Returns a Boolean value indicating whether the corresponding components of
 /// two tuples are equal.
@@ -743,7 +743,7 @@ public func != <A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equat
   )
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before the second in a lexicographical ordering.
 ///
@@ -764,7 +764,7 @@ public func < <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: Co
     rhs.1, rhs.2, rhs.3, rhs.4, rhs.5
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// before or the same as the second in a lexicographical ordering.
 ///
@@ -785,7 +785,7 @@ public func <= <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: C
     rhs.1, rhs.2, rhs.3, rhs.4, rhs.5
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after the second in a lexicographical ordering.
 ///
@@ -806,7 +806,7 @@ public func > <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: Co
     rhs.1, rhs.2, rhs.3, rhs.4, rhs.5
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 176)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 176)
 /// Returns a Boolean value indicating whether the first tuple is ordered
 /// after or the same as the second in a lexicographical ordering.
 ///
@@ -827,7 +827,7 @@ public func >= <A: Comparable, B: Comparable, C: Comparable, D: Comparable, E: C
     rhs.1, rhs.2, rhs.3, rhs.4, rhs.5
   )
 }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/Tuple.swift.gyb", line: 198)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/Tuple.swift.gyb", line: 198)
 
 // Local Variables:
 // eval: (read-only-mode 1)

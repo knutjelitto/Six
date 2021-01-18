@@ -11,12 +11,14 @@ namespace Six.Peg.Runtime
         public Match(string name, int start, int next, IReadOnlyList<Match> matches)
         {
             Name = name;
+            Before = start;
             Start = start;
             Next = next;
             Matches = matches;
         }
 
         public string Name { get; }
+        public int Before { get; set; }
         public int Start { get; }
         public int Next { get; }
         public int Lenght => Next - Start;
@@ -26,6 +28,12 @@ namespace Six.Peg.Runtime
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(name));
             return new Match(name, start, start, NoMatches);
+        }
+
+        public static Match Success(string name, Match match)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(name));
+            return new Match(name, match.Start, match.Next, NoMatches);
         }
 
         public static Match Success(string name, int start, int next)

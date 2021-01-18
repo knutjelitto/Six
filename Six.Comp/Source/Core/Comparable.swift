@@ -135,83 +135,88 @@
 ///   (`FloatingPoint.nan`) compares as neither less than, greater than, nor
 ///   equal to any normal floating-point value. Exceptional values need not
 ///   take part in the strict total order.
-public protocol Comparable: Equatable {
-  /// Returns a Boolean value indicating whether the value of the first
-  /// argument is less than that of the second argument.
-  ///
-  /// This function is the only requirement of the `Comparable` protocol. The
-  /// remainder of the relational operator functions are implemented by the
-  /// standard library for any type that conforms to `Comparable`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  static func < (lhs: Self, rhs: Self) -> Bool
+public protocol Comparable: Equatable 
+{
+	/// Returns a Boolean value indicating whether the value of the first
+	/// argument is less than that of the second argument.
+	///
+	/// This function is the only requirement of the `Comparable` protocol. The
+	/// remainder of the relational operator functions are implemented by the
+	/// standard library for any type that conforms to `Comparable`.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	static func < (lhs: Self, rhs: Self) -> Bool
 
-  /// Returns a Boolean value indicating whether the value of the first
-  /// argument is less than or equal to that of the second argument.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  static func <= (lhs: Self, rhs: Self) -> Bool
+	/// Returns a Boolean value indicating whether the value of the first
+	/// argument is less than or equal to that of the second argument.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	static func <= (lhs: Self, rhs: Self) -> Bool
 
-  /// Returns a Boolean value indicating whether the value of the first
-  /// argument is greater than or equal to that of the second argument.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  static func >= (lhs: Self, rhs: Self) -> Bool
+	/// Returns a Boolean value indicating whether the value of the first
+	/// argument is greater than or equal to that of the second argument.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	static func >= (lhs: Self, rhs: Self) -> Bool
 
-  /// Returns a Boolean value indicating whether the value of the first
-  /// argument is greater than that of the second argument.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  static func > (lhs: Self, rhs: Self) -> Bool
+	/// Returns a Boolean value indicating whether the value of the first
+	/// argument is greater than that of the second argument.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	static func > (lhs: Self, rhs: Self) -> Bool
 }
 
-extension Comparable {
-  /// Returns a Boolean value indicating whether the value of the first argument
-  /// is greater than that of the second argument.
-  ///
-  /// This is the default implementation of the greater-than operator (`>`) for
-  /// any type that conforms to `Comparable`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  public static func > (lhs: Self, rhs: Self) -> Bool {
-    return rhs < lhs
-  }
+extension Comparable
+{
+	/// Returns a Boolean value indicating whether the value of the first argument
+	/// is greater than that of the second argument.
+	///
+	/// This is the default implementation of the greater-than operator (`>`) for
+	/// any type that conforms to `Comparable`.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	public static func > (lhs: Self, rhs: Self) -> Bool
+	{
+		return rhs < lhs
+	}
 
-  /// Returns a Boolean value indicating whether the value of the first argument
-  /// is less than or equal to that of the second argument.
-  ///
-  /// This is the default implementation of the less-than-or-equal-to
-  /// operator (`<=`) for any type that conforms to `Comparable`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  public static func <= (lhs: Self, rhs: Self) -> Bool {
-    return !(rhs < lhs)
-  }
+	/// Returns a Boolean value indicating whether the value of the first argument
+	/// is less than or equal to that of the second argument.
+	///
+	/// This is the default implementation of the less-than-or-equal-to
+	/// operator (`<=`) for any type that conforms to `Comparable`.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	public static func <= (lhs: Self, rhs: Self) -> Bool
+	{
+		return !(rhs < lhs)
+	}
 
-  /// Returns a Boolean value indicating whether the value of the first argument
-  /// is greater than or equal to that of the second argument.
-  ///
-  /// This is the default implementation of the greater-than-or-equal-to operator
-  /// (`>=`) for any type that conforms to `Comparable`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  /// - Returns: `true` if `lhs` is greater than or equal to `rhs`; otherwise,
-  ///   `false`.
-  public static func >= (lhs: Self, rhs: Self) -> Bool {
-    return !(lhs < rhs)
-  }
+	/// Returns a Boolean value indicating whether the value of the first argument
+	/// is greater than or equal to that of the second argument.
+	///
+	/// This is the default implementation of the greater-than-or-equal-to operator
+	/// (`>=`) for any type that conforms to `Comparable`.
+	///
+	/// - Parameters:
+	///   - lhs: A value to compare.
+	///   - rhs: Another value to compare.
+	/// - Returns: `true` if `lhs` is greater than or equal to `rhs`; otherwise,
+	///   `false`.
+	public static func >= (lhs: Self, rhs: Self) -> Bool
+	{
+		return !(lhs < rhs)
+	}
 }

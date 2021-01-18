@@ -39,7 +39,14 @@ namespace SixPeg.Matchers
                 {
                     IsSingle = allSingle || GetAttribute(rule, "single"),
                     IsFragment = GetAttribute(rule, "fragment"),
+                    Flatten = GetAttribute(rule, "flatten"),
+                    Lift = GetAttribute(rule, "lift"),
                 };
+
+                if (matcher.Flatten)
+                {
+                    Debug.Assert(true);
+                }
 
                 if (matcher.IsFragment)
                 {
@@ -47,6 +54,11 @@ namespace SixPeg.Matchers
                 }
 
                 if (matcher.IsSingle)
+                {
+                    Debug.Assert(true);
+                }
+
+                if (matcher.Lift)
                 {
                     Debug.Assert(true);
                 }

@@ -3,23 +3,23 @@
     terminals
     {
         string-literal
-            = interpolated-string-literal
-            / static-string-literal
+            : interpolated-string-literal
+            | static-string-literal
 
         static-string-literal
-            = multiline-string-literal-opening-delimiter multiline-quoted-text? multiline-string-literal-closing-delimiter
-            / string-literal-opening-delimiter quoted-text? string-literal-closing-delimiter
+            : multiline-string-literal-opening-delimiter multiline-quoted-text? multiline-string-literal-closing-delimiter
+            | string-literal-opening-delimiter quoted-text? string-literal-closing-delimiter
 
         interpolated-string-literal
-            = multiline-string-literal-opening-delimiter multiline-interpolated-text? multiline-string-literal-closing-delimiter
-            / string-literal-opening-delimiter interpolated-text? string-literal-closing-delimiter
+            : multiline-string-literal-opening-delimiter multiline-interpolated-text? multiline-string-literal-closing-delimiter
+            | string-literal-opening-delimiter interpolated-text? string-literal-closing-delimiter
 
-        quoted-text
-            = quoted-text-item+
+        quoted-text:
+            quoted-text-item+
 
         quoted-text-item
-            = escaped-character
-            / !(["] / [\\] / line-break-character) .
+            : escaped-character
+            | !(["] / [\\] / line-break-character) .
 
         multiline-quoted-text
             = multiline-quoted-text-item+
@@ -59,8 +59,8 @@
         escaped-newline
             =  escape-sequence inline-spaces? line-break
 
-        string-literal-opening-delimiter
-            = _ extended-string-literal-delimiter? ["]
+        string-literal-opening-delimiter:
+            _ extended-string-literal-delimiter? ["]
 
         string-literal-closing-delimiter
             = ["] extended-string-literal-delimiter?

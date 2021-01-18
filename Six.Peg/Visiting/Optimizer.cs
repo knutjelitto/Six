@@ -18,6 +18,11 @@ namespace SixPeg.Visiting
             return matcher.Accept(this);
         }
 
+        public AnyMatcher Visit(MatchTerminal matcher)
+        {
+            return matcher;
+        }
+
         public AnyMatcher Visit(MatchAnd matcher)
         {
             return matcher;

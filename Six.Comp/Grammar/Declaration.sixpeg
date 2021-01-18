@@ -6,29 +6,29 @@ grammar Six
 {
     rules
     {
+        @lift
         declaration
-            = import-declaration
-            / constant-declaration
-            / variable-declaration
-            / typealias-declaration
-            / function-declaration
-            / enum-declaration
-            / struct-declaration
-            / class-declaration
-            / protocol-declaration
-            / initializer-declaration
-            / deinitializer-declaration
-            / extension-declaration
-            / subscript-declaration
-            / operator-declaration
-            / precedence-group-declaration
-
+            : import-declaration
+            | constant-declaration
+            | variable-declaration
+            | typealias-declaration
+            | function-declaration
+            | enum-declaration
+            | struct-declaration
+            | class-declaration
+            | protocol-declaration
+            | initializer-declaration
+            | deinitializer-declaration
+            | extension-declaration
+            | subscript-declaration
+            | operator-declaration
+            | precedence-group-declaration
 
         // ------------------------------------
         // import-declaration
         // ------------------------------------
         import-declaration
-            = attributes? 'import' import-kind? import-path
+            = attribute* 'import' import-kind? import-path
 
         import-kind
             : 'typealias'
@@ -55,8 +55,8 @@ grammar Six
             = class-head class-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? class-body
 
         class-head
-            = attributes? access-level-modifier? 'final'? 'class'
-            / attributes? 'final' access-level-modifier? 'class'
+            = attribute* access-level-modifier? 'final'? 'class'
+            / attribute* 'final' access-level-modifier? 'class'
 
         class-name
             = name
@@ -76,6 +76,6 @@ grammar Six
         // deinitializer-declaration
         // ------------------------------------
         deinitializer-declaration
-            = attributes? 'deinit' code-block
+            = attribute* 'deinit' code-block
     }
 }

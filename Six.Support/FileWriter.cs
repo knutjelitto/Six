@@ -6,8 +6,8 @@ namespace Six.Support
 {
     public class FileWriter : IndentWriter, IDisposable
     {
-        public FileWriter(string filename)
-            : base(new BaseTextWriter(new StreamWriter(filename, false, Encoding.UTF8)))
+        public FileWriter(string filename, string? indent = null)
+            : base(new BaseTextWriter(new StreamWriter(filename, false, Encoding.UTF8)), indent)
         {
         }
 

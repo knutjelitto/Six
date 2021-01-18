@@ -16,19 +16,24 @@ namespace Six.Support
 
         public static string Escape(this char character)
         {
-            return character switch
+            switch (character)
             {
-                '\b' => "\\b",
-                '\f' => "\\f",
-                '\n' => "\\n",
-                '\r' => "\\r",
-                '\t' => "\\t",
-                '\v' => "\\v",
-                '\'' => "\\'",
-                '\"' => "\\\"",
-                '\\' => "\\\\",
-                _ => character.ToString(),
-            };
+                case '\b': return "\\b";
+                case '\f': return "\\f";
+                case '\n': return "\\n";
+                case '\r': return "\\r";
+                case '\t': return "\\t";
+                case '\v': return "\\v";
+                case '\'': return "\\'";
+                case '\"': return "\\\"";
+                case '\\': return "\\\\";
+                default:
+                    if (character < ' ')
+                    {
+                        return string.Format("\\u{0:X4}", (int)character);
+                    }
+                    return character.ToString();
+            }
         }
 
         public static string Escape(this string characters)

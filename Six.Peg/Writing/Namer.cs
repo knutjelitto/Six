@@ -18,15 +18,27 @@ namespace SixPeg.Writing
 
         private bool IsNameable(char text)
         {
-            return char.IsLetterOrDigit(text) ||
-                   text == '@' ||
-                   text == '.'
-                   ;
+            return char.IsLetterOrDigit(text) || "@.,:;=<>({[]})".Contains(text);
         }
 
         private string Name(string text)
         {
-            return text.Replace("@", "at_").Replace(".", "dot_");
+            return text
+                .Replace("@", "at_")
+                .Replace(".", "dot_")
+                .Replace(",", "comma_")
+                .Replace(":", "colon_")
+                .Replace(";", "semi_")
+                .Replace("=", "equal_")
+                .Replace("<", "less_")
+                .Replace(">", "greater_")
+                .Replace("(", "lparent_")
+                .Replace("{", "lbrace_")
+                .Replace("[", "lbracket_")
+                .Replace("]", "rbracket_")
+                .Replace("}", "rbrace_")
+                .Replace(")", "rparent_")
+                ;
         }
 
         public string NameFor(MatchRule rule)

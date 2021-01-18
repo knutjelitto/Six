@@ -1,4 +1,4 @@
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 1)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 1)
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the Swift.org open source project
@@ -15,8 +15,6 @@
 // The two must coexist, so it was renamed. The old name must not be
 // used in the new runtime. _TtCs18__stdlib_AtomicInt is the mangled
 // name for Swift.__stdlib_AtomicInt
-@available(swift, deprecated: 4.2, obsoleted: 5.0)
-@_objcRuntimeName(_TtCs18__stdlib_AtomicInt)
 public final class _stdlib_AtomicInt {
   internal var _value: Int
 
@@ -37,8 +35,7 @@ public final class _stdlib_AtomicInt {
     return _swift_stdlib_atomicLoadInt(object: _valuePtr)
   }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 40)
-  @discardableResult
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 38)
   public func fetchAndAdd(_ operand: Int) -> Int {
     return _swift_stdlib_atomicFetchAddInt(
       object: _valuePtr,
@@ -48,8 +45,7 @@ public final class _stdlib_AtomicInt {
   public func addAndFetch(_ operand: Int) -> Int {
     return fetchAndAdd(operand) + operand
   }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 40)
-  @discardableResult
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 38)
   public func fetchAndAnd(_ operand: Int) -> Int {
     return _swift_stdlib_atomicFetchAndInt(
       object: _valuePtr,
@@ -59,8 +55,7 @@ public final class _stdlib_AtomicInt {
   public func andAndFetch(_ operand: Int) -> Int {
     return fetchAndAnd(operand) & operand
   }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 40)
-  @discardableResult
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 38)
   public func fetchAndOr(_ operand: Int) -> Int {
     return _swift_stdlib_atomicFetchOrInt(
       object: _valuePtr,
@@ -70,8 +65,7 @@ public final class _stdlib_AtomicInt {
   public func orAndFetch(_ operand: Int) -> Int {
     return fetchAndOr(operand) | operand
   }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 40)
-  @discardableResult
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 38)
   public func fetchAndXor(_ operand: Int) -> Int {
     return _swift_stdlib_atomicFetchXorInt(
       object: _valuePtr,
@@ -81,7 +75,7 @@ public final class _stdlib_AtomicInt {
   public func xorAndFetch(_ operand: Int) -> Int {
     return fetchAndXor(operand) ^ operand
   }
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 51)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 48)
 
   public func compareExchange(expected: inout Int, desired: Int) -> Bool {
     var expectedVar = expected
@@ -94,49 +88,30 @@ public final class _stdlib_AtomicInt {
   }
 }
 
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicCompareExchangeStrongInt(
   object target: UnsafeMutablePointer<Int>,
   expected: UnsafeMutablePointer<Int>,
   desired: Int) -> Bool {
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let (oldValue, won) = Builtin.cmpxchg_seqcst_seqcst_Int32(
-    target._rawValue, expected.pointee._value, desired._value)
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let (oldValue, won) = Builtin.cmpxchg_seqcst_seqcst_Int64(
     target._rawValue, expected.pointee._value, desired._value)
-#endif
   expected.pointee._value = oldValue
   return Bool(won)
 }
 
-
-// FIXME: ideally it should not be here, at the very least not public, but
-// @usableFromInline internal to be used by SwiftPrivate._stdlib_AtomicInt
 public // Existing uses outside stdlib
 func _swift_stdlib_atomicLoadInt(
   object target: UnsafeMutablePointer<Int>) -> Int {
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let value = Builtin.atomicload_seqcst_Int32(target._rawValue)
-  return Int(value)
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let value = Builtin.atomicload_seqcst_Int64(target._rawValue)
   return Int(value)
-#endif
 }
 
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicStoreInt(
   object target: UnsafeMutablePointer<Int>,
   desired: Int) {
-#if arch(i386) || arch(arm) || arch(wasm32)
-  Builtin.atomicstore_seqcst_Int32(target._rawValue, desired._value)
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   Builtin.atomicstore_seqcst_Int64(target._rawValue, desired._value)
-#endif
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 106)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 84)
 // Warning: no overflow checking.
 // FIXME: ideally it should not be here, at the very least not public, but
 // @usableFromInline internal to be used by SwiftPrivate._stdlib_AtomicInt
@@ -145,22 +120,15 @@ func _swift_stdlib_atomicFetchAddInt(
   object target: UnsafeMutablePointer<Int>,
   operand: Int) -> Int {
   let rawTarget = UnsafeMutableRawPointer(target)
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let value = _swift_stdlib_atomicFetchAddInt32(
-    object: rawTarget.assumingMemoryBound(to: Int32.self),
-    operand: Int32(operand))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let value = _swift_stdlib_atomicFetchAddInt64(
     object: rawTarget.assumingMemoryBound(to: Int64.self),
     operand: Int64(operand))
-#endif
   return Int(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchAddInt32(
   object target: UnsafeMutablePointer<Int32>,
   operand: Int32) -> Int32 {
@@ -171,10 +139,9 @@ internal func _swift_stdlib_atomicFetchAddInt32(
   return Int32(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchAddInt64(
   object target: UnsafeMutablePointer<Int64>,
   operand: Int64) -> Int64 {
@@ -185,9 +152,9 @@ internal func _swift_stdlib_atomicFetchAddInt64(
   return Int64(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 141)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 106)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 84)
 // Warning: no overflow checking.
 // FIXME: ideally it should not be here, at the very least not public, but
 // @usableFromInline internal to be used by SwiftPrivate._stdlib_AtomicInt
@@ -196,22 +163,15 @@ func _swift_stdlib_atomicFetchAndInt(
   object target: UnsafeMutablePointer<Int>,
   operand: Int) -> Int {
   let rawTarget = UnsafeMutableRawPointer(target)
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let value = _swift_stdlib_atomicFetchAndInt32(
-    object: rawTarget.assumingMemoryBound(to: Int32.self),
-    operand: Int32(operand))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let value = _swift_stdlib_atomicFetchAndInt64(
     object: rawTarget.assumingMemoryBound(to: Int64.self),
     operand: Int64(operand))
-#endif
   return Int(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchAndInt32(
   object target: UnsafeMutablePointer<Int32>,
   operand: Int32) -> Int32 {
@@ -222,10 +182,9 @@ internal func _swift_stdlib_atomicFetchAndInt32(
   return Int32(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchAndInt64(
   object target: UnsafeMutablePointer<Int64>,
   operand: Int64) -> Int64 {
@@ -236,9 +195,9 @@ internal func _swift_stdlib_atomicFetchAndInt64(
   return Int64(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 141)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 106)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 84)
 // Warning: no overflow checking.
 // FIXME: ideally it should not be here, at the very least not public, but
 // @usableFromInline internal to be used by SwiftPrivate._stdlib_AtomicInt
@@ -247,22 +206,15 @@ func _swift_stdlib_atomicFetchOrInt(
   object target: UnsafeMutablePointer<Int>,
   operand: Int) -> Int {
   let rawTarget = UnsafeMutableRawPointer(target)
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let value = _swift_stdlib_atomicFetchOrInt32(
-    object: rawTarget.assumingMemoryBound(to: Int32.self),
-    operand: Int32(operand))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let value = _swift_stdlib_atomicFetchOrInt64(
     object: rawTarget.assumingMemoryBound(to: Int64.self),
     operand: Int64(operand))
-#endif
   return Int(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchOrInt32(
   object target: UnsafeMutablePointer<Int32>,
   operand: Int32) -> Int32 {
@@ -273,10 +225,9 @@ internal func _swift_stdlib_atomicFetchOrInt32(
   return Int32(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchOrInt64(
   object target: UnsafeMutablePointer<Int64>,
   operand: Int64) -> Int64 {
@@ -287,9 +238,9 @@ internal func _swift_stdlib_atomicFetchOrInt64(
   return Int64(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 141)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 106)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 84)
 // Warning: no overflow checking.
 // FIXME: ideally it should not be here, at the very least not public, but
 // @usableFromInline internal to be used by SwiftPrivate._stdlib_AtomicInt
@@ -298,22 +249,15 @@ func _swift_stdlib_atomicFetchXorInt(
   object target: UnsafeMutablePointer<Int>,
   operand: Int) -> Int {
   let rawTarget = UnsafeMutableRawPointer(target)
-#if arch(i386) || arch(arm) || arch(wasm32)
-  let value = _swift_stdlib_atomicFetchXorInt32(
-    object: rawTarget.assumingMemoryBound(to: Int32.self),
-    operand: Int32(operand))
-#elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
   let value = _swift_stdlib_atomicFetchXorInt64(
     object: rawTarget.assumingMemoryBound(to: Int64.self),
     operand: Int64(operand))
-#endif
   return Int(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchXorInt32(
   object target: UnsafeMutablePointer<Int32>,
   operand: Int32) -> Int32 {
@@ -324,10 +268,9 @@ internal func _swift_stdlib_atomicFetchXorInt32(
   return Int32(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 127)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 99)
 
 // Warning: no overflow checking.
-@usableFromInline // used by SwiftPrivate._stdlib_AtomicInt
 internal func _swift_stdlib_atomicFetchXorInt64(
   object target: UnsafeMutablePointer<Int64>,
   operand: Int64) -> Int64 {
@@ -338,7 +281,7 @@ internal func _swift_stdlib_atomicFetchXorInt64(
   return Int64(value)
 }
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 141)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 112)
 
-// ###sourceLocation(file: "D:/Projects/Six/Six.Source/Core/AtomicInt.swift.gyb", line: 143)
+// ###sourceLocation(file: "D:/Projects/Six/Six.Comp/Source/CoreFull/AtomicInt.swift.gyb", line: 114)
 

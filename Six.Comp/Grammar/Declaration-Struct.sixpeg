@@ -1,19 +1,17 @@
 ﻿// ------------------------------------
 // struct-declaration
 // ------------------------------------
-struct-declaration
-    = access-prefix 'struct' struct-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? struct-body
+struct-declaration:
+    access-prefix 'struct' struct-name generic-parameter-clause? type-inheritance-clause? generic-where-clause? struct-body
 
-struct-name
-    = name
+struct-name:
+    name
 
 struct-body
-    = '{' struct-members? '}'
-    / '{' #error("struct-body")
-
-struct-members
-    = struct-member+
+    : '{' struct-member* '}'
+    | '{' #error("struct-body")
 
 struct-member
-    = declaration
-    / compiler-control-statement
+    : declaration
+    | compiler-control-statement
+    | !'}' #error("struct-member")

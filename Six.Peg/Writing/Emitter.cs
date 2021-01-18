@@ -84,7 +84,6 @@ namespace SixPeg.Writing
                     {
                     }
 
-
                     foreach (var rule in Parser.Rules)
                     {
                         D.NL();
@@ -112,11 +111,6 @@ namespace SixPeg.Writing
         {
             N.Reset();
 
-            if (rule.Fragment)
-            {
-                Debug.Assert(true);
-            }
-
             var ruleName = N.NameFor(rule);
 
             var cacheIndexName = $"Cache_{ruleName}";
@@ -138,7 +132,7 @@ namespace SixPeg.Writing
                             rule.Matcher.Transform().Emit(this);
                             using (D.If($"{GetResult()} != null"))
                             {
-                                D.Line($"{GetResult()} = {NmSuccess}({ruleName.AsStringLiteral()}, {GetStart()}, {GetResult()});");
+                                AssignResult();
                             }
                         }
                     }
@@ -157,7 +151,7 @@ namespace SixPeg.Writing
                             {
                                 using (D.If($"{GetResult()} != null"))
                                 {
-                                    D.Line($"{GetResult()} = {NmSuccess}({ruleName.AsStringLiteral()}, {GetStart()}, {GetResult()});");
+                                    AssignResult();
                                 }
                             }
                             D.Line($"Caches[{cacheIndexName}].Cache({GetStart()}, {match});");
@@ -168,34 +162,54 @@ namespace SixPeg.Writing
 
             }
             return true;
+
+            void AssignResult()
+            {
+                if (!rule.Lift)
+                {
+                    var match = rule.Flatten ? $"{GetResult()}.Next" : $"{GetResult()}";
+
+                    D.Line($"{GetResult()} = {NmSuccess}({ruleName.AsStringLiteral()}, {GetStart()}, {match});");
+                }
+            }
+        }
+
+
+        public bool Visit(MatchTerminal matcher)
+        {
+            D.Line($"{GetResult()} = {Inline(matcher)};");
+            return true;
         }
 
         public bool Visit(MatchSequence sequence)
         {
-            var next = D.NewVar(D.NmNext, GetStart());
-            var matches = D.NewMatches();
-            using (SetStart(next))
-            using (D.Block("while (true) // ---Sequence---"))
-            {
-                var matchers = sequence.Matchers.Transform();
+            var matchers = sequence.Matchers.Transform().ToList();
 
+            var single = matchers.Count(m => !m.IsPredicate) == 1;
+            var never = matchers.Any(m => m.NeverContinues);
+
+            var next = D.NewVar(D.NmNext, GetStart());
+            var matches = never ? string.Empty : D.NewMatches();
+            using (SetStart(next))
+            using (D.Block("while (true) // Sequence -->"))
+            {
                 var last = matchers.Last();
                 var bailout = false;
-                foreach (var matcher in matchers)
+                for (var i = 0; i < matchers.Count; i += 1)
                 {
+                    var matcher = matchers[i];
+                    var nextMatcher = i + 1 < matchers.Count ? matchers[i + 1] : null;
+
                     var inline = Inline(matcher);
                     if (inline != null)
                     {
-                        if (matcher.AlwaysSucceeds)
+                        if (matcher.AlwaysSucceeds || nextMatcher == null)
                         {
                             D.Line($"{GetResult()} = {inline};");
                         }
                         else
                         {
-                            using (D.If($"({GetResult()} = {inline}) == null"))
-                            {
-                                D.Line("break;");
-                            }
+                            D.BreakIf($"({GetResult()} = {inline}) == null");
                         }
                     }
                     else
@@ -208,14 +222,14 @@ namespace SixPeg.Writing
                         }
                         if (!matcher.AlwaysSucceeds)
                         {
-                            using (D.If($"{GetResult()} == null"))
-                            {
-                                D.Line("break;");
-                            }
+                            D.BreakIf($"{GetResult()} == null");
                         }
                     }
-                    D.Line($"{matches}.Add({GetResult()});");
-                    if (matcher != last)
+                    if (!matcher.IsPredicate && !never)
+                    {
+                        D.Line($"{matches}.Add({GetResult()});");
+                    }
+                    if (nextMatcher != null)
                     {
                         D.Line($"{next} = {GetResult()}.Next;");
                     }
@@ -225,17 +239,28 @@ namespace SixPeg.Writing
                     D.Line("break;");
                 }
             }
-            using (D.If($"{GetResult()} != null"))
+            if (!never)
             {
-                D.Line($"{GetResult()} = {NmSuccess}({sequence.Marker.AsStringLiteral()}, {GetStart()}, {matches});");
+                using (D.If($"{GetResult()} != null"))
+                {
+                    if (single)
+                    {
+                        D.Line($"{GetResult()} = {matches}[0];");
+                    }
+                    else
+                    {
+                        D.Line($"{GetResult()} = {NmSuccess}({sequence.Marker.AsStringLiteral()}, {GetStart()}, {matches});");
+                    }
+                }
             }
+            D.Line("// <-- Sequence");
 
             return true;
         }
 
         public bool Visit(MatchChoice choice)
         {
-            using (D.Block("while (true) // ---Choice---"))
+            using (D.Block("while (true) // Choice -->"))
             {
                 var matchers = choice.Matchers.Transform().ToList();
                 var last = matchers.Last();
@@ -251,10 +276,7 @@ namespace SixPeg.Writing
                         }
                         else
                         {
-                            using (D.If($"({GetResult()} = {inline}) != null"))
-                            {
-                                D.Line("break;");
-                            }
+                            D.BreakIf($"({GetResult()} = {inline}) != null");
                         }
                     }
                     else
@@ -268,15 +290,13 @@ namespace SixPeg.Writing
                             }
                             else
                             {
-                                using (D.If($"{GetResult()} != null"))
-                                {
-                                    D.Line("break;");
-                                }
+                                D.BreakIf($"{GetResult()} != null");
                             }
                         }
                     }
                 }
             }
+            D.Line("// <-- Choice");
 
             return true;
         }
@@ -376,14 +396,12 @@ namespace SixPeg.Writing
 
         public bool Visit(MatchError matcher)
         {
-            using (D.Block())
-            {
-                D.Line("// >>> ERROR");
-                var arguments = string.Join(" ", matcher.Arguments);
-                D.Line($"new Error(Context).Report(\"{arguments}\", {GetStart()});");
-                D.Line($"throw new BailOutException();");
-                D.Line("// <<< ERROR");
-            }
+            D.Line("// ERROR -->");
+            var arguments = string.Join(" ", matcher.Arguments);
+            D.Line($"new Error(Context).Report(\"{arguments}\", {GetStart()});");
+            D.Line($"throw new BailOutException();");
+            D.Line("// <-- ERROR");
+
             return true;
         }
 
@@ -399,18 +417,12 @@ namespace SixPeg.Writing
                 var inline = Inline(matcher);
                 if (inline != null)
                 {
-                    using (D.If($"({GetResult()} = {inline}) == null"))
-                    {
-                        D.Line("break;");
-                    }
+                    D.BreakIf($"({GetResult()} = {inline}) == null");
                 }
                 else
                 {
                     matcher.Emit(this);
-                    using (D.If($"{GetResult()} == null"))
-                    {
-                        D.Line("break;");
-                    }
+                    D.BreakIf($"{GetResult()} == null");
                 }
                 D.Line($"{matches}.Add({GetResult()});");
                 D.Line($"{next} = {GetResult()}.Next;");
@@ -435,18 +447,12 @@ namespace SixPeg.Writing
                 var inline = Inline(matcher);
                 if (inline != null)
                 {
-                    using (D.If($"({GetResult()} = {inline}) == null"))
-                    {
-                        D.Line("break;");
-                    }
+                    D.BreakIf($"({GetResult()} = {inline}) == null");
                 }
                 else
                 {
                     matcher.Emit(this);
-                    using (D.If($"{GetResult()} == null"))
-                    {
-                        D.Line("break;");
-                    }
+                    D.BreakIf($"{GetResult()} == null");
                 }
                 D.Line($"{matches}.Add({GetResult()});");
                 D.Line($"{next} = {GetResult()}.Next;");
@@ -479,7 +485,7 @@ namespace SixPeg.Writing
             }
             if (any is MatchCharacterSequence sequence)
             {
-                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterSequence_)}({GetStart()}, \"{sequence.Text.Escape()}\")";
+                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterSequence_)}({GetStart()}, {sequence.Text.AsStringLiteral()})";
             }
             if (any is MatchCharacterAny)
             {
@@ -487,15 +493,22 @@ namespace SixPeg.Writing
             }
             if (any is MatchCharacterExact exact)
             {
-                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterExact_)}({GetStart()}, '{exact.Character.Escape()}')";
+                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterExact_)}({GetStart()}, {exact.Character.AsCharLiteral()})";
             }
             if (any is MatchCharacterRange range)
             {
-                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterRange_)}({GetStart()}, '{range.MinCharacter.Escape()}', '{range.MaxCharacter.Escape()}')";
+                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterRange_)}({GetStart()}, {range.MinCharacter.AsCharLiteral()}, {range.MaxCharacter.AsCharLiteral()})";
             }
             if (any is MatchCharacterSet set)
             {
-                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterSet_)}({GetStart()}, \"{set.Set.Escape()}\")";
+                return $"{nameof(Six.Peg.Runtime.Pegger.CharacterSet_)}({GetStart()}, {set.Set.AsStringLiteral()})";
+            }
+            if (any is MatchTerminal terminal)
+            {
+                var space = $"{N.NameFor(Parser.Space)}({GetStart()})";
+                var text = terminal.Text.AsStringLiteral();
+                var more = terminal.NotMore ? $"{N.NameFor(Parser.More)}" : "null";
+                return $"{nameof(Six.Peg.Runtime.Pegger.Terminal_)}({space}, {text}, {more})";
             }
             if (any is MatchNot not)
             {

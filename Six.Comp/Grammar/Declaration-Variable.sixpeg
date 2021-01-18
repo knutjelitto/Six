@@ -48,8 +48,8 @@ willSet-didSet-block
     / '{' didSet-clause willSet-clause? '}'
 
 willSet-clause
-    = attributes? 'willSet' setter-name? code-block
+    = attribute* 'willSet' setter-name? code-block
 
 didSet-clause
-    = attributes? 'didSet' setter-name? code-block
+    = attribute* 'didSet' setter-name? code-block
 

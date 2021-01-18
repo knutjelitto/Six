@@ -18,7 +18,7 @@ union-style-enum-member
     / compiler-control-statement
 
 union-style-enum-case-clause
-    = attributes? 'indirect'? 'case' !more union-style-enum-case-list
+    = attribute* 'indirect'? 'case' !more union-style-enum-case-list
 
 union-style-enum-case-list
     = union-style-enum-case (',' union-style-enum-case)*
@@ -38,7 +38,7 @@ raw-value-style-enum-member
     / compiler-control-statement
 
 raw-value-style-enum-case-clause
-    = attributes? 'case' !more raw-value-style-enum-case-list
+    = attribute* 'case' !more raw-value-style-enum-case-list
 
 raw-value-style-enum-case-list
     = raw-value-style-enum-case (',' raw-value-style-enum-case)*

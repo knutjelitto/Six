@@ -32,6 +32,13 @@ namespace SixPeg.Visiting
             }
         }
 
+        public bool Visit(MatchTerminal matcher)
+        {
+            Writer.WriteLine($"{matcher.SpacePrefix}'{matcher.Text.Escape()}'");
+
+            return true;
+        }
+
         public bool Visit(MatchRule matcher)
         {
             var rt = matcher.IsTerminal ? "T" : "R";

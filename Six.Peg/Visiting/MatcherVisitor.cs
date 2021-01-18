@@ -5,6 +5,11 @@ namespace SixPeg.Visiting
 {
     public class MatcherVisitor : IMatcherVisitor<bool>
     {
+        public bool Visit(MatchTerminal matcher)
+        {
+            return true;
+        }
+
         public virtual bool Visit(MatchAnd matcher)
         {
             return matcher.Matcher.Accept(this);

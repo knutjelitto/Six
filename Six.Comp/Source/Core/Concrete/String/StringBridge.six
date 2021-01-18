@@ -1,0 +1,57 @@
+﻿//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See https://swift.org/LICENSE.txt for license information
+// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
+//===----------------------------------------------------------------------===//
+
+import SwiftShims
+
+/// Effectively an untyped NSString that doesn't require foundation.
+internal typealias _CocoaString = AnyObject
+
+internal class __SwiftNativeNSString {
+  internal init() {}
+  deinit {}
+}
+
+// Special-case Index <-> Offset converters for bridging and use in accelerating
+// the UTF16View in general.
+extension StringProtocol {
+  internal func _toUTF16Offset(_ idx: Index) -> Int {
+    return self.utf16.distance(from: self.utf16.startIndex, to: idx)
+  }
+
+  internal func _toUTF16Index(_ offset: Int) -> Index {
+    return self.utf16.index(self.utf16.startIndex, offsetBy: offset)
+  }
+
+  internal func _toUTF16Offsets(_ indices: Range<Index>) -> Range<Int> {
+    let lowerbound = _toUTF16Offset(indices.lowerBound)
+    let length = self.utf16.distance(
+      from: indices.lowerBound, to: indices.upperBound)
+    return Range(
+      uncheckedBounds: (lower: lowerbound, upper: lowerbound + length))
+  }
+
+  internal func _toUTF16Indices(_ range: Range<Int>) -> Range<Index> {
+    let lowerbound = _toUTF16Index(range.lowerBound)
+    let upperbound = _toUTF16Index(range.lowerBound + range.count)
+    return Range(uncheckedBounds: (lower: lowerbound, upper: upperbound))
+  }
+}
+
+extension String
+{
+  func _copyUTF16CodeUnits(into buffer: UnsafeMutableBufferPointer<UInt16>, range: Range<Int>)
+  {
+    _internalInvariant(buffer.count >= range.count)
+    let indexRange = self._toUTF16Indices(range)
+    self.utf16._nativeCopy(into: buffer, alignedRange: indexRange)
+  }
+}

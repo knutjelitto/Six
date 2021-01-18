@@ -83,10 +83,9 @@ extension Unicode.ASCII.Parser: Unicode.Parser {
 
   /// Parses a single Unicode scalar value from `input`.
   @inlinable
-  public mutating func parseScalar<I: IteratorProtocol>(
-    from input: inout I
-  ) -> Unicode.ParseResult<Encoding.EncodedScalar>
-  where I.Element == Encoding.CodeUnit {
+  public mutating func parseScalar<I: IteratorProtocol>(from input: inout I) -> Unicode.ParseResult<Encoding.EncodedScalar>
+    where I.Element == Encoding.CodeUnit
+  {
     let n = input.next()
     if _fastPath(n != nil), let x = n {
       guard _fastPath(Int8(truncatingIfNeeded: x) >= 0)

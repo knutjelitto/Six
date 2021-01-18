@@ -47,6 +47,19 @@ namespace SixPeg.Writing
             return Block($"if ({text})");
         }
 
+        public void If(string condition, string statement)
+        {
+            using(If(condition))
+            {
+                Line(statement);
+            }
+        }
+
+        public void BreakIf(string condition)
+        {
+            If(condition, "break;");
+        }
+
         public IDisposable Else()
         {
             return Block($"else");

@@ -48,7 +48,7 @@ namespace Six.Peg.Runtime
             return (lineNo + 1, offset - start + 1, Source.Text[start..end].TrimEnd());
         }
 
-        public string? GetLine(int lineIndex)
+        public string GetLine(int lineIndex)
         {
             if (lineIndex >= 0 && lineIndex < Index.Count)
             {

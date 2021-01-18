@@ -16,7 +16,6 @@ namespace SixPeg.Matchers
         public bool Used => UsedByRule || UsedByTerminal;
         public bool Fragment => !UsedByRule;
         public bool IsFragment { get; set; } = false;
-        public bool IsSpacy { get; set; } = false;
         public bool IsPredicate { get; set; } = false;
         public bool AlwaysSucceeds { get; set; } = false;
         public bool NeverContinues { get; set; } = false;

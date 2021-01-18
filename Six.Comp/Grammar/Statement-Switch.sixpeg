@@ -23,8 +23,8 @@ grammar Swift
             / conditional-switch-case
 
         case-label
-            = attributes? 'case' case-item-list ':'
-            / attributes? 'case' #error("case-label")
+            = attribute* 'case' case-item-list ':'
+            / attribute* 'case' #error("case-label")
 
         case-item-list
             = case-item (',' case-item)* &':'
@@ -35,7 +35,7 @@ grammar Swift
             = pattern where-clause?
 
         default-label
-            = attributes? 'default' ':'
+            = attribute* 'default' ':'
 
         conditional-switch-case
             = switch-if-directive-clause switch-elseif-directive-clauses? switch-else-directive-clause? endif-directive

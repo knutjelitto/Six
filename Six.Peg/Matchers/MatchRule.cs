@@ -23,6 +23,8 @@ namespace SixPeg.Matchers
         public bool IsTerminal { get; }
         public int Index { get; set; } = -1;
         public bool IsSingle { get; set; } = false;
+        public bool Flatten { get; set; } = false;
+        public bool Lift { get; set; } = false;
         private MatchCacheBool MatchCacheBool { get; }
         private Matches.MatchCache MatchCache { get; }
         private MatchesCache MatchesCache { get; }

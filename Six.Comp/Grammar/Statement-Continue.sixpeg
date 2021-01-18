@@ -1,4 +1,0 @@
-﻿continue-statement
-    = 'continue' !(('case'/'default') !more) label-name?
-    / 'continue' !(('case'/'default') !more) #error("continue-statement")
-

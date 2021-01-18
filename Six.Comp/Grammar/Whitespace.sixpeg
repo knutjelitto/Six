@@ -34,7 +34,8 @@
             = inline-space+
 
         inline-space
-            = [\u0009] / [\u0020]
+            : [\u0009]
+            | [\u0020]
 
         comment
             = [/][/] comment-text line-break
